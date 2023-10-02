@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: localhost
--- Thời gian đã tạo: Th10 02, 2023 lúc 03:21 PM
+-- Thời gian đã tạo: Th10 02, 2023 lúc 03:40 PM
 -- Phiên bản máy phục vụ: 10.4.28-MariaDB
 -- Phiên bản PHP: 8.1.17
 
@@ -412,7 +412,7 @@ ALTER TABLE `HoaDon`
 ALTER TABLE `KhachHang`
   ADD PRIMARY KEY (`ma`),
   ADD KEY `KhachHang_tentaikhoan_TaiKhoan_tentaikhoan` (`tentaikhoan`),
-  ADD KEY `KhachHang_matrangthai_TrangThaiKhachHang_ma` (`matrangthai`);
+  ADD KEY `KH_matrangthai_TTKH_ma` (`matrangthai`);
 
 --
 -- Chỉ mục cho bảng `KichCo`
@@ -669,6 +669,7 @@ ALTER TABLE `HoaDon`
 -- Các ràng buộc cho bảng `KhachHang`
 --
 ALTER TABLE `KhachHang`
+  ADD CONSTRAINT `KH_matrangthai_TTKH_ma` FOREIGN KEY (`matrangthai`) REFERENCES `TrangThaiKhachHang` (`ma`),
   ADD CONSTRAINT `KhachHang_matrangthai_TrangThaiKhachHang_ma` FOREIGN KEY (`matrangthai`) REFERENCES `TrangThaiKhachHang` (`ma`),
   ADD CONSTRAINT `KhachHang_tentaikhoan_TaiKhoan_tentaikhoan` FOREIGN KEY (`tentaikhoan`) REFERENCES `TaiKhoan` (`tentaikhoan`);
 
