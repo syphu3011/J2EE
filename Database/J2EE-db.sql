@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: localhost
--- Thời gian đã tạo: Th10 02, 2023 lúc 03:40 PM
+-- Thời gian đã tạo: Th10 02, 2023 lúc 04:02 PM
 -- Phiên bản máy phục vụ: 10.4.28-MariaDB
 -- Phiên bản PHP: 8.1.17
 
@@ -302,6 +302,17 @@ CREATE TABLE `TrangThaiHoaDon` (
 -- --------------------------------------------------------
 
 --
+-- Cấu trúc bảng cho bảng `TrangThaiKhachHang`
+--
+
+CREATE TABLE `TrangThaiKhachHang` (
+  `ma` int(11) NOT NULL,
+  `tentrangthai` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Cấu trúc bảng cho bảng `TrangThaiNhaCungCap`
 --
 
@@ -493,6 +504,12 @@ ALTER TABLE `TrangThaiHoaDon`
   ADD PRIMARY KEY (`ma`);
 
 --
+-- Chỉ mục cho bảng `TrangThaiKhachHang`
+--
+ALTER TABLE `TrangThaiKhachHang`
+  ADD PRIMARY KEY (`ma`);
+
+--
 -- Chỉ mục cho bảng `TrangThaiNhaCungCap`
 --
 ALTER TABLE `TrangThaiNhaCungCap`
@@ -587,6 +604,12 @@ ALTER TABLE `TrangThaiHoaDon`
   MODIFY `ma` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT cho bảng `TrangThaiKhachHang`
+--
+ALTER TABLE `TrangThaiKhachHang`
+  MODIFY `ma` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT cho bảng `TrangThaiNhaCungCap`
 --
 ALTER TABLE `TrangThaiNhaCungCap`
@@ -669,7 +692,6 @@ ALTER TABLE `HoaDon`
 -- Các ràng buộc cho bảng `KhachHang`
 --
 ALTER TABLE `KhachHang`
-  ADD CONSTRAINT `KH_matrangthai_TTKH_ma` FOREIGN KEY (`matrangthai`) REFERENCES `TrangThaiKhachHang` (`ma`),
   ADD CONSTRAINT `KhachHang_matrangthai_TrangThaiKhachHang_ma` FOREIGN KEY (`matrangthai`) REFERENCES `TrangThaiKhachHang` (`ma`),
   ADD CONSTRAINT `KhachHang_tentaikhoan_TaiKhoan_tentaikhoan` FOREIGN KEY (`tentaikhoan`) REFERENCES `TaiKhoan` (`tentaikhoan`);
 
