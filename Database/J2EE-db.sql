@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: localhost
--- Thời gian đã tạo: Th10 02, 2023 lúc 04:02 PM
+-- Thời gian đã tạo: Th10 03, 2023 lúc 04:17 PM
 -- Phiên bản máy phục vụ: 10.4.28-MariaDB
 -- Phiên bản PHP: 8.1.17
 
@@ -52,7 +52,7 @@ CREATE TABLE `ChiTietGioHang` (
 
 CREATE TABLE `ChiTietHoaDon` (
   `mamathang` int(11) NOT NULL,
-  `maphieunhap` int(11) NOT NULL,
+  `mahoadon` int(11) NOT NULL,
   `soluong` int(11) NOT NULL,
   `gia` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -112,7 +112,7 @@ CREATE TABLE `ChucNang` (
 
 CREATE TABLE `DonVi` (
   `ma` int(11) NOT NULL,
-  `ten` int(11) NOT NULL
+  `ten` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -194,7 +194,8 @@ CREATE TABLE `MatHang` (
   `mamau` int(11) NOT NULL,
   `matrangthaisanpham` int(11) NOT NULL,
   `madonvi` int(11) NOT NULL,
-  `makichco` int(11) NOT NULL
+  `makichco` int(11) NOT NULL,
+  `giaban` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -272,8 +273,7 @@ CREATE TABLE `SanPham` (
   `ma` int(11) NOT NULL,
   `ten` varchar(255) NOT NULL,
   `anhminhhoa` varchar(255) NOT NULL,
-  `mota` varchar(255) NOT NULL,
-  `giaban` int(11) NOT NULL
+  `mota` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -365,8 +365,8 @@ ALTER TABLE `ChiTietGioHang`
 -- Chỉ mục cho bảng `ChiTietHoaDon`
 --
 ALTER TABLE `ChiTietHoaDon`
-  ADD PRIMARY KEY (`mamathang`,`maphieunhap`),
-  ADD KEY `ChiTietHoaDon_maphieunhap_PhieuNhap_ma` (`maphieunhap`);
+  ADD PRIMARY KEY (`mamathang`,`mahoadon`),
+  ADD KEY `ChiTietHoaDon_mahoadon_HoaDon_ma` (`mahoadon`);
 
 --
 -- Chỉ mục cho bảng `ChiTietLoaiSanPham`
@@ -562,6 +562,12 @@ ALTER TABLE `KichCo`
   MODIFY `ma` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT cho bảng `Loai`
+--
+ALTER TABLE `Loai`
+  MODIFY `ma` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT cho bảng `MatHang`
 --
 ALTER TABLE `MatHang`
@@ -649,8 +655,8 @@ ALTER TABLE `ChiTietGioHang`
 -- Các ràng buộc cho bảng `ChiTietHoaDon`
 --
 ALTER TABLE `ChiTietHoaDon`
-  ADD CONSTRAINT `ChiTietHoaDon_mamathang_MatHang_ma` FOREIGN KEY (`mamathang`) REFERENCES `MatHang` (`ma`),
-  ADD CONSTRAINT `ChiTietHoaDon_maphieunhap_PhieuNhap_ma` FOREIGN KEY (`maphieunhap`) REFERENCES `PhieuNhap` (`ma`);
+  ADD CONSTRAINT `ChiTietHoaDon_mahoadon_HoaDon_ma` FOREIGN KEY (`mahoadon`) REFERENCES `HoaDon` (`ma`),
+  ADD CONSTRAINT `ChiTietHoaDon_mamathang_MatHang_ma` FOREIGN KEY (`mamathang`) REFERENCES `MatHang` (`ma`);
 
 --
 -- Các ràng buộc cho bảng `ChiTietLoaiSanPham`
