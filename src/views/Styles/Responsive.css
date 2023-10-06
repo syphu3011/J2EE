@@ -1,0 +1,52 @@
+@media screen and (max-width:749px){
+     .app{
+          width:100%;
+          margin: 0 auto;
+     }
+     .menu{
+          display: block;
+     }
+     .Leftmenu{
+          width:100%;
+     }
+     .MenuRight{
+          width:100%;
+         text-align: center;
+     }
+     .RightMenu{
+          justify-content: center;
+          
+     }
+     .banner{
+          margin-top:132px;
+     }
+}
+@media screen and (min-width:750px) and (max-width:900px){
+     .app{
+          width:95%;
+          margin:0 auto;
+     }
+     .menuLeft{
+          width: 100%;
+          text-align: center;
+     }
+     .Leftmenu{
+          justify-content: center;
+          font-size: large;
+     }
+     
+     .MenuRight{
+          width:100%;
+         text-align: center;
+     }
+     .RightMenu{
+          justify-content: center;
+          
+     }
+     
+}
+@media screen and (min-width:901px) and (max-width:1200px){
+     .app{
+         
+     }
+}

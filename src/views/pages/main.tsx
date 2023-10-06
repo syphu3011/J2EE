@@ -1,19 +1,27 @@
 import * as React from 'react';  
-import Test from '../components/test';
+//import Test from '../components/test';
 import axios from 'axios';
+import {Layout} from "antd";
+import Header from'./../components/Header/header';
+import BannerHeader from "../components/banner/Banerheader";
+import "../Styles/style.css";
+import "../Styles/Responsive.css";
 export default class Main extends React.Component<any, any>   
 {  
     so() {
-        axios.post
+        axios.post 
     }
     render() {  
         return (
-        <>
-            <div>  
-        <h2>Hello React with TypeScript</h2>  
-        <Test/>
-            </div>
-        </>)
+            <div>
+                <Layout>
+                    <Header/>
+                    <div className="banner">
+                        <BannerHeader/>
+                    </div>
+                </Layout>
+                
+          </div>
         
-    }  
+   ) }  
 }  
