@@ -1,0 +1,75 @@
+/*Header*/
+body,html,*{
+     margin:0 ;
+     padding:0;
+     border:none;
+     box-sizing:border-box;
+     font-family: sans-serif;
+     
+}
+.appHeader{
+     width:100%;
+     height:50px;
+     margin:0 auto;
+     font-family: 'Times New Roman', Times, serif;
+}
+.promotionHeader{
+     background-color: White;
+     text-align: center;
+     height:20px;
+     margin-top:0;
+     margin-bottom: 2px;
+     
+}
+.promotionHeader h3{
+     color: red;
+     display:inline;
+     
+}
+.menuHeader{
+
+}.menu{
+     display:flex;
+    
+}
+.menuLeft{
+     width:100%;
+}
+.Leftmenu{
+     background-color: #F4AAC0;
+     color:White;
+     font-size:25px;
+     font-weight: bold;
+}
+.groupAo{
+     text-align: center;
+     border-bottom: 1px solid #e70c4e;
+     font-size: 25px;
+     color:#e70c4e;
+}
+
+.MenuRight{
+width:25%;
+font-size: x-large;
+}
+.RightMenu{
+     background-color: #F4AAC0;
+     font-size: large;
+     font-weight: bold;
+}
+.large-icon{
+     margin-top: 20px;
+     color:black;
+}
+/*banner*/
+.banner{
+     width: 100%;
+     margin-top:51px;
+     height:700px;
+}
+.Headerbanner{
+     height:700px;
+     background-size: cover;
+     background-repeat: no-repeat;
+}
+

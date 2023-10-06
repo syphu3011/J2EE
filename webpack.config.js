@@ -35,7 +35,8 @@ module.exports = {
             },
           {
             test: /\.(sa|sc|c)ss$/, // styles files
-            use: ["style-loader", "css-loader", "sass-loader"],
+            use: ["style-loader", "css-loader", "sass-loader","css-modules-typescript-loader"],
+           
           },
           {
             test: /\.(png|woff|woff2|eot|ttf|svg)$/, // to import images and fonts
@@ -51,4 +52,5 @@ module.exports = {
         })
     ],
     mode: "development",
+    
 };
