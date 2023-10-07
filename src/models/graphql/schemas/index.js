@@ -1,6 +1,7 @@
 const {gql} = require('apollo-server-express')
-const SanPhamType = require('./sanpham'); 
-const LoaiType = require('./loai'); 
+const phu = require('./index.phu')
+const thao = require('./index.thao')
+
 const rootType = gql`
  type Query {
      root: String
@@ -11,4 +12,4 @@ const rootType = gql`
 
 `;
 
-module.exports = [rootType, SanPhamType, LoaiType];
+module.exports = [rootType,...phu, ...thao];

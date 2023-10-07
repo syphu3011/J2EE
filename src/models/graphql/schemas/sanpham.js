@@ -9,21 +9,32 @@ type SanPham {
     giaban: Int!
     loai: [Loai!]
 }
-input taoSanPhamInput {
+input SanPhamInput {
     ten: String!
     anhminhhoa: String!
     mota: String!
     giaban: Int!
+    maloai: [Int!]
+    manhacungcap: [Int!]
 }
-type taoSanPhamResponse {
-    id: Int!
+type SanPhamResponseData {
+    ma: Int!
+    ten: String!
     mota: String!
     giaban: Int!
+    maloai: [Int!]
+    manhacungcap: [Int!]
+}
+type SanPhamResponse {
+    status: Int!,
+    message: String!
+    data: SanPhamResponseData
 }
 extend type Query {
     sanpham: [SanPham!]
 }
 extend type Mutation {
-    taoSanPham(input: taoSanPhamInput!): taoSanPhamResponse
+    taoSanPham(input: SanPhamInput!): SanPhamResponse
+    suaSanPham(input: SanPhamInput!): SanPhamResponse
 }
 `
