@@ -1,4 +1,4 @@
 // graphql/resolvers/index.ts
-const SanPhamResolvers = require('./sanpham')
-const LoaiResolvers = require('./loai')
-module.exports = [SanPhamResolvers, LoaiResolvers];
+const phu = require('./index.phu')
+const thao = require('./index.thao')
+module.exports = [...phu, ...thao];

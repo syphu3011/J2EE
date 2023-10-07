@@ -19,7 +19,8 @@ module.exports = (sequelize, DataTypes) => {
   Loai.init({
     ma: {
       type: DataTypes.INTEGER,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     ten: DataTypes.STRING,
     anhminhhoa: DataTypes.STRING,
