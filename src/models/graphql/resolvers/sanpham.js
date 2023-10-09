@@ -1,5 +1,7 @@
+const { Op } = require("sequelize")
 const {SanPham, sequelize, Loai, NhaCungCap} = require("../../database/models/")
 const STATUS_CODE = require("../const")
+
 module.exports = {
     Mutation: {
         async taoSanPham(root, args, context) {
@@ -85,7 +87,7 @@ module.exports = {
                 const sanpham = await SanPham.findByPk(ma)
                 await sanpham.setLoai([])
                 await sanpham.setNhaCungCap([])
-                await sanpham.save()
+                await sanpham.destroy()
                 transaction.commit
                 return {
                     status: STATUS_CODE.delete_success,
@@ -119,9 +121,40 @@ module.exports = {
                 }
             }
         },
-        async sanphamvoima(root, args, context) {
+        async sanphamvoithuoctinh(root, args, context) {
             try {
-                const sanpham = await SanPham.findByPk(args.ma);
+                const {ma = "", ten = ""} = args.input
+                const sanpham = await SanPham.findAll({
+                    where: {
+                        ma: {[Op.like]: '%' + ma + '%'},
+                        ten: {[Op.like]: '%' + ten + '%'}
+                    }
+                });
+                return {
+                    status: STATUS_CODE.query_success,
+                    message: "Lấy sản phẩm thành công!",
+                    data: sanpham
+                }
+            }
+            catch (e) {
+                return {
+                    status: STATUS_CODE.query_fail,
+                    message: "Sản phẩm không tồn tại!",
+                    data: []
+                }
+            }
+        },
+        async timkiemsanpham(root, args, context) {
+            try {
+                const {ma = "", ten = ""} = args.input
+                const sanpham = await SanPham.findAll({
+                    where: {
+                        [Op.or]: {
+                            ma: {[Op.like]: '%' + ma + '%'},
+                            ten: {[Op.like]: '%' + ten + '%'}
+                        }
+                    }
+                });
                 return {
                     status: STATUS_CODE.query_success,
                     message: "Lấy sản phẩm thành công!",

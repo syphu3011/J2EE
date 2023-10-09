@@ -13,14 +13,10 @@ type NhaCungCapQueryResponse {
   message: String!
   data: [NhaCungCap]
 }
-type NhaCungCapQueryVoiMaResponse {
-  status: Int!
-  message: String!
-  data: NhaCungCap
-}
 extend type Query {
   nhacungcap: NhaCungCapQueryResponse!
-  nhacungcapvoima(ma: Int!): NhaCungCapQueryVoiMaResponse!
+  nhacungcapvoithuoctinh(input: NhaCungCapQueryInput): NhaCungCapQueryResponse!
+  timkiemnhacungcap(input: NhaCungCapQueryInput): NhaCungCapQueryResponse!
 }
 input NhaCungCapUpdateInput {
   ma: Int!
@@ -36,6 +32,14 @@ input NhaCungCapInput {
   dienthoai: String!
   matrangthaincc: Int!
   masanpham: [Int!]
+}
+input NhaCungCapQueryInput {
+  ma: Int
+  ten: String
+  diachi: String
+  dienthoai: String
+  matrangthaincc: Int
+  tensanpham: String
 }
 type NhaCungCapData {
   ten: String!

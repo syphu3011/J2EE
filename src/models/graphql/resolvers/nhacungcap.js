@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const { NhaCungCap, SanPham, sequelize } = require("../../database/models");
 const STATUS_CODE = require("../const")
 module.exports = {
@@ -104,13 +105,63 @@ module.exports = {
         }
       }
     },
-    async nhacungcapvoima(root, args, context) {
+    async nhacungcapvoithuoctinh(root, args, context) {
       try {
-        const ma = args.ma
+        const {ma = "", ten = "", diachi = "", dienthoai = "", matrangthaincc = "", tensanpham = ""} = args.input
         const rs =  {
           status: STATUS_CODE.query_success,
           message: "Lấy nhà cung cấp thành công!",
-          data: await NhaCungCap.findByPk(ma)
+          data: await NhaCungCap.findAll({
+            where: [
+              {ma: {[Op.like]: "%" + ma + "%"}},
+              {ten: {[Op.like]: "%" + ten + "%"}},
+              {diachi: {[Op.like]: "%" + diachi + "%"}},
+              {dienthoai: {[Op.like]: "%" + dienthoai + "%"}},
+              {matrangthaincc: {[Op.like]: "%" + matrangthaincc + "%"}}
+            ],
+            include: [{
+              model: SanPham,
+              as: "SanPham",
+              where: {
+                ten: {[Op.like]: "%" + tensanpham + "%"}
+              }
+            }]
+          })
+        }
+        return rs
+      }
+      catch (e) {
+        return {
+          status: STATUS_CODE.query_fail,
+          message: "Nhà cung cấp không tồn tại!",
+          data: []
+        }
+      }
+    },
+    async timkiemnhacungcap(root, args, context) {
+      try {
+        const {ma = "", ten = "", diachi = "", dienthoai = "", matrangthaincc = "", tensanpham = ""} = args.input
+        const rs =  {
+          status: STATUS_CODE.query_success,
+          message: "Lấy nhà cung cấp thành công!",
+          data: await NhaCungCap.findAll({
+            where: {
+              [Op.or]: {
+                ma: {[Op.like]: "%" + ma + "%"},
+                ten: {[Op.like]: "%" + ten + "%"},
+                diachi: {[Op.like]: "%" + diachi + "%"},
+                dienthoai: {[Op.like]: "%" + dienthoai + "%"},
+                matrangthaincc: {[Op.like]: "%" + matrangthaincc + "%"},
+                include: [{
+                  model: SanPham,
+                  as: "SanPham",
+                  where: {
+                    ten: {[Op.like]: "%" + tensanpham + "%"}
+                  }
+                }]
+              }
+            },
+          })
         }
         return rs
       }
@@ -124,11 +175,11 @@ module.exports = {
     }
   },
   NhaCungCap: {
-    trangthai(loai) {
-      return loai.getTrangThai();
+    trangthai(nhacungcap) {
+      return nhacungcap.getTrangThai();
     },
-    sanpham(loai) {
-      return loai.getSanPham();
+    sanpham(nhacungcap) {
+      return nhacungcap.getSanPham();
     },
   },
 };
