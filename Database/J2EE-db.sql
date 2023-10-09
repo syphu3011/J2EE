@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: localhost
--- Thời gian đã tạo: Th10 09, 2023 lúc 12:15 PM
+-- Thời gian đã tạo: Th10 09, 2023 lúc 05:08 PM
 -- Phiên bản máy phục vụ: 10.4.28-MariaDB
 -- Phiên bản PHP: 8.0.28
 
@@ -58,7 +58,8 @@ CREATE TABLE `ChiTietHoaDon` (
   `soluong` int(11) NOT NULL,
   `gia` int(11) NOT NULL,
   `mamau` int(11) NOT NULL,
-  `makichco` int(11) NOT NULL
+  `makichco` int(11) NOT NULL,
+  `maphieunhap` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -376,10 +377,11 @@ ALTER TABLE `ChiTietGioHang`
 -- Chỉ mục cho bảng `ChiTietHoaDon`
 --
 ALTER TABLE `ChiTietHoaDon`
-  ADD PRIMARY KEY (`masanpham`,`mahoadon`,`mamau`,`makichco`),
+  ADD PRIMARY KEY (`masanpham`,`mahoadon`,`mamau`,`makichco`,`maphieunhap`),
   ADD KEY `ChiTietHoaDon_mahoadon_HoaDon_ma` (`mahoadon`),
-  ADD KEY `ChiTietHoaDon_mamau_MatHang_mamau` (`mamau`),
-  ADD KEY `ChiTietHoaDon_makichco_MatHang_makichco` (`makichco`);
+  ADD KEY `ChiTietHoaDon_makichco_HangTrongKho_makichco` (`makichco`),
+  ADD KEY `ChiTietHoaDon_mamau_HangTrongKho_mamau` (`mamau`),
+  ADD KEY `ChiTietHoaDon_maphieunhap_HangTrongKho_maphieunhap` (`maphieunhap`);
 
 --
 -- Chỉ mục cho bảng `ChiTietLoaiSanPham`
@@ -394,8 +396,8 @@ ALTER TABLE `ChiTietLoaiSanPham`
 ALTER TABLE `ChiTietPhieuNhap`
   ADD PRIMARY KEY (`masanpham`,`maphieunhap`,`mamau`,`makichco`),
   ADD KEY `ChiTietPhieuNhap_maphieunhap_PhieuNhap_ma` (`maphieunhap`),
-  ADD KEY `ChiTietPhieuNhap_mamau_MatHang_mamau` (`mamau`),
-  ADD KEY `ChiTietPhieuNhap_makichco_MatHang_makichco` (`makichco`);
+  ADD KEY `ChiTietPhieuNhap_makichco_HangTrongKho_makichco` (`makichco`),
+  ADD KEY `ChiTietPhieuNhap_mamau_HangTrongKho_mamau` (`mamau`);
 
 --
 -- Chỉ mục cho bảng `ChiTietQuyen`
@@ -504,7 +506,7 @@ ALTER TABLE `Quyen`
 -- Chỉ mục cho bảng `SanPham`
 --
 ALTER TABLE `SanPham`
-  ADD PRIMARY KEY (`ma`,`madonvi`),
+  ADD PRIMARY KEY (`ma`),
   ADD KEY `SanPham_madonvi_DonVi_ma` (`madonvi`);
 
 --
@@ -669,9 +671,10 @@ ALTER TABLE `ChiTietGioHang`
 --
 ALTER TABLE `ChiTietHoaDon`
   ADD CONSTRAINT `ChiTietHoaDon_mahoadon_HoaDon_ma` FOREIGN KEY (`mahoadon`) REFERENCES `HoaDon` (`ma`),
-  ADD CONSTRAINT `ChiTietHoaDon_makichco_MatHang_makichco` FOREIGN KEY (`makichco`) REFERENCES `MatHang` (`makichco`),
-  ADD CONSTRAINT `ChiTietHoaDon_mamau_MatHang_mamau` FOREIGN KEY (`mamau`) REFERENCES `MatHang` (`mamau`),
-  ADD CONSTRAINT `ChiTietHoaDon_masanpham_MatHang_masanpham` FOREIGN KEY (`masanpham`) REFERENCES `MatHang` (`masanpham`);
+  ADD CONSTRAINT `ChiTietHoaDon_makichco_HangTrongKho_makichco` FOREIGN KEY (`makichco`) REFERENCES `HangTrongKho` (`makichco`),
+  ADD CONSTRAINT `ChiTietHoaDon_mamau_HangTrongKho_mamau` FOREIGN KEY (`mamau`) REFERENCES `HangTrongKho` (`mamau`),
+  ADD CONSTRAINT `ChiTietHoaDon_maphieunhap_HangTrongKho_maphieunhap` FOREIGN KEY (`maphieunhap`) REFERENCES `HangTrongKho` (`maphieunhap`),
+  ADD CONSTRAINT `ChiTietHoaDon_masanpham_HangTrongKho_masanpham` FOREIGN KEY (`masanpham`) REFERENCES `HangTrongKho` (`masanpham`);
 
 --
 -- Các ràng buộc cho bảng `ChiTietLoaiSanPham`
@@ -684,10 +687,11 @@ ALTER TABLE `ChiTietLoaiSanPham`
 -- Các ràng buộc cho bảng `ChiTietPhieuNhap`
 --
 ALTER TABLE `ChiTietPhieuNhap`
-  ADD CONSTRAINT `ChiTietPhieuNhap_makichco_MatHang_makichco` FOREIGN KEY (`makichco`) REFERENCES `MatHang` (`makichco`),
-  ADD CONSTRAINT `ChiTietPhieuNhap_mamau_MatHang_mamau` FOREIGN KEY (`mamau`) REFERENCES `MatHang` (`mamau`),
+  ADD CONSTRAINT `ChiTietPhieuNhap_makichco_HangTrongKho_makichco` FOREIGN KEY (`makichco`) REFERENCES `HangTrongKho` (`makichco`),
+  ADD CONSTRAINT `ChiTietPhieuNhap_mamau_HangTrongKho_mamau` FOREIGN KEY (`mamau`) REFERENCES `HangTrongKho` (`mamau`),
+  ADD CONSTRAINT `ChiTietPhieuNhap_maphieunhap_HangTrongKho_ma` FOREIGN KEY (`maphieunhap`) REFERENCES `HangTrongKho` (`maphieunhap`),
   ADD CONSTRAINT `ChiTietPhieuNhap_maphieunhap_PhieuNhap_ma` FOREIGN KEY (`maphieunhap`) REFERENCES `PhieuNhap` (`ma`),
-  ADD CONSTRAINT `ChiTietPhieuNhap_masanpham_MatHang_masanpham` FOREIGN KEY (`masanpham`) REFERENCES `MatHang` (`masanpham`);
+  ADD CONSTRAINT `ChiTietPhieuNhap_masanpham_HangTrongKho_masanpham` FOREIGN KEY (`masanpham`) REFERENCES `HangTrongKho` (`masanpham`);
 
 --
 -- Các ràng buộc cho bảng `ChiTietQuyen`
