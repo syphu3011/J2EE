@@ -69,8 +69,28 @@ query getNhaCungCap {
     }
   }
 }
-query getNhaCungCapVoiMa {
-  nhacungcapvoima(ma: 10) {
+query getNhaCungCapVoiThuocTinh {
+  nhacungcapvoithuoctinh(input: { tensanpham: "Sanj"}) {
+    status
+    message
+    data {
+      ma
+      ten
+      diachi
+      dienthoai
+      trangthai {
+        ma
+        ten
+      }
+      sanpham {
+        ma
+        ten
+      }
+    }
+  }
+}
+query timkiemNhaCungCap {
+  timkiemnhacungcap(input: { tensanpham: "Sanj"}) {
     status
     message
     data {
@@ -173,6 +193,118 @@ mutation suattncc {
 }
 mutation xoattncc {
   xoaTrangThaiNhaCungCap(ma: 2) {
+    status
+    message
+  }
+}
+
+#loại
+query getloai{
+  loai{
+    status
+    message
+    data {
+      ma
+      ten
+      mota
+      loaicha {
+        ma
+        ten
+        mota
+      }
+      loaicon {
+        ma
+        ten
+        mota
+      }
+      sanpham {
+        ma
+        ten
+        mota
+      }
+    }
+  }
+}
+query getLoaiThuocTinh {
+  loaivoithuoctinh (input: {
+    ma: 4, mota: "l", maloaicha: 1,ten: "l"
+  }) {
+    status
+    message
+    data {
+      ma
+      ten
+      mota
+      loaicha {
+        ma
+        ten
+        mota
+      }
+      loaicon {
+        ma
+        ten
+        mota
+      }
+      sanpham {
+        ma
+        ten
+        mota
+      }
+    }
+  }
+}
+query timkiemLoaiThuocTinh {
+  timkiemloai (input: {
+    ma: 4, mota: "l", maloaicha: 1,ten: "l"
+  }) {
+    status
+    message
+    data {
+      ma
+      ten
+      mota
+      loaicha {
+        ma
+        ten
+        mota
+      }
+      loaicon {
+        ma
+        ten
+        mota
+      }
+      sanpham {
+        ma
+        ten
+        mota
+      }
+    }
+  }
+}
+mutation themloai {
+  taoLoai(input:{
+    ten: "loại vip"
+    mota:"vip lắm"
+    anhminhhoa: "dfsdff"
+  }) {
+    status
+    message
+  }
+}
+
+mutation sualoai {
+  suaLoai(input:{
+    ma: 4
+    ten: "loại vip"
+    mota:"vip lắm"
+    anhminhhoa: "dfsdff"
+  }) {
+    status
+    message
+  }
+}
+mutation xoaloai {
+  xoaLoai(ma: 4) {
     status
     message
   }

@@ -18,6 +18,10 @@ input SanPhamInput {
     maloai: [Int!]
     manhacungcap: [Int!]
 }
+input SanPhamQuery {
+    ma: Int
+    ten: String
+}
 type SanPhamResponse {
     status: Int!,
     message: String!
@@ -27,14 +31,10 @@ type SanPhamQueryResponse {
     message: String!,
     data: [SanPham!]
 }
-type SanPhamQueryVoiMaResponse {
-    status: Int!,
-    message: String!,
-    data: SanPham!
-}
 extend type Query {
     sanpham: SanPhamQueryResponse
-    sanphamvoima(ma: Int!): SanPhamQueryVoiMaResponse
+    sanphamvoithuoctinh(input: SanPhamQuery): SanPhamQueryResponse
+    timkiemsanpham(input: SanPhamQuery): SanPhamQueryResponse
 }
 extend type Mutation {
     taoSanPham(input: SanPhamInput!): SanPhamResponse

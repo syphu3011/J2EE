@@ -97,7 +97,7 @@ module.exports = {
                 const ma = args.ma
                 const ttncc = await TrangThaiNhaCungCap.findByPk(ma)
                 await ttncc.setNhaCungCap([])
-                await ttncc.save()
+                await ttncc.destroy()
                 transaction.commit()
                 return {
                     status: STATUS_CODE.delete_success,
