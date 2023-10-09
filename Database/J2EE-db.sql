@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: localhost
--- Thời gian đã tạo: Th10 03, 2023 lúc 04:17 PM
+-- Thời gian đã tạo: Th10 09, 2023 lúc 12:15 PM
 -- Phiên bản máy phục vụ: 10.4.28-MariaDB
--- Phiên bản PHP: 8.1.17
+-- Phiên bản PHP: 8.0.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Cơ sở dữ liệu: `J2EE`
+-- Cơ sở dữ liệu: `j2ee`
 --
 
 -- --------------------------------------------------------
@@ -39,9 +39,11 @@ CREATE TABLE `ChiTietCungCap` (
 --
 
 CREATE TABLE `ChiTietGioHang` (
-  `mamathang` int(11) NOT NULL,
+  `masanpham` int(11) NOT NULL,
   `makhachhang` int(11) NOT NULL,
-  `soluong` int(11) NOT NULL
+  `soluong` int(11) NOT NULL,
+  `mamau` int(11) NOT NULL,
+  `makichco` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -51,10 +53,12 @@ CREATE TABLE `ChiTietGioHang` (
 --
 
 CREATE TABLE `ChiTietHoaDon` (
-  `mamathang` int(11) NOT NULL,
+  `masanpham` int(11) NOT NULL,
   `mahoadon` int(11) NOT NULL,
   `soluong` int(11) NOT NULL,
-  `gia` int(11) NOT NULL
+  `gia` int(11) NOT NULL,
+  `mamau` int(11) NOT NULL,
+  `makichco` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -75,11 +79,13 @@ CREATE TABLE `ChiTietLoaiSanPham` (
 --
 
 CREATE TABLE `ChiTietPhieuNhap` (
-  `mamathang` int(11) NOT NULL,
+  `masanpham` int(11) NOT NULL,
   `maphieunhap` int(11) NOT NULL,
   `soluong` int(11) NOT NULL,
   `gianhap` int(11) NOT NULL,
-  `ghichu` varchar(255) NOT NULL
+  `ghichu` varchar(255) NOT NULL,
+  `mamau` int(11) NOT NULL,
+  `makichco` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -122,9 +128,11 @@ CREATE TABLE `DonVi` (
 --
 
 CREATE TABLE `HangTrongKho` (
-  `mamathang` int(11) NOT NULL,
+  `masanpham` int(11) NOT NULL,
   `maphieunhap` int(11) NOT NULL,
-  `soluong` int(11) NOT NULL
+  `soluong` int(11) NOT NULL,
+  `mamau` int(11) NOT NULL,
+  `makichco` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -154,7 +162,8 @@ CREATE TABLE `KhachHang` (
   `sodienthoai` int(11) NOT NULL,
   `tentaikhoan` varchar(255) NOT NULL,
   `ngaythamgia` datetime NOT NULL,
-  `matrangthai` int(11) NOT NULL
+  `matrangthai` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -189,11 +198,9 @@ CREATE TABLE `Loai` (
 --
 
 CREATE TABLE `MatHang` (
-  `ma` int(11) NOT NULL,
   `masanpham` int(11) NOT NULL,
   `mamau` int(11) NOT NULL,
   `matrangthaisanpham` int(11) NOT NULL,
-  `madonvi` int(11) NOT NULL,
   `makichco` int(11) NOT NULL,
   `giaban` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -236,7 +243,8 @@ CREATE TABLE `NhanVien` (
   `sodienthoai` varchar(11) NOT NULL,
   `socccd` varchar(11) NOT NULL,
   `tentaikhoan` varchar(255) NOT NULL,
-  `matrangthai` int(11) NOT NULL
+  `matrangthai` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -273,7 +281,8 @@ CREATE TABLE `SanPham` (
   `ma` int(11) NOT NULL,
   `ten` varchar(255) NOT NULL,
   `anhminhhoa` varchar(255) NOT NULL,
-  `mota` varchar(255) NOT NULL
+  `mota` varchar(255) NOT NULL,
+  `madonvi` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -358,15 +367,19 @@ ALTER TABLE `ChiTietCungCap`
 -- Chỉ mục cho bảng `ChiTietGioHang`
 --
 ALTER TABLE `ChiTietGioHang`
-  ADD PRIMARY KEY (`mamathang`,`makhachhang`),
-  ADD KEY `ChiTietGioHang_makhachhang_KhachHang_ma` (`makhachhang`);
+  ADD PRIMARY KEY (`masanpham`,`makhachhang`,`mamau`,`makichco`),
+  ADD KEY `ChiTietGioHang_makhachhang_KhachHang_ma` (`makhachhang`),
+  ADD KEY `ChiTietGioHang_mamau_MatHang_mamau` (`mamau`),
+  ADD KEY `ChiTietGioHang_makichco_MatHang_makichco` (`makichco`);
 
 --
 -- Chỉ mục cho bảng `ChiTietHoaDon`
 --
 ALTER TABLE `ChiTietHoaDon`
-  ADD PRIMARY KEY (`mamathang`,`mahoadon`),
-  ADD KEY `ChiTietHoaDon_mahoadon_HoaDon_ma` (`mahoadon`);
+  ADD PRIMARY KEY (`masanpham`,`mahoadon`,`mamau`,`makichco`),
+  ADD KEY `ChiTietHoaDon_mahoadon_HoaDon_ma` (`mahoadon`),
+  ADD KEY `ChiTietHoaDon_mamau_MatHang_mamau` (`mamau`),
+  ADD KEY `ChiTietHoaDon_makichco_MatHang_makichco` (`makichco`);
 
 --
 -- Chỉ mục cho bảng `ChiTietLoaiSanPham`
@@ -379,8 +392,10 @@ ALTER TABLE `ChiTietLoaiSanPham`
 -- Chỉ mục cho bảng `ChiTietPhieuNhap`
 --
 ALTER TABLE `ChiTietPhieuNhap`
-  ADD PRIMARY KEY (`mamathang`,`maphieunhap`),
-  ADD KEY `ChiTietPhieuNhap_maphieunhap_PhieuNhap_ma` (`maphieunhap`);
+  ADD PRIMARY KEY (`masanpham`,`maphieunhap`,`mamau`,`makichco`),
+  ADD KEY `ChiTietPhieuNhap_maphieunhap_PhieuNhap_ma` (`maphieunhap`),
+  ADD KEY `ChiTietPhieuNhap_mamau_MatHang_mamau` (`mamau`),
+  ADD KEY `ChiTietPhieuNhap_makichco_MatHang_makichco` (`makichco`);
 
 --
 -- Chỉ mục cho bảng `ChiTietQuyen`
@@ -405,8 +420,10 @@ ALTER TABLE `DonVi`
 -- Chỉ mục cho bảng `HangTrongKho`
 --
 ALTER TABLE `HangTrongKho`
-  ADD PRIMARY KEY (`mamathang`,`maphieunhap`),
-  ADD KEY `HangTrongKho_maphieunhap_PhieuNhap_ma` (`maphieunhap`);
+  ADD PRIMARY KEY (`masanpham`,`maphieunhap`,`mamau`,`makichco`),
+  ADD KEY `HangTrongKho_maphieunhap_PhieuNhap_ma` (`maphieunhap`),
+  ADD KEY `HangTrongKho_mamau_MatHang_mamau` (`mamau`),
+  ADD KEY `HangTrongKho_makichco_MatHang_makichco` (`makichco`);
 
 --
 -- Chỉ mục cho bảng `HoaDon`
@@ -442,12 +459,11 @@ ALTER TABLE `Loai`
 -- Chỉ mục cho bảng `MatHang`
 --
 ALTER TABLE `MatHang`
-  ADD PRIMARY KEY (`ma`,`masanpham`,`mamau`,`matrangthaisanpham`,`madonvi`,`makichco`),
+  ADD PRIMARY KEY (`masanpham`,`mamau`,`matrangthaisanpham`,`makichco`),
   ADD KEY `MatHang_makichco_KichCo_ma` (`makichco`),
   ADD KEY `MatHang_mamau_Mau_ma` (`mamau`),
   ADD KEY `MatHang_masanpham_SanPham_ma` (`masanpham`),
-  ADD KEY `MatHang_matrangthaisanpham_TrangThaiSanPham_ma` (`matrangthaisanpham`),
-  ADD KEY `MatHang_madonvi_DonVi_ma` (`madonvi`);
+  ADD KEY `MatHang_matrangthaisanpham_TrangThaiSanPham_ma` (`matrangthaisanpham`);
 
 --
 -- Chỉ mục cho bảng `Mau`
@@ -488,7 +504,8 @@ ALTER TABLE `Quyen`
 -- Chỉ mục cho bảng `SanPham`
 --
 ALTER TABLE `SanPham`
-  ADD PRIMARY KEY (`ma`);
+  ADD PRIMARY KEY (`ma`,`madonvi`),
+  ADD KEY `SanPham_madonvi_DonVi_ma` (`madonvi`);
 
 --
 -- Chỉ mục cho bảng `TaiKhoan`
@@ -568,12 +585,6 @@ ALTER TABLE `Loai`
   MODIFY `ma` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT cho bảng `MatHang`
---
-ALTER TABLE `MatHang`
-  MODIFY `ma` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT cho bảng `Mau`
 --
 ALTER TABLE `Mau`
@@ -649,14 +660,18 @@ ALTER TABLE `ChiTietCungCap`
 --
 ALTER TABLE `ChiTietGioHang`
   ADD CONSTRAINT `ChiTietGioHang_makhachhang_KhachHang_ma` FOREIGN KEY (`makhachhang`) REFERENCES `KhachHang` (`ma`),
-  ADD CONSTRAINT `ChiTietGioHang_mamathang_MatHang_ma` FOREIGN KEY (`mamathang`) REFERENCES `MatHang` (`ma`);
+  ADD CONSTRAINT `ChiTietGioHang_makichco_MatHang_makichco` FOREIGN KEY (`makichco`) REFERENCES `MatHang` (`makichco`),
+  ADD CONSTRAINT `ChiTietGioHang_mamau_MatHang_mamau` FOREIGN KEY (`mamau`) REFERENCES `MatHang` (`mamau`),
+  ADD CONSTRAINT `ChiTietGioHang_masanpham_MatHang_masanpham` FOREIGN KEY (`masanpham`) REFERENCES `MatHang` (`masanpham`);
 
 --
 -- Các ràng buộc cho bảng `ChiTietHoaDon`
 --
 ALTER TABLE `ChiTietHoaDon`
   ADD CONSTRAINT `ChiTietHoaDon_mahoadon_HoaDon_ma` FOREIGN KEY (`mahoadon`) REFERENCES `HoaDon` (`ma`),
-  ADD CONSTRAINT `ChiTietHoaDon_mamathang_MatHang_ma` FOREIGN KEY (`mamathang`) REFERENCES `MatHang` (`ma`);
+  ADD CONSTRAINT `ChiTietHoaDon_makichco_MatHang_makichco` FOREIGN KEY (`makichco`) REFERENCES `MatHang` (`makichco`),
+  ADD CONSTRAINT `ChiTietHoaDon_mamau_MatHang_mamau` FOREIGN KEY (`mamau`) REFERENCES `MatHang` (`mamau`),
+  ADD CONSTRAINT `ChiTietHoaDon_masanpham_MatHang_masanpham` FOREIGN KEY (`masanpham`) REFERENCES `MatHang` (`masanpham`);
 
 --
 -- Các ràng buộc cho bảng `ChiTietLoaiSanPham`
@@ -669,8 +684,10 @@ ALTER TABLE `ChiTietLoaiSanPham`
 -- Các ràng buộc cho bảng `ChiTietPhieuNhap`
 --
 ALTER TABLE `ChiTietPhieuNhap`
-  ADD CONSTRAINT `ChiTietPhieuNhap_mamathang_MatHang_ma` FOREIGN KEY (`mamathang`) REFERENCES `MatHang` (`ma`),
-  ADD CONSTRAINT `ChiTietPhieuNhap_maphieunhap_PhieuNhap_ma` FOREIGN KEY (`maphieunhap`) REFERENCES `PhieuNhap` (`ma`);
+  ADD CONSTRAINT `ChiTietPhieuNhap_makichco_MatHang_makichco` FOREIGN KEY (`makichco`) REFERENCES `MatHang` (`makichco`),
+  ADD CONSTRAINT `ChiTietPhieuNhap_mamau_MatHang_mamau` FOREIGN KEY (`mamau`) REFERENCES `MatHang` (`mamau`),
+  ADD CONSTRAINT `ChiTietPhieuNhap_maphieunhap_PhieuNhap_ma` FOREIGN KEY (`maphieunhap`) REFERENCES `PhieuNhap` (`ma`),
+  ADD CONSTRAINT `ChiTietPhieuNhap_masanpham_MatHang_masanpham` FOREIGN KEY (`masanpham`) REFERENCES `MatHang` (`masanpham`);
 
 --
 -- Các ràng buộc cho bảng `ChiTietQuyen`
@@ -683,8 +700,10 @@ ALTER TABLE `ChiTietQuyen`
 -- Các ràng buộc cho bảng `HangTrongKho`
 --
 ALTER TABLE `HangTrongKho`
-  ADD CONSTRAINT `HangTrongKho_mamathang_MatHang_ma` FOREIGN KEY (`mamathang`) REFERENCES `MatHang` (`ma`),
-  ADD CONSTRAINT `HangTrongKho_maphieunhap_PhieuNhap_ma` FOREIGN KEY (`maphieunhap`) REFERENCES `PhieuNhap` (`ma`);
+  ADD CONSTRAINT `HangTrongKho_makichco_MatHang_makichco` FOREIGN KEY (`makichco`) REFERENCES `MatHang` (`makichco`),
+  ADD CONSTRAINT `HangTrongKho_mamau_MatHang_mamau` FOREIGN KEY (`mamau`) REFERENCES `MatHang` (`mamau`),
+  ADD CONSTRAINT `HangTrongKho_maphieunhap_PhieuNhap_ma` FOREIGN KEY (`maphieunhap`) REFERENCES `PhieuNhap` (`ma`),
+  ADD CONSTRAINT `HangTrongKho_masanpham_MatHang_masanpham` FOREIGN KEY (`masanpham`) REFERENCES `MatHang` (`masanpham`);
 
 --
 -- Các ràng buộc cho bảng `HoaDon`
@@ -711,7 +730,6 @@ ALTER TABLE `Loai`
 -- Các ràng buộc cho bảng `MatHang`
 --
 ALTER TABLE `MatHang`
-  ADD CONSTRAINT `MatHang_madonvi_DonVi_ma` FOREIGN KEY (`madonvi`) REFERENCES `DonVi` (`ma`),
   ADD CONSTRAINT `MatHang_makichco_KichCo_ma` FOREIGN KEY (`makichco`) REFERENCES `KichCo` (`ma`),
   ADD CONSTRAINT `MatHang_mamau_Mau_ma` FOREIGN KEY (`mamau`) REFERENCES `Mau` (`ma`),
   ADD CONSTRAINT `MatHang_masanpham_SanPham_ma` FOREIGN KEY (`masanpham`) REFERENCES `SanPham` (`ma`),
@@ -736,6 +754,12 @@ ALTER TABLE `NhanVien`
 ALTER TABLE `PhieuNhap`
   ADD CONSTRAINT `PhieuNhap_manhacungcap_NhaCungCap_ma` FOREIGN KEY (`manhacungcap`) REFERENCES `NhaCungCap` (`ma`),
   ADD CONSTRAINT `PhieuNhap_manhanvien_NhanVien_ma` FOREIGN KEY (`manhanvien`) REFERENCES `NhanVien` (`ma`);
+
+--
+-- Các ràng buộc cho bảng `SanPham`
+--
+ALTER TABLE `SanPham`
+  ADD CONSTRAINT `SanPham_madonvi_DonVi_ma` FOREIGN KEY (`madonvi`) REFERENCES `DonVi` (`ma`);
 
 --
 -- Các ràng buộc cho bảng `TaiKhoan`
