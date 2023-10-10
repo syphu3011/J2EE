@@ -20,10 +20,6 @@ export default class Main extends React.Component<any, any>
                 <Layout>
                     <Header/>
                     <PageContent/>
-                    <PageContent/>
-                    <PageContent/>
-                    <PageContent/>
-                    <PageContent/>
                 </Layout>
                 </BrowserRouter>
                 
