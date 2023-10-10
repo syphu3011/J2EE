@@ -1,8 +1,13 @@
 import {Menu} from "antd";
-import React from "react";
+//import React from "react";
 import {CaretDownOutlined} from "@ant-design/icons";
-class MenuLeft extends React.Component{
-     render(){
+import { useNavigate } from "react-router-dom";
+function MenuLeft(){
+     //render(){
+     const navigate = useNavigate();
+     const onMenuClick = (item)=>{
+          navigate(`/${item.key}`);
+     }
      const labelAo=(
           <span>
                Thời trang
@@ -15,17 +20,19 @@ class MenuLeft extends React.Component{
                <CaretDownOutlined/>
           </span>
      )
-     return (<div className="menuLeft">
-     <Menu className="Leftmenu"mode="horizontal" style={{height:'80px'}}
+     
+     return (
+     <div className="menuLeft">
+     <Menu onClick={onMenuClick} className="Leftmenu"mode="horizontal" 
                          items={[
                          {
                               label:"Trang chủ",
-                              key:"home",
-                              style:{marginLeft:'50px',marginTop:'13px'},
+                              key:"",
+                              style:{marginLeft:'50px',marginTop:'5px'},
                          },{
                               label:labelAo,
                               key:"fashion",
-                              style:{marginTop:'13px'},
+                              style:{marginTop:'5px'},
                               children:[
                                    
                                    {
@@ -35,19 +42,19 @@ class MenuLeft extends React.Component{
                                         children:[
                                              {
                                                   label:"Áo thun",
-                                                  key:"thun",
+                                                  key:"Aothun",
                                                   className:"groupAo",
                                              },{
                                                   label:"Áo sơ mi",
-                                                  key:"somi",
+                                                  key:"Aosomi",
                                                   className:"groupAo",
                                              },{
                                                   label:"Áo kiểu",
-                                                  key:"aokieu",
+                                                  key:"Aokieu",
                                                   className:"groupAo",
                                              },{
                                                   label:"Áo polo",
-                                                  key:"polo",
+                                                  key:"Aokieupolo",
                                                   className:"groupAo",
                                              }
                                              
@@ -83,11 +90,11 @@ class MenuLeft extends React.Component{
                                         children:[
                                              {
                                                   label:"Đầm và jumpsuit",
-                                                  key:"jump",
+                                                  key:"jump&dress",
                                                   className:"groupAo",
                                              },{
                                                   label:"Chân váy",
-                                                  key:"vay",
+                                                  key:"Chanvay",
                                                   className:"groupAo",
                                              }
                                         ]
@@ -122,7 +129,7 @@ class MenuLeft extends React.Component{
                          },{
                               label:labelPhuKien,
                               key :"phukien",
-                              style:{marginTop:'13px'},
+                              style:{marginTop:'5px'},
                               children:[
                                    {
                                         label:"Nón",
@@ -146,10 +153,11 @@ class MenuLeft extends React.Component{
                          },{
                               label:"Giới thiệu",
                               key:"Introduce",
-                              style:{marginTop:'13px'},
+                              style:{marginTop:'5px'},
                          }
                          ]}/>
      </div>)
      }
-}
+
+//}
 export default MenuLeft;
