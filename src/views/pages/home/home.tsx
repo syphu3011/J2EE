@@ -1,6 +1,7 @@
 import React from 'react';
 import BannerHeader from '../../components/banner/Banerheader';
 import MenuCard     from '../../components/content/menuCard';
+import AllProduct from './allProduct';
 export default class Home extends React.Component{
      render(){
           return(
@@ -18,7 +19,7 @@ export default class Home extends React.Component{
                          </div>
                     </div>
                     <div className="main">
-                         
+                         <AllProduct/>
                     </div>
                     </div>
                </div>

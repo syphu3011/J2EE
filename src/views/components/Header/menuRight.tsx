@@ -1,7 +1,7 @@
 import React from 'react';
 import {Menu} from "antd";
 import {SearchOutlined,ShoppingCartOutlined,UserOutlined,LoginOutlined,PlusCircleOutlined} from "@ant-design/icons";
-import SearchItem from "./search";
+import SearchItem from "../search/search";
 
 const MenuRight =()=>{
      const [visible, setVisible] = React.useState(false);    
