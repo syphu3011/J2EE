@@ -3,9 +3,11 @@ import * as React from 'react';
 import axios from 'axios';
 import {Layout} from "antd";
 import Header from'./../components/Header/header';
-import BannerHeader from "../components/banner/Banerheader";
 import "../Styles/style.css";
 import "../Styles/Responsive.css";
+import "../components/content/menuCard"
+import PageContent from '../components/content/content';
+import { BrowserRouter } from 'react-router-dom';
 export default class Main extends React.Component<any, any>   
 {  
     so() {
@@ -14,12 +16,16 @@ export default class Main extends React.Component<any, any>
     render() {  
         return (
             <div>
+                <BrowserRouter>
                 <Layout>
                     <Header/>
-                    <div className="banner">
-                        <BannerHeader/>
-                    </div>
+                    <PageContent/>
+                    <PageContent/>
+                    <PageContent/>
+                    <PageContent/>
+                    <PageContent/>
                 </Layout>
+                </BrowserRouter>
                 
           </div>
         

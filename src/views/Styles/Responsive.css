@@ -18,7 +18,17 @@
           
      }
      .banner{
-          margin-top:132px;
+          margin-top:76px;
+     }
+     .allProduct{
+          margin-left:25%;
+     }
+     .input{
+          position: absolute;
+          border-radius: 2px;
+          top: 100%;
+          right: 8rem;
+          
      }
 }
 @media screen and (min-width:750px) and (max-width:900px){
@@ -43,10 +53,23 @@
           justify-content: center;
           
      }
-     
-}
+     .allProduct{
+          margin-left:30%;
+     }
+     .input{
+          right: 12rem;
+     }
+} 
 @media screen and (min-width:901px) and (max-width:1200px){
      .app{
          
      }
+     .input{
+          right: 12rem;
+     }
+}
+@media screen and (min-width:1201px) and (max-width:1700px){
+     .input{
+          right: 13rem;
+     } 
 }
