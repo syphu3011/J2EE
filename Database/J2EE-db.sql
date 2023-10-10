@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: localhost
--- Thời gian đã tạo: Th10 09, 2023 lúc 05:08 PM
+-- Thời gian đã tạo: Th10 10, 2023 lúc 04:23 PM
 -- Phiên bản máy phục vụ: 10.4.28-MariaDB
 -- Phiên bản PHP: 8.0.28
 
@@ -84,7 +84,6 @@ CREATE TABLE `ChiTietPhieuNhap` (
   `maphieunhap` int(11) NOT NULL,
   `soluong` int(11) NOT NULL,
   `gianhap` int(11) NOT NULL,
-  `ghichu` varchar(255) NOT NULL,
   `mamau` int(11) NOT NULL,
   `makichco` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -258,7 +257,8 @@ CREATE TABLE `PhieuNhap` (
   `ma` int(11) NOT NULL,
   `ngaynhap` datetime NOT NULL,
   `manhacungcap` int(11) NOT NULL,
-  `manhanvien` int(11) NOT NULL
+  `manhanvien` int(11) NOT NULL,
+  `ghichu` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -596,6 +596,12 @@ ALTER TABLE `Mau`
 -- AUTO_INCREMENT cho bảng `NhaCungCap`
 --
 ALTER TABLE `NhaCungCap`
+  MODIFY `ma` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT cho bảng `NhanVien`
+--
+ALTER TABLE `NhanVien`
   MODIFY `ma` int(11) NOT NULL AUTO_INCREMENT;
 
 --
