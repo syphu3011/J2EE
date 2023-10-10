@@ -12,7 +12,8 @@ module.exports = {
   test: {
     username: 'root',
     password: null,
-    database: 'database_test',
+    database: 'j2ee',
+    // database: 'database_test',
     host: '127.0.0.1',
     dialect: 'postgres',
     use_env_variable: 'TEST_DATABASE_URL',
