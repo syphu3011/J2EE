@@ -1,3 +1,4 @@
+const { GraphQLDateTime } = require("graphql");
 const {gql} = require('apollo-server-express')
 const phu = require('./index.phu')
 const thao = require('./index.thao')
@@ -11,5 +12,4 @@ const rootType = gql`
  }
 
 `;
-
 module.exports = [rootType,...phu, ...thao];

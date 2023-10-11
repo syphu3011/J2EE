@@ -15,14 +15,14 @@ module.exports = (sequelize, DataTypes) => {
   }
   ChiTietLoaiSanPham.init({
     masanpham: {type: DataTypes.INTEGER,
-      primaryKey: true,
-      references: 'SanPham', 
-      referencesKey: 'ma' 
+      // primaryKey: true,
+      // references: 'SanPham', 
+      // referencesKey: 'ma' 
     },
     maloai: {type: DataTypes.INTEGER,
-      primaryKey: true,
-      references: 'Loai', 
-      referencesKey: 'ma' 
+      // primaryKey: true,
+      // references: 'Loai', 
+      // referencesKey: 'ma' 
     }
   }, {
     sequelize,
