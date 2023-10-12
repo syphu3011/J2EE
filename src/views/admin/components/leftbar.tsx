@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import { GiClothes} from 'react-icons/gi';
 import { IoReceiptSharp} from 'react-icons/io5';
 import {TbPackageImport} from 'react-icons/tb';
@@ -33,8 +34,8 @@ function getItem(
 
 const items: MenuItem[] = [
   getItem('Trang chủ', '', <HomeOutlined />),
-  getItem('Khách hàng', '2', <TeamOutlined />, [getItem('option 1', 'Customer'), getItem('option 2', '8')]),
-  getItem('Sản phẩm', '9', <GiClothes />,[getItem('option1','10')] ),
+  getItem('Khách hàng', '', <TeamOutlined />, [getItem('Thông tin KH', 'Customer'), getItem('Tài khoản KH', 'AccountCus')]),
+  getItem('Sản phẩm', 'Pro', <GiClothes />,[getItem('Sản Phẩm','Product'),getItem('kích thước','Size'),getItem('Máu sắc','color')] ),
   getItem('Đơn hàng', '11', <IoReceiptSharp />,[getItem('option1','Receipt')] ),
   getItem('Nhập hàng', '13', <TbPackageImport />,[getItem('option1','14')] ),
   getItem('Nhân viên', '15', <HiUserGroup />,[getItem('option1','16')] ),
@@ -55,7 +56,7 @@ export default function Leftbar() {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Header style={{ display: 'flex', alignItems: 'center' }} className='header'>
-        <div className="demo-logo" />
+        <div  />
         <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} items={items1} />
       </Header>
       <Layout>
