@@ -8,6 +8,8 @@ import "../Styles/Responsive.css";
 import "../components/content/menuCard"
 import PageContent from '../components/content/content';
 import { BrowserRouter } from 'react-router-dom';
+import ChatApp from '../components/chat/app';
+
 export default class Main extends React.Component<any, any>   
 {  
     so() {
@@ -20,6 +22,7 @@ export default class Main extends React.Component<any, any>
                 <Layout>
                     <Header/>
                     <PageContent/>
+                    <ChatApp />
                 </Layout>
                 </BrowserRouter>
                 

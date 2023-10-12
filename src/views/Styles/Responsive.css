@@ -59,6 +59,31 @@
      .input{
           right: 12rem;
      }
+     .slider_1{
+          margin:5px;
+     }
+     #card_1{
+          margin: 5px;
+     }
+     #card_1 p{
+          font-size: 15px;
+     }
+     .ant-carousel .slick-prev,
+.ant-carousel .slick-next,
+.ant-carousel .slick-prev:hover,
+.ant-carousel .slick-next:hover {
+     width:5%;
+  z-index: 3;
+  margin-right: 20px;
+  font-size: 25px;
+  margin-top:-20px;
+  color:#e70c4e;
+  border-radius:2px ;
+     height:28px;
+  background-color: #f4aac062;
+
+}
+     
 } 
 @media screen and (min-width:901px) and (max-width:1200px){
      .app{
@@ -66,6 +91,30 @@
      }
      .input{
           right: 12rem;
+     }
+     
+     .slider_1{
+          margin:2px;
+     }
+     #card_1{
+          margin: 5px;
+     }
+     #card_1 p{
+          font-size: 15px;
+     }.ant-carousel .slick-prev,
+     .ant-carousel .slick-next,
+     .ant-carousel .slick-prev:hover,
+     .ant-carousel .slick-next:hover {
+     width:5%;
+       z-index: 3;
+       margin-right: 20px;
+       font-size: 25px;
+       margin-top:-30px;
+       color:#e70c4e;
+       border-radius:2px ;
+          height:28px;
+       background-color: #f4aac062;
+     
      }
 }
 @media screen and (min-width:1201px) and (max-width:1700px){

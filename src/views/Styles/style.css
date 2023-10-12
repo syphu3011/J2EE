@@ -137,6 +137,7 @@ width:25%;
      text-align: center;
      border-radius: 3px;
      background: rgba(244, 170, 192, 0.35);
+     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
      width:auto;
      justify-content: center;
      width: 300px;
@@ -144,7 +145,6 @@ width:25%;
      margin-right: 40%;
      font-size: larger;
      color:gray;
-     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
 
 }
 .mainAllProduct{
@@ -153,12 +153,64 @@ width:25%;
      display:flex;
 }
 .bannerSale{
+     width: 40%;
+     margin:25px;
+     cursor: pointer;
+
+}
+.slider_1{
+     width:54%;
+     display:flex;
+     justify-content: center;
+     margin:20px;
+}
+.sliderProduct{
+     width:100%;
+     margin-top: 30px;
+
+}
+#card_1{
+     margin : 20px;
+     border-radius: 10px;
+     background: linear-gradient(180deg, rgba(244, 170, 192, 0.00) 0%, rgba(242, 81, 129, 0.35) 30.73%);
+     box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.25), 0px 3px 3px 0px rgba(0, 0, 0, 0.25);
+     color: #464142;
+     text-align: center;
+
+}
+#card_1 Image{
+     border-radius: 10px;
+}
+#card_1 p{
+     color:black;
+     font-size: 20px;
+     font-style: normal;
+     font-weight: bolder;
+     line-height: normal;
+     margin:5px;
+     text-align: center;
+}
+.ant-carousel .slick-prev,
+.ant-carousel .slick-next,
+.ant-carousel .slick-prev:hover,
+.ant-carousel .slick-next:hover {
+     width:5%;
+  z-index: 3;
+  margin-right: 15px;
+  font-size: 25px;
+  margin-top:-100px;
+  color:#e70c4e;
+  border-radius:2px ;
+     height:28px;
+  background-color: #f4aac062;
+
+}
+#sale_2{
+     margin-top:50px;
      background-repeat: no-repeat;
      background-size: cover;
-     width: 50%;
-     height:300px;
-     margin :20px;
 }
+
 #search-box{
      height:50px;
      font-size: 20px;
@@ -174,6 +226,9 @@ Input::placeholder{
      height:50px;
      background-color: #e70c4e;
      margin-left:-55px;
+}
+#btn-Search:hover{
+     background-color: #F4AAC0;
 }
 .input{
      position: absolute;
