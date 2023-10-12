@@ -42,7 +42,16 @@ module.exports = {
             loader: "url-loader",
             options: { limit: false },
           },
+          {
+            test: /\.(png|jpe?g|gif|jp2|webp)$/,
+            loader: 'file-loader',
+            options: {
+                name: '[name].[ext]',
+            },
+          }
         ],
+
+
       },
     plugins: [
         new HtmlWebpackPlugin({
