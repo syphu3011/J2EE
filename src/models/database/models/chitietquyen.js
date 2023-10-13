@@ -9,6 +9,14 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            ChiTietQuyen.belongsTo(models.ChucNang, {
+                as: "ChucNang",
+                foreignKey: "machucnang",
+            });
+            ChiTietQuyen.belongsTo(models.Quyen, {
+                as: "Quyen",
+                foreignKey: "maquyen",
+            });
         }
     }
     ChiTietQuyen.init(
@@ -18,11 +26,11 @@ module.exports = (sequelize, DataTypes) => {
                 primaryKey: true,
                 references: "Quyen",
             },
-            // manhacungcap: {
-            //     type: DataTypes.INTEGER,
-            //     primaryKey: true,
-            //     references: "NhaCungCap",
-            // },
+            machucnang: {
+                type: DataTypes.INTEGER,
+                primaryKey: true,
+                references: "ChucNang",
+            },
         },
         {
             sequelize,
