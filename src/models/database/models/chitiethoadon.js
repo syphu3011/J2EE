@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-    class HangTrongKho extends Model {
+    class ChiTietHoaDon extends Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
@@ -9,47 +9,37 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            HangTrongKho.belongsTo(models.MatHang, {
+            ChiTietHoaDon.belongsTo(models.Mathang, {
                 as: "MatHang",
                 foreignKey: "mamathang",
             });
-
-            HangTrongKho.belongsTo(models.PhieuNhap, {
-                as: "PhieuNhap",
-                foreignKey: "maphieunhap",
+            ChiTietHoaDon.belongsTo(models.HoaDon, {
+                as: "HoaDon",
+                foreignKey: "mahoadon",
             });
         }
     }
-    HangTrongKho.init(
+    ChiTietHoaDon.init(
         {
-            masanpham: {
+            mamathang: {
                 type: DataTypes.INTEGER,
                 primaryKey: true,
                 references: "MatHang",
             },
-            maphieunhap: {
+            mahoadon: {
                 type: DataTypes.INTEGER,
                 primaryKey: true,
-                references: "MatHang",
-            },
-            mamau: {
-                type: DataTypes.INTEGER,
-                primaryKey: true,
-                references: "MatHang",
-            },
-            makichco: {
-                type: DataTypes.INTEGER,
-                primaryKey: true,
-                references: "MatHang",
+                references: "KhachHang",
             },
             soluong: DataTypes.INTEGER,
+            gia: DataTypes.INTEGER,
         },
         {
             sequelize,
-            modelName: "HangTrongKho",
-            tableName: "HangTrongKho",
+            modelName: "ChiTietHoaDon",
+            tableName: "ChiTietHoaDon",
             timestamps: false,
         }
     );
-    return HangTrongKho;
+    return ChiTietHoaDon;
 };
