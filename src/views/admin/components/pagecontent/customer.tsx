@@ -5,7 +5,7 @@ interface Item {
   key: string;
   id: string;
   name: string;
-  age: number;
+  birthday: Date;
   status: string;
 }
 
@@ -15,7 +15,7 @@ for (let i = 0; i < 20; i++) {
     key: i.toString(),
     id: `${i}`,
     name: `Edward ${i}`,
-    age: 32,
+    birthday:  new Date('2002, 02, 18'),
     status: `Hoạt động`,
   });
 }
@@ -23,7 +23,7 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
   title: any;
-  inputType: 'number' | 'text';
+  inputType: 'number' | 'text' | 'Date';
   record: Item;
   index: number;
   children: React.ReactNode;
@@ -50,7 +50,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
           rules={[
             {
               required: true,
-              message: `Please Input ${title}!`,
+              message: `Hãy nhập ${title}!`,
             },
           ]}
         >
@@ -63,7 +63,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
   );
 };
 
-const Customer= () => {
+  const Customer= () => {
   const [form] = Form.useForm();
   const [data, setData] = useState(originData);
   const [editingKey, setEditingKey] = useState('');
@@ -71,7 +71,7 @@ const Customer= () => {
   const isEditing = (record: Item) => record.key === editingKey;
 
   const edit = (record: Partial<Item> & { key: React.Key }) => {
-    form.setFieldsValue({id: '', name: '', age: '', status: '', ...record });
+    form.setFieldsValue({id: '', name: '',birthday: '' , status: '', ...record });
     setEditingKey(record.key);
   };
 
@@ -108,17 +108,28 @@ const Customer= () => {
       title: 'Mã',
       dataIndex: 'id',
       width: 'auto',
-      editable: true,
     },
     {
-      title: 'tên',
+      title: 'Tên',
       dataIndex: 'name',
       width: 'auto',
       editable: true,
     },
     {
-      title: 'Tuổi',
-      dataIndex: 'age',
+      title: 'Số điện thoại',
+      dataIndex: 'numberphone',
+      width: 'auto',
+      editable: true,
+    },
+    {
+      title: 'Ngày sinh',
+      dataIndex: 'birthday',
+      width: 'auto',
+      editable: true,
+    },
+    {
+      title: 'Ngày tham gia',
+      dataIndex: 'dateinit',
       width: 'auto',
       editable: true,
     },
@@ -129,8 +140,8 @@ const Customer= () => {
       editable: true,
     },
     {
-      title: 'operation',
-      dataIndex: 'operation',
+      title: 'Sửa',
+      dataIndex: 'editcus',
       render: (_: any, record: Item) => {
         const editable = isEditing(record);
         return editable ? (
@@ -138,7 +149,7 @@ const Customer= () => {
             <Typography.Link onClick={() => save(record.key)} style={{ marginRight: 8 }}>
               Lưu
             </Typography.Link>
-            <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
+            <Popconfirm title="Bạn muốn hủy??" onConfirm={cancel}>
               <a>Hủy</a>
             </Popconfirm>
           </span>

@@ -13,8 +13,10 @@ import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import ContentAdmin from './content';
+import Search from 'antd/es/input/Search';
 const { Header, Content, Sider } = Layout;
 const items1:MenuItem[]=[ getItem('Admin', 'user', <PiUserSquareDuotone />, [getItem('Đăng xuất', 'log_out')])];
+
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -34,16 +36,16 @@ function getItem(
 
 const items: MenuItem[] = [
   getItem('Trang chủ', '', <HomeOutlined />),
-  getItem('Khách hàng', '', <TeamOutlined />, [getItem('Thông tin KH', 'Customer'), getItem('Tài khoản KH', 'AccountCus')]),
-  getItem('Sản phẩm', 'Pro', <GiClothes />,[getItem('Sản Phẩm','Product'),getItem('kích thước','Size'),getItem('Máu sắc','color')] ),
-  getItem('Đơn hàng', '11', <IoReceiptSharp />,[getItem('option1','Receipt')] ),
-  getItem('Nhập hàng', '13', <TbPackageImport />,[getItem('option1','14')] ),
-  getItem('Nhân viên', '15', <HiUserGroup />,[getItem('option1','16')] ),
-  getItem('Đối tác', '17',<PiHandshakeBold />,[getItem('Sản phẩm cung cấp','18')] ),
-  getItem('Thống kê', '19', <PiChartBarFill />,[getItem('option1','20')] )
+  getItem('Khách hàng', 'Customer', <TeamOutlined />, [getItem('Thông tin khách hàng', 'Customers'), getItem('Tài khoản khách hàng', 'AccountCus')]),
+  getItem('Sản phẩm', 'Product', <GiClothes />,[getItem('Sản Phẩm','Products'),getItem('Loại sản phẩm','TypePro'),getItem('Sản phẩm trong kho','ProInStock'),getItem('Thuộc tính','Attribute')] ),
+  getItem('Đơn hàng', 'Recripts', <IoReceiptSharp />,[getItem('Các đơn hàng','Receipts'), getItem('Lịch sử đơn hàng','HistoryRe')] ),
+  getItem('Nhập hàng', 'ImportPro', <TbPackageImport />,[getItem('Nhập hàng mới','ImportNew'),getItem('Lịch sử nhập','HistoryImp')] ),
+  getItem('Nhân viên', 'Staff', <HiUserGroup />,[getItem('Thông tin nhân viên','InforStaff'),getItem('Tài khoản nhân viên','AccountStaff')] ),
+  getItem('Đối tác', 'Partner',<PiHandshakeBold />,[getItem('Thông tin đối tác','InforPart'),getItem('Sản phẩm cung cấp','12')] ),
+  getItem('Thống kê', '19', <PiChartBarFill />,[getItem('Số liệu',''),getItem('Biểu đồ','chart')] )
 ];
 
-export default function Leftbar() {
+export default function layout() {
   const navigate = useNavigate();
   const onMenuClick = (item)=>{
     navigate(`/${item.key}`);
@@ -55,13 +57,15 @@ export default function Leftbar() {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Header style={{ display: 'flex', alignItems: 'center' }} className='header'>
-        <div  />
+      <Header style={{ display: 'flex', alignItems: 'center', justifyContent :'space-between' }} className='header'>
+        
         <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} items={items1} />
+        <Search placeholder="input search text" 
+         style={{ width: '50%' }} />
+        <div />
       </Header>
       <Layout>
-        <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-          <div className="demo-logo-vertical" />
+        <Sider width={250} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
           <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} onClick={onMenuClick}/>
         </Sider>
         <Layout style={{ padding: '0 24px 24px' }}>
