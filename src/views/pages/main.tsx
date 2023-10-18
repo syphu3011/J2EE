@@ -17,10 +17,17 @@ export default class Main extends React.Component<any, any>
         return (
             <div>
                 <BrowserRouter>
+                <BrowserRouter>
                 <Layout>
                     <Header/>
                     <PageContent/>
+                    <PageContent/>
+                    <PageContent/>
+                    <PageContent/>
+                    <PageContent/>
+                    <PageContent/>
                 </Layout>
+                </BrowserRouter>
                 </BrowserRouter>
                 
           </div>
