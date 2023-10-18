@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-// import partner from "./Image/partner.png";
+import partner from "./Image/partner.png";
 import {
   FileOutlined,
   TeamOutlined,
@@ -8,7 +8,6 @@ import {
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
-import { PiHandshakeThin} from 'react-icons/pi';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -35,7 +34,7 @@ const items: MenuItem[] = [
   getItem('Đơn hàng', '11', <FileOutlined />,[getItem('option1','12')] ),
   getItem('Nhập hàng', '13', <FileOutlined />,[getItem('option1','14')] ),
   getItem('Nhân viên', '15', <FileOutlined />,[getItem('option1','16')] ),
-  getItem('Đối tác', '17', <PiHandshakeThin />,[getItem('option1','18')] ),
+  getItem('Đối tác', '17', <partner />,[getItem('option1','18')] ),
   getItem('Thống kê', '19', <FileOutlined />,[getItem('option1','20')] )
 ];
 
