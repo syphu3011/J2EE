@@ -2,7 +2,7 @@ import * as React from 'react';
 //import Test from '../components/test';
 import axios from 'axios';
 import {Layout} from "antd";
-import Header from'./../components/Header/header';
+import Header from'../components/Header/header';
 import "../Styles/style.css";
 import "../Styles/Responsive.css";
 import "../components/content/menuCard"
