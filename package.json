@@ -12,6 +12,7 @@
     "dependencies": {
         "@types/react": "^18.2.23",
         "antd": "^5.9.3",
+        "antd-img-crop": "^4.13.0",
         "apollo-datasource": "^0.7.0",
         "apollo-server-express": "^2.13.0",
         "axios": "^1.5.1",

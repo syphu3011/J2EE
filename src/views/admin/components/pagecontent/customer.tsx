@@ -5,7 +5,9 @@ interface Item {
   key: string;
   id: string;
   name: string;
-  birthday: Date;
+  numberphone: number;
+  birthday: string;
+  dateinit: string;
   status: string;
 }
 
@@ -14,8 +16,10 @@ for (let i = 0; i < 20; i++) {
   originData.push({
     key: i.toString(),
     id: `${i}`,
-    name: `Edward ${i}`,
-    birthday:  new Date('2002, 02, 18'),
+    name: `Khách hàng ${i}`,
+    numberphone: 394142181,
+    birthday: `18/02/2002` ,
+    dateinit:`18/10/2023`,
     status: `Hoạt động`,
   });
 }
@@ -71,7 +75,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
   const isEditing = (record: Item) => record.key === editingKey;
 
   const edit = (record: Partial<Item> & { key: React.Key }) => {
-    form.setFieldsValue({id: '', name: '',birthday: '' , status: '', ...record });
+    form.setFieldsValue({ name: '',numberphone: '',birthday: '' , ...record });
     setEditingKey(record.key);
   };
 
@@ -107,37 +111,35 @@ const EditableCell: React.FC<EditableCellProps> = ({
     {
       title: 'Mã',
       dataIndex: 'id',
-      width: 'auto',
+      width: '10%',
     },
     {
       title: 'Tên',
       dataIndex: 'name',
-      width: 'auto',
+      width: '20%',
       editable: true,
     },
     {
       title: 'Số điện thoại',
       dataIndex: 'numberphone',
-      width: 'auto',
+      width: '15%',
       editable: true,
     },
     {
       title: 'Ngày sinh',
       dataIndex: 'birthday',
-      width: 'auto',
+      width: '15%',
       editable: true,
     },
     {
       title: 'Ngày tham gia',
       dataIndex: 'dateinit',
-      width: 'auto',
-      editable: true,
+      width: '15%',
     },
     {
       title: 'Trạng thái',
       dataIndex: 'status',
-      width: 'auto',
-      editable: true,
+      width: '15%',
     },
     {
       title: 'Sửa',
@@ -170,7 +172,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
       ...col,
       onCell: (record: Item) => ({
         record,
-        inputType: col.dataIndex === 'age' ? 'number' : 'text',
+        inputType: col.dataIndex === 'numberphone' ? 'number' : 'text',
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),

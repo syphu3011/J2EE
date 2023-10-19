@@ -7,10 +7,11 @@ import {HiUserGroup} from 'react-icons/hi';
 import {PiHandshakeBold, PiChartBarFill, PiUserSquareDuotone} from 'react-icons/pi';
 import {
   TeamOutlined,
-  HomeOutlined
+  HomeOutlined,
+  MailOutlined 
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { Avatar, Badge, Breadcrumb, Layout, Menu, theme } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import ContentAdmin from './content';
 import Search from 'antd/es/input/Search';
@@ -35,9 +36,9 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-  getItem('Trang chủ', '', <HomeOutlined />),
+  getItem('Trang chủ','', <HomeOutlined />),
   getItem('Khách hàng', 'Customer', <TeamOutlined />, [getItem('Thông tin khách hàng', 'Customers'), getItem('Tài khoản khách hàng', 'AccountCus')]),
-  getItem('Sản phẩm', 'Product', <GiClothes />,[getItem('Sản Phẩm','Products'),getItem('Loại sản phẩm','TypePro'),getItem('Sản phẩm trong kho','ProInStock'),getItem('Thuộc tính','Attribute')] ),
+  getItem('Sản phẩm', 'Product', <GiClothes />,[getItem('Sản Phẩm','Products'),getItem('Loại sản phẩm','TypePro'),getItem('Sản phẩm trong kho','ProInStock'),getItem('Thuộc tính sản phẩm','Attribute')] ),
   getItem('Đơn hàng', 'Recripts', <IoReceiptSharp />,[getItem('Các đơn hàng','Receipts'), getItem('Lịch sử đơn hàng','HistoryRe')] ),
   getItem('Nhập hàng', 'ImportPro', <TbPackageImport />,[getItem('Nhập hàng mới','ImportNew'),getItem('Lịch sử nhập','HistoryImp')] ),
   getItem('Nhân viên', 'Staff', <HiUserGroup />,[getItem('Thông tin nhân viên','InforStaff'),getItem('Tài khoản nhân viên','AccountStaff')] ),
@@ -58,11 +59,13 @@ export default function layout() {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Header style={{ display: 'flex', alignItems: 'center', justifyContent :'space-between' }} className='header'>
-        
-        <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} items={items1} />
+        <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['']} items={items1} />
         <Search placeholder="input search text" 
          style={{ width: '50%' }} />
         <div />
+        <Badge dot>
+            <Avatar  icon={<MailOutlined />} />
+        </Badge>
       </Header>
       <Layout>
         <Sider width={250} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
