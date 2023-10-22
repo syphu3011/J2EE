@@ -2,7 +2,7 @@ import * as React from 'react';
 //import Test from '../components/test';
 import axios from 'axios';
 import {Layout} from "antd";
-import Header from'./../components/Header/header';
+import Header from'../components/Header/header';
 import "../Styles/style.css";
 import "../Styles/Responsive.css";
 import "../components/content/menuCard"
@@ -19,13 +19,15 @@ export default class Main extends React.Component<any, any>
         return (
             <div >
                 <BrowserRouter>
+                <BrowserRouter>
                 <Layout>
                     <Header/>
                     <PageContent/>
                     <ChatApp />
                     <Footer/>
-                    
+
                 </Layout>
+                </BrowserRouter>
                 </BrowserRouter>
                 
           </div>

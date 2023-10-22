@@ -1,0 +1,10 @@
+const SanPhamType = require('./sanpham'); 
+const LoaiType = require('./loai'); 
+const NhaCungCapType = require('./nhacungcap'); 
+const TrangThaiNhaCungCapType = require('./trangthainhacungcap'); 
+const PhieuNhapType = require('./phieunhap')
+const MauType = require('./mau'); 
+const KichCoType = require('./kichco'); 
+const DonViType = require('./donvi'); 
+const MatHangType = require('./mathang'); 
+module.exports = [SanPhamType, LoaiType, NhaCungCapType, TrangThaiNhaCungCapType, PhieuNhapType, MauType, DonViType, KichCoType, MatHangType]
