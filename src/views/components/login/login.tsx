@@ -1,33 +1,24 @@
 import React from 'react';
 import {CloseOutlined } from "@ant-design/icons";
 import SocailNetworks from "./socailNetWorks";
-import { Checkbox, Form,FormInstance,Input} from 'antd';
+import { Checkbox, Form,Input} from 'antd';
 import ForgotPaswords from './forgotPassword';
 import SignUp from './signup';
-import SuccessLogin from '../../alert/LoginSuccess';
 interface LoginProps{
      onClose:()=>void;
-     isLoggedIn:boolean;
-     setIsLoggedIn:(isLoggedIn:boolean)=>void;
-   //  onSucces:()=>void;
 }
 interface LoginState{
      active: boolean;
      showForgotPasswordForm:boolean;
      showFormSignUp:boolean;
-     showSuccessMessage: boolean;
-     isLoggedIn: boolean;
 }
 export default class Login extends React.Component<LoginProps,LoginState>{
-     formRef = React.createRef<FormInstance>();
      constructor(props: LoginProps) {
           super(props);
           this.state = {
                active:true,
                showForgotPasswordForm:false,
                showFormSignUp:false,
-               showSuccessMessage: false,
-               isLoggedIn:false,
           };
                
      }
@@ -59,71 +50,25 @@ export default class Login extends React.Component<LoginProps,LoginState>{
              }));
              this.props.onClose();
      }
-     handleSubmit = async (values: any) => {
-          const { EmailorUsername, password } = values;
-          console.log("Form values:", values); // Log the form values to the console
-
-          if ((EmailorUsername==='phuongvy'||EmailorUsername==='example@gnail.com') && password==='12345678') {
-                 // Authentication successful
-                 console.log('User authenticated');
-                 this.props.setIsLoggedIn(true);
-                 // Reset the form fields after successful submission
-                 this.formRef.current?.resetFields();
-                 // Close the login form
-                 this.setState({ active: false,showFormSignUp:false });
-                 this.props.onClose();
-                 this.setState({showSuccessMessage:true});
-               } 
-          
-          else if(EmailorUsername!=='phuongvy'){
-               // Handle invalid username
-               this.formRef.current?.setFields([
-               {
-                    name: 'EmailorUsername',
-                    errors: ['Email hoặc tên đăng nhập không đúng'],
-               },
-               ]);
-               console.log('Authentication failed');
-
-               // Handle error (e.g., display error message)
-             }  
-             else {
-               // Handle invalid password
-               this.formRef.current?.setFields([
-                 {
-                   name: 'password',
-                   errors: ['Mật khẩu không đúng'],
-                 },
-               ]);
-             }
-          
-        }
-     
      render(){
-          
-          const { showSuccessMessage,showForgotPasswordForm,showFormSignUp } = this.state;
+          const {showForgotPasswordForm,showFormSignUp } = this.state;
           if(showForgotPasswordForm){
                return <ForgotPaswords  onBackToLogin={this.hanldeComback} />;
           }
           if (showFormSignUp) {
-              // this.props.onSucces();
                return <SignUp onCloseSignUp={this.handleSignUpClose} />;
              }
-          if(showSuccessMessage){
-               
-               return <SuccessLogin />
-          }
           return(
                
                
                    <div className='login'> 
-                   <Form  onFinish={this.handleSubmit} ref={this.formRef}>
+                   <Form action="">
                          <div id="close-login-btn"><CloseOutlined onClick={this.handleLoginCloseClick} /></div>
                          <h3>ĐĂNG NHẬP</h3>
                          <SocailNetworks/><br/>
                          <p className="option-text">hoặc sử dụng tài khoản của bạn</p>
                          <Form.Item
-                              name="EmailorUsername" hasFeedback
+                              name="Email hoặc tên đăng nhập" hasFeedback
                               label="Email hoặc tên đăng nhập"
                               labelCol= {{span:24}}
                               wrapperCol={{span:24}}
