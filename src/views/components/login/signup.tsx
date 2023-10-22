@@ -1,22 +1,32 @@
 import React from 'react';
-import {Form,Row,Col,Input,DatePicker, Checkbox} from 'antd';
+import {Form,Row,Col,Input,DatePicker, Checkbox, FormInstance} from 'antd';
 import {CloseOutlined } from "@ant-design/icons";
 import SocialNetWorks from './socailNetWorks';
 import Login  from './login';
+import SuccessSignUp from '../../alert/signUpSuccess';
 
 interface SignUpProps{
      onCloseSignUp:()=>void;
+     
 }
 interface SignUpState{
      active:boolean;
      showFormLogin:boolean;
+     checked: boolean;
+     showSuccessMessage: boolean;
+     formValues: string[],
 }
 export default class SignUp extends React.Component<SignUpProps, SignUpState> {
+     formRef = React.createRef<FormInstance>();
+
      constructor(props:SignUpProps){
           super(props);
           this.state={
                active:true,
                showFormLogin:false,
+               checked:false,
+               showSuccessMessage: false,
+               formValues: [],
           };
      }
      handleSignUpCloseClick=()=>{
@@ -37,18 +47,47 @@ export default class SignUp extends React.Component<SignUpProps, SignUpState> {
           });
           this.props.onCloseSignUp();
      }
+     onCheckBoxChange = (e) => {
+          this.setState({
+               checked: e.target.checked
+          });
+     }
+      validation=(rule,value,callback) =>{
+          if(this.state.checked){
+               return callback();
+          }
+          return callback("Hãy nhấn đồng ý thỏa thuận về điều khoản ");
+     }
+     handleSubmit = async({ fullName, birthdate, username, Email, password, confirmPass, numberPhone }) =>{
+          //console.log("Form values:", value); // Log the form values to the console
+          const formValues = [fullName, birthdate, username, Email, password, confirmPass, numberPhone];
+          console.log("Form values:", formValues);
+          this.setState({formValues});
+           // Display success message
+          // Reset the form fields after successful submission
+          this.formRef.current?.resetFields();
+          this.setState({ active: false,showFormLogin:false});
+          this.props.onCloseSignUp();
+           
+          console.log('Registration successful');
+          this.setState({showSuccessMessage:true});
+     }
      render(){
           const onChange=(date,dateString)=>{
                console.log(date, dateString);
           }
-          const{showFormLogin}= this.state;
+          const{showFormLogin,showSuccessMessage}= this.state;
           if(showFormLogin){
-               return <Login onClose={this.handleLoginClose} />
+              return <Login onClose={this.handleLoginClose} isLoggedIn={true} setIsLoggedIn={this.handleLoginForm}/>
+          }
+          if(showSuccessMessage) {
+               return <SuccessSignUp/>
+               
           }
           return(
                <div>
                     <Form name="signup" initialValues={{}}
-                    autoComplete='off' action=""
+                    autoComplete='off' onFinish={this.handleSubmit}
                     >
                     <div id="close-login-btn"><CloseOutlined onClick={this.handleSignUpCloseClick}  /></div>
                     <h3>ĐĂNG KÝ</h3>
@@ -145,6 +184,9 @@ export default class SignUp extends React.Component<SignUpProps, SignUpState> {
                                    {
                                         required:true,
                                         message :"Nhập mật khẩu"
+                                   },{
+                                        min:6,
+                                        message:"Mật khẩu phải từ 6 kí tự trở lên"
                                    }
                               ]}
                               >
@@ -163,7 +205,22 @@ export default class SignUp extends React.Component<SignUpProps, SignUpState> {
                                         {
                                              required:true,
                                              message :"Nhập lại mật khẩu",
-                                        }
+                                        },
+
+                                        (
+                                             {getFieldValue}
+                                        ) =>({
+                                             validator(_,value){
+                                                  if(!value||getFieldValue("password")===value){
+                                                       return Promise.resolve();
+                                                  }
+                                                  return Promise.reject(
+                                                       new Error(
+                                                            "Mật khẩu xác nhận không đúng!"
+                                                  )
+                                                  )
+                                             }
+                                        })
                                    ]
                               }
                               >
@@ -185,8 +242,8 @@ export default class SignUp extends React.Component<SignUpProps, SignUpState> {
                                              required:true,
                                              message:"Nhập số điện thoại của bạn",
                                         },{
-                                             type:"number",
-                                             message:"Số điện thoại không đúng định dạng",
+                                             max:10,
+                                             message:"Số điện thoại phải đúng 10 số"
                                         }
 
                                    ]
@@ -198,18 +255,18 @@ export default class SignUp extends React.Component<SignUpProps, SignUpState> {
                     </Row>
                     <Form.Item>
                          <Form.Item
-                         name="agree"
+                         name="agree" 
                          valuePropName='checked'
                          noStyle
                          rules={
                               [
                                    {
-                                        //validator:validation
+                                        validator:this.validation
                                    }
                               ]
                          }
                          >
-                              <Checkbox >
+                              <Checkbox checked={this.state.checked} onChange={this.onCheckBoxChange} >
                                    <p>Tôi đã đọc và đồng ý với Điều kiện sử dụng - thỏa thuận</p>
                               </Checkbox>
                          </Form.Item>
