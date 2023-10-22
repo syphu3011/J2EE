@@ -8,6 +8,8 @@ import "../Styles/Responsive.css";
 import "../components/content/menuCard"
 import PageContent from '../components/content/content';
 import { BrowserRouter } from 'react-router-dom';
+import ChatApp from '../components/chat/app';
+import Footer from "../components/footer/footer";
 export default class Main extends React.Component<any, any>   
 {  
     so() {
@@ -15,17 +17,15 @@ export default class Main extends React.Component<any, any>
     }
     render() {  
         return (
-            <div>
+            <div >
                 <BrowserRouter>
                 <BrowserRouter>
                 <Layout>
                     <Header/>
                     <PageContent/>
-                    <PageContent/>
-                    <PageContent/>
-                    <PageContent/>
-                    <PageContent/>
-                    <PageContent/>
+                    <ChatApp />
+                    <Footer/>
+
                 </Layout>
                 </BrowserRouter>
                 </BrowserRouter>
