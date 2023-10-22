@@ -1,0 +1,311 @@
+#sản phẩm
+query getSanPham {
+  sanpham {
+    status
+    message
+    data {
+      ma
+      mota
+      anhminhhoa
+      giaban
+      loai {
+        ma
+        mota
+        anhminhhoa
+      }
+    }
+  }
+}
+mutation taosanpham {
+  taoSanPham(input:{
+    ten: "sanpham100"
+    giaban: 300000
+    mota:"dùng rất tốt"
+    anhminhhoa:"anh minh hoa"
+    maloai: [1,2]
+    manhacungcap: [1,2]
+  }) {
+    status
+    message
+  }
+}
+mutation suasanpham {
+  suaSanPham(input:{
+    ma: 2
+    ten: "sanpham101"
+    giaban: 500000
+    mota:"dùng rất tốt luôn"
+    anhminhhoa:"anh minh hoa ne"
+    maloai: [1,2,3]
+    manhacungcap: [1,2,3]
+  }) {
+    status
+    message
+  }
+}
+mutation xoasanpham {
+  xoaSanPham(ma: 2) {
+    status
+    message
+  }
+}
+#nhà cung cấp
+query getNhaCungCap {
+  nhacungcap {
+    status
+    message
+    data {
+      ma
+      ten
+      diachi
+      dienthoai
+      trangthai {
+        ma
+        ten
+      }
+      sanpham {
+        ten
+      }
+    }
+  }
+}
+query getNhaCungCapVoiThuocTinh {
+  nhacungcapvoithuoctinh(input: { tensanpham: "Sanj"}) {
+    status
+    message
+    data {
+      ma
+      ten
+      diachi
+      dienthoai
+      trangthai {
+        ma
+        ten
+      }
+      sanpham {
+        ma
+        ten
+      }
+    }
+  }
+}
+query timkiemNhaCungCap {
+  timkiemnhacungcap(input: { tensanpham: "Sanj"}) {
+    status
+    message
+    data {
+      ma
+      ten
+      diachi
+      dienthoai
+      trangthai {
+        ma
+        ten
+      }
+      sanpham {
+        ma
+        ten
+      }
+    }
+  }
+}
+mutation suaNCC{
+  suaNhaCungCap(input: {
+    ma: 14
+    ten: "ncc5"
+    diachi: "q6"
+    dienthoai: "0303020230"
+    matrangthaincc: 1
+  }) {
+    status
+    message
+  }
+}
+mutation taoNCC{
+  taoNhaCungCap(input: {
+    ten: "ncc5"
+    diachi: "q6"
+    dienthoai: "0303020230"
+    matrangthaincc: 1
+    masanpham: [1,2]
+  }) {
+    status
+    message
+  }
+}
+mutation xoaNCC {
+  xoaNhaCungCap(input: {ma: 37}) {
+    status
+    message
+  }
+}
+# trạng thái nhà cung cấp
+query getttncc {
+  trangthainhacungcap {
+    status
+    message
+    data {
+      ma
+      ten
+      nhacungcap {
+        ma
+        ten
+        diachi
+        dienthoai
+        trangthai {
+          ma
+        }
+      }
+    }
+  }
+}
+query getttnccvoima {
+  trangthainhacungcapvoima(ma: 1) {
+    status
+    message
+    data {
+      ma
+      ten
+      nhacungcap {
+        ma
+        ten
+        diachi
+        dienthoai
+        trangthai {
+          ma
+        }
+      }
+    }
+  }
+}
+
+mutation themttncc {
+  themTrangThaiNhaCungCap(input: {ten: "Không hoạt động"}) {
+    status
+    message
+	}
+}
+mutation suattncc {
+  suaTrangThaiNhaCungCap(input: {ma: 2, ten: "Không hoạt động được"}) {
+    status
+    message
+	}
+}
+mutation xoattncc {
+  xoaTrangThaiNhaCungCap(ma: 2) {
+    status
+    message
+  }
+}
+
+#loại
+query getloai{
+  loai{
+    status
+    message
+    data {
+      ma
+      ten
+      mota
+      loaicha {
+        ma
+        ten
+        mota
+      }
+      loaicon {
+        ma
+        ten
+        mota
+      }
+      sanpham {
+        ma
+        ten
+        mota
+      }
+    }
+  }
+}
+query getLoaiThuocTinh {
+  loaivoithuoctinh (input: {
+    ma: 4, mota: "l", maloaicha: 1,ten: "l"
+  }) {
+    status
+    message
+    data {
+      ma
+      ten
+      mota
+      loaicha {
+        ma
+        ten
+        mota
+      }
+      loaicon {
+        ma
+        ten
+        mota
+      }
+      sanpham {
+        ma
+        ten
+        mota
+      }
+    }
+  }
+}
+query timkiemLoaiThuocTinh {
+  timkiemloai (input: {
+    ma: 4, mota: "l", maloaicha: 1,ten: "l"
+  }) {
+    status
+    message
+    data {
+      ma
+      ten
+      mota
+      loaicha {
+        ma
+        ten
+        mota
+      }
+      loaicon {
+        ma
+        ten
+        mota
+      }
+      sanpham {
+        ma
+        ten
+        mota
+      }
+    }
+  }
+}
+mutation themloai {
+  taoLoai(input:{
+    ten: "loại vip"
+    mota:"vip lắm"
+    anhminhhoa: "dfsdff"
+  }) {
+    status
+    message
+  }
+}
+
+mutation sualoai {
+  suaLoai(input:{
+    ma: 4
+    ten: "loại vip"
+    mota:"vip lắm"
+    anhminhhoa: "dfsdff"
+  }) {
+    status
+    message
+  }
+}
+mutation xoaloai {
+  xoaLoai(ma: 4) {
+    status
+    message
+  }
+}

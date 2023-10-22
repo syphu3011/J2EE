@@ -10,19 +10,40 @@ type Loai {
     loaicon: [Loai]
     sanpham: [SanPham]
 }
-input taoLoaiInput {
+input loaiInput {
+    ma: Int
     ten: String!
-    anhminhhoa: String!
+    anhminhhoa: String
     mota: String!
+    maloaicha: Int
 }
-type taoLoaiResponse {
-    id: Int!
-    mota: String!
+input loaiThuocTinhInput {
+    ma: Int
+    ten: String
+    mota: String
+}
+type loaiResponse {
+    status: Int!
+    message: String!
+}
+type loaiQueryResponse {
+    status: Int!
+    message: String!
+    data: [Loai!]
+}
+type loaiQueryVoiThuocTinhResponse {
+    status: Int!
+    message: String!
+    data: Loai!
 }
 extend type Query {
-    loai: [Loai!]
+    loai: loaiQueryResponse!
+    loaivoithuoctinh(input: loaiInput!): loaiQueryResponse!
+    timkiemloai(input: loaiInput!): loaiQueryResponse!
 }
 extend type Mutation {
-    taoLoai(input: taoLoaiInput!): taoLoaiResponse
+    taoLoai(input: loaiInput!): loaiResponse
+    suaLoai(input: loaiInput!): loaiResponse
+    xoaLoai(ma: Int!): loaiResponse
 }
 `
