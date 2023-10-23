@@ -40,7 +40,7 @@ const items: MenuItem[] = [
   getItem('Trang chủ','', <HomeOutlined />),
   getItem('Khách hàng', 'Customer', <TeamOutlined />, [getItem('Thông tin khách hàng', 'Customers'), getItem('Tài khoản khách hàng', 'AccountCus')]),
   getItem('Sản phẩm', 'Product', <GiClothes />,[getItem('Sản Phẩm','Products'),getItem('Loại sản phẩm','TypePro'),getItem('Sản phẩm trong kho','ProInStock'),getItem('Thuộc tính sản phẩm','Attribute')] ),
-  getItem('Đơn hàng', 'Recripts', <IoReceiptSharp />,[getItem('Các đơn hàng','Receipts'), getItem('Lịch sử đơn hàng','HistoryRe')] ),
+  getItem('Đơn hàng', 'Bill', <IoReceiptSharp />,[getItem('Các đơn hàng','Orders'), getItem('Lịch sử đơn hàng','HistoryOr')] ),
   getItem('Nhập hàng', 'ImportPro', <TbPackageImport />,[getItem('Nhập hàng mới','ImportNew'),getItem('Lịch sử nhập','HistoryImp')] ),
   getItem('Nhân viên', 'Staff', <HiUserGroup />,[getItem('Thông tin nhân viên','InforStaff'),getItem('Tài khoản nhân viên','AccountStaff')] ),
   getItem('Đối tác', 'Partner',<PiHandshakeBold />,[getItem('Thông tin đối tác','InforPart'),getItem('Sản phẩm cung cấp','12')] ),
