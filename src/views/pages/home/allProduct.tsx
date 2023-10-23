@@ -1,9 +1,10 @@
 import React,{useEffect} from 'react';
-import sale from '../../../views/components/Image/SaleProduct/sale1.png';
-import sale2 from '../../../views/components/Image/SaleProduct/Sale2.png';
-import sale3 from '../../components/Image/SaleProduct/Sale3.png';
+const root_directory_source = '/src/views/components/Image';
+const sale = `${root_directory_source}/SaleProduct/sale1.png`;
+const sale2  = `${root_directory_source}/SaleProduct/sale2.png`;
+const sale3  = `${root_directory_source}/SaleProduct/sale3.png`;
 import {Image,Carousel,Card} from "antd";
-import testImage from '../../components/Image/CardsMenu/Rectangle 56.png';
+const testImage = `${root_directory_source}/CardsMenu/Rectangle 56.png`;
 import { LeftOutlined, RightOutlined,CheckCircleOutlined,DeliveredProcedureOutlined,ThunderboltOutlined,SyncOutlined} from '@ant-design/icons';
 import CardMenu from "../../components/content/menuCard";
 import AOS from "aos";
