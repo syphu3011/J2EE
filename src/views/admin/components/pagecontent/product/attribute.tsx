@@ -1,11 +1,9 @@
 
-import { Button, Col, Layout, Row, Select, SelectProps, Space, Upload} from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
-import "../../style/product.css"
-import { Image } from 'antd';
+import { Button, Col, Layout, Row, Select, SelectProps, Space} from 'antd';
+import "../../../style/product.css"
 const { Header, Content } = Layout;
 import React, { useState } from 'react';
-import { Form, Input, InputNumber, Popconfirm, Table, Typography, Tag } from 'antd';
+import { Form, Input, InputNumber, Popconfirm, Table, Typography } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 const headerStyle: React.CSSProperties = {
     color: '#000000',
@@ -24,13 +22,10 @@ const contentStyle: React.CSSProperties = {
 
 interface Item {
   key: string;
-  id_pro: string;
-  name_pro: string;
-  type_pro: string[];
-  color: string[];
-  size_pro: string[];
+  id_att: string;
+  name_att: string;
+  type_att: string;
   describe: string;
-  image: string[];
 }
 
 const originData: Item[] = [];
@@ -41,20 +36,17 @@ const handleChange = (value: string[]) => {
 for (let i = 0; i < 20; i++) {
   originData.push({
     key: i.toString(),
-    id_pro: `${i}`,
-    name_pro: `Áo quần ${i}`,
-    type_pro: ['áo', 'quần'],
-    color: ['FF0000','000000'],
-    size_pro: ['S','M','L'],
+    id_att: `${i}`,
+    name_att: `Đỏ ${i}`,
+    type_att: 'Màu',
     describe: `Đây là quần áo`,
-    image:['https://bizweb.dktcdn.net/100/415/697/products/nta126-xpj0wgjv-1-ko0v-hinh-mat-truoc-0.jpg','https://bizweb.dktcdn.net/100/415/697/products/ahu2keci-1-iirh-hinh-mat-truoc-01.jpg']
   });
 }
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
   title: any;
-  inputType: 'number' | 'text' | 'Date';
+  inputType: 'number' | 'text' ;
   record: Item;
   index: number;
   children: React.ReactNode;
@@ -93,7 +85,7 @@ const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
     </td>
   );
 };
-const Product= () => {
+const Attribute= () => {
   const [form] = Form.useForm();
   const [data, setData] = useState(originData);
   const [editingKey, setEditingKey] = useState('');
@@ -136,76 +128,24 @@ const Product= () => {
   const columns = [
     {
       title: 'Mã',
-      dataIndex: 'id_pro',
-      width: '10%',
+      dataIndex: 'id_att',
+      width: 'auto',
     },
     {
-      title: 'Tên sản phẩm',
-      dataIndex: 'name_pro',
-      width: '15%',
+      title: 'Tên thuộc tính',
+      dataIndex: 'name_att',
+      width: 'auto',
       editable: true,
     },
     {
-      title: 'Loại sản phẩm',
-      dataIndex: 'type_pro',
-      width: '10%',
-      render: (type_pro: string[]) => (
-        <>
-          {type_pro.map((tag) => (
-            <Tag  key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          ))}
-        </>
-      )
-    },
-    {
-      title: 'Màu',
-      dataIndex: 'color',
-      width: '15%',
-      render: (color: string[]) => (
-        <>
-          {color.map((tag) => (
-            <Tag color={tag} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          ))}
-        </>
-      )
-    },
-    {
-      title: 'Kích thước',
-      dataIndex: 'size_pro',
-      width: '10%',
-      render: (size_pro: string[]) => (
-        <>
-          {size_pro.map((tag) => (
-            <Tag  key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          ))}
-        </>
-      )
+      title: 'Loại thuộc tính',
+      dataIndex: 'type_att',
+      width: 'auto',
     },
     {
       title: 'Mô tả',
       dataIndex: 'describe',
       editable: true,
-    },
-    {
-      title: 'Hình ảnh',
-      dataIndex: 'image',
-      width: '15%',
-      render: (image: string[]) => (
-        <>
-          {image.map((pic) => (
-            <Image
-            width={50}
-            height={50}
-            src={pic}/>
-          ))}
-        </>
-      )
     },
     {
       title: 'Sửa',
@@ -229,13 +169,22 @@ const Product= () => {
         );
       },
     },
+    {
+        title: 'Xóa',
+        key: 'operation',
+        dataIndex: 'delete',
+        width: '8%',
+        render: () => <a>Xóa</a>,
+    },
   ];
-  for (let i = 10; i < 36; i++) {
     options.push({
-      value: `ao` + i,
-      label: `ao` + i,
+      value: `color` ,
+      label: `Màu` 
     });
-  }
+    options.push({
+        value: `size` ,
+        label: `Kích thước` 
+    });
   const mergedColumns = columns.map((col) => {
     if (!col.editable) {
       return col;
@@ -251,83 +200,38 @@ const Product= () => {
       }),
     };
   });
-  const normFile = (e: any) => {
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e?.fileList;
-  };
         return(
             <Space direction="vertical" style={{ width: '100%' }} size={[0, 48]}>
                 <Layout>
                     <Header style={headerStyle} > 
                     <Row gutter={16}>
-                      <Col className="gutter-row" span={5}>
+                      <Col className="gutter-row" span={8}>
                       <Form.Item label="Tên:">
                         <Input />
                       </Form.Item>
                       <Form.Item label="Loại"
                         style={{ width: '100%', height: 30, minWidth: '100%'}}>
                         <Select
-                          mode="multiple"
-                          allowClear
-                          placeholder="Please select"
+                          placeholder="Hãy chọn"
                           onChange={handleChange}
                           options={options}
                         />
                       </Form.Item> 
                       </Col>
-                      <Col className="gutter-row" span={5}>
-                        <div>
-                          <Form.Item label="Màu:"
-                            style={{ width: '100%', height: 30, minWidth: '100%'}}>
-                            <Select
-                                mode="multiple"
-                                allowClear
-                                style={{width: '100%'}}
-                                placeholder="Please select"
-                                onChange={handleChange}
-                                options={options}
-                              />
-                            </Form.Item> 
-                            <Form.Item label="Kích thước:"
-                            style={{ width: '100%', height: 30, minWidth: '100%'}}>
-                            <Select
-                                mode="multiple"
-                                allowClear
-                                style={{width: '100%'}}
-                                placeholder="Please select"
-                                onChange={handleChange}
-                                options={options}
-                              />
-                            </Form.Item> 
-                        </div>
-                      </Col>
-                      <Col className="gutter-row" span={5}>
-                        <div >
+                      <Col className="gutter-row" span={8}>
+                        <div  >
                         <Form.Item label="Mô tả">
                           <TextArea rows={4} />
                         </Form.Item>
                         </div>
                       </Col>
-                      <Col className="gutter-row" span={5}>
-                        <div>
-                        <Form.Item label="Ảnh" valuePropName="fileList" getValueFromEvent={normFile}>
-                          <Upload action="/upload.do" listType="picture-card">
-                            <div>
-                              <PlusOutlined />
-                              <div style={{ marginTop: 8 }}>Upload</div>
-                            </div>
-                          </Upload>
-                        </Form.Item>
-                        </div>
-                      </Col>
-                      <Col className="gutter-row" span={4}>
-                        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
-                          <Button type="primary" style={{ width: '50%', marginBottom: 30}}>
+                      <Col className="gutter-row" span={8} >
+                        <div style={{ display: 'flex', flexDirection: 'column', 
+                                      justifyContent: 'center', alignItems:'center'}}>
+                          <Button type="primary" style={{ width: '30%', marginBottom: 30}}>
                             Thêm
                           </Button>
-                          <Button type="primary"  style={{ width: '50%'}}>
+                          <Button type="primary"  style={{ width: '30%'}}>
                             Làm mới
                           </Button>
                         </div>
@@ -356,4 +260,4 @@ const Product= () => {
             </Space>
         )
 }
-export default Product;
+export default Attribute;

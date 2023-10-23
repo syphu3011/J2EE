@@ -43,7 +43,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
   children,
   ...restProps
 }) => {
-  const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
+const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
 
   return (
     <td {...restProps}>
@@ -111,39 +111,40 @@ const EditableCell: React.FC<EditableCellProps> = ({
     {
       title: 'Mã',
       dataIndex: 'id',
-      width: '10%',
+      width: 'auto',
     },
     {
-      title: 'Tên',
+      title: 'Tên khách hàng',
       dataIndex: 'name',
-      width: '20%',
+      width: 'auto',
       editable: true,
     },
     {
       title: 'Số điện thoại',
       dataIndex: 'numberphone',
-      width: '15%',
+      width: 'auto',
       editable: true,
     },
     {
       title: 'Ngày sinh',
       dataIndex: 'birthday',
-      width: '15%',
+      width: 'auto',
       editable: true,
     },
     {
       title: 'Ngày tham gia',
       dataIndex: 'dateinit',
-      width: '15%',
+      width: 'auto',
     },
     {
       title: 'Trạng thái',
       dataIndex: 'status',
-      width: '15%',
+      width: 'auto',
     },
     {
       title: 'Sửa',
       dataIndex: 'editcus',
+      width: 'auto',
       render: (_: any, record: Item) => {
         const editable = isEditing(record);
         return editable ? (
@@ -166,10 +167,11 @@ const EditableCell: React.FC<EditableCellProps> = ({
       title: 'Xóa',
       key: 'operation',
       dataIndex: 'delete',
-      width: '8%',
+      width: 'auto',
       render: () => <a>Xóa</a>,
     },
   ];
+  
 
   const mergedColumns = columns.map((col) => {
     if (!col.editable) {
@@ -191,16 +193,16 @@ const EditableCell: React.FC<EditableCellProps> = ({
     <Form form={form} component={false}>
       <Table
         components={{
-          body: {
-            cell: EditableCell,
-          },
+        body: {
+          cell: EditableCell,
+        },
         }}
         bordered
         dataSource={data}
         columns={mergedColumns}
         rowClassName="editable-row"
         pagination={{
-          onChange: cancel,
+        onChange: cancel,
         }}
       />
     </Form>
