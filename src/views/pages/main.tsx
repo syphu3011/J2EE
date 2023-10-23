@@ -8,8 +8,9 @@ import "../Styles/Responsive.css";
 import "../components/content/menuCard"
 import PageContent from '../components/content/content';
 import { BrowserRouter } from 'react-router-dom';
-import ChatApp from '../components/chat/app';
+//import ChatApp from '../components/chat/app';
 import Footer from "../components/footer/footer";
+import ChatApp from '../components/chat/app';
 export default class Main extends React.Component<any, any>   
 {  
     so() {
@@ -19,16 +20,16 @@ export default class Main extends React.Component<any, any>
         return (
             <div >
                 <BrowserRouter>
-                <BrowserRouter>
+               
                 <Layout>
                     <Header/>
                     <PageContent/>
-                    <ChatApp />
+                   <ChatApp/>
                     <Footer/>
 
                 </Layout>
                 </BrowserRouter>
-                </BrowserRouter>
+             
                 
           </div>
         

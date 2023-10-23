@@ -1,10 +1,12 @@
 import { Card,Image } from 'antd';
 import {useEffect}from 'react';
-import ao from '../../components/Image/CardsMenu/Ao.png';
-import quan from '../Image/CardsMenu/quan.png';
-import dam from '../Image/CardsMenu/dam.png';
-import aokhoac from '../Image/CardsMenu/aokhoac.png';
-import phukien from '../Image/CardsMenu/Vo.png';
+const root_directory_source = '/src/views/components/Image/CardsMenu';
+
+const ao = `${root_directory_source}/Ao.png`;
+const quan = `${root_directory_source}/quan.png`;
+const dam = `${root_directory_source}/dam.png`;
+const aokhoac = `${root_directory_source}/aokhoac.png`;
+const phukien = `${root_directory_source}/Vo.png`;
 import AOS from "aos";
 import "aos/dist/aos.css";
 export default function MenuCard(){
