@@ -8,7 +8,8 @@ import {PiHandshakeBold, PiChartBarFill, PiUserSquareDuotone} from 'react-icons/
 import {
   TeamOutlined,
   HomeOutlined,
-  MailOutlined 
+  MailOutlined,
+  MessageOutlined
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Avatar, Badge, Breadcrumb, Layout, Menu, theme } from 'antd';
@@ -43,7 +44,8 @@ const items: MenuItem[] = [
   getItem('Nhập hàng', 'ImportPro', <TbPackageImport />,[getItem('Nhập hàng mới','ImportNew'),getItem('Lịch sử nhập','HistoryImp')] ),
   getItem('Nhân viên', 'Staff', <HiUserGroup />,[getItem('Thông tin nhân viên','InforStaff'),getItem('Tài khoản nhân viên','AccountStaff')] ),
   getItem('Đối tác', 'Partner',<PiHandshakeBold />,[getItem('Thông tin đối tác','InforPart'),getItem('Sản phẩm cung cấp','12')] ),
-  getItem('Thống kê', '19', <PiChartBarFill />,[getItem('Số liệu',''),getItem('Biểu đồ','chart')] )
+  getItem('Thống kê', '19', <PiChartBarFill />,[getItem('Số liệu',''),getItem('Biểu đồ','chart')] ),
+  getItem('Tin nhắn hỗ trợ', 'message', <MessageOutlined /> )
 ];
 
 export default function layout() {
