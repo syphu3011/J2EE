@@ -1,11 +1,13 @@
 
 import { Button, Col, Layout, Row, Select, SelectProps, Space, Upload} from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import "../../style/product.css"
 import { Image } from 'antd';
 const { Header, Content } = Layout;
 import React, { useState } from 'react';
 import { Form, Input, InputNumber, Popconfirm, Table, Typography, Tag } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
+import type { SizeType } from 'antd/es/config-provider/SizeContext';
 const headerStyle: React.CSSProperties = {
     color: '#000000',
     minHeight: 120,
@@ -262,23 +264,19 @@ const Product= () => {
                     <Header style={headerStyle} > 
                     <Row gutter={16}>
                       <Col className="gutter-row" span={5}>
-                        <div style={{ height: 180}}>
-                          <Form.Item label="Tên sản phẩm"
-                          style={{ width: '100%', height: 30, }}>
-                          <Input />
-                          </Form.Item>
-                          <Form.Item label="Loại sản phẩm"
-                          style={{ width: '100%', height: 30, minWidth: '100%'}}>
-                          <Select
-                              mode="multiple"
-                              allowClear
-                              style={{width: '100%'}}
-                              placeholder="Please select"
-                              onChange={handleChange}
-                              options={options}
-                            />
-                          </Form.Item> 
-                        </div>
+                      <Form.Item label="Tên:">
+                        <Input />
+                      </Form.Item>
+                      <Form.Item label="Loại"
+                        style={{ width: '100%', height: 30, minWidth: '100%'}}>
+                        <Select
+                          mode="multiple"
+                          allowClear
+                          placeholder="Please select"
+                          onChange={handleChange}
+                          options={options}
+                        />
+                      </Form.Item> 
                       </Col>
                       <Col className="gutter-row" span={5}>
                         <div>
@@ -315,7 +313,7 @@ const Product= () => {
                       </Col>
                       <Col className="gutter-row" span={5}>
                         <div>
-                        <Form.Item label="Upload" valuePropName="fileList" getValueFromEvent={normFile}>
+                        <Form.Item label="Ảnh" valuePropName="fileList" getValueFromEvent={normFile}>
                           <Upload action="/upload.do" listType="picture-card">
                             <div>
                               <PlusOutlined />
@@ -326,11 +324,11 @@ const Product= () => {
                         </div>
                       </Col>
                       <Col className="gutter-row" span={4}>
-                        <div style={{ display: 'flex', flexDirection: 'column'}}>
-                          <Button type="primary" size='large' style={{ width: '40%', marginBottom: 10}}>
+                        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+                          <Button type="primary" style={{ width: '50%', marginBottom: 10}}>
                             Thêm
                           </Button>
-                          <Button type="primary" size='large' style={{ width: '40%', marginBottom: 10}}>
+                          <Button type="primary"  style={{ width: '50%', marginBottom: 10}}>
                             Làm mới
                           </Button>
                         </div>
