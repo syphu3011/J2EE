@@ -162,6 +162,13 @@ const EditableCell: React.FC<EditableCellProps> = ({
         );
       },
     },
+    {
+      title: 'Xóa',
+      key: 'operation',
+      dataIndex: 'delete',
+      width: '8%',
+      render: () => <a>Xóa</a>,
+    },
   ];
 
   const mergedColumns = columns.map((col) => {

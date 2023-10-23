@@ -24,11 +24,9 @@ const contentStyle: React.CSSProperties = {
 
 interface Item {
   key: string;
-  id_pro: string;
-  name_pro: string;
-  type_pro: string[];
-  color: string[];
-  size_pro: string[];
+  id_type: string;
+  name_type: string;
+  oftype: string[];
   describe: string;
   image: string[];
 }
@@ -41,11 +39,9 @@ const handleChange = (value: string[]) => {
 for (let i = 0; i < 20; i++) {
   originData.push({
     key: i.toString(),
-    id_pro: `${i}`,
-    name_pro: `Áo quần ${i}`,
-    type_pro: ['áo', 'quần'],
-    color: ['FF0000','000000'],
-    size_pro: ['S','M','L'],
+    id_type: `${i}`,
+    name_type: `Áo quần ${i}`,
+    oftype: ['áo', 'quần'],
     describe: `Đây là quần áo`,
     image:['https://bizweb.dktcdn.net/100/415/697/products/nta126-xpj0wgjv-1-ko0v-hinh-mat-truoc-0.jpg','https://bizweb.dktcdn.net/100/415/697/products/ahu2keci-1-iirh-hinh-mat-truoc-01.jpg']
   });
@@ -93,7 +89,7 @@ const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
     </td>
   );
 };
-const Product= () => {
+const Typeproduct= () => {
   const [form] = Form.useForm();
   const [data, setData] = useState(originData);
   const [editingKey, setEditingKey] = useState('');
@@ -136,50 +132,22 @@ const Product= () => {
   const columns = [
     {
       title: 'Mã',
-      dataIndex: 'id_pro',
+      dataIndex: 'id_type',
       width: '10%',
     },
     {
-      title: 'Tên sản phẩm',
-      dataIndex: 'name_pro',
+      title: 'Tên loại',
+      dataIndex: 'name_type',
       width: '15%',
       editable: true,
     },
     {
-      title: 'Loại sản phẩm',
-      dataIndex: 'type_pro',
+      title: 'Thuộc loại',
+      dataIndex: 'oftype',
       width: '10%',
       render: (type_pro: string[]) => (
         <>
           {type_pro.map((tag) => (
-            <Tag  key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          ))}
-        </>
-      )
-    },
-    {
-      title: 'Màu',
-      dataIndex: 'color',
-      width: '15%',
-      render: (color: string[]) => (
-        <>
-          {color.map((tag) => (
-            <Tag color={tag} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          ))}
-        </>
-      )
-    },
-    {
-      title: 'Kích thước',
-      dataIndex: 'size_pro',
-      width: '10%',
-      render: (size_pro: string[]) => (
-        <>
-          {size_pro.map((tag) => (
             <Tag  key={tag}>
               {tag.toUpperCase()}
             </Tag>
@@ -229,6 +197,13 @@ const Product= () => {
         );
       },
     },
+    {
+        title: 'Xóa',
+        key: 'operation',
+        dataIndex: 'delete',
+        width: '8%',
+        render: () => <a>Xóa</a>,
+    },
   ];
   for (let i = 10; i < 36; i++) {
     options.push({
@@ -262,11 +237,11 @@ const Product= () => {
                 <Layout>
                     <Header style={headerStyle} > 
                     <Row gutter={16}>
-                      <Col className="gutter-row" span={5}>
-                      <Form.Item label="Tên:">
+                      <Col className="gutter-row" span={7}>
+                      <Form.Item label="Tên loại:">
                         <Input />
                       </Form.Item>
-                      <Form.Item label="Loại"
+                      <Form.Item label="Thuộc loại"
                         style={{ width: '100%', height: 30, minWidth: '100%'}}>
                         <Select
                           mode="multiple"
@@ -277,40 +252,14 @@ const Product= () => {
                         />
                       </Form.Item> 
                       </Col>
-                      <Col className="gutter-row" span={5}>
-                        <div>
-                          <Form.Item label="Màu:"
-                            style={{ width: '100%', height: 30, minWidth: '100%'}}>
-                            <Select
-                                mode="multiple"
-                                allowClear
-                                style={{width: '100%'}}
-                                placeholder="Please select"
-                                onChange={handleChange}
-                                options={options}
-                              />
-                            </Form.Item> 
-                            <Form.Item label="Kích thước:"
-                            style={{ width: '100%', height: 30, minWidth: '100%'}}>
-                            <Select
-                                mode="multiple"
-                                allowClear
-                                style={{width: '100%'}}
-                                placeholder="Please select"
-                                onChange={handleChange}
-                                options={options}
-                              />
-                            </Form.Item> 
-                        </div>
-                      </Col>
-                      <Col className="gutter-row" span={5}>
+                      <Col className="gutter-row" span={6}>
                         <div >
                         <Form.Item label="Mô tả">
                           <TextArea rows={4} />
                         </Form.Item>
                         </div>
                       </Col>
-                      <Col className="gutter-row" span={5}>
+                      <Col className="gutter-row" span={7}>
                         <div>
                         <Form.Item label="Ảnh" valuePropName="fileList" getValueFromEvent={normFile}>
                           <Upload action="/upload.do" listType="picture-card">
@@ -356,4 +305,4 @@ const Product= () => {
             </Space>
         )
 }
-export default Product;
+export default Typeproduct;
