@@ -194,6 +194,7 @@ const Inventory= () => {
     {
       title: 'Sửa giá',
       dataIndex: 'editprice',
+      width: 'auto',
       render: (_: any, record: Item) => {
         const editable = isEditing(record);
         return editable ? (
@@ -201,7 +202,7 @@ const Inventory= () => {
             <Typography.Link onClick={() => save(record.key)} style={{ marginRight: 8 }}>
               Lưu
             </Typography.Link>
-            <Popconfirm title="Bạn muốn hủy??" onConfirm={cancel}>
+            <Popconfirm title="Bạn muốn hủy?" onConfirm={cancel}>
               <a>Hủy</a>
             </Popconfirm>
           </span>
