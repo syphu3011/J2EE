@@ -69,44 +69,7 @@ const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
 
   const AccountCus= () => {
   const [form] = Form.useForm();
-  const [data, setData] = useState(originData);
-  const [editingKey, setEditingKey] = useState('');
-
-  const isEditing = (record: Item) => record.key === editingKey;
-
-  const edit = (record: Partial<Item> & { key: React.Key }) => {
-    form.setFieldsValue({ name: '',numberphone: '',birthday: '' , ...record });
-    setEditingKey(record.key);
-  };
-
-  const cancel = () => {
-    setEditingKey('');
-  };
-
-  const save = async (key: React.Key) => {
-    try {
-      const row = (await form.validateFields()) as Item;
-
-      const newData = [...data];
-      const index = newData.findIndex((item) => key === item.key);
-      if (index > -1) {
-        const item = newData[index];
-        newData.splice(index, 1, {
-          ...item,
-          ...row,
-        });
-        setData(newData);
-        setEditingKey('');
-      } else {
-        newData.push(row);
-        setData(newData);
-        setEditingKey('');
-      }
-    } catch (errInfo) {
-      console.log('Validate Failed:', errInfo);
-    }
-  };
-
+  const [data] = useState(originData);
   const columns = [
     {
       title: 'Mã',
@@ -117,19 +80,16 @@ const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
       title: 'Tên khách hàng',
       dataIndex: 'name',
       width: '20%',
-      editable: true,
     },
     {
       title: 'Tài khoản',
       dataIndex: 'account',
       width: '15%',
-      editable: true,
     },
     {
       title: 'Mật khẩu',
       dataIndex: 'password',
-      width: '15%',
-      editable: true,
+      width: '10%',
     },
     {
       title: 'Ngày tham gia',
@@ -142,32 +102,15 @@ const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
       width: '15%',
     },
     {
-      title: 'Sửa',
-      dataIndex: 'editcus',
-      render: (_: any, record: Item) => {
-        const editable = isEditing(record);
-        return editable ? (
-          <span>
-            <Typography.Link onClick={() => save(record.key)} style={{ marginRight: 8 }}>
-              Lưu
-            </Typography.Link>
-            <Popconfirm title="Bạn muốn hủy??" onConfirm={cancel}>
-              <a>Hủy</a>
-            </Popconfirm>
-          </span>
-        ) : (
-          <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
-            Sửa
-          </Typography.Link>
-        );
-      },
+      title: 'Xóa',
+      key: 'operation',
+      dataIndex: 'delete',
+      width: '15%',
+      render: () => <a>Khóa tài khoản</a>,
     },
   ];
 
   const mergedColumns = columns.map((col) => {
-    if (!col.editable) {
-      return col;
-    }
     return {
       ...col,
       onCell: (record: Item) => ({
@@ -175,7 +118,6 @@ const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
         inputType: col.dataIndex === 'numberphone' ? 'number' : 'text',
         dataIndex: col.dataIndex,
         title: col.title,
-        editing: isEditing(record),
       }),
     };
   });
@@ -191,10 +133,6 @@ const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
         bordered
         dataSource={data}
         columns={mergedColumns}
-        rowClassName="editable-row"
-        pagination={{
-          onChange: cancel,
-        }}
       />
     </Form>
   );
