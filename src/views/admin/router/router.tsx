@@ -7,6 +7,7 @@ import Receipt from '../components/pagecontent/receipt';
 import AccountCus from '../components/pagecontent/accountCus'
 import Message from '../components/pagecontent/message';
 import Typeproduct from '../components/pagecontent/typeproduct';
+import Inventory from '../components/pagecontent/inventory';
 
 export default class AppRoutesAdmin extends React.Component {
     
@@ -20,6 +21,7 @@ export default class AppRoutesAdmin extends React.Component {
                     <Route path="/Receipt" element={<Receipt/>} ></Route>
                     <Route path="/Products" element={<Product/>} ></Route>
                     <Route path="/TypePro" element={<Typeproduct/>} ></Route>
+                    <Route path="/ProInStock" element={<Inventory/>} ></Route>
                     <Route path="/Message" element={<Message/>} ></Route>
                    
                     
