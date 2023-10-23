@@ -3,7 +3,7 @@ import {Routes,Route} from 'react-router-dom';
 import HomeAdmin from '../components/pagecontent/home';
 import Customer from '../components/pagecontent/customer/customer';
 import Product from '../components/pagecontent/product/product';
-import Receipt from '../components/pagecontent/order';
+import Receipt from '../components/pagecontent/Orders/order';
 import AccountCus from '../components/pagecontent/customer/accountCus';
 import Message from '../components/pagecontent/message';
 import Typeproduct from '../components/pagecontent/product/typeproduct';
