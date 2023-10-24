@@ -9,6 +9,11 @@ body,html,*{
      
      
 }
+#app{
+     margin:0;
+     width:100%;
+     padding:0;
+}
 .main{
      background-color: white;
 }
@@ -44,16 +49,18 @@ body,html,*{
 }
 
 .menuHeader.hidden {
+     
      top:0;
+     z-index: 100;
      transform: translateY(1);
 }
 .menu{
-     width:100%;
+     
      display:flex;
     
 }
 .menuLeft{
-     width:100%;
+     width:90%;
 }
 .Leftmenu{
      background-color: #F4AAC0;
@@ -67,11 +74,17 @@ body,html,*{
      font-size: 25px;
      color:#e70c4e;
 }
+.groupIcons{
+     border-bottom: 1px solid #e70c4e;
+     font-size: 25px;
+     color:#e70c4e;
+}
 
 .MenuRight{
-width:25%;
+width:15%;
 }
 .RightMenu{
+     
      background-color: #F4AAC0;
      font-size: large;
      font-weight: bold;
@@ -132,19 +145,21 @@ width:25%;
 	color: #515151;
 	text-decoration: none;
 }
-.allProduct{
+.allProduct, .allProduct_2{
      padding:20px;
      text-align: center;
      border-radius: 3px;
      background: rgba(244, 170, 192, 0.35);
+     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
      width:auto;
      justify-content: center;
      width: 300px;
      margin-left: 37%;
      margin-right: 40%;
+     margin-top:10px;
+     margin-bottom: 10px;
      font-size: larger;
      color:gray;
-     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
 
 }
 .mainAllProduct{
@@ -153,12 +168,84 @@ width:25%;
      display:flex;
 }
 .bannerSale{
+     width: 40%;
+     margin:25px;
+     cursor: pointer;
+
+}
+.slider_1{
+     width:54%;
+     display:flex;
+     justify-content: center;
+     margin:20px;
+}
+.sliderProduct{
+     width:100%;
+     margin-top: 30px;
+
+}
+.sliderProduct-3{
+     width:100%;
+     margin-top: 30px;
+}
+#card_1{
+     margin : 20px;
+     border-radius: 10px;
+     background: linear-gradient(180deg, rgba(244, 170, 192, 0.00) 24.48%, rgb(255, 198, 215) 67.71%);     ;
+     box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.25), 0px 3px 3px 0px rgba(0, 0, 0, 0.25);
+     color: #464142;
+     text-align: center;
+
+}
+#card_1 Image{
+     border-radius: 10px;
+}
+#card_1 p{
+     color:black;
+     font-size: 20px;
+     font-style: normal;
+     font-weight: bolder;
+     line-height: normal;
+     margin:5px;
+     text-align: center;
+}
+.sliderProduct > .ant-carousel .slick-prev,
+.sliderProduct >.ant-carousel .slick-next,
+.sliderProduct>.ant-carousel .slick-prev:hover,
+.sliderProduct>.ant-carousel .slick-next:hover {
+     width:3%;
+     z-index: 3;
+  margin-right: 10px;
+  font-size: 25px;
+  margin-top:-100px;
+  color:#e70c4e;
+  border-radius:2px ;
+     height:28px;
+  background-color: #f4aac062;
+
+}
+.sliderProduct-3 > .ant-carousel .slick-prev,
+.sliderProduct-3 >.ant-carousel .slick-next,
+.sliderProduct-3>.ant-carousel .slick-prev:hover,
+.sliderProduct-3>.ant-carousel .slick-next:hover {
+     width:3%;
+     z-index: 7;
+     margin-right:30px;
+     margin-left: 30px;
+  font-size: 25px;
+  margin-top:-20px;
+  color:#e70c4e;
+  border-radius:2px ;
+     height:28px;
+  background-color: #f4aac062;
+
+}
+#sale_2{
+     margin-top:50px;
      background-repeat: no-repeat;
      background-size: cover;
-     width: 50%;
-     height:300px;
-     margin :20px;
 }
+
 #search-box{
      height:50px;
      font-size: 20px;
@@ -174,6 +261,9 @@ Input::placeholder{
      height:50px;
      background-color: #e70c4e;
      margin-left:-55px;
+}
+#btn-Search:hover{
+     background-color: #F4AAC0;
 }
 .input{
      position: absolute;
@@ -192,3 +282,197 @@ Input::placeholder{
 .input.active{
      transform: scaleY(1);
 }
+#footer{
+     height:60px;
+     font-size: 15px;
+     text-align: center;
+     color:white;
+     background-color: #F4AAC0;
+     margin:0;
+}
+#card_footer{
+     width : 100%;
+    display:flex;
+    justify-content: center;
+     margin-left:0;
+}
+.Card_footer{
+     margin : 20px;
+     width:260px;
+     background: linear-gradient(180deg, rgba(244, 170, 192, 0.76) 0%, rgba(244, 170, 192, 0.00) 100%);
+     box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.25);
+}
+.Card_footer:hover{
+     border:1px solid black
+}
+.icon-card-footer{
+ font-size: 40px;
+ margin-left:80px;
+ margin-top: -5px;
+ font-weight: bolder;
+ margin-bottom: 10px;
+ 
+}
+.Card_footer p{
+     font-size: 20px;
+     font-weight: bolder;
+     text-align: center;
+}
+#footer h3{
+     margin-top:20px;
+}
+/*Social Networks*/
+.social-container .social{
+     border: 1px solid #ddd;
+        border-radius: 50%;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 7px;
+        height: 40px;
+        width: 40px;
+        cursor: pointer;
+        font-size: 20px;
+        color: #fff;
+}
+.social-container {
+     margin: 20px 0;
+     text-align: center;
+ }
+ .social-container .facebook {
+     background: #4267B2;
+     border-color: #4267B2;
+ }
+
+ .social-container .google {
+     background: #db4a39;
+     border-color: #db4a39;
+ }
+ .social-container .linkedin {
+     background: #0e76a8;
+     border-color: #0e76a8;
+ }
+
+
+/*Login*/
+.login-form-container,.signup-form-container {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     background: rgba(2, 2, 2, 0.14);
+     position: absolute;
+     top: 100%;
+     right: -105%;
+     z-index: 1000;
+     height:55rem;
+     width: 100%;
+     box-shadow: 0 0.5em 3rem -1rem rgba(0,0,0,0.5);
+     transition: all .6s ease-out;
+ }
+ .login-form-container.active,.signup-form-container.active{
+     right:0;
+ }
+ 
+
+ .login-form-container Form{
+     background-color: white;
+     border: 1px solid #F4AAC0;
+     border-radius: 10px;
+     width: auto;
+     height:auto;
+     padding:1rem;
+     box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.25) ;
+     
+ }
+ .signup-form-container Form{
+     background-color: white;
+     border: 1px solid #F4AAC0;
+     border-radius: 10px;
+     width: auto;
+     height:auto;
+     padding:1rem;
+     box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.25) ;
+
+ }
+ #close-login-btn{
+     font-weight: 400;
+     font-size: 20px;
+     float:right;
+ }
+.option-text{
+     color: rgba(70, 65, 66, 0.78);
+     font-size: 14px;
+     font-style: normal;
+     font-weight: 400;
+     line-height: normal;
+     text-align: center;
+     margin-top: -25px;
+     margin-bottom: 5px;
+}
+ .login-form-container h3,.signup-form-container h3{
+     color: #F25181;
+     font-size: 25px;
+     font-style: normal;
+     font-weight: 700;
+     line-height: normal;
+     text-align: center;
+     margin-top:20px;
+ }
+.login-form-forgot{
+     float:right;
+     color:#F25181;
+     font-size: 15px;
+     font-weight: 500;
+     cursor: pointer;
+}
+.create-account{
+     color:#F25181;
+     font-size: 15px;
+     font-weight: 500;
+     margin-left: 5px;
+}
+.btn-btnLogin,.btn-btnSendEmail{
+     padding:0.5rem;
+     margin-bottom:10px;
+     font-size: 20px;
+     color:white;
+     font-weight: bold;
+border-radius: 10px;
+border: 1px solid #F25181;
+background: #F25181;
+box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+.btn-btnLogin:hover,.btn-btnSendEmail:hover{
+     color:#e70c4e;
+     background-color: white;
+     border: 1px solid #F25181;
+     font-weight: bold;
+}
+.ForgotLogin{
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     background: rgba(2, 2, 2, 0.14);
+     position: absolute;
+     top: 100%;
+     right: -105%;
+     z-index: 1000;
+     height:55rem;
+     width: 100%;
+     box-shadow: 0 0.5em 3rem -1rem rgba(0,0,0,0.5);
+     transition: all .6s ease-out;
+      
+}
+.ForgotLogin .active{
+     right:0;
+}
+.login-form-forgot-text{
+     float:right;
+     color:#F25181;
+     font-size: 15px;
+     font-weight: 500;
+     cursor: pointer;
+     margin-top:-10px;
+     margin-bottom: 10px;
+}
+
