@@ -13,9 +13,6 @@ import Footer from "../components/footer/footer";
 import ChatApp from '../components/chat/app';
 export default class Main extends React.Component<any, any>   
 {  
-    so() {
-        axios.post 
-    }
     render() {  
         return (
             <div >
@@ -28,8 +25,7 @@ export default class Main extends React.Component<any, any>
                     <Footer/>
 
                 </Layout>
-                </BrowserRouter>
-             
+            </BrowserRouter>
                 
           </div>
         

@@ -31,11 +31,13 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.STRING,
                 primaryKey: true,
             },
+            matkhau: {
+                type: DataTypes.STRING,
+            },
             maquyen: {
                 type: DataTypes.INTEGER,
                 references: "Quyen",
-            },
-            matkhau: DataTypes.STRING,
+            }
         },
         {
             sequelize,

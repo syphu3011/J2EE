@@ -1,6 +1,6 @@
 const { Op, literal } = require("sequelize")
 const {PhieuNhap, ChiTietPhieuNhap, sequelize, ChiTietHoaDon, HangTrongKho, MatHang} = require("../../database/models")
-const STATUS_CODE = require("../const")
+const {STATUS_CODE} = require("../const")
 module.exports = {
     Mutation: {
       async taoPhieuNhap(root, args, context) {

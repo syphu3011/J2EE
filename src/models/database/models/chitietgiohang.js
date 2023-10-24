@@ -9,22 +9,28 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            ChiTietGioHang.belongsTo(models.Mathang, {
-                as: "MatHang",
-                foreignKey: "mamathang",
-            });
-            ChiTietGioHang.belongsTo(models.KhachHang, {
-                as: "KhachHang",
-                foreignKey: "makhachHang",
-            });
+
         }
     }
     ChiTietGioHang.init(
         {
-            mamathang: {
+            masanpham: {
                 type: DataTypes.INTEGER,
-                primaryKey: true,
-                references: "MatHang",
+                // primaryKey: true,
+                // references: 'SanPham',
+                // referencesKey: 'ma'
+            },
+            makichco: {
+                type: DataTypes.INTEGER,
+                // primaryKey: true,
+                // references: 'KichCo',
+                // referencesKey: 'ma' 
+            },
+            mamau: {
+                type: DataTypes.INTEGER,
+                // primaryKey: true,
+                // references: 'Mau',
+                // referencesKey: 'ma' 
             },
             makhachhang: {
                 type: DataTypes.INTEGER,

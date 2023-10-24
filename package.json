@@ -6,7 +6,7 @@
     "author": "VMTP",
     "license": "ISC",
     "scripts": {
-        "dev": "concurrently \"nodemon src/models/index.js\" \"webpack-dev-server\"",
+        "dev": "webpack-dev-server",
         "start": "concurrently \"node src/models/index.js\" \"webpack\""
     },
     "dependencies": {
@@ -21,8 +21,10 @@
         "babel-preset-react": "^6.24.1",
         "babel-preset-react-hmre": "^1.1.1",
         "babel-preset-stage-2": "^6.24.1",
+        "bcrypt": "^5.1.1",
         "bcryptjs": "^2.4.3",
         "body-parser": "^1.20.2",
+        "cookie-parser": "^1.4.6",
         "cors": "^2.8.5",
         "dotenv": "^8.6.0",
         "express": "^4.17.1",
@@ -30,6 +32,7 @@
         "graphql-resolvers": "^0.4.2",
         "history": "^5.3.0",
         "html-webpack-plugin": "^5.5.3",
+        "json-web-token": "^3.2.0",
         "jsonwebtoken": "^8.5.1",
         "mysql2": "^3.6.1",
         "pg": "^8.0.3",
@@ -45,6 +48,7 @@
         "ts-node": "^10.9.1",
         "tsx": "^3.13.0",
         "typescript": "^5.2.2",
+        "universal-cookie": "^6.1.1",
         "webpack": "^5.88.2",
         "webpack-cli": "^5.1.4",
         "webpack-dev-middleware": "^6.1.1",
