@@ -9,19 +9,20 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            HoaDon.hasMany(models.ChiTietHoaDon, {
-                as: "TrangThaiHoaDon",
+            HoaDon.belongsToMany(models.HangTrongKho, {
+                as: "HangTrongKho",
+                through: "ChiTietHoaDon",
                 foreignKey: "mahoadon",
             });
-            HoaDon.belongsToMany(models.TrangThaiHoaDon, {
+            HoaDon.belongsTo(models.TrangThaiHoaDon, {
                 as: "TrangThaiHoaDon",
                 foreignKey: "matrangthaihoadon",
             });
-            HoaDon.belongsToMany(models.NhanVien, {
+            HoaDon.belongsTo(models.NhanVien, {
                 as: "NhanVien",
                 foreignKey: "manhanvien",
             });
-            HoaDon.belongsToMany(models.KhachHang, {
+            HoaDon.belongsTo(models.KhachHang, {
                 as: "KhachHang",
                 foreignKey: "makhachhang",
             });
@@ -53,7 +54,9 @@ module.exports = (sequelize, DataTypes) => {
             sequelize,
             modelName: "HoaDon",
             tableName: "HoaDon",
-            timestamps: false,
+            createdAt: "ngaylap",
+            updatedAt: false,
+            deletedAt: false
         }
     );
     return HoaDon;

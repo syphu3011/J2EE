@@ -14,9 +14,9 @@ module.exports = (sequelize, DataTypes) => {
       MatHang.belongsToMany(models.PhieuNhap, {as: 'PhieuNhap', through: 'ChiTietPhieuNhap', foreignKey: 'masanpham', uniqueKey: 'masanpham'});
       MatHang.belongsToMany(models.PhieuNhap, {as: 'MauNhap', through: 'ChiTietPhieuNhap', foreignKey: 'mamau', uniqueKey: 'mamau'});
       MatHang.belongsToMany(models.PhieuNhap, {as: 'KichThuocNhap', through: 'ChiTietPhieuNhap', foreignKey: 'makichco', uniqueKey: 'makichco'});
-      // MatHang.belongsToMany(models.KhachHang, {as: 'SanPhamGioHang', through: 'ChiTietGioHang', foreignKey: 'masanpham'})
-      // MatHang.belongsToMany(models.KhachHang, {as: 'MauGioHang', through: 'ChiTietGioHang', foreignKey: 'mamau'})
-      // MatHang.belongsToMany(models.KhachHang, {as: 'KichCoGioHang', through: 'ChiTietGioHang', foreignKey: 'makichco'})
+      MatHang.belongsToMany(models.KhachHang, {as: 'SanPhamGioHang', through: 'ChiTietGioHang', foreignKey: 'masanpham'})
+      MatHang.belongsToMany(models.KhachHang, {as: 'MauGioHang', through: 'ChiTietGioHang', foreignKey: 'mamau'})
+      MatHang.belongsToMany(models.KhachHang, {as: 'KichCoGioHang', through: 'ChiTietGioHang', foreignKey: 'makichco'})
       MatHang.belongsTo(models.TrangThaiSanPham, {as: 'TrangThaiSanPham', foreignKey: 'matrangthaisanpham'})
     }
   }

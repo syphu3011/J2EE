@@ -5,7 +5,7 @@ const {
     HoaDon,
     PhieuNhap,
 } = require("../../database/models/");
-const STATUS_CODE = require("../const");
+const {STATUS_CODE} = require("../const");
 
 module.exports = {
     Mutation: {
@@ -160,4 +160,7 @@ module.exports = {
             }
         },
     },
+    Query: {
+    
+    }
 };

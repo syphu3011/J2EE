@@ -17,6 +17,11 @@ module.exports = (sequelize, DataTypes) => {
                 as: "TaiKhoan",
                 foreignKey: "tentaikhoan",
             });
+            KhachHang.belongsToMany(models.MatHang, {
+                as: "MatHang",
+                through: "ChiTietGioHang",
+                foreignKey: "makhachhang"
+            })
         }
     }
     KhachHang.init(

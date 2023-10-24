@@ -10,24 +10,14 @@ import PageContent from '../components/content/content';
 import { BrowserRouter } from 'react-router-dom';
 export default class Main extends React.Component<any, any>   
 {  
-    so() {
-        axios.post 
-    }
     render() {  
         return (
             <div>
                 <BrowserRouter>
-                <BrowserRouter>
                 <Layout>
                     <Header/>
                     <PageContent/>
-                    <PageContent/>
-                    <PageContent/>
-                    <PageContent/>
-                    <PageContent/>
-                    <PageContent/>
                 </Layout>
-                </BrowserRouter>
                 </BrowserRouter>
                 
           </div>
