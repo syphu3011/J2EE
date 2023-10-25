@@ -1,8 +1,6 @@
 
 import { Button, Col, Layout, Row, Select, SelectProps, Space, Upload} from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
 import "../../../style/product.css"
-import { Image } from 'antd';
 const { Header, Content } = Layout;
 import React, { useState } from 'react';
 import { Form, Input, InputNumber, Popconfirm, Table, Typography, Tag } from 'antd';
@@ -24,13 +22,14 @@ const contentStyle: React.CSSProperties = {
 
 interface Item {
   key: string;
-  id_pro: string;
-  name_pro: string;
-  type_pro: string[];
-  color: string[];
-  size_pro: string[];
-  describe: string;
-  image: string[];
+  id_pro_imp: string;
+  name_imp: string;
+  color_imp: string;
+  size_imp: string;
+  provider: string;
+  amount_imp: number;
+  price_imp: number;
+  total_imp:number;
 }
 
 const originData: Item[] = [];
@@ -38,16 +37,17 @@ const options: SelectProps['options'] = [];
 const handleChange = (value: string[]) => {
   console.log(`selected ${value}`);
 };
-for (let i = 0; i < 20; i++) {
+for (let i = 0; i < 11; i++) {
   originData.push({
     key: i.toString(),
-    id_pro: `${i}`,
-    name_pro: `Áo quần ${i}`,
-    type_pro: ['áo', 'quần'],
-    color: ['FF0000','000000'],
-    size_pro: ['S','M','L'],
-    describe: `Đây là quần áo`,
-    image:['https://bizweb.dktcdn.net/100/415/697/products/nta126-xpj0wgjv-1-ko0v-hinh-mat-truoc-0.jpg','https://bizweb.dktcdn.net/100/415/697/products/ahu2keci-1-iirh-hinh-mat-truoc-01.jpg']
+    id_pro_imp: `${i}`,
+    name_imp: `Áo quần ${i}`,
+    color_imp: '000000',
+    size_imp: 'L',
+    provider: `Đây là quần áo`,
+    amount_imp: 15,
+    price_imp: 3200000,
+    total_imp: 3200000 * 15,
   });
 }
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
@@ -93,15 +93,13 @@ const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
     </td>
   );
 };
-const Product= () => {
+const Import= () => {
   const [form] = Form.useForm();
   const [data, setData] = useState(originData);
   const [editingKey, setEditingKey] = useState('');
-
   const isEditing = (record: Item) => record.key === editingKey;
-
   const edit = (record: Partial<Item> & { key: React.Key }) => {
-    form.setFieldsValue({ name: '',numberphone: '',birthday: '' , ...record });
+    form.setFieldsValue({ name_imp: '',provider: '',amount_imp: '' , ...record });
     setEditingKey(record.key);
   };
 
@@ -136,80 +134,49 @@ const Product= () => {
   const columns = [
     {
       title: 'Mã',
-      dataIndex: 'id_pro',
-      width: '10%',
+      dataIndex: 'id_pro_imp',
+      width: 'auto',
     },
     {
       title: 'Tên sản phẩm',
-      dataIndex: 'name_pro',
-      width: '15%',
+      dataIndex: 'name_imp',
+      width: 'auto',
       editable: true,
-    },
-    {
-      title: 'Loại sản phẩm',
-      dataIndex: 'type_pro',
-      width: '10%',
-      render: (type_pro: string[]) => (
-        <>
-          {type_pro.map((tag) => (
-            <Tag  key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          ))}
-        </>
-      )
     },
     {
       title: 'Màu',
-      dataIndex: 'color',
-      width: '15%',
-      render: (color: string[]) => (
-        <>
-          {color.map((tag) => (
-            <Tag color={tag} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          ))}
-        </>
-      )
+      dataIndex: 'color_imp',
+      width: 'auto',
+
     },
     {
       title: 'Kích thước',
-      dataIndex: 'size_pro',
-      width: '10%',
-      render: (size_pro: string[]) => (
-        <>
-          {size_pro.map((tag) => (
-            <Tag  key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          ))}
-        </>
-      )
+      dataIndex: 'size_imp',
+      width: 'auto',
     },
     {
-      title: 'Mô tả',
-      dataIndex: 'describe',
+      title: 'Nhà cung cấp',
+      dataIndex: 'provider',
+      width: 'auto',
       editable: true,
     },
     {
-      title: 'Hình ảnh',
-      dataIndex: 'image',
-      width: '15%',
-      render: (image: string[]) => (
-        <>
-          {image.map((pic) => (
-            <Image
-            width={50}
-            height={50}
-            src={pic}/>
-          ))}
-        </>
-      )
+        title: 'Số lượng',
+        dataIndex: 'amount_imp',
+        editable: true,
+    },
+    {
+        title: 'Giá',
+        dataIndex: 'price_imp',
+        editable: true,
+    },
+    {
+        title: 'Tổng tiền',
+        dataIndex: 'total_imp',
     },
     {
       title: 'Sửa',
-      dataIndex: 'editcus',
+      dataIndex: 'edit_imp',
       width: '8%',
       render: (_: any, record: Item) => {
         const editable = isEditing(record);
@@ -262,7 +229,7 @@ const Product= () => {
                 <Layout>
                     <Header style={headerStyle} > 
                     <Row gutter={16}>
-                      <Col className="gutter-row" span={5}>
+                      <Col className="gutter-row" span={7}>
                       <Form.Item label="Tên:"
                         labelAlign ='left'
                         labelCol={{span: 5}}>
@@ -281,7 +248,7 @@ const Product= () => {
                         />
                       </Form.Item> 
                       </Col>
-                      <Col className="gutter-row" span={5}>
+                      <Col className="gutter-row" span={7}>
                         <div>
                           <Form.Item label="Màu:"
                             labelAlign ='left'
@@ -312,25 +279,10 @@ const Product= () => {
                             </Form.Item> 
                         </div>
                       </Col>
-                      <Col className="gutter-row" span={5}>
+                      <Col className="gutter-row" span={7}>
                         <div >
                         <Form.Item label="Mô tả">
                           <TextArea rows={4} />
-                        </Form.Item>
-                        </div>
-                      </Col>
-                      <Col className="gutter-row" span={6}>
-                        <div>
-                        <Form.Item label="Ảnh" valuePropName="fileList" getValueFromEvent={normFile}
-                        labelAlign ='left'
-                        labelCol={{span: 4}}
-                        >
-                          <Upload action="/upload.do" listType="picture-card">
-                            <div>
-                              <PlusOutlined />
-                              <div style={{ marginTop: 8 }}>Upload</div>
-                            </div>
-                          </Upload>
                         </Form.Item>
                         </div>
                       </Col>
@@ -368,4 +320,4 @@ const Product= () => {
             </Space>
         )
 }
-export default Product;
+export default Import;
