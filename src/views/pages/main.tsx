@@ -26,7 +26,7 @@ export default class Main extends React.Component<any, any>
                     <PageContent/>
                    <ChatApp/>
                     <Footer/>
-
+                    
                 </Layout>
                 </BrowserRouter>
              

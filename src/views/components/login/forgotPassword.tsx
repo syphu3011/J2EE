@@ -50,7 +50,7 @@ export default class ForgotPaswords extends React.Component<ForgotPasswordProps,
                               ]
                          }
                          >
-                              <Input placeholder="Email" type="email" size="large" required/>
+                              <Input placeholder="Email" type="email" size="large" />
                               
                          </Form.Item>
                          <Form.Item>

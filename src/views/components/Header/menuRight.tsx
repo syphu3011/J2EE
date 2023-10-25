@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from "react-router-dom";
 import {Menu} from "antd";
 import {SearchOutlined,ShoppingCartOutlined,UserOutlined,LoginOutlined,PlusCircleOutlined,EditOutlined,LogoutOutlined } from "@ant-design/icons";
 import SearchItem from "../search/search";
@@ -28,14 +29,18 @@ const MenuRight =()=>{
      const handleSignUpFormClose = ()=>{
           setActiveSignUp(false);
      }
+     const navigate = useNavigate();
+     const handleUpdateClick=(item)=>{
+          navigate(`/${item.key}`);
+     }
      React.useEffect(() => {
           const childrenUpdate = isLoggedIn
             ? [
                 {
                   icon: <EditOutlined className="large-icon" />,
                   label: "Cập nhật thông tin",
-                  //onClick: handleUpdateClick,
-                  key: "update",
+                  onClick: handleUpdateClick,
+                  key: "cap-nhat-thong-tin",
                   className: "groupIcons"
                 },
                 {
@@ -91,7 +96,7 @@ const MenuRight =()=>{
           <div className={active?"login-form-container active" :"login-form-container"}>
           <Login onClose={handleLoginFormClose}  isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>          </div>
           <div className={activeSignUp?"signup-form-container active":"signup-form-container"}>
-               <SignUp onCloseSignUp={handleSignUpFormClose}/>
+               <SignUp onCloseSignUp={handleSignUpFormClose} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
           </div>
           </div>
      )
