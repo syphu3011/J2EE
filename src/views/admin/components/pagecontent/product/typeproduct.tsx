@@ -238,10 +238,14 @@ const Typeproduct= () => {
                     <Header style={headerStyle} > 
                     <Row gutter={16}>
                       <Col className="gutter-row" span={7}>
-                      <Form.Item label="Tên loại:">
+                      <Form.Item label="Tên loại:"
+                      labelAlign ='left'
+                      labelCol={{span: 6}}>
                         <Input />
                       </Form.Item>
                       <Form.Item label="Thuộc loại"
+                        labelAlign ='left'
+                        labelCol={{span: 6}}
                         style={{ width: '100%', height: 30, minWidth: '100%'}}>
                         <Select
                           mode="multiple"

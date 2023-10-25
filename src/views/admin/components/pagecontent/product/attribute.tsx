@@ -206,11 +206,15 @@ const Attribute= () => {
                     <Header style={headerStyle} > 
                     <Row gutter={16}>
                       <Col className="gutter-row" span={8}>
-                      <Form.Item label="Tên:">
+                      <Form.Item label="Tên:"
+                      labelAlign ='left'
+                      labelCol={{span: 5}}>
                         <Input />
                       </Form.Item>
                       <Form.Item label="Loại"
-                        style={{ width: '100%', height: 30, minWidth: '100%'}}>
+                      labelAlign ='left'
+                      labelCol={{span: 5}}
+                      style={{ width: '100%', height: 30, minWidth: '100%'}}>
                         <Select
                           placeholder="Hãy chọn"
                           onChange={handleChange}
