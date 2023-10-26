@@ -4,12 +4,12 @@ import "../../../style/product.css"
 const { Header, Content } = Layout;
 import React, { useState } from 'react';
 import { Form, Input, InputNumber, Popconfirm, Table, Typography, Tag } from 'antd';
-import TextArea from 'antd/es/input/TextArea';
+import { Footer } from 'antd/es/layout/layout';
 const headerStyle: React.CSSProperties = {
     color: '#000000',
-    minHeight: 120,
+    minHeight: 100,
     paddingInline: 10,
-    lineHeight: '180px',
+    lineHeight: '100px',
     backgroundColor: '#ffffff',
   };
 const contentStyle: React.CSSProperties = {
@@ -135,7 +135,7 @@ const Import= () => {
     {
       title: 'Mã',
       dataIndex: 'id_pro_imp',
-      width: 'auto',
+      width: '5%',
     },
     {
       title: 'Tên sản phẩm',
@@ -163,16 +163,19 @@ const Import= () => {
     {
         title: 'Số lượng',
         dataIndex: 'amount_imp',
+        width: 'auto',
         editable: true,
     },
     {
         title: 'Giá',
         dataIndex: 'price_imp',
+        width: 'auto',
         editable: true,
     },
     {
         title: 'Tổng tiền',
         dataIndex: 'total_imp',
+        width: 'auto',
     },
     {
       title: 'Sửa',
@@ -196,6 +199,13 @@ const Import= () => {
         );
       },
     },
+    {
+      title: 'Xóa',
+      key: 'operation',
+      dataIndex: 'delete',
+      width: '8%',
+      render: () => <a>Xóa</a>,
+    },
   ];
   for (let i = 10; i < 36; i++) {
     options.push({
@@ -218,30 +228,28 @@ const Import= () => {
       }),
     };
   });
-  const normFile = (e: any) => {
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e?.fileList;
-  };
+
         return(
             <Space direction="vertical" style={{ width: '100%' }} size={[0, 48]}>
                 <Layout>
                     <Header style={headerStyle} > 
                     <Row gutter={16}>
                       <Col className="gutter-row" span={7}>
-                      <Form.Item label="Tên:"
+                      <Form.Item label="Nhà cung cấp"
                         labelAlign ='left'
-                        labelCol={{span: 5}}>
-                        <Input />
-                      </Form.Item>
-                      <Form.Item label="Loại"
-                        labelAlign ='left'
-                        labelCol={{span: 5}}
+                        labelCol={{span: 6}}
                         style={{ width: '100%', height: 30, minWidth: '100%'}}>
                         <Select
-                          mode="multiple"
-                          allowClear
+                          placeholder="Please select"
+                          onChange={handleChange}
+                          options={options}
+                        />
+                      </Form.Item>
+                      <Form.Item label="Sản phẩm"
+                        labelAlign ='left'
+                        labelCol={{span:6}}
+                        style={{ width: '100%', height: 30, minWidth: '100%'}}>
+                        <Select
                           placeholder="Please select"
                           onChange={handleChange}
                           options={options}
@@ -252,7 +260,7 @@ const Import= () => {
                         <div>
                           <Form.Item label="Màu:"
                             labelAlign ='left'
-                            labelCol={{span: 8}}
+                            labelCol={{span: 5}}
                             style={{ width: '100%', height: 30, minWidth: '100%'}}
                             >
                             <Select
@@ -266,7 +274,7 @@ const Import= () => {
                             </Form.Item> 
                             <Form.Item label="Kích thước:"
                             labelAlign ='left'
-                            labelCol={{span: 8}}
+                            labelCol={{span: 5}}
                             style={{ width: '100%', height: 30, minWidth: '100%'}}>
                             <Select
                                 mode="multiple"
@@ -280,41 +288,66 @@ const Import= () => {
                         </div>
                       </Col>
                       <Col className="gutter-row" span={7}>
-                        <div >
-                        <Form.Item label="Mô tả">
-                          <TextArea rows={4} />
-                        </Form.Item>
-                        </div>
+                        <Form.Item label="Giá:"
+                            labelAlign ='left'
+                            labelCol={{span: 4}}
+                            style={{ width: '100%', height: 30, minWidth: '100%'}}
+                            >
+                            <Input />
+                        </Form.Item> 
+                        <Form.Item label="Số lượng:"
+                            labelAlign ='left'
+                            labelCol={{span: 4}}
+                            style={{ width: '100%', height: 30, minWidth: '100%'}}
+                            >
+                            <Input />
+                        </Form.Item> 
                       </Col>
                       <Col className="gutter-row" span={3}>
-                        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+                        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: 100}}>
                           <Button type="primary" style={{ width: '70%', marginBottom: 30}}>
                             Thêm
-                          </Button>
-                          <Button type="primary"  style={{ width: '70%'}}>
-                            Làm mới
                           </Button>
                         </div>
                       </Col>
                     </Row>
                     </Header>
                     <Content style={contentStyle} > 
-                            <Form form={form} component={false}>
-                                <Table
-                                    components={{
-                                    body: {
-                                        cell: EditableCell,
-                                    },
-                                    }}
-                                    bordered
-                                    dataSource={data}
-                                    columns={mergedColumns}
-                                    rowClassName="editable-row"
-                                    pagination={{
-                                    onChange: cancel,
-                                    }}
-                                />
-                            </Form>
+                      <Form form={form} component={false}>
+                          <Table
+                              components={{
+                                body: {
+                                    cell: EditableCell,
+                                },
+                                }}
+                              bordered
+                              dataSource={data}
+                              columns={mergedColumns}
+                              rowClassName="editable-import"
+                              pagination={ false }
+                              scroll={{ x: 800, y: 500 }}
+                              summary={(pageData) => { 
+                                let totalBorrow = 0;
+                                pageData.forEach(({ total_imp }) => {
+                                  totalBorrow +=total_imp;
+                                });
+                                return (
+                                  <Table.Summary fixed>
+                                    <Table.Summary.Row>
+                                      <Table.Summary.Cell index={0}>Tổng tiền</Table.Summary.Cell>
+                                      <Table.Summary.Cell index={1}></Table.Summary.Cell>
+                                      <Table.Summary.Cell index={2}></Table.Summary.Cell>
+                                      <Table.Summary.Cell index={3}></Table.Summary.Cell>
+                                      <Table.Summary.Cell index={4}></Table.Summary.Cell>
+                                      <Table.Summary.Cell index={5}></Table.Summary.Cell>
+                                      <Table.Summary.Cell index={6}></Table.Summary.Cell>
+                                      <Table.Summary.Cell index={7}>{totalBorrow}</Table.Summary.Cell>
+                                    </Table.Summary.Row>
+                                  </Table.Summary>
+                              );
+                            }}
+                          />
+                      </Form>
                     </Content>
                 </Layout>
             </Space>

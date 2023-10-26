@@ -14,7 +14,7 @@ import {
 import type { MenuProps } from 'antd';
 import { Avatar, Badge, Breadcrumb, Layout, Menu, theme } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import ContentAdmin from './content';
+import ContentAdmin from './pagecontent/content';
 import Search from 'antd/es/input/Search';
 const { Header, Content, Sider } = Layout;
 const items1:MenuItem[]=[ getItem('Admin', 'user', <PiUserSquareDuotone />, [getItem('Đăng xuất', 'log_out')])];
@@ -37,7 +37,7 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-  getItem('Trang chủ','', <HomeOutlined />),
+  getItem('Trang chủ','home', <HomeOutlined />),
   getItem('Khách hàng', 'Customer', <TeamOutlined />, [getItem('Thông tin khách hàng', 'Customers'), getItem('Tài khoản khách hàng', 'AccountCus')]),
   getItem('Sản phẩm', 'Product', <GiClothes />,[getItem('Sản Phẩm','Products'),getItem('Loại sản phẩm','TypePro'),
                                                 getItem('Sản phẩm trong kho','ProInStock'),getItem('Thuộc tính sản phẩm','Attribute')] ),
@@ -62,7 +62,7 @@ export default function layout() {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Header style={{ display: 'flex', alignItems: 'center', justifyContent :'space-between' }} className='header'>
-        <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['']} items={items1} />
+        <Menu theme="dark" mode="horizontal"  items={items1} />
         <Search placeholder="input search text" 
          style={{ width: '50%' }} />
         <div />
@@ -72,7 +72,7 @@ export default function layout() {
       </Header>
       <Layout>
         <Sider width={250} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-          <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} onClick={onMenuClick}/>
+          <Menu theme="dark" defaultSelectedKeys={['']} mode="inline" items={items} onClick={onMenuClick}/>
         </Sider>
         <Layout style={{ padding: '0 24px 24px' }}>
           <Breadcrumb style={{ margin: '16px 0' }}>

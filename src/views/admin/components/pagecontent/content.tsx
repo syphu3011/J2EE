@@ -1,5 +1,5 @@
 import React from'react';
-import AppRoutesAdmin from '../router/router';
+import AppRoutesAdmin from '../../router/router';
 export default class ContentAdmin extends React.Component{
     render(){
         return(

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Routes,Route} from 'react-router-dom';
+import {Routes,Route, createBrowserRouter} from 'react-router-dom';
 import HomeAdmin from '../components/pagecontent/home';
 import Customer from '../components/pagecontent/customer/customer';
 import Product from '../components/pagecontent/product/product';
@@ -11,13 +11,19 @@ import Typeproduct from '../components/pagecontent/product/typeproduct';
 import Inventory from '../components/pagecontent/product/inventory';
 import Attribute from '../components/pagecontent/product/attribute';
 import Import from '../components/pagecontent/import/importcoupon';
+import HisImp from '../components/pagecontent/import/historyImp'
+import Login from '../components/pagecontent/loginpage';
+import Staff from '../components/pagecontent/staff/staffs';
+import AccStaff from '../components/pagecontent/staff/accountStaff';
+
 export default class AppRoutesAdmin extends React.Component {
     
      render(){
-
-          return(
+          
+          return(    
                <Routes>
-                    <Route path="/" element={<HomeAdmin/>}   ></Route>
+                    <Route path="/" element={<Login />}   ></Route>
+                    <Route path="/home" element={<HomeAdmin/>}   ></Route>
                     <Route path="/Customers" element={<Customer/>}></Route>
                     <Route path="/AccountCus" element={<AccountCus/>} ></Route>              
                     <Route path="/Products" element={<Product/>} ></Route>
@@ -28,6 +34,9 @@ export default class AppRoutesAdmin extends React.Component {
                     <Route path="/Orders" element={<Order/>} ></Route>
                     <Route path="/HistoryOr" element={<History/>} ></Route>
                     <Route path="/ImportNew" element={<Import/>} ></Route>
+                    <Route path="/HistoryImp" element={<HisImp/>} ></Route>
+                    <Route path="/InforStaff" element={<Staff/>} ></Route>
+                    <Route path="/AccountStaff" element={<AccStaff/>} ></Route>
                </Routes>
           )
      }
