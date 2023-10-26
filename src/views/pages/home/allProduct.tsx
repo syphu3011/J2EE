@@ -3,9 +3,9 @@ const root_directory_source = '/src/views/components/Image';
 const sale = `${root_directory_source}/SaleProduct/sale1.png`;
 const sale2  = `${root_directory_source}/SaleProduct/sale2.png`;
 const sale3  = `${root_directory_source}/SaleProduct/sale3.png`;
-import {Image,Carousel,Card} from "antd";
+import {Image,Carousel,Card, Row, Col, Button} from "antd";
 const testImage = `${root_directory_source}/CardsMenu/Rectangle 56.png`;
-import { LeftOutlined, RightOutlined,CheckCircleOutlined,DeliveredProcedureOutlined,ThunderboltOutlined,SyncOutlined} from '@ant-design/icons';
+import { LeftOutlined, RightOutlined,CheckCircleOutlined,DeliveredProcedureOutlined,ThunderboltOutlined,SyncOutlined,ShoppingCartOutlined} from '@ant-design/icons';
 import CardMenu from "../../components/content/menuCard";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -85,16 +85,30 @@ export default function AllProduct(){
                     </div>
                     <div className="slider_1">
                     <div className="sliderProduct" data-aos="fade-up">
-                         <Carousel slidesToShow={3} slidesToScroll={3} rows={2} arrows={true} prevArrow={<LeftOutlined />} nextArrow={<RightOutlined />}>
+                         <Carousel slidesToShow={3} slidesToScroll={2} rows={2} arrows={true} prevArrow={<LeftOutlined />} nextArrow={<RightOutlined />}>
                               
                               {
                                    productData.map((product)=>(
                                         <div>
                                         <Card key={product.id} id="card_1">
-                                             
-                                                  <Image src={product.image}></Image>
+                                                  <Image src={product.image} id="image-card"></Image> <br/>
                                                   <h4>{product.name}</h4>
                                                   <p>{product.Giá}</p>
+                                                  <Row gutter={[6,6]} className="action-cart-btn">
+                                                      <Col >
+                                                          <Button className="add-to-cart-button btn-1">
+                                                          <span><ShoppingCartOutlined />Thêm vào giỏ</span>
+                                                          </Button>
+                                                      </Col>
+                                                      <Col>
+                                                          <Button className="add-to-cart-button btn-2">
+                                                            <span>Mua ngay</span>
+                                                          </Button>
+                                                      </Col>
+                                                  </Row>
+                                             
+                                                  
+                                             
                
                                         </Card>
                                         </div>
@@ -123,10 +137,24 @@ export default function AllProduct(){
                                    productData.map((product)=>(
                                         <div>
                                         <Card key={product.id} id="card_1">
-                                             
-                                                  <Image src={product.image}></Image>
+                                                  <Image src={product.image} id="image-card"></Image> <br/>
                                                   <h4>{product.name}</h4>
                                                   <p>{product.Giá}</p>
+                                                  <Row gutter={[6,6]} className="action-cart-btn">
+                                                      <Col >
+                                                          <Button className="add-to-cart-button btn-1">
+                                                          <span><ShoppingCartOutlined />Thêm vào giỏ</span>
+                                                          </Button>
+                                                      </Col>
+                                                      <Col>
+                                                          <Button className="add-to-cart-button btn-2">
+                                                            <span>Mua ngay</span>
+                                                          </Button>
+                                                      </Col>
+                                                  </Row>
+                                             
+                                                  
+                                             
                
                                         </Card>
                                         </div>
@@ -153,10 +181,24 @@ export default function AllProduct(){
                                    productData.map((product)=>(
                                         <div>
                                         <Card key={product.id} id="card_1">
-                                             
-                                                  <Image src={product.image}></Image>
+                                                  <Image src={product.image} id="image-card"></Image> <br/>
                                                   <h4>{product.name}</h4>
                                                   <p>{product.Giá}</p>
+                                                  <Row gutter={[6,6]} className="action-cart-btn">
+                                                      <Col >
+                                                          <Button className="add-to-cart-button btn-1">
+                                                          <span><ShoppingCartOutlined />Thêm vào giỏ</span>
+                                                          </Button>
+                                                      </Col>
+                                                      <Col>
+                                                          <Button className="add-to-cart-button btn-2">
+                                                            <span>Mua ngay</span>
+                                                          </Button>
+                                                      </Col>
+                                                  </Row>
+                                             
+                                                  
+                                             
                
                                         </Card>
                                         </div>
