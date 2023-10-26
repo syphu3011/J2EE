@@ -1,39 +1,24 @@
 import React from 'react';
-import { Row,Col,Form,Input, Radio, Upload } from 'antd';
+import { Row,Col,Form,Input, Radio, Upload, FormInstance, Modal } from 'antd';
 import {PlusOutlined} from '@ant-design/icons';
-import UpdateSuccess,{UpdatePassSuccess} from '../../components/alert/updateSuccess';
 interface UserState {
      filelist: string;
-     showSuccessMessage: boolean;
-     showSuccessMessForPassword:boolean;
-     userProfiles: Array<String>;
-     userProfilesPass: UserProfile;
-     shouldPreventDefault:boolean;
-   }
-   interface UserProfile {
-     old_pass: string;
-     newPass: string;
-     comfirmNewPass: string;
+     userProfiles: string[];
+    
+    
    }
 export default class UpdateInformation extends React.Component<{},UserState> {
+     formRef = React.createRef<FormInstance>();
      constructor(props){
           super(props);
           this.state={
                filelist:'',
                userProfiles:[],
-               showSuccessMessage: false,
-               showSuccessMessForPassword:false,
-               userProfilesPass:  {
-                    old_pass: '',
-                    newPass: '',
-                    comfirmNewPass: '',
-                  },
-               shouldPreventDefault:true,
 
 
           }
      }
-     handleChange = (e) => {
+     /*handleChange = (e) => {
           const { name, value } = e.target;
           this.setState((prevState) => ({
             userProfiles: {
@@ -42,6 +27,14 @@ export default class UpdateInformation extends React.Component<{},UserState> {
             },
           }));
         };
+    */
+     /*handleChange = (event) => {
+          const { name, value } = event.target;
+          this.setState(prevState => ({
+            ...prevState,
+            [name]: value
+          }));
+        };*/
      handlePreview = (file) => {
           const reader = new FileReader();
           reader.onload = () => {
@@ -72,54 +65,66 @@ export default class UpdateInformation extends React.Component<{},UserState> {
                callback();
           }
      }
-     handleSubmitUpdateInform=async({
+     handleSubmitUpdateInform=({
           username,fullname,gender,birthdate,phoneNumber,Email,address,createDate
      })=>{
           const userProfiles=[username,fullname,gender,birthdate,phoneNumber,Email,address,createDate];
           console.log("Form values:", userProfiles);
-          this.setState({userProfiles});
-          //this.setState({active:true});
-          this.setState({showSuccessMessage:true});
+         Modal.success({
+          content: 'Cập nhật thông tin thành công!',
+        });
           console.log("Edit Success!");
           
 
      }
-     handleSubmitPassword = async(values: any): Promise<void>=>{
-        const { old_pass, newPass, comfirmNewPass } = values;
-        console.log(values);
-          const { userProfilesPass } = this.state;
-         // console.log("Form values:", userProfilesPass);
-          //this.setState({userProfilesPass});
-         // this.setState({active:true});
-          this.setState({showSuccessMessForPassword:true});
-          console.log("Edit Pass Success!");
-     }
+     handleSubmitPassword = (values:any)=>{
+          const {oldPass} = values;
+          console.log("Form values:", values);
+         
+          if(oldPass!=='Tran@123'){
+               this.formRef.current?.setFields([
+               {
+                    name:'oldPass',
+                    errors:['Mật khẩu cũ của bạn không chính xác'],
+               }
+               ])
+               Modal.error({
+                    content: 'Lỗi!Hãy thử lại vào lần sau!',
+                  });
+               console.log('Update pass Failed')
+          }
+          else{
+               this.formRef.current?.resetFields();
+               /*this.setState({
+                    showSuccessMessForPassword:true
+               })*/
+               Modal.success({
+                    content: 'Đổi mật khẩu thành công!',
+                  });
+               console.log("Edit Pass Success!");
+          }
+          
+     };
      
      render(){
          /* const onChange=(date,dateString)=>{
                console.log(date, dateString);
           }*/
           
-          const{showSuccessMessage,showSuccessMessForPassword,userProfilesPass,shouldPreventDefault}=this.state;
           const validatePassword = (password) => {
                const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?#&]{6,}$/;
                return passwordRegex.test(password);
              };
-             if(showSuccessMessage) {
-               return <UpdateSuccess/>
-               
-          }
-          if(showSuccessMessForPassword){
-               return <UpdatePassSuccess/>
-          }
+          
           return(
                <div className="update-container">
+
                     <Row gutter={[24, 24]}>
                          <Col className="gutter-row"flex={3}>
                          <div className="form-update-information">
                               <h3>CẬP NHẬT THÔNG TIN CÁ NHÂN</h3>
                               
-                              <Form  name="wrap"
+                              <Form  name="wrap" ref={this.formRef}
                                    labelCol={{ flex: '180px' }}
                                    labelAlign="left"
                                    labelWrap
@@ -288,7 +293,7 @@ export default class UpdateInformation extends React.Component<{},UserState> {
                          <Col className="gutter-row" flex={2}>
                               <div className="form-update-password">
                               <h3>ĐỔI MẬT KHẨU</h3>
-                              <Form name="wrap" 
+                              <Form name="wrap" ref={this.formRef}
                                    labelCol={{ flex: '180px' }}
                                    labelAlign="left"
                                    labelWrap
@@ -299,7 +304,7 @@ export default class UpdateInformation extends React.Component<{},UserState> {
                                   >
                                    <Form.Item
                                    hasFeedback
-                                   name="old_pass"
+                                   name="oldPass"
                                    label="Mật khẩu cũ"
                                    labelAlign='left'
                                    //labelCol={{span:6}}
@@ -309,18 +314,20 @@ export default class UpdateInformation extends React.Component<{},UserState> {
                                              {
                                                   required:true,
                                                   message:"Nhập mật khẩu cũ",
-                                             },{
+                                             },
+                                             {
                                                   validator: (_, value) => {
                                                        if (validatePassword(value) && value.length >=6) {
                                                          return Promise.resolve();
                                                        }
                                                        return Promise.reject("Mật khẩu phải từ 6 kí tự trở lên, bao gồm chữ in hoa, chữ thường, ký tự đặc biệt và số");
-                                             }
+                                             },
+                                             
                                         }
                                         ]
                                    }
                                    >
-                                        <Input.Password placeholder="Nhập mật khẩu cũ" size="large" value={userProfilesPass.old_pass}/>
+                                        <Input.Password placeholder="Nhập mật khẩu cũ" size="large" value=""/>
                                    </Form.Item>
                                    <Form.Item
                                    hasFeedback
@@ -340,12 +347,13 @@ export default class UpdateInformation extends React.Component<{},UserState> {
                                                          return Promise.resolve();
                                                        }
                                                        return Promise.reject("Mật khẩu phải từ 6 kí tự trở lên, bao gồm chữ in hoa, chữ thường, ký tự đặc biệt và số");
-                                             }
-                                        }
+                                             },
+                                        },
+                                             
                                         ]
                                    }
                                    >
-                                        <Input.Password placeholder="Nhập mật khẩu mới"size="large" value={userProfilesPass.newPass}/>
+                                        <Input.Password placeholder="Nhập mật khẩu mới"size="large" value=""/>
                                    </Form.Item>
                                    <Form.Item
                                    hasFeedback
@@ -379,7 +387,7 @@ export default class UpdateInformation extends React.Component<{},UserState> {
                                         ]
                                    }
                                    >
-                                        <Input.Password  placeholder="Nhập lại mật khẩu mới" size="large" value={userProfilesPass.comfirmNewPass}/>
+                                        <Input.Password  placeholder="Nhập lại mật khẩu mới" size="large" value=""/>
                                    </Form.Item>
                                    <Input type="submit" value="Đổi mật khẩu" className="btn-btnUpdatePassword" size="large" />
 

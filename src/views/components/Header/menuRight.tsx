@@ -5,6 +5,7 @@ import {SearchOutlined,ShoppingCartOutlined,UserOutlined,LoginOutlined,PlusCircl
 import SearchItem from "../search/search";
 import Login from "../login/login";
 import SignUp from '../login/signup';
+import UpdateInformation from '../../pages/editInformation/updateInformation';
 
 const MenuRight =()=>{
      const [isLoggedIn,setIsLoggedIn] = React.useState(false);
@@ -12,6 +13,7 @@ const MenuRight =()=>{
      const [visible, setVisible] = React.useState(false);    
      const [active, setActive] = React.useState(false);    
      const [activeSignUp,setActiveSignUp] = React.useState(false);
+     const [isFormSubmitted, setIsFormSubmitted] = React.useState(false);
      const handleSearchClick = () => {
           setVisible(!visible);
         };
@@ -32,6 +34,7 @@ const MenuRight =()=>{
      const navigate = useNavigate();
      const handleUpdateClick=(item)=>{
           navigate(`/${item.key}`);
+          //setIsFormSubmitted(true);
      }
      React.useEffect(() => {
           const childrenUpdate = isLoggedIn
@@ -39,7 +42,7 @@ const MenuRight =()=>{
                 {
                   icon: <EditOutlined className="large-icon" />,
                   label: "Cập nhật thông tin",
-                  onClick: handleUpdateClick,
+                  onClick:  handleUpdateClick,
                   key: "cap-nhat-thong-tin",
                   className: "groupIcons"
                 },
@@ -71,7 +74,7 @@ const MenuRight =()=>{
           setChildren(childrenUpdate);
         }, [isLoggedIn]);
      return(
-          <div className="MenuRight">
+          <div className="MenuRight" >
                <Menu className="RightMenu" mode="horizontal"  items={
           [
                {
