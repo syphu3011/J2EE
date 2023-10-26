@@ -1,17 +1,21 @@
 import React from 'react';
-import {Form,Row,Col,Input,DatePicker, Checkbox, FormInstance} from 'antd';
+import {Form,Row,Col,Input, Checkbox, FormInstance} from 'antd';
 import {CloseOutlined } from "@ant-design/icons";
 import SocialNetWorks from './socailNetWorks';
 import Login  from './login';
 import SuccessSignUp from '../alert/signUpSuccess';
+import SuccessLogin from '../alert/LoginSuccess';
 
 interface SignUpProps{
      onCloseSignUp:()=>void;
+     isLoggedIn:boolean;
+     setIsLoggedIn:(isLoggedIn:boolean)=>void;
 }
 interface SignUpState{
      active:boolean;
      showFormLogin:boolean;
      checked: boolean;
+     isLoggedIn: boolean;
      showSuccessMessage: boolean;
      formValues: string[],
 }
@@ -25,6 +29,8 @@ export default class SignUp extends React.Component<SignUpProps, SignUpState> {
                checked:false,
                showSuccessMessage: false,
                formValues: [],
+               isLoggedIn:false,
+               
           };
      }
      handleSignUpCloseClick=()=>{
@@ -35,12 +41,13 @@ export default class SignUp extends React.Component<SignUpProps, SignUpState> {
      }
      handleLoginForm=()=>{
           this.setState({
+               active:false,
                showFormLogin:true,
           })
      }
      handleLoginClose=()=>{
           this.setState({
-               active:false,
+               //active:false,
                showFormLogin:false,
           });
           this.props.onCloseSignUp();
@@ -50,40 +57,61 @@ export default class SignUp extends React.Component<SignUpProps, SignUpState> {
                checked: e.target.checked
           });
      }
+     validatePhoneNumber=(rule,value,callback)=>{
+          const regex=/^[0-9]{10}$/;
+          if(!regex.test(value)){
+               callback('Số điện thoại không hợp lệ!');
+          }
+          else{
+               callback();
+          }
+     }
       validation=(rule,value,callback) =>{
           if(this.state.checked){
                return callback();
           }
           return callback("Hãy nhấn đồng ý thỏa thuận về điều khoản ");
      }
+     
      handleSubmit = async({ fullName, birthdate, username, Email, password, confirmPass, numberPhone }) =>{
           //console.log("Form values:", value); // Log the form values to the console
           const formValues = [fullName, birthdate, username, Email, password, confirmPass, numberPhone];
           console.log("Form values:", formValues);
           this.setState({formValues});
            // Display success message
+           this.setState({showSuccessMessage:true});
+
           // Reset the form fields after successful submission
           this.formRef.current?.resetFields();
-          this.setState({ active: false,showFormLogin:false});
+          this.setState({ active: true,showFormLogin:true});
           this.props.onCloseSignUp();
-           
           console.log('Registration successful');
-          this.setState({showSuccessMessage:true});
+          
      }
      render(){
-          const onChange=(date,dateString)=>{
+          /*const onChange=(date,dateString)=>{
                console.log(date, dateString);
-          }
-          const{showFormLogin,showSuccessMessage}= this.state;
-          if(showFormLogin){
+          }*/
+          const validatePassword = (password) => {
+               const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+               return passwordRegex.test(password);
+             };
+          const{showFormLogin,showSuccessMessage,isLoggedIn}= this.state;
+          /*if(showFormLogin){
                return <Login onClose={this.handleLoginClose} isLoggedIn={true} setIsLoggedIn={this.handleLoginForm}/>
-          }
+          }*/
           if(showSuccessMessage) {
                return <SuccessSignUp/>
                
           }
           return(
                <div>
+                    {
+                         this.state.showFormLogin ? (
+                              <Login onClose={this.handleLoginClose} isLoggedIn={isLoggedIn} setIsLoggedIn={this.props.setIsLoggedIn}/>
+                              
+                         ):(
+                    
                     <Form name="signup" initialValues={{}}
                      autoComplete='off' onFinish={this.handleSubmit} ref={this.formRef}
                     >
@@ -124,7 +152,8 @@ export default class SignUp extends React.Component<SignUpProps, SignUpState> {
 
                                         ]}
                                    >
-                                        <DatePicker onChange={onChange} size="large"/>
+                                        <Input type="date" placeholder=""/>
+
                                    </Form.Item>
                          </Col>
                     </Row>
@@ -184,9 +213,13 @@ export default class SignUp extends React.Component<SignUpProps, SignUpState> {
                                         message :"Nhập mật khẩu"
                                    }
                                    ,{
-                                        min:6,
-                                        message:"Mật khẩu phải từ 6 kí tự trở lên"
+                                        validator: (_, value) => {
+                                             if (validatePassword(value) && value.length >=6) {
+                                               return Promise.resolve();
+                                             }
+                                             return Promise.reject("Mật khẩu phải từ 6 kí tự trở lên, bao gồm chữ in hoa, chữ thường, ký tự đặc biệt và số");
                                    }
+                              }
                               ]}
                               >
                                    <Input.Password placeholder="Password" size='large'/>
@@ -241,14 +274,22 @@ export default class SignUp extends React.Component<SignUpProps, SignUpState> {
                                              required:true,
                                              message:"Nhập số điện thoại của bạn",
                                         },{
-                                             type:"string",
-                                             message:"Số điện thoại không đúng định dạng",
+                                             validator:this.validatePhoneNumber,
                                         }
+                                   
 
                                    ]
                               }
                               >
-                                   <Input placeholder='Phone number' size="large"/>
+                                   
+                                   <Row wrap={false}>
+                                        <Col flex="none">
+                                             <Input placeholder='+84' disabled size="large" style={{width:'70px'}}/>
+                                             </Col>
+                                             <Col flex="auto">
+                                             <Input  type="text" placeholder="Phone number" size="large"/>
+                                             </Col>
+                                   </Row>
                               </Form.Item>
                          </Col>
                     </Row>
@@ -274,6 +315,7 @@ export default class SignUp extends React.Component<SignUpProps, SignUpState> {
                     <p onClick={this.handleLoginForm}>Hoặc bạn đã là thành viên ?<a className="create-account"> Đăng nhập</a> </p>
                     
                     </Form>
+                    )}
                </div>
           )
      }
