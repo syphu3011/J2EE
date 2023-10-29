@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import {Menu} from "antd";
+import {Badge, Menu} from "antd";
 import {SearchOutlined,ShoppingCartOutlined,UserOutlined,LoginOutlined,PlusCircleOutlined,EditOutlined,LogoutOutlined } from "@ant-design/icons";
 import SearchItem from "../search/search";
 import Login from "../login/login";
@@ -8,6 +8,7 @@ import SignUp from '../login/signup';
 import UpdateInformation from '../../pages/editInformation/updateInformation';
 
 const MenuRight =()=>{
+     const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
      const [isLoggedIn,setIsLoggedIn] = React.useState(false);
      const [children, setChildren] = React.useState([]);
      const [visible, setVisible] = React.useState(false);    
@@ -82,7 +83,7 @@ const MenuRight =()=>{
                     key:"search",
                     
                },{
-                    label:<ShoppingCartOutlined className="large-icon" style={{fontWeight:'bolder',fontSize:'25px'}} />,
+                    label:<Badge count={0} className="soppingCartIcon" showZero><ShoppingCartOutlined className="large-icon" style={{fontWeight:'bolder',fontSize:'25px'}} /></Badge>,
                     key:"Cart",
                },{
                     label:<UserOutlined className="large-icon" style={{fontWeight:'bolder',fontSize:'25px'}} />,

@@ -3,6 +3,7 @@ import Home from '../pages/home/home';
 import Category from '../pages/category/category';
 import {Routes,Route} from 'react-router-dom';
 import UpdateInformation from '../pages/editInformation/updateInformation';
+import ProductDetail from '../components/product/productDetail';
 export default class AppRoutes extends React.Component {
      render(){
           return(
@@ -10,6 +11,7 @@ export default class AppRoutes extends React.Component {
                     <Route path='/' element={<Home/>}></Route>
                     <Route path="/:categoryId" element={<Category/>}></Route>
                     <Route path="/cap-nhat-thong-tin" element={<UpdateInformation/>}></Route>
+                    <Route path="/products/:categoryId/:nameId" element={<ProductDetail/>}></Route>
                </Routes>
           )
      }

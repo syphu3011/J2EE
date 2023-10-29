@@ -1,0 +1,68 @@
+.color-groups {
+     display: flex;
+     flex-wrap: wrap;
+}
+   
+   .color {
+     width: 30px;
+     height: 30px;
+     margin:10px;
+     padding:2px;
+     cursor: pointer;
+     border-radius: 50%;
+     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+   }
+   .color:hover{
+     border:1px solid black;
+   }
+   .color-white {
+     background-color: white;
+   }
+   
+   .color-black {
+     background-color: black;
+   }
+   
+   .color-yellow {
+     background-color: yellow;
+   }
+   
+   .color-blue {
+     background-color: blue;
+   }
+   
+   .color-red {
+     background-color: red;
+   }
+   
+   .active-color {
+     border: 2px solid black;
+   }
+   .color-Aqua{
+     background-color: #00FFFF;
+   }
+   .color-Bisque{
+     background-color: #FFE4C4;
+   }
+   .color-brown{
+     background-color: #A52A2A;
+   }
+   .color-chartreuse{
+     background-color: #7fff00;
+   }
+   .color-cornflowerBlue{
+     background-color: #6495ed;
+   }
+   .color-gray{
+     background-color: gray;
+   }
+   .color-green{
+     background-color: #228;
+   }
+   .color-yellow{
+     background-color: yellow;
+   }
+   .color-purple{
+     background-color: purple;
+   }
+   

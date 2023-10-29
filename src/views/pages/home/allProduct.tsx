@@ -3,74 +3,19 @@ const root_directory_source = '/src/views/components/Image';
 const sale = `${root_directory_source}/SaleProduct/sale1.png`;
 const sale2  = `${root_directory_source}/SaleProduct/sale2.png`;
 const sale3  = `${root_directory_source}/SaleProduct/sale3.png`;
-import {Image,Carousel,Card, Row, Col, Button} from "antd";
-const testImage = `${root_directory_source}/CardsMenu/Rectangle 56.png`;
-import { LeftOutlined, RightOutlined,CheckCircleOutlined,DeliveredProcedureOutlined,ThunderboltOutlined,SyncOutlined,ShoppingCartOutlined} from '@ant-design/icons';
+import {Image,Carousel,Card} from "antd";
+import { LeftOutlined, RightOutlined,CheckCircleOutlined,DeliveredProcedureOutlined,ThunderboltOutlined,SyncOutlined} from '@ant-design/icons';
 import CardMenu from "../../components/content/menuCard";
 import AOS from "aos";
 import "aos/dist/aos.css";
-
+import AddToCartButton from '../../components/cart/addToCartButton';
+import { Link } from 'react-router-dom';
+import productData from '../../components/product/productData';
 export default function AllProduct(){
           useEffect(() => {
                AOS.init({ duration: 1000 });
              }, []);
-          const productData =[
-          {
-               id: 1,
-               image:testImage,
-               name: 'Áo sơ mi tay lỡ phối ren',
-               Giá : '1.999.000 VND',
-          },{
-               id: 2,
-               image:testImage,
-               name: 'Áo sơ mi tay lỡ phối ren',
-               Giá : '1.999.000 VND',
-          },{
-               id: 3,
-               image:testImage,
-               name: 'Áo sơ mi tay lỡ phối ren',
-               Giá : '1.999.000 VND',
-          },
-          {
-               id: 4,
-               image:testImage,
-               name: 'Áo sơ mi tay lỡ phối ren',
-               Giá : '1.999.000 VND',
-          },
-          {
-               id: 5,
-               image:testImage,
-               name: 'Áo sơ mi tay lỡ phối ren',
-               Giá : '1.999.000 VND',
-          },
-          {
-               id: 6,
-               image:testImage,
-               name: 'Áo sơ mi tay lỡ phối ren',
-               Giá : '1.999.000 VND',
-          },
-          {
-               id: 7,
-               image:testImage,
-               name: 'Áo sơ mi tay lỡ phối ren',
-               Giá : '1.999.000 VND',
-          },{
-               id: 8,
-               image:testImage,
-               name: 'Áo sơ mi tay lỡ phối ren',
-               Giá : '1.999.000 VND',
-          },{
-               id: 9,
-               image:testImage,
-               name: 'Áo sơ mi tay lỡ phối ren',
-               Giá : '1.999.000 VND',
-          },{
-               id: 10,
-               image:testImage,
-               name: 'Áo sơ mi tay lỡ phối ren',
-               Giá : '1.999.000 VND',
-          }
-          ]
+          
          return(
           <div>
                <CardMenu/>
@@ -90,27 +35,18 @@ export default function AllProduct(){
                               {
                                    productData.map((product)=>(
                                         <div>
+                                        <Link to={`/products/${product.category}/${product.name}`}>
                                         <Card key={product.id} id="card_1">
-                                                  <Image src={product.image} id="image-card"></Image> <br/>
+                                                  <Image src={product.image[0]} id="image-card"></Image> <br/>
                                                   <h4>{product.name}</h4>
-                                                  <p>{product.Giá}</p>
-                                                  <Row gutter={[6,6]} className="action-cart-btn">
-                                                      <Col >
-                                                          <Button className="add-to-cart-button btn-1">
-                                                          <span><ShoppingCartOutlined />Thêm vào giỏ</span>
-                                                          </Button>
-                                                      </Col>
-                                                      <Col>
-                                                          <Button className="add-to-cart-button btn-2">
-                                                            <span>Mua ngay</span>
-                                                          </Button>
-                                                      </Col>
-                                                  </Row>
+                                                  <p>{product.price}</p>
+                                                  <AddToCartButton item={undefined}/>
                                              
                                                   
                                              
                
                                         </Card>
+                                        </Link>
                                         </div>
                                    ))
                               }
@@ -136,27 +72,18 @@ export default function AllProduct(){
                               {
                                    productData.map((product)=>(
                                         <div>
+                                        <Link to={`/products/${product.category}/${product.name}`}>
                                         <Card key={product.id} id="card_1">
-                                                  <Image src={product.image} id="image-card"></Image> <br/>
+                                                  <Image src={product.image[0]} id="image-card"></Image> <br/>
                                                   <h4>{product.name}</h4>
-                                                  <p>{product.Giá}</p>
-                                                  <Row gutter={[6,6]} className="action-cart-btn">
-                                                      <Col >
-                                                          <Button className="add-to-cart-button btn-1">
-                                                          <span><ShoppingCartOutlined />Thêm vào giỏ</span>
-                                                          </Button>
-                                                      </Col>
-                                                      <Col>
-                                                          <Button className="add-to-cart-button btn-2">
-                                                            <span>Mua ngay</span>
-                                                          </Button>
-                                                      </Col>
-                                                  </Row>
+                                                  <p>{product.price}</p>
+                                                  <AddToCartButton item={undefined}/>
                                              
                                                   
                                              
                
                                         </Card>
+                                        </Link>
                                         </div>
                                    ))
                               }
@@ -180,27 +107,18 @@ export default function AllProduct(){
                               {
                                    productData.map((product)=>(
                                         <div>
+                                        <Link to={`/products/${product.category}/${product.name}`}>
                                         <Card key={product.id} id="card_1">
-                                                  <Image src={product.image} id="image-card"></Image> <br/>
+                                                  <Image src={product.image[0]} id="image-card"></Image> <br/>
                                                   <h4>{product.name}</h4>
-                                                  <p>{product.Giá}</p>
-                                                  <Row gutter={[6,6]} className="action-cart-btn">
-                                                      <Col >
-                                                          <Button className="add-to-cart-button btn-1">
-                                                          <span><ShoppingCartOutlined />Thêm vào giỏ</span>
-                                                          </Button>
-                                                      </Col>
-                                                      <Col>
-                                                          <Button className="add-to-cart-button btn-2">
-                                                            <span>Mua ngay</span>
-                                                          </Button>
-                                                      </Col>
-                                                  </Row>
+                                                  <p>{product.price}</p>
+                                                  <AddToCartButton item={undefined}/>
                                              
                                                   
                                              
                
                                         </Card>
+                                        </Link>
                                         </div>
                                    ))
                               }
