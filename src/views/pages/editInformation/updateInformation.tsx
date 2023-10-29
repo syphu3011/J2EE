@@ -228,14 +228,8 @@ export default class UpdateInformation extends React.Component<{},UserState> {
                                         }
                                    ]}
                                    >
-                                        <Row wrap={false}>
-                                        <Col flex="none">
-                                             <Input placeholder='+84' disabled size="large" style={{width:'70px'}}/>
-                                             </Col>
-                                             <Col flex="auto">
-                                             <Input  type="text" placeholder="" size="large" width={40}/>
-                                             </Col>
-                                        </Row>
+                                        <Input addonBefore="+84" type="text" placeholder="Phone number" size="large"/>
+
                                    </Form.Item>
                                    <Form.Item
                               hasFeedback

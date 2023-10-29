@@ -282,14 +282,8 @@ export default class SignUp extends React.Component<SignUpProps, SignUpState> {
                               }
                               >
                                    
-                                   <Row wrap={false}>
-                                        <Col flex="none">
-                                             <Input placeholder='+84' disabled size="large" style={{width:'70px'}}/>
-                                             </Col>
-                                             <Col flex="auto">
-                                             <Input  type="text" placeholder="Phone number" size="large"/>
-                                             </Col>
-                                   </Row>
+                                   <Input addonBefore="+84" type="text" placeholder="Phone number" size="large"/>
+
                               </Form.Item>
                          </Col>
                     </Row>
