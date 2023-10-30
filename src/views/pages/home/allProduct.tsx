@@ -1,8 +1,12 @@
 import React,{useEffect} from 'react';
-const root_directory_source = '/src/views/components/Image';
+/*const root_directory_source = '/src/views/components/Image';
 const sale = `${root_directory_source}/SaleProduct/sale1.png`;
 const sale2  = `${root_directory_source}/SaleProduct/sale2.png`;
-const sale3  = `${root_directory_source}/SaleProduct/sale3.png`;
+const sale3  = `${root_directory_source}/SaleProduct/sale3.png`;*/
+import sale from "../../components/Image/SaleProduct/sale1.png";
+import sale2 from "../../components/Image/SaleProduct/sale2.png";
+import sale3 from "../../components/Image/SaleProduct/sale3.png";
+
 import {Image,Carousel,Card} from "antd";
 import { LeftOutlined, RightOutlined,CheckCircleOutlined,DeliveredProcedureOutlined,ThunderboltOutlined,SyncOutlined} from '@ant-design/icons';
 import CardMenu from "../../components/content/menuCard";
@@ -35,18 +39,18 @@ export default function AllProduct(){
                               {
                                    productData.map((product)=>(
                                         <div>
-                                        <Link to={`/products/${product.category}/${product.name}`}>
                                         <Card key={product.id} id="card_1">
+                                             <Link to={`/products/${product.category}/${product.name}`}>
                                                   <Image src={product.image[0]} id="image-card"></Image> <br/>
                                                   <h4>{product.name}</h4>
-                                                  <p>{product.price}</p>
+                                                  <p>{product.price} VND</p>
+                                             </Link>
                                                   <AddToCartButton item={undefined}/>
                                              
                                                   
                                              
                
                                         </Card>
-                                        </Link>
                                         </div>
                                    ))
                               }
@@ -72,18 +76,18 @@ export default function AllProduct(){
                               {
                                    productData.map((product)=>(
                                         <div>
-                                        <Link to={`/products/${product.category}/${product.name}`}>
                                         <Card key={product.id} id="card_1">
+                                             <Link to={`/products/${product.category}/${product.name}`}>
                                                   <Image src={product.image[0]} id="image-card"></Image> <br/>
                                                   <h4>{product.name}</h4>
-                                                  <p>{product.price}</p>
+                                                  <p>{product.price} VND</p>
+                                             </Link>
                                                   <AddToCartButton item={undefined}/>
                                              
                                                   
                                              
                
                                         </Card>
-                                        </Link>
                                         </div>
                                    ))
                               }
@@ -107,18 +111,18 @@ export default function AllProduct(){
                               {
                                    productData.map((product)=>(
                                         <div>
-                                        <Link to={`/products/${product.category}/${product.name}`}>
                                         <Card key={product.id} id="card_1">
+                                             <Link to={`/products/${product.category}/${product.name}`}>
                                                   <Image src={product.image[0]} id="image-card"></Image> <br/>
                                                   <h4>{product.name}</h4>
-                                                  <p>{product.price}</p>
+                                                  <p>{product.price} VND</p>
+                                             </Link>
                                                   <AddToCartButton item={undefined}/>
                                              
                                                   
                                              
                
                                         </Card>
-                                        </Link>
                                         </div>
                                    ))
                               }

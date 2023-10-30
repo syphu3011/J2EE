@@ -1,6 +1,10 @@
 .color-groups {
      display: flex;
      flex-wrap: wrap;
+     color:#b4b2b2;
+     font-size: 30px;
+     margin-left: 17px;
+     margin-top:10px;
 }
    
    .color {
