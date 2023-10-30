@@ -49,16 +49,24 @@ module.exports = {
           },
           {
             test: /\.(jpeg|jpg|png|woff|woff2|eot|ttf|svg)$/, // to import images and fonts
-            loader: "url-loader",
+            use: [
+           { loader: "url-loader",
             options: { limit: false },
-          },
-          {
-            test: /\.(png|jpe?g|gif|jp2|webp)$/,
-            loader: 'file-loader',
-            options: {
-                name: '[name].[ext]',
-            },
           }
+            ]
+          },
+        //   {
+        //     test: /\.(png|jpe?g|gif|jp2|webp)$/,
+        //     use: [
+        //         {
+        //           loader: 'file-loader',
+
+        //             options: {
+        //                 name: '[name].[ext]',
+        //             },
+        //         },
+        //       ]
+        //   }
         ],
 
 
