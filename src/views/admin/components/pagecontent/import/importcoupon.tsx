@@ -4,7 +4,6 @@ import "../../../style/product.css"
 const { Header, Content } = Layout;
 import React, { useState } from 'react';
 import { Form, Input, InputNumber, Popconfirm, Table, Typography, Tag } from 'antd';
-import { Footer } from 'antd/es/layout/layout';
 const headerStyle: React.CSSProperties = {
     color: '#000000',
     minHeight: 100,
@@ -334,8 +333,8 @@ const Import= () => {
                                 return (
                                   <Table.Summary fixed>
                                     <Table.Summary.Row>
-                                      <Table.Summary.Cell index={0}>Tổng tiền</Table.Summary.Cell>
-                                      <Table.Summary.Cell index={1}></Table.Summary.Cell>
+                                      <Table.Summary.Cell index={0}></Table.Summary.Cell>
+                                      <Table.Summary.Cell index={1}>Tổng tiền</Table.Summary.Cell>
                                       <Table.Summary.Cell index={2}></Table.Summary.Cell>
                                       <Table.Summary.Cell index={3}></Table.Summary.Cell>
                                       <Table.Summary.Cell index={4}></Table.Summary.Cell>

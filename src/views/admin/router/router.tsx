@@ -15,7 +15,9 @@ import HisImp from '../components/pagecontent/import/historyImp'
 import Login from '../components/pagecontent/loginpage';
 import Staff from '../components/pagecontent/staff/staffs';
 import AccStaff from '../components/pagecontent/staff/accountStaff';
-
+import Partner from '../components/pagecontent/partner/partnerInfo';
+import Provider from '../components/pagecontent/partner/provider';
+import StatNumber from '../components/pagecontent/Statistics/StatNumber';
 export default class AppRoutesAdmin extends React.Component {
     
      render(){
@@ -37,6 +39,9 @@ export default class AppRoutesAdmin extends React.Component {
                     <Route path="/HistoryImp" element={<HisImp/>} ></Route>
                     <Route path="/InforStaff" element={<Staff/>} ></Route>
                     <Route path="/AccountStaff" element={<AccStaff/>} ></Route>
+                    <Route path="/InforPart" element={<Partner/>} ></Route>
+                    <Route path="/Provider" element={<Provider/>} ></Route>
+                    <Route path="/Number" element={<StatNumber/>} ></Route>
                </Routes>
           )
      }

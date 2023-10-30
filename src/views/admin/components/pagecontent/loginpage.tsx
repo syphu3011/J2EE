@@ -6,28 +6,23 @@ const { Header, Footer, Content } = Layout;
 
 const headerStyle: React.CSSProperties = {
     textAlign: 'center',
-    color: '#fff',
+    color: '#000000',
     height: 64,
     paddingInline: 50,
     lineHeight: '64px',
-    backgroundColor: '#7dbcea',
+    backgroundColor: '#ffffff',
+    
   };
   
   const contentStyle: React.CSSProperties = {
     textAlign: 'center',
+    paddingInline: 50,
     minHeight: 120,
     lineHeight: '120px',
-    color: '#fff',
-    backgroundColor: '#108ee9',
-  };
-  
+    color: '#000000',
+    backgroundColor: '#ffffff',
+  };  
 
-  
-  const footerStyle: React.CSSProperties = {
-    textAlign: 'center',
-    color: '#fff',
-    backgroundColor: '#7dbcea',
-  };
 const onFinish = (values: any) => {
     console.log('Success:', values);
   };
@@ -49,8 +44,11 @@ export default class Login extends React.Component{
         return(
         <><Space direction="vertical" style={{ width: '100%' }} size={[0, 48]}></Space>
         <Layout>
-                <Header style={headerStyle}>Header</Header>
-                <Content style={contentStyle}> <div>
+                <Header style={headerStyle}>Đăng Nhập</Header>
+                <Content style={contentStyle}> 
+                <div 
+                style={{ display: 'flex', alignItems: 'center' , justifyContent: 'center'}}
+                >
                     <Form
                         name="basic"
                         labelCol={{ span: 8 }}
@@ -93,7 +91,6 @@ export default class Login extends React.Component{
                     </Form>
                 </div>
                 </Content>
-                <Footer style={footerStyle}>Footer</Footer>
             </Layout>
         </>
         )

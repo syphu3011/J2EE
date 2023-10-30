@@ -1,24 +1,24 @@
 
-import { Button, Col, DatePicker, Layout, Row, Select, SelectProps, Space, Upload} from 'antd';
+import { Button, Col, DatePicker, Layout, Row, Select, SelectProps, Space, Upload } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import "../../../style/product.css"
 const { Header, Content } = Layout;
 import React, { useState } from 'react';
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from 'antd';
 const headerStyle: React.CSSProperties = {
-    color: '#000000',
-    minHeight: 120,
-    paddingInline: 10,
-    lineHeight: '180px',
-    backgroundColor: '#ffffff',
-  };
+  color: '#000000',
+  minHeight: 120,
+  paddingInline: 10,
+  lineHeight: '180px',
+  backgroundColor: '#ffffff',
+};
 const contentStyle: React.CSSProperties = {
-    textAlign: 'center',
-    minHeight: 120,
-    lineHeight: '120px',
-    color: '#fff',
-    backgroundColor: '#ffffff',
-  };
+  textAlign: 'center',
+  minHeight: 120,
+  lineHeight: '120px',
+  color: '#fff',
+  backgroundColor: '#ffffff',
+};
 
 interface Item {
   key: string;
@@ -64,7 +64,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
   children,
   ...restProps
 }) => {
-const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
+  const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
 
   return (
     <td {...restProps}>
@@ -87,7 +87,7 @@ const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
     </td>
   );
 };
-const AccStaff= () => {
+const AccStaff = () => {
   const [form] = Form.useForm();
   const [data, setData] = useState(originData);
   const [editingKey, setEditingKey] = useState('');
@@ -95,7 +95,7 @@ const AccStaff= () => {
   const isEditing = (record: Item) => record.key === editingKey;
 
   const edit = (record: Partial<Item> & { key: React.Key }) => {
-    form.setFieldsValue({ name: '',numberphone: '',birthday: '' , ...record });
+    form.setFieldsValue({ name: '', numberphone: '', birthday: '', ...record });
     setEditingKey(record.key);
   };
 
@@ -146,17 +146,17 @@ const AccStaff= () => {
       editable: true,
     },
     {
-        title: 'Mật khẩu',
-        dataIndex: 'PasswordStaff',
-        editable: true,
+      title: 'Mật khẩu',
+      dataIndex: 'PasswordStaff',
+      editable: true,
     },
     {
-        title: 'Quyền',
-        dataIndex: 'permission',
+      title: 'Quyền',
+      dataIndex: 'permission',
     },
     {
-        title: 'Trạng thái',
-        dataIndex: 'status',
+      title: 'Trạng thái',
+      dataIndex: 'status',
     },
     {
       title: 'Sửa',
@@ -181,11 +181,11 @@ const AccStaff= () => {
       },
     },
     {
-        title: 'Xóa',
-        key: 'operation',
-        dataIndex: 'delete',
-        width: '8%',
-        render: () => <a>Xóa</a>,
+      title: 'Xóa',
+      key: 'operation',
+      dataIndex: 'delete',
+      width: '8%',
+      render: () => <a>Xóa</a>,
     },
 
   ];
@@ -213,90 +213,90 @@ const AccStaff= () => {
       }),
     };
   });
-        return(
-            <Space direction="vertical" style={{ width: '100%' }} size={[0, 48]}>
-                <Layout>
-                    <Header style={headerStyle} > 
-                    <Row gutter={16}>
-                      <Col className="gutter-row" span={10}>
-                      <Form.Item label="Nhân viên:"
-                        labelAlign ='left'
-                        labelCol={{span: 5}}
-                        >
-                        <Select
-                          mode="multiple"
-                          style={{width: '60%'}}
-                          allowClear
-                          placeholder="Please select"
-                          onChange={handleChange}
-                          options={options}
-                        />
-                      </Form.Item> 
-                      <Form.Item label="Quyền:"
-                        labelAlign ='left'
-                        labelCol={{span: 5}}
-                        >
-                        <Select
-                          mode="multiple"
-                          style={{width: '60%'}}
-                          allowClear
-                          placeholder="Please select"
-                          onChange={handleChange}
-                          options={options}
-                        />
-                      </Form.Item> 
-                      </Col>
-                      <Col className="gutter-row" span={10}>
-                        <div>
-                          <Form.Item label="Tài khoản:"
-                            labelAlign ='left'
-                            labelCol={{span: 6}}
-                            >
-                            <Input 
-                            style={{width: '60%'}}
-                            />
-                            </Form.Item> 
-                            <Form.Item label="Mật Khẩu:"
-                                labelAlign ='left'
-                                labelCol={{span: 6}}>
-                                <Input 
-                                style={{width: '60%'}}
-                                />                           
-                            </Form.Item> 
-                        </div>
-                      </Col>
-                      <Col className="gutter-row" span={4}>
-                        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
-                          <Button type="primary" style={{ width: '70%', marginBottom: 30}}>
-                            Cấp tài khoản
-                          </Button>
-                          <Button type="primary"  style={{ width: '70%'}}>
-                            Làm mới
-                          </Button>
-                        </div>
-                      </Col>
-                    </Row>
-                    </Header>
-                    <Content style={contentStyle} > 
-                            <Form form={form} component={false}>
-                                <Table
-                                    components={{
-                                    body: {
-                                        cell: EditableCell,
-                                    },
-                                    }}
-                                    bordered
-                                    dataSource={data}
-                                    columns={mergedColumns}
-                                    rowClassName="editable-row"
-                                    pagination={{
-                                    onChange: cancel,
-                                    }}
-                                />
-                            </Form>
-                    </Content>
-                </Layout>
-            </Space>
-        )
+  return (
+    <Space direction="vertical" style={{ width: '100%' }} size={[0, 48]}>
+      <Layout>
+        <Header style={headerStyle} >
+          <Row gutter={16}>
+            <Col className="gutter-row" span={10}>
+              <Form.Item label="Nhân viên:"
+                labelAlign='left'
+                labelCol={{ span: 5 }}
+              >
+                <Select
+                  mode="multiple"
+                  style={{ width: '60%' }}
+                  allowClear
+                  placeholder="Please select"
+                  onChange={handleChange}
+                  options={options}
+                />
+              </Form.Item>
+              <Form.Item label="Quyền:"
+                labelAlign='left'
+                labelCol={{ span: 5 }}
+              >
+                <Select
+                  mode="multiple"
+                  style={{ width: '60%' }}
+                  allowClear
+                  placeholder="Please select"
+                  onChange={handleChange}
+                  options={options}
+                />
+              </Form.Item>
+            </Col>
+            <Col className="gutter-row" span={10}>
+              <div>
+                <Form.Item label="Tài khoản:"
+                  labelAlign='left'
+                  labelCol={{ span: 6 }}
+                >
+                  <Input
+                    style={{ width: '60%' }}
+                  />
+                </Form.Item>
+                <Form.Item label="Mật Khẩu:"
+                  labelAlign='left'
+                  labelCol={{ span: 6 }}>
+                  <Input
+                    style={{ width: '60%' }}
+                  />
+                </Form.Item>
+              </div>
+            </Col>
+            <Col className="gutter-row" span={4}>
+              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <Button type="primary" style={{ width: '70%', marginBottom: 30 }}>
+                  Cấp tài khoản
+                </Button>
+                <Button type="primary" style={{ width: '70%' }}>
+                  Làm mới
+                </Button>
+              </div>
+            </Col>
+          </Row>
+        </Header>
+        <Content style={contentStyle} >
+          <Form form={form} component={false}>
+            <Table
+              components={{
+                body: {
+                  cell: EditableCell,
+                },
+              }}
+              bordered
+              dataSource={data}
+              columns={mergedColumns}
+              rowClassName="editable-row"
+              pagination={{
+                onChange: cancel,
+              }}
+            />
+          </Form>
+        </Content>
+      </Layout>
+    </Space>
+  )
 }
 export default AccStaff;

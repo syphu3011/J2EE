@@ -1,5 +1,6 @@
-import React from 'react';
-import { Layout, Space } from 'antd';
+import React, { useState } from 'react';
+import { Button, Form, Input, Layout, Menu, MenuProps, Space } from 'antd';
+import { SendOutlined } from '@ant-design/icons';
 
 const { Header, Footer, Sider, Content } = Layout;
 const headerStyle: React.CSSProperties = {
@@ -15,33 +16,66 @@ const headerStyle: React.CSSProperties = {
     textAlign: 'center',
     minHeight: 470,
     lineHeight: '120px',
-    color: '#fff',
-    backgroundColor: '#108ee9',
+    color: '#000000',
+    backgroundColor: '#ffffff',
+    border: '1px solid'
   };
-  
-  const siderStyle: React.CSSProperties = {
-    textAlign: 'center',
-    lineHeight: '120px',
-    color: '#fff',
-    backgroundColor: '#3ba0e9',
-  };
+
   
   const footerStyle: React.CSSProperties = {
     textAlign: 'center',
-    color: '#fff',
-    backgroundColor: '#7dbcea',
+    color: '#000000',
+    backgroundColor: '#ffffff',
+    minHeight: 64
   };
+  type MenuItem = Required<MenuProps>['items'][number];
+  function getItem(
+    label: React.ReactNode,
+    key: React.Key,
+  ): MenuItem {
+    return {
+      key,
+      label,  
+    } as MenuItem;
+  }
+  
+  let arr=[]
+      for (let i = 0; i < 7; i++) {
+        arr.push(getItem(`Khách ${i}`,`${i}`))
+      };
+  console.log(arr)    
+  const items: MenuItem[] = arr;
+
 export default class message extends React.Component{
+  
     render(){
+      const send = () => {
+        console.log("đã nhấn gửi")
+      };
         return(
+
             <div>
-                <Space direction="vertical" style={{ width: '100%' }} size={[0, 48]}>
+                <Space direction="vertical" style={{ width: '100%', border: '2px solid' }} size={[0, 48] }>
                 <Layout>
-                    <Sider style={siderStyle}>Chọn người nhắn</Sider>
+                <Sider theme="light" style={{  border: '1px solid', minWidth: 150 }} >
+                  <Menu theme="light" defaultSelectedKeys={['']} mode="inline" items={items}/>
+                </Sider>
                     <Layout>
-                        <Header style={headerStyle}>Tên người đang nhắn</Header>
+                        <Header style={headerStyle}>Tên người đang nhắn {}</Header>
                         <Content style={contentStyle}>Tin nhắn</Content>
-                        <Footer style={footerStyle}>Nhập tin nhắn</Footer>
+                        <Footer style={footerStyle}>
+                        <Form.Item >
+                          <div style={{display: 'flex', flexDirection: 'row'}}>
+                            <Input placeholder="Nhập câu trả lời" />
+                            <Button style={{marginLeft:10}} 
+                            type="primary" 
+                            shape="circle" 
+                            icon={<SendOutlined />}
+                            onClick={send}
+                            />
+                          </div>
+                        </Form.Item>
+                        </Footer>
                     </Layout>
                     </Layout>
                 </Space>
