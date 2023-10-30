@@ -1,19 +1,28 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import {Badge, Menu} from "antd";
+import {Badge, Button, Drawer, Menu, Space} from "antd";
 import {SearchOutlined,ShoppingCartOutlined,UserOutlined,LoginOutlined,PlusCircleOutlined,EditOutlined,LogoutOutlined } from "@ant-design/icons";
 import SearchItem from "../search/search";
 import Login from "../login/login";
 import SignUp from '../login/signup';
 import UpdateInformation from '../../pages/editInformation/updateInformation';
+import PageCart from '../cart/pageCart';
 
 const MenuRight =(check:{isLogin: boolean})=>{
+     const [open, setOpen] = useState(false);
      const [isLoggedIn,setIsLoggedIn] = React.useState(check.isLogin);
      const [children, setChildren] = React.useState([]);
      const [visible, setVisible] = React.useState(false);    
      const [active, setActive] = React.useState(false);    
      const [activeSignUp,setActiveSignUp] = React.useState(false);
      const [isFormSubmitted, setIsFormSubmitted] = React.useState(false);
+     
+     const showDrawer=()=>{
+          setOpen(true);
+     }
+     const onClose = () => {
+          setOpen(false);
+        };
      const handleSearchClick = () => {
           setVisible(!visible);
         };
@@ -84,7 +93,7 @@ const MenuRight =(check:{isLogin: boolean})=>{
                     key:"search",
                     
                },{
-                    label:<Badge count={0} className="soppingCartIcon" showZero><ShoppingCartOutlined className="large-icon" style={{fontWeight:'bolder',fontSize:'25px'}} /></Badge>,
+                    label:<Badge count={0} className="soppingCartIcon" showZero><ShoppingCartOutlined className="large-icon" onClick={showDrawer} style={{fontWeight:'bolder',fontSize:'25px'}} /></Badge>,
                     key:"Cart",
                },{
                     label:<UserOutlined className="large-icon" style={{fontWeight:'bolder',fontSize:'25px'}} />,
@@ -102,6 +111,26 @@ const MenuRight =(check:{isLogin: boolean})=>{
           <Login onClose={handleLoginFormClose}  isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>          </div>
           <div className={activeSignUp?"signup-form-container active":"signup-form-container"}>
                <SignUp onCloseSignUp={handleSignUpFormClose} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
+          </div>
+          <div>
+               <Drawer
+                    title="Giỏ hàng của bạn"
+                    width={500}
+                    onClose={onClose}
+                    open={open}
+                    extra={
+                         <Space>
+                         <Button onClick={onClose} className="btn-delete-cart">
+                              Xóa tất cả
+                         </Button>
+                         <Button type="primary" onClick={onClose}>
+                              Thanh toán
+                         </Button>
+                         </Space>
+                         }
+                    >
+                         <PageCart/>
+               </Drawer>
           </div>
           </div>
      )

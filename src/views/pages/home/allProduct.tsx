@@ -39,8 +39,8 @@ export default function AllProduct(){
                               {
                                    productData.map((product)=>(
                                         <div>
-                                        <Card key={product.id} id="card_1">
-                                             <Link to={`/products/${product.category}/${product.name}`}>
+                                        <Card key={product.id} className="card_1">
+                                             <Link to={`/products/${product.id}/${product.name}`}>
                                                   <Image src={product.image[0]} id="image-card"></Image> <br/>
                                                   <h4>{product.name}</h4>
                                                   <p>{product.price} VND</p>
@@ -76,8 +76,9 @@ export default function AllProduct(){
                               {
                                    productData.map((product)=>(
                                         <div>
-                                        <Card key={product.id} id="card_1">
-                                             <Link to={`/products/${product.category}/${product.name}`}>
+                                        <Card key={product.id} className="card_1">
+                                             <Link to={`/products/${product.id}/${product.name}`}>
+
                                                   <Image src={product.image[0]} id="image-card"></Image> <br/>
                                                   <h4>{product.name}</h4>
                                                   <p>{product.price} VND</p>
@@ -111,8 +112,9 @@ export default function AllProduct(){
                               {
                                    productData.map((product)=>(
                                         <div>
-                                        <Card key={product.id} id="card_1">
-                                             <Link to={`/products/${product.category}/${product.name}`}>
+                                        <Card key={product.id} className="card_1">
+                                             <Link to={`/products/${product.id}/${product.name}`}>
+
                                                   <Image src={product.image[0]} id="image-card"></Image> <br/>
                                                   <h4>{product.name}</h4>
                                                   <p>{product.price} VND</p>
