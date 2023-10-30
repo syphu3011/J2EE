@@ -1,5 +1,6 @@
 const path = require("path");
 const fs = require("fs");
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const appDirectory = fs.realpathSync(process.cwd());
 
@@ -8,22 +9,30 @@ module.exports = {
     output: {
         filename: "js/bundleName.js", 
         clean: true,
+        
     },
     resolve: {
         extensions: [".tsx", ".ts", ".js"],
         fallback: {
             fs: false,
-            'path': false
-
+            'path': false,  
+            "constants": false,
+            "crypto": false,
+            "buffer": false
         }
     },
     devServer: {
-        host: "0.0.0.0",
+        host: "localhost",
         port: 8080, 
         static: path.resolve(appDirectory, ""), 
-        hot: true,
+        // hot: true,
         devMiddleware: {
             publicPath: "/",
+        },
+        headers: {
+        "Access-Control-Allow-Origin": "http://localhost:8080",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+        "Access-Control-Allow-Headers": 'Origin, X-Requested-With, Content-Type, Accept'
         }
     },
     module: {
@@ -58,8 +67,15 @@ module.exports = {
         new HtmlWebpackPlugin({
             inject: true,
             template: path.resolve(appDirectory, "public/index.html"),
-        })
+        }),
+        new webpack.ProvidePlugin({
+            Buffer: ['buffer', 'Buffer'],
+        }),
+        new webpack.ProvidePlugin({
+            process: 'process/browser',
+        }),
     ],
+
     mode: "development",
     
 };

@@ -27,15 +27,13 @@ type TaiKhoanResponse {
   status: Int!
   message: String!
 }
-type Token {
-  maquyen: Int!
-  accessToken: String!
-  refreshToken: String!
-}
 type DangNhapResponse {
   status: Int!
   message: String!
-  data: Token
+}
+type DangNhapTokenResponse {
+  status: Int!
+  message: String!
 }
 extend type Query {
   taikhoan: TaiKhoanQueryResponse
@@ -45,7 +43,7 @@ extend type Query {
 extend type Mutation {
   taoTaiKhoan(input: TaiKhoanInput): TaiKhoanResponse
   dangNhap(input: TaiKhoanInput):DangNhapResponse
-  dangNhapVoiToken(input: TaiKhoanTokenInput):DangNhapResponse
+  dangNhapVoiToken: DangNhapTokenResponse
   dangNhapAdminVoiToken(input: TaiKhoanTokenInput):DangNhapResponse
   suaTaiKhoan(input: TaiKhoanInput): TaiKhoanResponse
   xoaTaiKhoan(ma: Int!): TaiKhoanResponse

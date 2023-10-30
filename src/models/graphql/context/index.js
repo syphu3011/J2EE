@@ -2,6 +2,7 @@ const {TaiKhoan} = require('../../database/models')
 const jwt = require('jsonwebtoken');
 const { AuthenticationError } = require('apollo-server-express');
 const { LIFE_AT, LIFE_RT, PRIVATE_CODE_AT, PRIVATE_CODE_RT } = require('../const');
+const decrypt = require('../../utils/crypto')
 function jwtVerify(token, secret) {
   return new Promise((resolve, reject) => {
     jwt.verify(token, secret, (err, decoded) => {
@@ -42,5 +43,6 @@ module.exports = async ({ req, res }) => {
   if ((token || rToken)) {
     taikhoan = await verifyToken(token, rToken, res)
   }
-  return {taikhoan, res};
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+  return {taikhoan, res, req};
 };

@@ -1,47 +1,57 @@
 import axios from 'axios';
 import CONFIG_CALL from '../const';
 import axios_default from '../../../utils/axios';
+import { encrypt } from '../../../utils/crypto';
 
 export async function login(username, password) {
-    // let rq = `mutation{dangNhap(input:{
-    //     tentaikhoan: "${username}", 
-    //     matkhau: "${password}"}) {
-    //     status
-    //     message
-    //     data {
-    //     accessToken
-    //     refreshToken
-    //     }}
-    // }`
-    let rq = `
-    mutation {
-        taoSanPham(input:{
-          ten: "SanPham3"
-          anhminhhoa: "okok"
-          mota:"deplamnha"
-          maloai: [1,2,3]
-          madonvi: 1
-          manhacungcap: [1,2,3]
-        }) {
-          status
-          message
-              
-        }
-        
-      }
-      `
+    let rq = `mutation dangNhap($username:String!,$password:String!){dangNhap(input:{tentaikhoan: $username, matkhau: $password}){status
+message
+}}`
     try {
-    let rs = await axios_default.post("http://127.0.0.1:3301/api", 
-        {query: rq,isLoginCus: true}
-    ).then(
-        result => {
-            console.log(result);
-            return result.data
+        const rsLogin = axios_default.post(CONFIG_CALL.DEFAULT_URL,
+            { query: rq, variables: {
+                username: username,
+                password: password
+            }})
+        let rs = rsLogin.then(response => {
+            return response.data
         }
-    )
-    return rs
+        ).catch(e => {
+            console.log(e)
+            return {
+                status: 400,
+                message: "Có lỗi xảy ra!",
+                data: e
+            }
+        })
+        console.log(rs)
+        return rs
     }
-    catch(e) {
+    catch (e) {
         console.log(e)
+        return {
+            status: 400,
+            message: "Có lỗi xảy ra!",
+            data: null
+        }
+    }
+}
+export async function authentication() {
+    let rq = `mutation{dangNhapVoiToken{status
+message}}`
+    try {
+        const rsLogin = await axios_default.post(CONFIG_CALL.DEFAULT_URL,
+            { query: rq})
+        let rs = rsLogin.data.data.dangNhapVoiToken
+        if (rs.status == 200) {
+            return true
+        }
+        else {
+            return false
+        }
+    }
+    catch (e) {
+        console.log(e)
+        return false
     }
 }
