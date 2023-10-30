@@ -47,6 +47,7 @@ export default class Login extends React.Component<LoginProps,LoginState>{
      };
      handleSignUpform=()=>{
           this.setState({
+               active:false,
                showFormSignUp:true
           })
           
@@ -54,7 +55,7 @@ export default class Login extends React.Component<LoginProps,LoginState>{
      handleSignUpClose=()=>{
           
           this.setState((prevState) => ({
-               active: !prevState.active,
+              active: !prevState.active,
                showFormSignUp:false
              }));
              this.props.onClose();
@@ -69,10 +70,11 @@ export default class Login extends React.Component<LoginProps,LoginState>{
                  this.props.setIsLoggedIn(true);
                  // Reset the form fields after successful submission
                  this.formRef.current?.resetFields();
+                 this.setState({showSuccessMessage:true});
                  // Close the login form
                  this.setState({ active: false,showFormSignUp:false });
                  this.props.onClose();
-                 this.setState({showSuccessMessage:true});
+                 
                } 
           
           else {
@@ -90,12 +92,13 @@ export default class Login extends React.Component<LoginProps,LoginState>{
           
         }
      render(){
-          const { showSuccessMessage,showForgotPasswordForm,showFormSignUp } = this.state;          if(showForgotPasswordForm){
+          const { showSuccessMessage,showForgotPasswordForm,showFormSignUp } = this.state;          
+          if(showForgotPasswordForm){
                return <ForgotPaswords  onBackToLogin={this.hanldeComback} />;
           }
-          if (showFormSignUp) {
+         /* if (showFormSignUp) {
                return <SignUp onCloseSignUp={this.handleSignUpClose} />;
-             }
+             }*/
           if(showSuccessMessage){
                
                return <SuccessLogin />
@@ -103,7 +106,10 @@ export default class Login extends React.Component<LoginProps,LoginState>{
           return(
                
                
-                   <div className='login'> 
+                   <div className='login'>
+                    {this.state.showFormSignUp?(
+                         <SignUp onCloseSignUp={this.handleSignUpClose} isLoggedIn={false} setIsLoggedIn={this.props.setIsLoggedIn}/>
+                    ):(
                    <Form onFinish={this.handleSubmit} ref={this.formRef}>
                          <div id="close-login-btn"><CloseOutlined onClick={this.handleLoginCloseClick} /></div>
                          <h3>ĐĂNG NHẬP</h3>
@@ -156,10 +162,10 @@ export default class Login extends React.Component<LoginProps,LoginState>{
                          <p onClick={this.handleSignUpform}>Hoặc<a href="#" className="create-account" onClick={this.handleSignUpform}>Tạo tài khoản?</a></p>
                    </Form>
                          
-                   
+                    )}
                    
                     </div> 
                
-          )
+          );
      }
 }
