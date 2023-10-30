@@ -1,10 +1,14 @@
 import MenuRight from "./menuRight";
 import MenuLeft from "./menuLeft";
 import React from "react";
-class Header extends React.Component{
+interface HeaderProps {
+     isLogin: boolean;
+   }
+class Header extends React.Component<HeaderProps> {
      state = {
           prevScrollPos: window.screenY,
-          isVisible: true
+          isVisible: true,
+          isLogin: false
         };
       
         componentDidMount() {
@@ -21,7 +25,8 @@ class Header extends React.Component{
           const isVisible = prevScrollPos > currentScrollPos || currentScrollPos === 0;
           this.setState({
             prevScrollPos: currentScrollPos,
-            isVisible
+            isVisible,
+            isLogin: this.state.isLogin
           });
         };
      render(){
@@ -34,7 +39,7 @@ class Header extends React.Component{
                     <div className={`menuHeader ${isVisible ? "visible" : "hidden"}`}>
                          <div className ="menu" >
                               <MenuLeft />
-                              <MenuRight/>
+                              <MenuRight isLogin={this.props.isLogin}/>
                          </div>
                          
                     </div>

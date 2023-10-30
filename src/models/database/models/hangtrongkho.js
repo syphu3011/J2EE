@@ -9,15 +9,9 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            HangTrongKho.belongsTo(models.MatHang, {
-                as: "MatHang",
-                foreignKey: "mamathang",
-            });
-
-            HangTrongKho.belongsTo(models.PhieuNhap, {
-                as: "PhieuNhap",
-                foreignKey: "maphieunhap",
-            });
+            HangTrongKho.belongsTo(models.ChiTietPhieuNhap, {as: "SanPhamKho", foreignKey: "masanpham"})
+            HangTrongKho.belongsTo(models.ChiTietPhieuNhap, {as: "MauKho", foreignKey: "mamau"})
+            HangTrongKho.belongsTo(models.ChiTietPhieuNhap, {as: "KichCoKho", foreignKey: "makichco"})
         }
     }
     HangTrongKho.init(

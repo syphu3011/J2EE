@@ -9,6 +9,7 @@ module.exports = {
     output: {
         filename: "js/bundleName.js", 
         clean: true,
+        
     },
     resolve: {
         extensions: [".tsx", ".ts", ".js"],
@@ -18,7 +19,7 @@ module.exports = {
             "constants": false,
             "crypto": false,
             "buffer": false
-        },
+        }
     },
     devServer: {
         host: "localhost",

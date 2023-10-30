@@ -1,6 +1,6 @@
 const { Op, literal } = require("sequelize")
 const {Loai, sequelize} = require("../../database/models")
-const STATUS_CODE = require("../const")
+const {STATUS_CODE} = require("../const")
 module.exports = {
     Mutation: {
         async taoLoai(root, args, context) {

@@ -6,7 +6,7 @@ type SanPham {
     ten: String!
     anhminhhoa: String!
     mota: String!
-    giaban: Int!
+    donvi: DonVi
     loai: [Loai!]
 }
 input SanPhamInput {
@@ -14,8 +14,8 @@ input SanPhamInput {
     ten: String!
     anhminhhoa: String!
     mota: String!
-    giaban: Int!
     maloai: [Int!]
+    madonvi: Int!
     manhacungcap: [Int!]
 }
 input SanPhamQuery {

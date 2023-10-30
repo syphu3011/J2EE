@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       SanPham.belongsToMany(models.Mau, {as: 'Mau', through: 'MatHang', foreignKey: 'masanpham'})
       SanPham.belongsToMany(models.KichCo, {as: 'KichCo', through: 'MatHang', foreignKey: 'masanpham'})
       SanPham.belongsTo(models.TrangThaiSanPham, {as: 'TrangThaiSanPham', foreignKey: 'matrangthaisanpham'})
+      SanPham.belongsTo(models.DonVi, {as: 'DonVi', foreignKey: 'madonvi'})
     }
   }
   SanPham.init({
@@ -27,8 +28,8 @@ module.exports = (sequelize, DataTypes) => {
     ten: DataTypes.STRING,
     anhminhhoa: DataTypes.STRING,
     mota: DataTypes.STRING,
-    giaban: DataTypes.INTEGER,
-    matrangthaisanpham: DataTypes.STRING
+    matrangthaisanpham: DataTypes.STRING,
+    madonvi: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'SanPham',
