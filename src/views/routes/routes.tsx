@@ -11,7 +11,7 @@ export default class AppRoutes extends React.Component {
                     <Route path='/' element={<Home/>}></Route>
                     <Route path="/:categoryId" element={<Category/>}></Route>
                     <Route path="/cap-nhat-thong-tin" element={<UpdateInformation/>}></Route>
-                    <Route path="/products/:categoryId/:nameId" element={<ProductDetail/>}></Route>
+                    <Route path="/products/:Id/:nameId" element={<ProductDetail/>}></Route>
                </Routes>
           )
      }

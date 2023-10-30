@@ -5,8 +5,8 @@ import { useState } from "react";
 import AddToCartButton from "../cart/addToCartButton";
 
 function ProductDetail() {
-    const {categoryId,nameId} = useParams()
-    const thisProduct = productData.find(prod => prod.category=== categoryId && prod.name=== nameId)
+    const {nameId,Id} = useParams()
+    const thisProduct = productData.find(prod =>prod.id===Id && prod.name=== nameId)
     const [activeImg, setActiveImage] = useState(thisProduct.image[0])
     //const [amount, setAmount] = useState("");
     const onChange = (value: number) => {

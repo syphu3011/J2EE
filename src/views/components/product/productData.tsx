@@ -25,9 +25,9 @@ const productData =[
           image:[testImage,],
           name: 'Áo sơ mi tay lỡ phối ren',
           price : '1.999.000 VND',
-          size:['xl','xs'],
-          color:['red','green','blue'],
-          category:'Nón',
+          size:['xl'],
+          color:['red','pink','blue'],
+          category:'Vớ',
           state:1,
           quantity:50,
           decription:"Lorem, ipsum dolor sit amet consectetur adipisicing elit. Recusandae rem eligendi repudiandae pariatur. Aut, esse molestias laborum sunt reprehenderit repellat officiis aspernatur consequatur nemo! Veritatis, ex architecto! Eligendi, istenulla."

@@ -192,7 +192,7 @@ width:15%;
 :where(.css-dev-only-do-not-override-3mqfnx).ant-card .ant-card-body{
      padding:0;
 }
- #card_1{
+ .card_1{
      position: relative;
      overflow: hidden;
      margin : 10px;
@@ -206,13 +206,13 @@ width:15%;
       -3px -3px 6px rgba(255,255,255,.3) !important;
 
 }
-#card_1:hover{
+.card_1:hover{
      background: white;
      box-shadow: 3px 3px 6px rgba(128,128,128,.5),
      -3px -3px 6px rgba(255,255,255,.5) !important;
 }
 
- #card_1 h4{
+.card_1 h4{
      margin: 3px;
      padding:2px;
      font-size: 15px;
@@ -220,7 +220,7 @@ width:15%;
      text-transform: uppercase;
      color:brown;
 }
- #card_1 #image-card{
+.card_1 #image-card{
     border-radius: 1rem;
     padding:20px; 
      width:100%;
@@ -229,11 +229,11 @@ width:15%;
     object-fit: cover;
 
 }
-#card_1:hover #image-card {
+.card_1:hover #image-card {
      transform: scale(1.1);
     
 }
- #card_1 p{
+.card_1 p{
      color:black;
      font-size: 20px;
      font-style: normal;
@@ -932,6 +932,19 @@ box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0
 .decription-product p{
      padding:1rem;
      word-wrap: break-word;
+}
+.drawer-container .active{
+     display: block;
+}
+/*cart-drawer*/
+.btn-delete-cart{
+     color:#db4a39;
+     border:1px solid #db4a39;
+}
+:where(.css-dev-only-do-not-override-3mqfnx).ant-drawer .ant-drawer-title{
+     color: #e70c4e;
+     text-transform: uppercase;
+     
 }
 
 
