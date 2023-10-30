@@ -5,6 +5,7 @@ import { Checkbox, Form,FormInstance,Input} from 'antd';
 import ForgotPaswords from './forgotPassword';
 import SignUp from './signup';
 import SuccessLogin from '../alert/LoginSuccess';
+import { login } from '../../../controllers/modules/login';
 interface LoginProps{
      onClose:()=>void;
      isLoggedIn:boolean;
@@ -62,8 +63,8 @@ export default class Login extends React.Component<LoginProps,LoginState>{
      handleSubmit = async (values: any) => {
           const { EmailorUsername, password } = values;
           console.log("Form values:", values); // Log the form values to the console
-
-          if ((EmailorUsername==='phuongvy'||EmailorUsername==='example@gnail.com') && password==='12345678') {
+          let rsLogin = (await login(EmailorUsername, password))
+          if (rsLogin && rsLogin.data && rsLogin.data.dangNhap && rsLogin.data.dangNhap.status == 200) {
                  // Authentication successful
                  console.log('User authenticated');
                  this.props.setIsLoggedIn(true);
@@ -76,27 +77,18 @@ export default class Login extends React.Component<LoginProps,LoginState>{
                  
                } 
           
-          else if(EmailorUsername!=='phuongvy'){
+          else {
                // Handle invalid username
                this.formRef.current?.setFields([
                {
                     name: 'EmailorUsername',
-                    errors: ['Email hoặc tên đăng nhập không đúng'],
+                    errors: ['Tên tài khoản hoặc mật khẩu không chính xác!'],
                },
                ]);
                console.log('Authentication failed');
 
                // Handle error (e.g., display error message)
              }  
-             else {
-               // Handle invalid password
-               this.formRef.current?.setFields([
-                 {
-                   name: 'password',
-                   errors: ['Mật khẩu không đúng'],
-                 },
-               ]);
-             }
           
         }
      render(){
@@ -166,7 +158,7 @@ export default class Login extends React.Component<LoginProps,LoginState>{
                                    Quên mật khẩu ?
                               </div>
                          </Form.Item>
-                         <Input type="submit" value="Đăng nhập" className="btn-btnLogin"/>
+                         <Input type="submit" value="Đăng nhập" onSubmitCapture={e=>e.preventDefault()}  className="btn-btnLogin"/>
                          <p onClick={this.handleSignUpform}>Hoặc<a href="#" className="create-account" onClick={this.handleSignUpform}>Tạo tài khoản?</a></p>
                    </Form>
                          

@@ -7,8 +7,8 @@ import Login from "../login/login";
 import SignUp from '../login/signup';
 import UpdateInformation from '../../pages/editInformation/updateInformation';
 
-const MenuRight =()=>{
-     const [isLoggedIn,setIsLoggedIn] = React.useState(false);
+const MenuRight =(check:{isLogin: boolean})=>{
+     const [isLoggedIn,setIsLoggedIn] = React.useState(check.isLogin);
      const [children, setChildren] = React.useState([]);
      const [visible, setVisible] = React.useState(false);    
      const [active, setActive] = React.useState(false);    
@@ -37,8 +37,11 @@ const MenuRight =()=>{
           //setIsFormSubmitted(true);
      }
      React.useEffect(() => {
-          const childrenUpdate = isLoggedIn
-            ? [
+          setIsLoggedIn(check.isLogin)
+        }, [check.isLogin]);
+     const childrenLogin = () => {
+          return isLoggedIn
+          ? [
                 {
                   icon: <EditOutlined className="large-icon" />,
                   label: "Cập nhật thông tin",
@@ -70,9 +73,8 @@ const MenuRight =()=>{
                   className: "groupIcons"
                 }
               ];
-      
-          setChildren(childrenUpdate);
-        }, [isLoggedIn]);
+     
+     }
      return(
           <div className="MenuRight" >
                <Menu className="RightMenu" mode="horizontal"  items={
@@ -88,7 +90,7 @@ const MenuRight =()=>{
                     label:<UserOutlined className="large-icon" style={{fontWeight:'bolder',fontSize:'25px'}} />,
                     key:"User",
                     
-                    children:children,
+                    children:childrenLogin(),
 
                }
           ]
