@@ -71,18 +71,19 @@ export default class Product extends React.PureComponent<ProductProps,ProductSta
                                        product.id >= this.state.minValue && product.id <= this.state.maxValue
                                    )*/.map((product)=>(
                                         <div>
-                                        <Link to={`/products/${product.category}/${product.name}`}>
                                         <Card key={product.id} id="card_1">
+                                          <Link to={`/products/${product.category}/${product.name}`}>
                                                   <Image src={product.image[0]} id="image-card"></Image> <br/>
                                                   <h4>{product.name}</h4>
                                                   <p>{product.price} VND</p>
+                                          </Link>
                                                   <AddToCartButton item={undefined}/>
                                              
                                                   
                                              
-               
+                                          
                                         </Card>
-                                        </Link>
+                                        
                                         </div>
                                    ))
                               }
