@@ -44,7 +44,7 @@ const items: MenuItem[] = [
   getItem('Đơn hàng', 'Bill', <IoReceiptSharp />,[getItem('Các đơn hàng','Orders'), getItem('Lịch sử đơn hàng','HistoryOr')] ),
   getItem('Nhập hàng', 'ImportPro', <TbPackageImport />,[getItem('Nhập hàng mới','ImportNew'),getItem('Lịch sử nhập','HistoryImp')] ),
   getItem('Nhân viên', 'Staff', <HiUserGroup />,[getItem('Thông tin nhân viên','InforStaff'),getItem('Tài khoản nhân viên','AccountStaff')] ),
-  getItem('Đối tác', 'Partner',<PiHandshakeBold />,[getItem('Thông tin đối tác','InforPart'),getItem('Sản phẩm cung cấp','12')] ),
+  getItem('Đối tác', 'Partner',<PiHandshakeBold />,[getItem('Thông tin đối tác','InforPart'),getItem('Sản phẩm cung cấp','Provider')] ),
   getItem('Thống kê', '19', <PiChartBarFill />,[getItem('Số liệu','number'),getItem('Biểu đồ','chart')] ),
   getItem('Tin nhắn hỗ trợ', 'message', <MessageOutlined /> )
 ];

@@ -1,4 +1,3 @@
-
 import { Button, Col, Layout, Row, Select, SelectProps, Space, Upload} from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import "../../../style/product.css"
