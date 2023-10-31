@@ -12,13 +12,10 @@ import {
   MessageOutlined
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Avatar, Badge, Breadcrumb, Layout, Menu, Switch, theme } from 'antd';
-import { Route, Router, Routes, useNavigate } from 'react-router-dom';
-import ContentAdmin from './pagecontent/content';
+import { Avatar, Badge, Breadcrumb, Layout, Menu, theme } from 'antd';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Search from 'antd/es/input/Search';
-import AppRoutesAdmin from '../router/router';
-import HomeAdmin from './pagecontent/home';
-import Customer from './pagecontent/customer/customer';
+
 const { Header, Content, Sider } = Layout;
 const items1: MenuItem[] = [getItem('Admin', 'user', <PiUserSquareDuotone />, [getItem('Đăng xuất', 'log_out')])];
 
@@ -40,7 +37,7 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-  getItem('Trang chủ', 'trangchu', <HomeOutlined />),
+  getItem('Trang chủ', 'Home', <HomeOutlined />),
   getItem('Khách hàng', 'Customer', <TeamOutlined />, [getItem('Thông tin khách hàng', 'Customers'), getItem('Tài khoản khách hàng', 'AccountCus')]),
   getItem('Sản phẩm', 'Product', <GiClothes />, [getItem('Sản Phẩm', 'Products'), getItem('Loại sản phẩm', 'TypePro'),
   getItem('Sản phẩm trong kho', 'ProInStock'), getItem('Thuộc tính sản phẩm', 'Attribute')]),
@@ -57,8 +54,11 @@ const items: MenuItem[] = [
 export default function LayoutPage() {
   const [Label, setLabel] = useState(`Đăng nhập`);
   const navigate = useNavigate();
+  const log_out= () =>{
+    navigate('/');
+  }
   const onMenuClick = (items) => {
-    navigate(`/home/${items.key}`);
+    navigate(`${items.key}`);
     setLabel(getStringFromSwitch(`${items.key}`));
 
   }
@@ -72,7 +72,7 @@ export default function LayoutPage() {
     
     <Layout style={{ minHeight: '100vh' }}>
       <Header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} className='header'>
-        <Menu theme="dark" mode="horizontal" items={items1} />
+        <Menu theme="dark" mode="horizontal" items={items1} onClick={log_out} />
         <Search placeholder="input search text"
           style={{ width: '50%' }} />
         <div />
@@ -96,12 +96,13 @@ export default function LayoutPage() {
               background: colorBgContainer,
             }}
           >
-            {/* <ContentAdmin/> */}
-            <Routes>
-              <Route path="/home/trangchu" element={<HomeAdmin />} />
-              <Route path="/Customers" element={<Customer />} />
+            <><Outlet /></>
+            
+            {/* <Routes> */}
+              {/* <Route path="/home/trangchu" element={<HomeAdmin />} />
+              <Route path="/Customers" element={<Customer />} /> */}
               {/* Thêm các route con khác tương tự */}
-            </Routes>
+            {/* </Routes> */}
           </Content>
         </Layout>
       </Layout>

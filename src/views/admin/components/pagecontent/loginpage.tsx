@@ -53,7 +53,7 @@ export default function Login(){
                         wrapperCol={{ span: 16 }}
                         style={{ maxWidth: 600 }}
                         initialValues={{ remember: true }}
-                        onFinish={() => navigate('/home')}
+                        onFinish={() => navigate('/Admin')}
                         onFinishFailed={onFinishFailed}
                         autoComplete="off"
                         

@@ -28,7 +28,6 @@ interface Item {
 }
 
 const originData: Item[] = [];
-const options: SelectProps['options'] = [];
 for (let i = 0; i < 20; i++) {
     originData.push({
         key: i.toString(),
