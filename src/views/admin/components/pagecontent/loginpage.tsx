@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Checkbox, Form, Input, Space } from 'antd';
 import { Layout} from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 const { Header, Footer, Content } = Layout;
 
 const headerStyle: React.CSSProperties = {
@@ -37,10 +37,8 @@ const onFinishFailed = (errorInfo: any) => {
     password?: string;
     remember?: string;
   };
-export default class Login extends React.Component{
-    
-    render(){
-        
+export default function Login(){
+        const navigate = useNavigate()
         return(
         <><Space direction="vertical" style={{ width: '100%' }} size={[0, 48]}></Space>
         <Layout>
@@ -55,9 +53,10 @@ export default class Login extends React.Component{
                         wrapperCol={{ span: 16 }}
                         style={{ maxWidth: 600 }}
                         initialValues={{ remember: true }}
-                        onFinish={onFinish}
+                        onFinish={() => navigate('/home')}
                         onFinishFailed={onFinishFailed}
                         autoComplete="off"
+                        
                     >
                         <Form.Item<FieldType>
                             label="Tài khoản"
@@ -84,9 +83,11 @@ export default class Login extends React.Component{
                         </Form.Item>
 
                         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                            
                             <Button type="primary" htmlType="submit">
                                 Đăng nhập
-                            </Button>  
+                            </Button>
+                              
                         </Form.Item>
                     </Form>
                 </div>
@@ -95,4 +96,3 @@ export default class Login extends React.Component{
         </>
         )
     }
-}

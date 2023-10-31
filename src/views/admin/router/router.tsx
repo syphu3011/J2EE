@@ -18,14 +18,11 @@ import AccStaff from '../components/pagecontent/staff/accountStaff';
 import Partner from '../components/pagecontent/partner/partnerInfo';
 import Provider from '../components/pagecontent/partner/provider';
 import StatNumber from '../components/pagecontent/Statistics/StatNumber';
-export default class AppRoutesAdmin extends React.Component {
-    
-     render(){
+export default function AppRoutesAdmin(){
           
-          return(    
-               <Routes>
-                    <Route path="/" element={<Login />}   ></Route>
-                    <Route path="/home" element={<HomeAdmin/>}   ></Route>
+          return( 
+                    <Routes>
+                    <Route path="/trangchu" element={<HomeAdmin/>}  ></Route>
                     <Route path="/Customers" element={<Customer/>}></Route>
                     <Route path="/AccountCus" element={<AccountCus/>} ></Route>              
                     <Route path="/Products" element={<Product/>} ></Route>
@@ -42,7 +39,7 @@ export default class AppRoutesAdmin extends React.Component {
                     <Route path="/InforPart" element={<Partner/>} ></Route>
                     <Route path="/Provider" element={<Provider/>} ></Route>
                     <Route path="/Number" element={<StatNumber/>} ></Route>
-               </Routes>
+                    </Routes>
+              
           )
      }
-}
