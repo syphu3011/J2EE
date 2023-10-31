@@ -9,7 +9,6 @@ module.exports = {
     output: {
         filename: "js/bundleName.js", 
         clean: true,
-        
     },
     resolve: {
         extensions: [".tsx", ".ts", ".js"],
@@ -23,14 +22,14 @@ module.exports = {
     },
     devServer: {
         host: "localhost",
-        port: 8080, 
+        port: 3000, 
         static: path.resolve(appDirectory, ""), 
         // hot: true,
         devMiddleware: {
             publicPath: "/",
         },
         headers: {
-        "Access-Control-Allow-Origin": "http://localhost:8080",
+        "Access-Control-Allow-Origin": "http://localhost:3000",
         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
         "Access-Control-Allow-Headers": 'Origin, X-Requested-With, Content-Type, Accept'
         }
@@ -48,13 +47,27 @@ module.exports = {
            
           },
           {
-            test: /\.(jpeg|jpg|png|woff|woff2|eot|ttf|svg)$/, // to import images and fonts
+            test: /\.(jpeg|jpg|png|woff|woff2|eot|ttf|svg|pem)$/, // to import images and fonts
             use: [
            { loader: "url-loader",
             options: { limit: false },
           }
             ]
+          }
+            ]
           },
+        //   {
+        //     test: /\.(png|jpe?g|gif|jp2|webp)$/,
+        //     use: [
+        //         {
+        //           loader: 'file-loader',
+
+        //             options: {
+        //                 name: '[name].[ext]',
+        //             },
+        //         },
+        //       ]
+        //   }
         //   {
         //     test: /\.(png|jpe?g|gif|jp2|webp)$/,
         //     use: [

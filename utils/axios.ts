@@ -6,8 +6,10 @@ import jsencrypt from "jsencrypt";
 const axios_default = axios.create({
     withCredentials: true,
     headers: {
-      'Access-Control-Allow-Origin': '*',
       'Content-Type': 'application/json',
+      "Access-Control-Allow-Origin": "http://localhost:8080",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+      "Access-Control-Allow-Headers": 'Origin, X-Requested-With, Content-Type, Accept'
     },
 
 })

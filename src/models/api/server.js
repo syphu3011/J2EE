@@ -35,6 +35,8 @@ app.use(function(req, res, next) {
 })
 app.use(cors({origin: "http://localhost:8080", credentials: true}));
 app.post('/api', async (req, res, next) => {
+  console.log("environment " + JSON.stringify(process.env))
+  console.log(req)
   if (req.body.key) {
     req.body.key.key = b64ToUint8array(await decrypt.decryptrsa(req.body.key.key))
     req.body.key.iv = b64ToUint8array(await decrypt.decryptrsa(req.body.key.iv))

@@ -39,29 +39,36 @@ module.exports = {
         }
       },
       async dangNhap(root, args, context) {
-        const {tentaikhoan, matkhau} = args.input
-        const taikhoan = await TaiKhoan.findByPk(tentaikhoan)
-        if (taikhoan) {
-          const checkPassword = bcrypt.compareSync(matkhau, taikhoan.matkhau)
-          if (checkPassword) {
-            const taikhoandangnhap = {
-              tentaikhoan: tentaikhoan,
-              maquyen: taikhoan.maquyen
+        try {
+          console.log(args.input)
+          const {tentaikhoan, matkhau} = args.input
+          const taikhoan = await TaiKhoan.findByPk(tentaikhoan)
+          console.log(taikhoan)
+          if (taikhoan) {
+            const checkPassword = bcrypt.compareSync(matkhau, taikhoan.matkhau)
+            if (checkPassword) {
+              const taikhoandangnhap = {
+                tentaikhoan: tentaikhoan,
+                maquyen: taikhoan.maquyen
+              }
+              const accessToken = jwt.sign(taikhoandangnhap, PRIVATE_CODE_AT, {expiresIn: LIFE_AT})
+              const refreshToken = jwt.sign(taikhoandangnhap, PRIVATE_CODE_RT, {expiresIn: LIFE_RT})
+              context.res.cookie("token", accessToken, {secure: true, httpOnly: true, maxAge: LIFE_AT * 1000, sameSite: "none"})
+              context.res.cookie("rToken", refreshToken, {secure: true, httpOnly: true, maxAge: LIFE_RT * 1000, sameSite: "none"})
+              const rs = {
+                status: 200,
+                message: "Đăng nhập thành công!"
+              }
+              return rs
             }
-            const accessToken = jwt.sign(taikhoandangnhap, PRIVATE_CODE_AT, {expiresIn: LIFE_AT})
-            const refreshToken = jwt.sign(taikhoandangnhap, PRIVATE_CODE_RT, {expiresIn: LIFE_RT})
-            context.res.cookie("token", accessToken, {secure: true, httpOnly: true, maxAge: LIFE_AT * 1000, sameSite: "none"})
-            context.res.cookie("rToken", refreshToken, {secure: true, httpOnly: true, maxAge: LIFE_RT * 1000, sameSite: "none"})
-            const rs = {
-              status: 200,
-              message: "Đăng nhập thành công!"
-            }
-            return rs
+          }
+          return {
+            status: 400,
+            message: "Tên tài khoản hoặc mật khẩu không chính xác!",
           }
         }
-        return {
-          status: 400,
-          message: "Tên tài khoản hoặc mật khẩu không chính xác!",
+        catch (e) {
+          console.log(e);
         }
       },
       async dangNhapVoiToken(root, args, context) {
