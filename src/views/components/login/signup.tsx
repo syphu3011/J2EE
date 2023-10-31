@@ -5,6 +5,7 @@ import SocialNetWorks from './socailNetWorks';
 import Login  from './login';
 import SuccessSignUp from '../alert/signUpSuccess';
 import SuccessLogin from '../alert/LoginSuccess';
+import { signup } from '../../../controllers/modules/customer/signup';
 
 interface SignUpProps{
      onCloseSignUp:()=>void;
@@ -74,19 +75,24 @@ export default class SignUp extends React.Component<SignUpProps, SignUpState> {
      }
      
      handleSubmit = async({ fullName, birthdate, username, Email, password, confirmPass, numberPhone }) =>{
-          //console.log("Form values:", value); // Log the form values to the console
-          const formValues = [fullName, birthdate, username, Email, password, confirmPass, numberPhone];
-          console.log("Form values:", formValues);
-          this.setState({formValues});
-           // Display success message
-           this.setState({showSuccessMessage:true});
+          const regis = await signup(fullName, birthdate, Email, password, confirmPass, numberPhone)
+          if (regis.data && regis.data.dangKyKhachHang.status === 201) {
+               //console.log("Form values:", value); // Log the form values to the console
+               const formValues = [fullName, birthdate, username, Email, password, confirmPass, numberPhone];
+               console.log("Form values:", formValues);
+               this.setState({formValues});
+               // Display success message
+               this.setState({showSuccessMessage:true});
 
-          // Reset the form fields after successful submission
-          this.formRef.current?.resetFields();
-          this.setState({ active: true,showFormLogin:true});
-          this.props.onCloseSignUp();
-          console.log('Registration successful');
-          
+               // Reset the form fields after successful submission
+               this.formRef.current?.resetFields();
+               this.setState({ active: true,showFormLogin:true});
+               this.props.onCloseSignUp();
+               console.log('Registration successful');
+          }
+          else {
+
+          }
      }
      render(){
           /*const onChange=(date,dateString)=>{

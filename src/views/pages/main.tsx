@@ -11,7 +11,7 @@ import { BrowserRouter } from 'react-router-dom';
 //import ChatApp from '../components/chat/app';
 import Footer from "../components/footer/footer";
 import ChatApp from '../components/chat/app';
-import { authentication } from '../../controllers/modules/login';
+import { authentication } from '../../controllers/modules/customer/login';
 import Login from '../components/login/login';
 import { encrypt } from '../../../utils/crypto';
 export default class Main extends React.Component<any, any>   

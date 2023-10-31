@@ -9,6 +9,7 @@ import UpdateInformation from '../../pages/editInformation/updateInformation';
 
 const MenuRight =(check:{isLogin: boolean})=>{
      const [isLoggedIn,setIsLoggedIn] = React.useState(check.isLogin);
+     const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
      const [children, setChildren] = React.useState([]);
      const [visible, setVisible] = React.useState(false);    
      const [active, setActive] = React.useState(false);    
