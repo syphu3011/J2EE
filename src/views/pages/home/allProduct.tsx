@@ -1,4 +1,5 @@
 import React,{useEffect} from 'react';
+
 import {Image,Carousel,Card} from "antd";
 const root_directory_source = 'http://localhost:3301/image/';
 // const sale = `${root_directory_source}sale1.png`;

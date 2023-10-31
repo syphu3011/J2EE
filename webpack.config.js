@@ -47,12 +47,15 @@ module.exports = {
            
           },
           {
+
             test: /\.(jpeg|jpg|png|woff|woff2|eot|ttf|svg|pem)$/, // to import images and fonts
+
             use: [
            { loader: "url-loader",
             options: { limit: false },
           }
             ]
+
           }
             ]
         //   {
