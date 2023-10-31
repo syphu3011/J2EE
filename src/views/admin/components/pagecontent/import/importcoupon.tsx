@@ -236,7 +236,7 @@ const Import= () => {
                       <Col className="gutter-row" span={7}>
                       <Form.Item label="Nhà cung cấp"
                         labelAlign ='left'
-                        labelCol={{span: 6}}
+                        labelCol={{span: 7}}
                         style={{ width: '100%', height: 30, minWidth: '100%'}}>
                         <Select
                           placeholder="Please select"
@@ -246,7 +246,7 @@ const Import= () => {
                       </Form.Item>
                       <Form.Item label="Sản phẩm"
                         labelAlign ='left'
-                        labelCol={{span:6}}
+                        labelCol={{span: 7}}
                         style={{ width: '100%', height: 30, minWidth: '100%'}}>
                         <Select
                           placeholder="Please select"
@@ -259,13 +259,13 @@ const Import= () => {
                         <div>
                           <Form.Item label="Màu:"
                             labelAlign ='left'
-                            labelCol={{span: 5}}
+                            labelCol={{span: 6}}
                             style={{ width: '100%', height: 30, minWidth: '100%'}}
                             >
                             <Select
                                 mode="multiple"
                                 allowClear
-                                style={{width: '100%'}}
+                                style={{width: '80%'}}
                                 placeholder="Please select"
                                 onChange={handleChange}
                                 options={options}
@@ -273,12 +273,12 @@ const Import= () => {
                             </Form.Item> 
                             <Form.Item label="Kích thước:"
                             labelAlign ='left'
-                            labelCol={{span: 5}}
+                            labelCol={{span: 6}}
                             style={{ width: '100%', height: 30, minWidth: '100%'}}>
                             <Select
                                 mode="multiple"
                                 allowClear
-                                style={{width: '100%'}}
+                                style={{width: '80%'}}
                                 placeholder="Please select"
                                 onChange={handleChange}
                                 options={options}
@@ -289,17 +289,17 @@ const Import= () => {
                       <Col className="gutter-row" span={7}>
                         <Form.Item label="Giá:"
                             labelAlign ='left'
-                            labelCol={{span: 4}}
+                            labelCol={{span: 5}}
                             style={{ width: '100%', height: 30, minWidth: '100%'}}
                             >
-                            <Input />
+                            <Input style={{width: '80%'}} />
                         </Form.Item> 
                         <Form.Item label="Số lượng:"
                             labelAlign ='left'
-                            labelCol={{span: 4}}
+                            labelCol={{span: 5}}
                             style={{ width: '100%', height: 30, minWidth: '100%'}}
                             >
-                            <Input />
+                            <Input style={{width: '80%'}} />
                         </Form.Item> 
                       </Col>
                       <Col className="gutter-row" span={3}>

@@ -1,16 +1,25 @@
-import * as React from 'react';  
+import * as React from 'react';
 import axios from 'axios';
 
-import Layout from '../components/layout';
+import LayoutPage from '../components/layout';
 import "../style/leftbar.css";
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Login from '../components/pagecontent/loginpage';
 
-export default class Admin extends React.Component<any, any>   
-{  
-    render() {  
-        return (
-                <BrowserRouter>
-                    <><Layout /></>
-                </BrowserRouter>
-   ) }  
-}  
+
+
+function Admin() {
+    return (
+        <BrowserRouter>
+            {/* <Layout /> */}
+            <Routes>
+                <Route path="/" element={<Login />} ></Route>
+                <Route path="/home" element={<LayoutPage />} >
+                    
+                </Route>
+            </Routes>
+
+        </BrowserRouter>
+    )
+}
+export default Admin;

@@ -1,12 +1,12 @@
 
-import { Button, Col, Layout, Row, Select, SelectProps, Space} from 'antd';
+import { Col, Layout, Row, SelectProps, Space} from 'antd';
 import "../../../style/product.css"
 const { Header, Content } = Layout;
 import React, { useState } from 'react';
-import { Form, Input, InputNumber, Table } from 'antd';
+import { Form, Table } from 'antd';
 const headerStyle: React.CSSProperties = {
     color: '#000000',
-    minHeight: 100,
+    minHeight: 60,
     paddingInline: 10,
     lineHeight: '100px',
     backgroundColor: '#ffffff',
@@ -21,14 +21,13 @@ const contentStyle: React.CSSProperties = {
 
 interface Item {
   key: string;
-  id_pro_imp: string;
-  name_imp: string;
-  color_imp: string;
-  size_imp: string;
-  provider: string;
-  amount_imp: number;
-  price_imp: number;
-  total_imp:number;
+  id_type_stat: string;
+  name_type_stat: string;
+  provider_type_stat: string;
+  amount_sell_type: number;
+  income_type: number;
+  expenses_type: number;
+  profits_type:number;
 }
 
 const originData: Item[] = [];
@@ -36,28 +35,19 @@ const options: SelectProps['options'] = [];
 const handleChange = (value: string[]) => {
   console.log(`selected ${value}`);
 };
-for (let i = 0; i < 11; i++) {
+for (let i = 0; i < 7; i++) {
   originData.push({
     key: i.toString(),
-    id_pro_imp: `${i}`,
-    name_imp: `Áo quần ${i}`,
-    color_imp: '000000',
-    size_imp: 'L',
-    provider: `Đây là quần áo`,
-    amount_imp: 15,
-    price_imp: 3200000,
-    total_imp: 3200000 * 15,
+    id_type_stat: `${i}`,
+    name_type_stat: `Áo quần ${i}`,
+    provider_type_stat: '000000',
+    amount_sell_type: 12,
+    income_type: 15000000,
+    expenses_type: 3200000,
+    profits_type: 15000000-3200000
   });
 }
-interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
-  editing: boolean;
-  dataIndex: string;
-  title: any;
-  inputType: 'number' | 'text' | 'Date';
-  record: Item;
-  index: number;
-  children: React.ReactNode;
-}
+
 
 const StatNumber= () => {
   const [form] = Form.useForm();
@@ -65,47 +55,41 @@ const StatNumber= () => {
   const columns = [
     {
       title: 'Mã',
-      dataIndex: 'id_pro_imp',
+      dataIndex: 'id_type_stat',
       width: '5%',
     },
     {
-      title: 'Tên sản phẩm',
-      dataIndex: 'name_imp',
+      title: 'Loại sản phẩm',
+      dataIndex: 'name_type_stat',
       width: 'auto',
       editable: true,
     },
     {
-      title: 'Màu',
-      dataIndex: 'color_imp',
+      title: 'Nhà cung cấp',
+      dataIndex: 'provider_type_stat',
       width: 'auto',
 
     },
     {
-      title: 'Kích thước',
-      dataIndex: 'size_imp',
+      title: 'Số lượng bán',
+      dataIndex: 'amount_sell_type',
       width: 'auto',
     },
     {
-      title: 'Nhà cung cấp',
-      dataIndex: 'provider',
-      width: 'auto',
-      editable: true,
-    },
-    {
-        title: 'Số lượng',
-        dataIndex: 'amount_imp',
+        title: 'Thu',
+        dataIndex: 'income_type',
         width: 'auto',
         editable: true,
     },
     {
-        title: 'Giá',
-        dataIndex: 'price_imp',
+        title: 'Chi',
+        dataIndex: 'expenses_type',
         width: 'auto',
         editable: true,
     },
     {
-        title: 'Tổng tiền',
-        dataIndex: 'total_imp',
+        title: 'Lợi nhuận',
+        dataIndex: 'profits_type',
         width: 'auto',
     },
   ];
@@ -138,29 +122,33 @@ const StatNumber= () => {
                     <Content style={contentStyle} > 
                       <Form form={form} component={false}>
                           <Table
-
                               bordered
                               dataSource={data}
                               columns={mergedColumns}
-                              rowClassName="editable-Stat"
                               pagination={ false }
-                              scroll={{ x: 800, y: 500 }}
+                              scroll={{ x: 800, y: 600 }}
                               summary={(pageData) => { 
-                                let totalBorrow = 0;
-                                pageData.forEach(({ total_imp }) => {
-                                  totalBorrow +=total_imp;
+                                let total_profits = 0;
+                                let total_amount_sell_type = 0;
+                                let total_income_type = 0;
+                                let total_expenses_type = 0;
+                                pageData.forEach(({ profits_type,amount_sell_type,income_type,expenses_type }) => {
+                                  total_profits +=profits_type;
+                                  total_amount_sell_type +=amount_sell_type;
+                                  total_income_type +=income_type;
+                                  total_expenses_type +=expenses_type;
+
                                 });
                                 return (
                                   <Table.Summary fixed>
                                     <Table.Summary.Row>
                                       <Table.Summary.Cell index={0}></Table.Summary.Cell>
-                                      <Table.Summary.Cell index={1}>Tổng tiền</Table.Summary.Cell>
+                                      <Table.Summary.Cell index={1}>Tổng</Table.Summary.Cell>
                                       <Table.Summary.Cell index={2}></Table.Summary.Cell>
-                                      <Table.Summary.Cell index={3}></Table.Summary.Cell>
-                                      <Table.Summary.Cell index={4}></Table.Summary.Cell>
-                                      <Table.Summary.Cell index={5}></Table.Summary.Cell>
-                                      <Table.Summary.Cell index={6}></Table.Summary.Cell>
-                                      <Table.Summary.Cell index={7}>{totalBorrow}</Table.Summary.Cell>
+                                      <Table.Summary.Cell index={3}>{total_amount_sell_type}</Table.Summary.Cell>
+                                      <Table.Summary.Cell index={4}>{total_income_type}</Table.Summary.Cell>
+                                      <Table.Summary.Cell index={5}>{total_expenses_type}</Table.Summary.Cell>
+                                      <Table.Summary.Cell index={6}>{total_profits}</Table.Summary.Cell>
                                     </Table.Summary.Row>
                                   </Table.Summary>
                               );
