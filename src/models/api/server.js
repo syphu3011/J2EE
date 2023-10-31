@@ -7,8 +7,10 @@ const typeDefs = require('../graphql/schemas');
 const resolvers = require('../graphql/resolvers');
 const context = require('../graphql/context');
 const app = express();
+const url = require("url");
 const https = require('https')
 const fs = require('fs');
+const path = require("path");
 
 // const {axio} = require('axios');
 const cookieParser = require('cookie-parser');
@@ -34,6 +36,55 @@ app.use(function(req, res, next) {
   next()
 })
 app.use(cors({origin: "http://localhost:8080", credentials: true}));
+app.use((req, res, next) => {
+ 
+  // Parsing the URL
+  const request = url.parse(req.url, true);
+
+  // Extracting the path of file
+  const action = request.pathname;
+
+  // Path Refinements
+  const filePath = path.join('./',
+      action).split("%20").join(" ");
+
+  // Checking if the path exists
+  fs.exists(filePath, function (exists) {
+
+      if (!exists) {
+          // res.writeHead(404, {
+          //     "Content-Type": "text/plain"
+          // });
+          // res.end("404 Not Found");
+          next()
+          return
+      }
+
+      // Extracting file extension
+      const ext = path.extname(action);
+
+      // Setting default Content-Type
+      var contentType = "text/plain";
+
+      // Checking if the extension of
+      // image is '.png'
+      if (ext === ".png") {
+          contentType = "image/png";
+      }
+
+      // Setting the headers
+      res.writeHead(200, {
+          "Content-Type": contentType
+      });
+
+      // Reading the file
+      fs.readFile(filePath,
+          function (err, content) {
+              // Serving the image
+              res.end(content);
+          });
+  });
+});
 app.post('/api', async (req, res, next) => {
   console.log("environment " + JSON.stringify(process.env))
   console.log(req)
@@ -59,4 +110,5 @@ const apolloServer = new ApolloServer({
 
 apolloServer.applyMiddleware({app, path: '/api' });
 const server = createServer(app);
+
 module.exports = server;

@@ -22,7 +22,7 @@ module.exports = {
     },
     devServer: {
         host: "localhost",
-        port: 3000, 
+        port: 8080, 
         static: path.resolve(appDirectory, ""), 
         // hot: true,
         devMiddleware: {
@@ -55,7 +55,6 @@ module.exports = {
             ]
           }
             ]
-          },
         //   {
         //     test: /\.(png|jpe?g|gif|jp2|webp)$/,
         //     use: [
@@ -82,7 +81,7 @@ module.exports = {
         //   }
         // ],
 
-
+      },
       // },
     plugins: [
         new HtmlWebpackPlugin({

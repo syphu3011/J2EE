@@ -1,6 +1,7 @@
 import React from 'react';
 import {Form,Input} from 'antd';
 import {ArrowLeftOutlined} from "@ant-design/icons";
+import { forgotpassword } from '../../../controllers/modules/customer/forgotpassword';
 
 interface ForgotPasswordProps{
      onBackToLogin: () => void;
@@ -26,12 +27,35 @@ export default class ForgotPaswords extends React.Component<ForgotPasswordProps,
              this.props.onBackToLogin(); // Call the onBackToLogin callback
 
      }
-     
+     handleGetPassword = async (username) =>{
+          /* this.setState((prevState) => ({
+                activeForgotPasswordForm: !prevState.activeForgotPasswordForm,
+                activeLogin:true
+              }));
+              this.props.onClose();*/
+          const rs = await forgotpassword(username.enterEmail)
+          if (rs.data && rs.data.quenMatKhauKhachHang) {
+               if (rs.data.quenMatKhauKhachHang.status == 200) {
+                    //TODO: Thêm thông báo thành công rồi mới back về
+                    alert("Vui lòng kiểm tra email!")
+                    this.props.onBackToLogin(); // Call the onBackToLogin callback
+               }
+               else {
+                    //TODO: Thêm thông báo không thành công 
+                    alert(rs.data.quenMatKhauKhachHang.message)
+               }
+          }
+          else {
+               //TODO: Thêm thông báo không thành công từ 
+               alert("Có lỗi xảy ra!");
+          }
+ 
+      }
      render(){
           return(
                <div className="formForgot">
                     
-                    <Form>
+                    <Form onFinish={this.handleGetPassword}>
                          <p>Bạn quên mật khẩu ?</p>
                          <Form.Item 
                          name="enterEmail" hasFeedback
@@ -55,7 +79,7 @@ export default class ForgotPaswords extends React.Component<ForgotPasswordProps,
                          </Form.Item>
                          <Form.Item>
                               <div  onClick={this.handleComeBackFormLogin}><p className="login-form-forgot-text"><ArrowLeftOutlined /> Quay lại đăng nhập</p></div>
-                              <Input type="submit" value="Gửi" className="btn-btnSendEmail"/>
+                              <Input type="submit" value="Gửi" className="btn-btnSendEmail" />
 
                          </Form.Item>
 

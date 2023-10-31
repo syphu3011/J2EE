@@ -5,7 +5,7 @@ module.exports = {
     username: 'root',
     password: 'handsome3S',
     database: 'j2ee',
-    host: '192.168.31.164',
+    host: '192.168.1.241',
     dialect: 'mysql',
     use_env_variable: 'DATABASE_URL',
     // dialectOptions: {
