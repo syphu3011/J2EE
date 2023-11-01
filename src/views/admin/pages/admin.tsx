@@ -1,5 +1,4 @@
-import * as React from 'react';
-import axios from 'axios';
+
 
 import LayoutPage from '../components/layout';
 import "../style/leftbar.css";
@@ -50,6 +49,9 @@ function Admin() {
             <Route path="InforPart" element={<Partner/>} />
             <Route path="Provider" element={<Provider/>} />
             <Route path="Number" element={<StatNumber/>} />
+            <Route path="Chart" element={<StatNumber/>} />
+            <Route path="Status" element={<StatNumber/>} />
+
         </Route>
       </Routes>
     </BrowserRouter>
