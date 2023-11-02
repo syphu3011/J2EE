@@ -1,45 +1,44 @@
-import { Button, Drawer, InputNumber, Space, Table} from "antd"
+import {Button, InputNumber, Table} from "antd"
 import { useEffect, useState } from "react";
-import productData from "../product/productData";
-import { render } from "node-sass";
-import Product from "../product/productList";
+import { useCart } from "react-use-cart";
 const PageCart=()=>{
-     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+     const {items,removeItem,updateItem } = useCart();
      const [cartItems, setCartItems] = useState([]);
-     useEffect(() => {
-         /* const dataSource = productData.map((product) => ({
-            id: product.id,
+    /* useEffect(() => {
+          const dataSource = items.map((product) => ({
+           // id: product.id,
             image: product.image[0],
             name: product.name,
             color: product.color,
             size: product.size,
             price: product.price,
             quantity: product.quantity,
+            ...product,
             combinedData: `- Tên: ${product.name}\n- Màu :${product.color}\n- Kích cỡ: ${product.size}`,
             total: product.price * product.quantity,
           }));
       
-          setCartItems(dataSource);*/
-        }, []);
+          //setCartItems(dataSource);
+          
+     }, [items]);*/
         const renderImage = (image) => (
           <img src={image} alt="Product" style={{ width: "50px" }} />
         );
-        const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-          console.log('selectedRowKeys changed: ', newSelectedRowKeys);
-          setSelectedRowKeys(newSelectedRowKeys);
+        const handleQuantityChange = (value, record) => {
+          const updatedItems = cartItems.map((item) => {
+            if (item.id === record.id) {
+              return { ...item, quantity: value };
+            }
+            return item;
+          });
+          setCartItems(updatedItems);
+          updateItem(record.id, { quantity: value });
         };
-        const rowSelection = {
-          selectedRowKeys,
-          onChange: onSelectChange,
-        };
-      
-     
+        
      return (<div>
+          
          <Table
-         rowSelection={{
-          type: "checkbox",
-          ...rowSelection,
-        }}
+          
                columns={
                     [
                          {
@@ -50,10 +49,19 @@ const PageCart=()=>{
                          ,
                          {
                               title:"Sản phẩm",
-                              dataIndex:"combinedData",
-                              render:(text) => <div>{text.split("\n").map((line) => <p>{line}</p>)}</div>, // Split lines and render in separate paragraphs
+                              dataIndex:"name",
+                             // render:(text) => <div>{text.split("\n").map((line) => <p>{line}</p>)}</div>, // Split lines and render in separate paragraphs
+                              render: (_, record) => (
+                              <div>
+                                <p>-{record.name}</p>
+                                <p>-{record.color}</p>
+                                <p>-{record.size}</p>
+                              </div>
+                              ),
                               
-                         },{
+                         },
+                         
+                         {
                               title:"Giá",
                               dataIndex:"price",
                               render:(value)=><span>{value.toLocaleString()}</span>
@@ -62,25 +70,13 @@ const PageCart=()=>{
                          {
                               title:"Số lượng",
                               dataIndex:"quantity",
-                              render:(value,record)=>{
-                                   return(
-                                        <InputNumber
-                                             min={0}
-                                             defaultValue={value}
-                                             onChange={(newValue) => {
-                                             setCartItems((pre) =>
-                                             pre.map((cart) => {
-                                             if (record.id === cart.id) {
-                                             cart.quantity = newValue;   
-                                             cart.total = (cart.price * newValue).toLocaleString(); // Update the total price based on the new quantity
-                                        }
-                                        return cart;
-                                   })
-                                   );
-                                   }}
-                                   ></InputNumber>
-                                   )
-                              }
+                              render: (_, record) => (
+                                   <InputNumber
+                                   min={1}                                  
+                                   value={record.quantity}
+                                   onChange={(newValue) => handleQuantityChange(newValue, record)}
+                                 />
+                                 ),
                          },
                          {
                               title:"Tổng tiền",
@@ -91,16 +87,26 @@ const PageCart=()=>{
                                    return <span>{totalPrice.toLocaleString()}</span>;
                                  },
                              
+                         },
+                         {
+                              title:"Thao tác",
+                              dataIndex:"action",
+                              render:(_,record) => (
+                                   <div>
+                                     <Button type="default" onClick={() => removeItem(record.id)}>Xóa</Button>
+                                   </div>
+                                 )
                          }
                     ]
                }
-               dataSource={cartItems}
                summary={(data) => {
                     const totalSummary = data.reduce((pre, current) => {
                       return pre + (current.price * current.quantity);
                     }, 0);
                     return <span className="sumary-cart">Total: <p> {totalSummary.toLocaleString()}</p></span>;
                   }}
+               dataSource={items}
+
          >
           
          </Table>
