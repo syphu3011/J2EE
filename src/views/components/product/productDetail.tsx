@@ -42,7 +42,7 @@ function ProductDetail() {
                             <span>Mã SP :{thisProduct.id}</span>
                         </div>
                         <div className="price-detail-product">
-                            Giá: <p>{thisProduct.price}</p>
+                            Giá: <p>{thisProduct.price.toLocaleString()}</p>
                         </div>
                         <div className="color-groups">
                             Màu sắc: {thisProduct.color.map((color, index) => (
