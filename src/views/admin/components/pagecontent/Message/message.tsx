@@ -15,5 +15,3 @@ export default function message() {
     />
   );
 }
-
-// infinite scroll, logout, more customizations...
