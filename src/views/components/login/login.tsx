@@ -5,7 +5,7 @@ import { Checkbox, Form,FormInstance,Input} from 'antd';
 import ForgotPaswords from './forgotPassword';
 import SignUp from './signup';
 import SuccessLogin from '../alert/LoginSuccess';
-import { login } from '../../../controllers/modules/login';
+import { login } from '../../../controllers/modules/customer/login';
 interface LoginProps{
      onClose:()=>void;
      isLoggedIn:boolean;

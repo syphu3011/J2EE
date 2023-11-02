@@ -3,7 +3,6 @@ require('dotenv').config();
 const server = require('./api/server');
 const express = require('express');
 const app = express()
-
 const port = process.env.PORT || 3301;
 
 process.on('uncaughtException', (err) => {

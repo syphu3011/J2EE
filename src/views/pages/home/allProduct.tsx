@@ -1,13 +1,15 @@
 import React,{useEffect} from 'react';
-/*const root_directory_source = '/src/views/components/Image';
-const sale = `${root_directory_source}/SaleProduct/sale1.png`;
-const sale2  = `${root_directory_source}/SaleProduct/sale2.png`;
-const sale3  = `${root_directory_source}/SaleProduct/sale3.png`;*/
-import sale from "../../components/Image/SaleProduct/sale1.png";
-import sale2 from "../../components/Image/SaleProduct/sale2.png";
-import sale3 from "../../components/Image/SaleProduct/sale3.png";
 
 import {Image,Carousel,Card} from "antd";
+const root_directory_source = 'http://localhost:3301/image/';
+// const sale = `${root_directory_source}sale1.png`;
+// const sale2  = `${root_directory_source}sale2.png`;
+// const sale3  = `${root_directory_source}sale3.png`;
+import sale from "../../components/Image/SaleProduct/sale1.png";
+import sale2 from "../../components/Image/SaleProduct/Sale2.png";
+import sale3 from "../../components/Image/SaleProduct/Sale3.png";
+
+
 import { LeftOutlined, RightOutlined,CheckCircleOutlined,DeliveredProcedureOutlined,ThunderboltOutlined,SyncOutlined} from '@ant-design/icons';
 import CardMenu from "../../components/content/menuCard";
 import AOS from "aos";

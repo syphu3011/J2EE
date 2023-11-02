@@ -35,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
             ngaysinh: DataTypes.DATE,
             sodienthoai: DataTypes.INTEGER,
             socccd: DataTypes.INTEGER,
+            ngaythamgia: DataTypes.DATE,
             tentaikhoan: {
                 type: DataTypes.STRING,
                 references: "TaiKhoan",
@@ -49,7 +50,9 @@ module.exports = (sequelize, DataTypes) => {
             sequelize,
             modelName: "KhachHang",
             tableName: "KhachHang",
-            timestamps: false,
+            createdAt: "ngaythamgia",
+            updatedAt: false,
+            deletedAt: false
         }
     );
     return KhachHang;

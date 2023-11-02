@@ -5,10 +5,14 @@ let PRIVATE_KEY
 let PUBLIC_KEY
 let aeskey
 async function getPrivateKey() {
-    return PRIVATE_KEY ? PRIVATE_KEY : await readFile("server_pem/pem/7N3KJx+lkV09B/8OGvOPBmAqZXLQ.pem")
+    PRIVATE_KEY = PRIVATE_KEY ? PRIVATE_KEY : await readFile("server_pem/pem/7N3KJx+lkV09B/8OGvOPBmAqZXLQ.pem")
+    console.log(PRIVATE_KEY)
+    return PRIVATE_KEY 
 }
 async function getPublicKey() {
-    return PUBLIC_KEY ? PUBLIC_KEY : await readFile("server_pem/pem/7N3KJx+lkV09B/ye78d9sHHs839ss.pem")
+    PUBLIC_KEY = PUBLIC_KEY ? PUBLIC_KEY : await readFile("server_pem/pem/7N3KJx+lkV09B/ye78d9sHHs839ss.pem")
+    console.log(PRIVATE_KEY)
+    return PUBLIC_KEY
 }
 async function  getAesKey() {
     return aeskey

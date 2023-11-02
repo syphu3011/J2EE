@@ -16,4 +16,8 @@ const CHUCNANG = Object.freeze({
     THEMSANPHAM: "themSanPham"
 }
 )
-module.exports = {STATUS_CODE,PRIVATE_CODE_AT, PRIVATE_CODE_RT, LIFE_AT, LIFE_RT, CHUCNANG}
+const MAIL = Object.freeze({
+    USERNAME: "vmtpshop@gmail.com",
+    PASSWORD: "mgca fhab qtst weev"
+})
+module.exports = {STATUS_CODE,PRIVATE_CODE_AT, PRIVATE_CODE_RT, LIFE_AT, LIFE_RT, CHUCNANG, MAIL}

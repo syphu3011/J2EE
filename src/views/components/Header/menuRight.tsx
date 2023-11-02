@@ -13,6 +13,7 @@ const MenuRight =(check:{isLogin: boolean})=>{
      const {emptyCart}=useCart()
      const [open, setOpen] = useState(false);
      const [isLoggedIn,setIsLoggedIn] = React.useState(check.isLogin);
+     const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
      const [children, setChildren] = React.useState([]);
      const [visible, setVisible] = React.useState(false);    
      const [active, setActive] = React.useState(false);    

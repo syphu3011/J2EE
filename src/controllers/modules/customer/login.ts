@@ -1,7 +1,7 @@
 import axios from 'axios';
-import CONFIG_CALL from '../const';
-import axios_default from '../../../utils/axios';
-import { encrypt } from '../../../utils/crypto';
+import CONFIG_CALL from '../../const';
+import axios_default from '../../../../utils/axios';
+import { encrypt } from '../../../../utils/crypto';
 
 export async function login(username, password) {
     let rq = `mutation dangNhap($username:String!,$password:String!){dangNhap(input:{tentaikhoan: $username, matkhau: $password}){status

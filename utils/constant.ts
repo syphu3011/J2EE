@@ -1,10 +1,15 @@
 import { readFile } from "./readfile"
+import publickey from "../publickey.pem"
+import privatekey from "../publickey.pem"
 
 let PUBLIC_KEY
 let PRIVATE_KEY
 export async function getPrivateKey() {
-    return PRIVATE_KEY ? PRIVATE_KEY : await readFile("../privatekey.pem")
+    console.log(privatekey)
+    PRIVATE_KEY = PRIVATE_KEY ? PRIVATE_KEY : await readFile(privatekey)
+    return PRIVATE_KEY
 }
 export async function getPublicKey() {
-    return PUBLIC_KEY ? PUBLIC_KEY : await readFile("../publickey.pem")
+    PUBLIC_KEY = PUBLIC_KEY ? PUBLIC_KEY : await readFile(publickey)
+    return PUBLIC_KEY
 }
