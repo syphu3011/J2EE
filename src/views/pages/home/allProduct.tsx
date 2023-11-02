@@ -41,9 +41,9 @@ export default function AllProduct(){
                                         <div>
                                         <Card key={product.id} className="card_1">
                                              <Link to={`/products/${product.id}/${product.name}`}>
-                                                  <Image src={product.image[0]} id="image-card"></Image> <br/>
+                                                  <Image src={product.image[0]} className="image-card"></Image> <br/>
                                                   <h4>{product.name}</h4>
-                                                  <p>{product.price} VND</p>
+                                                  <p>{product.price.toLocaleString()} VND</p>
                                              </Link>
                                                   <AddToCartButton item={undefined}/>
                                              
@@ -79,9 +79,9 @@ export default function AllProduct(){
                                         <Card key={product.id} className="card_1">
                                              <Link to={`/products/${product.id}/${product.name}`}>
 
-                                                  <Image src={product.image[0]} id="image-card"></Image> <br/>
+                                                  <Image src={product.image[0]} className="image-card"></Image> <br/>
                                                   <h4>{product.name}</h4>
-                                                  <p>{product.price} VND</p>
+                                                  <p>{product.price.toLocaleString()} VND</p>
                                              </Link>
                                                   <AddToCartButton item={undefined}/>
                                              
@@ -115,9 +115,9 @@ export default function AllProduct(){
                                         <Card key={product.id} className="card_1">
                                              <Link to={`/products/${product.id}/${product.name}`}>
 
-                                                  <Image src={product.image[0]} id="image-card"></Image> <br/>
+                                                  <Image src={product.image[0]} className="image-card"></Image> <br/>
                                                   <h4>{product.name}</h4>
-                                                  <p>{product.price} VND</p>
+                                                  <p>{product.price.toLocaleString()} VND</p>
                                              </Link>
                                                   <AddToCartButton item={undefined}/>
                                              

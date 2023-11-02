@@ -114,14 +114,14 @@ const MenuRight =(check:{isLogin: boolean})=>{
           </div>
           <div>
                <Drawer
+                    size='large'
                     title="Giỏ hàng của bạn"
-                    width={500}
                     onClose={onClose}
                     open={open}
                     extra={
                          <Space>
                          <Button onClick={onClose} className="btn-delete-cart">
-                              Xóa tất cả
+                              Xóa 
                          </Button>
                          <Button type="primary" onClick={onClose}>
                               Thanh toán

@@ -1,4 +1,4 @@
-import { Card,Image } from 'antd';
+import { Card,Image, } from 'antd';
 import {useEffect}from 'react';
 //const root_directory_source = '/src/views/components/Image/CardsMenu';
 import ao from "../../components/Image/CardsMenu/Ao.png";
@@ -14,6 +14,9 @@ const aokhoac = `${root_directory_source}/aokhoac.png`;
 const phukien = `${root_directory_source}/Vo.png`;*/
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { Link } from 'react-router-dom';
+import MenuRight from '../Header/menuRight';
+import MenuLeft from '../Header/menuLeft';
 export default function MenuCard(){
      useEffect(() => {
           AOS.init();
@@ -22,25 +25,33 @@ export default function MenuCard(){
                {    
                     image:ao,
                     name:'Áo',
+                    key:'ao'
                },
                {    image:quan,
-                    name:'Quần'},
+                    name:'Quần',
+                    key:'quan',
+               },
                {
                     image:dam,
                     name:'Đầm',
+                    key:'dam',
                },
                {
                     image:aokhoac,
                     name:'Áo khoác',
+                    key:'aokhoac',
                },{
                     image:phukien,
                     name:"Phụ kiện",
+                    key:'phukien',
                }
           ];
           return (
+               <div>
                <div className='cardMenu'> 
                {cardData.map((card,index)=>(
-                    <Card className="cards_Item" key={index} data-aos="fade-down">
+                    <Link to={`/${card.key}`} key={index}>
+                    <Card className="cards_Item" data-aos="fade-down">
                          <div className="ImageCard">
                               <Image src={card.image}/>
                          </div>
@@ -48,7 +59,10 @@ export default function MenuCard(){
                               <h4>{card.name}</h4>
                          </div>
                     </Card>
+                    </Link>
                ))}
+               </div>
+
                </div>
           )
      }
