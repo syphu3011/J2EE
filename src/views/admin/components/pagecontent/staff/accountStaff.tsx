@@ -200,6 +200,12 @@ const AccStaff = () => {
       render: () => <a>Xóa</a>,
     },
   ];
+  // for (let i = 10; i < 36; i++) {
+  //   options.push({
+  //     value: `ao` + i,
+  //     label: `ao` + i,
+  //   });
+  // }
   const handleChange = (value: string[]) => {
     console.log(`selected ${value}`);
   };
@@ -303,7 +309,7 @@ const AccStaff = () => {
               bordered
               dataSource={data}
               columns={mergedColumns}
-              rowClassName="editable-row"
+              rowClassName="table_acc_staff"
               pagination={{
                 onChange: cancel,
               }}
