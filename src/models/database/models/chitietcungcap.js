@@ -18,13 +18,13 @@ module.exports = (sequelize, DataTypes) => {
   ChiTietCungCap.init({
     masanpham: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
-      references: 'SanPham'
+      // primaryKey: true,
+      // references: 'SanPham'
     },
     manhacungcap: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
-      references: 'NhaCungCap'
+      // primaryKey: true,
+      // references: 'NhaCungCap'
     }
   }, {
     sequelize,

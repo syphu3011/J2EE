@@ -1,15 +1,83 @@
-import React from 'react';
-import {Menu} from "antd";
-import {SearchOutlined,ShoppingCartOutlined,UserOutlined,LoginOutlined,PlusCircleOutlined} from "@ant-design/icons";
+import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import {Badge, Menu} from "antd";
+import {SearchOutlined,ShoppingCartOutlined,UserOutlined,LoginOutlined,PlusCircleOutlined,EditOutlined,LogoutOutlined } from "@ant-design/icons";
 import SearchItem from "../search/search";
+import Login from "../login/login";
+import SignUp from '../login/signup';
+import UpdateInformation from '../../pages/editInformation/updateInformation';
 
-const MenuRight =()=>{
+const MenuRight =(check:{isLogin: boolean})=>{
+     const [isLoggedIn,setIsLoggedIn] = React.useState(check.isLogin);
+     const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
+     const [children, setChildren] = React.useState([]);
      const [visible, setVisible] = React.useState(false);    
+     const [active, setActive] = React.useState(false);    
+     const [activeSignUp,setActiveSignUp] = React.useState(false);
+     const [isFormSubmitted, setIsFormSubmitted] = React.useState(false);
      const handleSearchClick = () => {
           setVisible(!visible);
         };
+     const handleLoginClick =() => {
+          setActive(!active);
+          setActiveSignUp(false)
+     };
+     const handleLoginFormClose = () => {
+          setActive(false);
+        };
+     const handleSignUpClick = () =>{
+          setActiveSignUp(!activeSignUp);
+          setActive(false);
+     }
+     const handleSignUpFormClose = ()=>{
+          setActiveSignUp(false);
+     }
+     const navigate = useNavigate();
+     const handleUpdateClick=(item)=>{
+          navigate(`/${item.key}`);
+          //setIsFormSubmitted(true);
+     }
+     React.useEffect(() => {
+          setIsLoggedIn(check.isLogin)
+        }, [check.isLogin]);
+     const childrenLogin = () => {
+          return isLoggedIn
+          ? [
+                {
+                  icon: <EditOutlined className="large-icon" />,
+                  label: "Cập nhật thông tin",
+                  onClick:  handleUpdateClick,
+                  key: "cap-nhat-thong-tin",
+                  className: "groupIcons"
+                },
+                {
+                  icon: <LogoutOutlined className="large-icon" />,
+                  label: "Đăng xuất",
+                  key: "logout",
+                  // onClick: handleLogoutClick,
+                  className: "groupIcons"
+                }
+              ]
+            : [
+                {
+                  icon: <LoginOutlined className="large-icon" />,
+                  label: "Đăng nhập",
+                  onClick: handleLoginClick,
+                  key: "login",
+                  className: "groupIcons"
+                },
+                {
+                  icon: <PlusCircleOutlined className="large-icon" />,
+                  label: "Đăng ký",
+                  key: "createAccount",
+                  onClick: handleSignUpClick,
+                  className: "groupIcons"
+                }
+              ];
+     
+     }
      return(
-          <div className="MenuRight">
+          <div className="MenuRight" >
                <Menu className="RightMenu" mode="horizontal"  items={
           [
                {
@@ -17,33 +85,24 @@ const MenuRight =()=>{
                     key:"search",
                     
                },{
-                    label:<ShoppingCartOutlined className="large-icon" style={{fontWeight:'bolder',fontSize:'25px'}} />,
+                    label:<Badge count={0} className="soppingCartIcon" showZero><ShoppingCartOutlined className="large-icon" style={{fontWeight:'bolder',fontSize:'25px'}} /></Badge>,
                     key:"Cart",
                },{
                     label:<UserOutlined className="large-icon" style={{fontWeight:'bolder',fontSize:'25px'}} />,
                     key:"User",
-                    style:{marginRight:'70px'},
-                    children:[
-                         {
-                              icon:<LoginOutlined className="large-icon" />,
-                              label:"Đăng nhập",
-                              key:"login",
-                              className:"groupAo"
-
-                         },
-                         {
-                              icon:<PlusCircleOutlined className="large-icon" />,
-                              label:"Tạo tài khoản",
-                              key:"createAccount",
-                              className:"groupAo"
-                         }
-                    ],
+                    
+                    children:childrenLogin(),
 
                }
           ]
           } />
           <div className={visible?"input active":"input"}>
                <SearchItem/>
+          </div>
+          <div className={active?"login-form-container active" :"login-form-container"}>
+          <Login onClose={handleLoginFormClose}  isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>          </div>
+          <div className={activeSignUp?"signup-form-container active":"signup-form-container"}>
+               <SignUp onCloseSignUp={handleSignUpFormClose} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
           </div>
           </div>
      )

@@ -1,14 +1,23 @@
 const { Op } = require("sequelize")
 const {SanPham, sequelize, Loai, NhaCungCap} = require("../../database/models/")
-const STATUS_CODE = require("../const")
+const {STATUS_CODE, CHUCNANG} = require("../const")
+const {checkAdmin, checkPrivileges} = require("./checkToken")
 
 module.exports = {
     Mutation: {
-        async taoSanPham(root, args, context) {
+        async taoSanPham(root, args, {taikhoan}) {
+            const admin = await checkPrivileges(taikhoan, CHUCNANG.THEMSANPHAM)
+            if (!admin) {
+                return {
+                    status: 400,
+                    message: "Bạn không có quyền!",
+                    data: null
+                }
+            }
             let transaction
             try {
                 transaction = await sequelize.transaction()
-                const {ten, anhminhhoa, mota, giaban, maloai, manhacungcap} = args.input
+                const {ten, anhminhhoa, mota, maloai, madonvi, manhacungcap} = args.input
                 const loais = await Loai.findAll({
                     where: {
                         ma: maloai
@@ -19,7 +28,7 @@ module.exports = {
                         ma: manhacungcap
                     }
                 })
-                const rs = await SanPham.create({ten, anhminhhoa, mota, giaban})
+                const rs = await SanPham.create({ten, anhminhhoa, madonvi, mota})
                 await rs.addLoai(loais)
                 await rs.addNhaCungCap(nhacungcaps)
                 rs.maloai = maloai
@@ -27,7 +36,7 @@ module.exports = {
                 transaction.commit()
                 const response =  {
                     status: STATUS_CODE.create_success,
-                    message: "Thêm sản phẩm thành công!"
+                    message: "Thêm sản phẩm thành công!",
                 }
                 return response
             }
@@ -173,6 +182,9 @@ module.exports = {
     SanPham: {
         loai(sanpham) {
             return sanpham.getLoai()
+        },
+        donvi(sanpham) {
+            return sanpham.getDonVi()
         }
     }
 }
