@@ -1,21 +1,21 @@
-import { Button, Col, DatePicker, Layout, Row, Space } from 'antd';
-import "../../../style/product.css"
+import { Button, Col, DatePicker, Layout, Row, Space } from "antd";
+import "../../../style/product.css";
 const { Header, Content } = Layout;
-import React, { useState } from 'react';
-import { Form, Input, InputNumber, Popconfirm, Table, Typography } from 'antd';
+import React, { useState } from "react";
+import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
 const headerStyle: React.CSSProperties = {
-  color: '#000000',
+  color: "#000000",
   minHeight: 120,
   paddingInline: 10,
-  lineHeight: '180px',
-  backgroundColor: '#ffffff',
+  lineHeight: "180px",
+  backgroundColor: "#ffffff",
 };
 const contentStyle: React.CSSProperties = {
-  textAlign: 'center',
+  textAlign: "center",
   minHeight: 120,
-  lineHeight: '120px',
-  color: '#fff',
-  backgroundColor: '#ffffff',
+  lineHeight: "120px",
+  color: "#fff",
+  backgroundColor: "#ffffff",
 };
 
 interface Item {
@@ -34,16 +34,15 @@ for (let i = 0; i < 20; i++) {
     id_staff: `${i}`,
     name_staff: `Nguyễn Văn ${i}`,
     CCCD: 233321312321,
-    birthday_staff: '18/02/2002',
-    status: 'Còn làm',
-
+    birthday_staff: "18/02/2002",
+    status: "Còn làm",
   });
 }
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
   title: any;
-  inputType: 'number' | 'text' | 'Date';
+  inputType: "number" | "text" | "Date";
   record: Item;
   index: number;
   children: React.ReactNode;
@@ -59,7 +58,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
   children,
   ...restProps
 }) => {
-  const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
+  const inputNode = inputType === "number" ? <InputNumber /> : <Input />;
 
   return (
     <td {...restProps}>
@@ -85,19 +84,19 @@ const EditableCell: React.FC<EditableCellProps> = ({
 const Staff = () => {
   const [form] = Form.useForm();
   const [data, setData] = useState(originData);
-  const [editingKey, setEditingKey] = useState('');
+  const [editingKey, setEditingKey] = useState("");
 
   const isEditing = (record: Item) => record.key === editingKey;
 
   const edit = (record: Partial<Item> & { key: React.Key }) => {
-    form.setFieldsValue({ name: '', numberphone: '', birthday: '', ...record });
+    form.setFieldsValue({ name: "", numberphone: "", birthday: "", ...record });
     setEditingKey(record.key);
   };
 
   const cancel = () => {
-    setEditingKey('');
+    setEditingKey("");
   };
-  const dateFormat = 'DD/MM/YYYY';
+  const dateFormat = "DD/MM/YYYY";
 
   const save = async (key: React.Key) => {
     try {
@@ -112,52 +111,55 @@ const Staff = () => {
           ...row,
         });
         setData(newData);
-        setEditingKey('');
+        setEditingKey("");
       } else {
         newData.push(row);
         setData(newData);
-        setEditingKey('');
+        setEditingKey("");
       }
     } catch (errInfo) {
-      console.log('Validate Failed:', errInfo);
+      console.log("Validate Failed:", errInfo);
     }
   };
 
   const columns = [
     {
-      title: 'Mã',
-      dataIndex: 'id_staff',
-      width: '10%',
+      title: "Mã",
+      dataIndex: "id_staff",
+      width: "10%",
     },
     {
-      title: 'Tên nhân viên',
-      dataIndex: 'name_staff',
-      width: '15%',
+      title: "Tên nhân viên",
+      dataIndex: "name_staff",
+      width: "15%",
       editable: true,
     },
     {
-      title: 'CMND/CCCD',
-      dataIndex: 'CCCD',
+      title: "CMND/CCCD",
+      dataIndex: "CCCD",
       editable: true,
     },
     {
-      title: 'Ngày sinh',
-      dataIndex: 'birthday_staff',
+      title: "Ngày sinh",
+      dataIndex: "birthday_staff",
       editable: true,
     },
     {
-      title: 'Trạng thái',
-      dataIndex: 'status',
+      title: "Trạng thái",
+      dataIndex: "status",
     },
     {
-      title: 'Sửa',
-      dataIndex: 'editcus',
-      width: '8%',
+      title: "Sửa",
+      dataIndex: "editcus",
+      width: "8%",
       render: (_: any, record: Item) => {
         const editable = isEditing(record);
         return editable ? (
           <span>
-            <Typography.Link onClick={() => save(record.key)} style={{ marginRight: 8 }}>
+            <Typography.Link
+              onClick={() => save(record.key)}
+              style={{ marginRight: 8 }}
+            >
               Lưu
             </Typography.Link>
             <Popconfirm title="Bạn muốn hủy??" onConfirm={cancel}>
@@ -165,20 +167,22 @@ const Staff = () => {
             </Popconfirm>
           </span>
         ) : (
-          <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+          <Typography.Link
+            disabled={editingKey !== ""}
+            onClick={() => edit(record)}
+          >
             Sửa
           </Typography.Link>
         );
       },
     },
     {
-      title: 'Xóa',
-      key: 'operation',
-      dataIndex: 'delete',
-      width: '8%',
+      title: "Xóa",
+      key: "operation",
+      dataIndex: "delete",
+      width: "8%",
       render: () => <a>Xóa</a>,
     },
-
   ];
   const mergedColumns = columns.map((col) => {
     if (!col.editable) {
@@ -188,7 +192,7 @@ const Staff = () => {
       ...col,
       onCell: (record: Item) => ({
         record,
-        inputType: col.dataIndex === 'numberphone' ? 'number' : 'text',
+        inputType: col.dataIndex === "numberphone" ? "number" : "text",
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),
@@ -197,59 +201,66 @@ const Staff = () => {
   });
 
   return (
-    <Space direction="vertical" style={{ width: '100%' }} size={[0, 48]}>
+    <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
-        <Header style={headerStyle} >
+        <Header style={headerStyle}>
           <Row gutter={16}>
             <Col className="gutter-row" span={10}>
-              <Form.Item label="Họ tên:"
-                labelAlign='left'
-                labelCol={{ span: 5 }}>
-                <Input
-                  style={{ width: '60%' }}
-                />
-              </Form.Item>
-              <Form.Item label="Ngày sinh"
-                labelAlign='left'
+              <Form.Item
+                label="Họ tên:"
+                labelAlign="left"
                 labelCol={{ span: 5 }}
               >
-                <DatePicker format={dateFormat}
-                  style={{ width: '60%' }}
-                />
+                <Input style={{ width: "60%" }} />
+              </Form.Item>
+              <Form.Item
+                label="Ngày sinh"
+                labelAlign="left"
+                labelCol={{ span: 5 }}
+              >
+                <DatePicker format={dateFormat} style={{ width: "60%" }} />
               </Form.Item>
             </Col>
             <Col className="gutter-row" span={10}>
               <div>
-                <Form.Item label="Số điện thoại:"
-                  labelAlign='left'
+                <Form.Item
+                  label="Số điện thoại:"
+                  labelAlign="left"
                   labelCol={{ span: 6 }}
                 >
-                  <Input
-                    style={{ width: '60%' }}
-                  />
+                  <Input style={{ width: "60%" }} />
                 </Form.Item>
-                <Form.Item label="CMND/CCCD:"
-                  labelAlign='left'
-                  labelCol={{ span: 6 }}>
-                  <Input
-                    style={{ width: '60%' }}
-                  />
+                <Form.Item
+                  label="CMND/CCCD:"
+                  labelAlign="left"
+                  labelCol={{ span: 6 }}
+                >
+                  <Input style={{ width: "60%" }} />
                 </Form.Item>
               </div>
             </Col>
             <Col className="gutter-row" span={4}>
-              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <Button type="primary" style={{ width: '70%', marginBottom: 30 }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
+              >
+                <Button
+                  type="primary"
+                  style={{ width: "70%", marginBottom: 30 }}
+                >
                   Thêm
                 </Button>
-                <Button type="primary" style={{ width: '70%' }}>
+                <Button type="primary" style={{ width: "70%" }}>
                   Làm mới
                 </Button>
               </div>
             </Col>
           </Row>
         </Header>
-        <Content style={contentStyle} >
+        <Content style={contentStyle}>
           <Form form={form} component={false}>
             <Table
               components={{
@@ -260,7 +271,7 @@ const Staff = () => {
               bordered
               dataSource={data}
               columns={mergedColumns}
-              rowClassName="editable-row"
+              rowClassName="table-staff"
               pagination={{
                 onChange: cancel,
               }}
@@ -269,6 +280,6 @@ const Staff = () => {
         </Content>
       </Layout>
     </Space>
-  )
-}
+  );
+};
 export default Staff;

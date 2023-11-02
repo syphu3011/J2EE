@@ -1,14 +1,8 @@
-import React from 'react';
-import Login from './loginpage';
+import React from "react";
+import Login from "../loginpage";
 
-export default class HomeAdmin extends React.Component{
-
-
-    render(){
-        return(
-            <div>
-                Trang chủ
-            </div>
-        )
-    }
+export default class HomeAdmin extends React.Component {
+  render() {
+    return <div>Trang chủ</div>;
+  }
 }
