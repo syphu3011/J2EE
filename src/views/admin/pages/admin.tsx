@@ -9,7 +9,7 @@ import Product from "../components/pagecontent/product/product";
 import Typeproduct from "../components/pagecontent/product/typeproduct";
 import Inventory from "../components/pagecontent/product/inventory";
 import Attribute from "../components/pagecontent/product/attribute";
-import Message from "../components/pagecontent/message";
+import Message from "../components/pagecontent/Message/message";
 import Order from "../components/pagecontent/Orders/order";
 import History from "../components/pagecontent/Orders/historyorder";
 import Import from "../components/pagecontent/import/importcoupon";
