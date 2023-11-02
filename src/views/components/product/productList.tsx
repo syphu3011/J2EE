@@ -15,9 +15,11 @@ export default class Product extends React.PureComponent<ProductProps,ProductSta
     super(props);
     this.state = {
       minValue: 0,
-      maxValue: 8
+      maxValue: 8,
+      
     };
   }
+  
   handleChange = value => {
     if (value <= 1) {
       this.setState({
@@ -33,7 +35,6 @@ export default class Product extends React.PureComponent<ProductProps,ProductSta
   };
   render(){
   //const {  category } = this.props;
-  
   const numEachPage = 8
 
     /*const filteredProducts = productData.filter(
@@ -71,13 +72,14 @@ export default class Product extends React.PureComponent<ProductProps,ProductSta
                                        product.id >= this.state.minValue && product.id <= this.state.maxValue
                                    )*/.map((product)=>(
                                         <div>
-                                        <Card key={product.id} id="card_1">
-                                          <Link to={`/products/${product.category}/${product.name}`}>
-                                                  <Image src={product.image[0]} id="image-card"></Image> <br/>
+                                        <Card key={product.id} className="card_1">
+                                        <Link to={`/products/${product.id}/${product.name}`}>
+
+                                                  <Image src={product.image[0]} className="image-card"></Image> <br/>
                                                   <h4>{product.name}</h4>
-                                                  <p>{product.price} VND</p>
+                                                  <p>{product.price.toLocaleString()} VND</p>
                                           </Link>
-                                                  <AddToCartButton item={undefined}/>
+                                                  <AddToCartButton item={product} selectedColor={product.color[0]} selectedSize={product.size[0]} amount={1}/>
                                              
                                                   
                                              

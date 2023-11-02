@@ -3,7 +3,7 @@ import "../../Styles/color.css";
 
 
 const ColorGroups = () => {
-  const colors = ['white', 'black', 'yellow', 'blue', 'red','Aqua','Bisque','brown','chartreuse','cornflowerBlue','gray','green','yellow','purple'];
+  const colors = ['white', 'black', 'yellow', 'blue', 'red','Aqua','Bisque','brown','chartreuse','cornflowerBlue','gray','green','yellow','purple','pink'];
   const handleClick = (color) => {
     // Xử lý logic khi màu được chọn
     console.log('Selected color:', color);
