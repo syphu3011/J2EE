@@ -1,5 +1,5 @@
 
-import { Button, Col, DatePicker, Layout, Select, Space } from 'antd';
+import {  DatePicker, Layout, Select, Space } from 'antd';
 import "../../../style/product.css"
 const { Header, Content } = Layout;
 import React, { useState } from 'react';
@@ -91,8 +91,6 @@ const History = () => {
     const handleChange = (value: string) => {
         console.log(`selected ${value}`);
     };
-    const today = new Date();
-    const now = today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear()
     const mergedColumns = columns.map((col) => {
         return {
             ...col,
@@ -111,13 +109,15 @@ const History = () => {
                     <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
                         <Form.Item label="Từ ngày:">
                             <DatePicker
-                                defaultValue={dayjs('01/01/2000', dateFormat)}
+                                defaultValue={dayjs('01/01/2000')}
                                 format={dateFormat}
                                 style={{ marginRight: 10 }}
                             />
                         </Form.Item>
                         <Form.Item label="Đến ngày:">
-                            <DatePicker defaultValue={dayjs(now, dateFormat)} format={dateFormat}  style={{ marginRight: 10 }} />
+                            <DatePicker defaultValue={dayjs()} 
+                            format={dateFormat}  
+                            style={{ marginRight: 10 }} />
                         </Form.Item>
                         <Form.Item label="Trạng thái">
                             <Select

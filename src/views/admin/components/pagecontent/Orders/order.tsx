@@ -96,8 +96,6 @@ const Order = () => {
     },
   ];
 
-  const today = new Date();
-  const now = today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear()
   const mergedColumns = columns.map((col) => {
     return {
       ...col,
@@ -122,7 +120,7 @@ const Order = () => {
               />
             </Form.Item>
             <Form.Item label="Đến ngày:">
-              <DatePicker defaultValue={dayjs(now, dateFormat)} format={dateFormat} />
+              <DatePicker defaultValue={dayjs()} format={dateFormat} />
             </Form.Item>
           </div>
         </Header>
