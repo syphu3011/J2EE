@@ -7,8 +7,10 @@ import Login from "../login/login";
 import SignUp from '../login/signup';
 import UpdateInformation from '../../pages/editInformation/updateInformation';
 import PageCart from '../cart/pageCart';
+import { useCart } from 'react-use-cart';
 
 const MenuRight =(check:{isLogin: boolean})=>{
+     const {emptyCart}=useCart()
      const [open, setOpen] = useState(false);
      const [isLoggedIn,setIsLoggedIn] = React.useState(check.isLogin);
      const [children, setChildren] = React.useState([]);
@@ -16,7 +18,7 @@ const MenuRight =(check:{isLogin: boolean})=>{
      const [active, setActive] = React.useState(false);    
      const [activeSignUp,setActiveSignUp] = React.useState(false);
      const [isFormSubmitted, setIsFormSubmitted] = React.useState(false);
-     
+     const {totalItems} = useCart();
      const showDrawer=()=>{
           setOpen(true);
      }
@@ -93,7 +95,7 @@ const MenuRight =(check:{isLogin: boolean})=>{
                     key:"search",
                     
                },{
-                    label:<Badge count={0} className="soppingCartIcon" showZero><ShoppingCartOutlined className="large-icon" onClick={showDrawer} style={{fontWeight:'bolder',fontSize:'25px'}} /></Badge>,
+                    label:<Badge count={totalItems} className="soppingCartIcon" showZero><ShoppingCartOutlined className="large-icon" onClick={showDrawer} style={{fontWeight:'bolder',fontSize:'25px'}} /></Badge>,
                     key:"Cart",
                },{
                     label:<UserOutlined className="large-icon" style={{fontWeight:'bolder',fontSize:'25px'}} />,
@@ -120,8 +122,8 @@ const MenuRight =(check:{isLogin: boolean})=>{
                     open={open}
                     extra={
                          <Space>
-                         <Button onClick={onClose} className="btn-delete-cart">
-                              Xóa 
+                         <Button onClick={()=>emptyCart()} className="btn-delete-cart">
+                              Xóa tất cả
                          </Button>
                          <Button type="primary" onClick={onClose}>
                               Thanh toán

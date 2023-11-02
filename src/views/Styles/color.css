@@ -19,6 +19,17 @@
    .color:hover{
      border:1px solid black;
    }
+   .color:active{
+    outline-color: red;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+   }
+   .color.selected {
+    width:50px;
+    height:50px;
+    box-shadow: 0px 4px 4px 0px rgba(221, 126, 126, 0.25);
+
+  }
    .color-white {
      background-color: white;
    }

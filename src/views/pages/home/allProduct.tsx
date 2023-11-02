@@ -45,7 +45,7 @@ export default function AllProduct(){
                                                   <h4>{product.name}</h4>
                                                   <p>{product.price.toLocaleString()} VND</p>
                                              </Link>
-                                                  <AddToCartButton item={undefined}/>
+                                                  <AddToCartButton item={product} selectedColor={product.color[0]} selectedSize={product.size[0]} amount={1}/>
                                              
                                                   
                                              
@@ -83,7 +83,7 @@ export default function AllProduct(){
                                                   <h4>{product.name}</h4>
                                                   <p>{product.price.toLocaleString()} VND</p>
                                              </Link>
-                                                  <AddToCartButton item={undefined}/>
+                                             <AddToCartButton item={product} selectedColor={product.color[0]} selectedSize={product.size[0]} amount={1}/>
                                              
                                                   
                                              
@@ -119,7 +119,7 @@ export default function AllProduct(){
                                                   <h4>{product.name}</h4>
                                                   <p>{product.price.toLocaleString()} VND</p>
                                              </Link>
-                                                  <AddToCartButton item={undefined}/>
+                                             <AddToCartButton item={product} selectedColor={product.color[0]} selectedSize={product.size[0]} amount={1}/>
                                              
                                                   
                                              
