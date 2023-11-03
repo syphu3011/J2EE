@@ -24,7 +24,7 @@ export default class Main extends React.Component<any, any>
     }   
     componentDidMount () {
         authentication().then(rs => this.setState({
-            isAuth: rs
+            isAuth: rs.data.dangNhapVoiToken.status==200
         }))
     }
     render() {  

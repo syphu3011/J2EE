@@ -86,8 +86,17 @@ app.use((req, res, next) => {
   });
 });
 app.post('/api', async (req, res, next) => {
-  console.log("environment " + JSON.stringify(process.env))
-  console.log(req)
+  if (req.cookies.key) {
+    req.cookies.key = b64ToUint8array(await decrypt.decryptrsa(req.cookies.key))
+    req.cookies.iv = b64ToUint8array(await decrypt.decryptrsa(req.cookies.iv))
+    console.log("key "+ req.cookies.key )
+    console.log("iv "+ req.cookies.iv )
+    const aeskey = {key: req.cookies.key, iv: req.cookies.iv}
+    let data = {token: req.cookies.token, rToken: req.cookies.rToken}
+    data = (await decrypt_all(data, aeskey))
+    req.cookies.token = data.token
+    req.cookies.rToken = data.rToken
+  }
   if (req.body.key) {
     req.body.key.key = b64ToUint8array(await decrypt.decryptrsa(req.body.key.key))
     req.body.key.iv = b64ToUint8array(await decrypt.decryptrsa(req.body.key.iv))

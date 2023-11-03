@@ -2,7 +2,8 @@ const {TaiKhoan} = require('../../database/models')
 const jwt = require('jsonwebtoken');
 const { AuthenticationError } = require('apollo-server-express');
 const { LIFE_AT, LIFE_RT, PRIVATE_CODE_AT, PRIVATE_CODE_RT } = require('../const');
-const decrypt = require('../../utils/crypto')
+const decrypt = require('../../utils/crypto');
+const { set_token } = require('../../utils/token');
 function jwtVerify(token, secret) {
   return new Promise((resolve, reject) => {
     jwt.verify(token, secret, (err, decoded) => {
@@ -25,8 +26,7 @@ const verifyToken = async (token, rtoken, res) => {
           tentaikhoan: rf.decoded.tentaikhoan,
           maquyen: rf.decoded.maquyen
         }
-        res.cookie("token", jwt.sign(taikhoandangnhap, PRIVATE_CODE_AT, {expiresIn: LIFE_AT}), {secure: true, httpOnly: true, maxAge: LIFE_AT * 1000, sameSite: "none"})
-        res.cookie("rToken", jwt.sign(taikhoandangnhap, PRIVATE_CODE_RT, {expiresIn: LIFE_RT}), {secure: true, httpOnly: true, maxAge: LIFE_RT * 1000, sameSite: "none"})
+        await set_token(res, taikhoandangnhap)
         return await TaiKhoan.findByPk(rf.decoded.tentaikhoan);
       }
       return null
