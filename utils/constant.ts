@@ -1,6 +1,6 @@
 import { readFile } from "./readfile"
 import publickey from "../publickey.pem"
-import privatekey from "../publickey.pem"
+import privatekey from "../privatekey.pem"
 
 let PUBLIC_KEY
 let PRIVATE_KEY

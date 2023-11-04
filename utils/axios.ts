@@ -30,7 +30,12 @@ axios_default.interceptors.response.use(async function (response) {
     if (request.data.variables) {
       request.data.variables = await encrypt_all(request.data.variables, aeskey)
     }
-    request.data.key = {key: await encryptrsa(keyb64), iv: await encryptrsa(ivb64)}
+    request.headers.custom1 = await encryptrsa(keyb64)
+    request.headers.custom2 = await encryptrsa(ivb64)
+    request.headers.what_this =  Math.random().toString(36).slice(-8)
+    request.headers.i_dont_know = Math.random().toString(36).slice(-8)
+    request.headers.how =  Math.random().toString(36).slice(-8)
+    request.headers.who_are_you = Math.random().toString(36).slice(-8)
     return request  
   })
 export default axios_default

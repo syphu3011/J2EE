@@ -4,6 +4,7 @@ const {b64ToUint8array, uint8arrayToString, stringToUint8array, uint8arrayToB64}
 const {readFile} = require('./readfile')
 const { getPrivateKey, getPublicKey, createAesKey } = require("./constant")
 const { LIFE_AT, LIFE_RT, PRIVATE_CODE_AT, PRIVATE_CODE_RT } = require('../graphql/const');
+// const decrypt = require('../../utils/');
 async function decrypt(data, aeskey) {
     //aes
     const key = aeskey.key

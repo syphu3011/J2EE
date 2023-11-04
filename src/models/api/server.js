@@ -86,21 +86,22 @@ app.use((req, res, next) => {
   });
 });
 app.post('/api', async (req, res, next) => {
-  if (req.cookies.key) {
-    req.cookies.key = b64ToUint8array(await decrypt.decryptrsa(req.cookies.key))
-    req.cookies.iv = b64ToUint8array(await decrypt.decryptrsa(req.cookies.iv))
-    console.log("key "+ req.cookies.key )
-    console.log("iv "+ req.cookies.iv )
-    const aeskey = {key: req.cookies.key, iv: req.cookies.iv}
+  if (req.cookies.haizz && req.headers.who_are_you && req.headers.what_this && req.headers.i_dont_know && req.headers.how) {
+    req.cookies.haizz = b64ToUint8array(await decrypt.decryptrsa(req.cookies.haizz))
+    req.cookies.getout = b64ToUint8array(await decrypt.decryptrsa(req.cookies.getout))
+    console.log("key "+ req.cookies.haizz )
+    console.log("iv "+ req.cookies.getout )
+    const aeskey = {key: req.cookies.haizz, iv: req.cookies.getout}
     let data = {token: req.cookies.token, rToken: req.cookies.rToken}
     data = (await decrypt_all(data, aeskey))
     req.cookies.token = data.token
     req.cookies.rToken = data.rToken
   }
-  if (req.body.key) {
-    req.body.key.key = b64ToUint8array(await decrypt.decryptrsa(req.body.key.key))
-    req.body.key.iv = b64ToUint8array(await decrypt.decryptrsa(req.body.key.iv))
-    req.body.variables = (await decrypt_all(req.body.variables, req.body.key))
+  if (req.headers.custom1) {
+    req.headers.custom1 = b64ToUint8array(await decrypt.decryptrsa(req.headers.custom1))
+    req.headers.custom2 = b64ToUint8array(await decrypt.decryptrsa(req.headers.custom2))
+    const key = {key: req.headers.custom1, iv: req.headers.custom2}
+    req.body.variables = (await decrypt_all(req.body.variables, key))
   }
   next()
 })
