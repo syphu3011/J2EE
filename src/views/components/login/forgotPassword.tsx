@@ -1,5 +1,5 @@
 import React from 'react';
-import {Form,Input} from 'antd';
+import {Form,Input, Modal} from 'antd';
 import {ArrowLeftOutlined} from "@ant-design/icons";
 import { forgotpassword } from '../../../controllers/modules/customer/forgotpassword';
 
@@ -37,17 +37,26 @@ export default class ForgotPaswords extends React.Component<ForgotPasswordProps,
           if (rs.data && rs.data.quenMatKhauKhachHang) {
                if (rs.data.quenMatKhauKhachHang.status == 200) {
                     //TODO: Thêm thông báo thành công rồi mới back về
-                    alert("Vui lòng kiểm tra email!")
+                    Modal.info({
+                         content:"Mật khẩu mới đã được gửi đến email của bạn! Vui lòng kiểm tra và đăng nhập lại!"
+                    })
+                    //alert("Vui lòng kiểm tra email!")
                     this.props.onBackToLogin(); // Call the onBackToLogin callback
                }
                else {
                     //TODO: Thêm thông báo không thành công 
+                    Modal.error({
+                         content:"Vui lòng kiểm tra lại email đăng ký của bạn!"
+                    })
                     alert(rs.data.quenMatKhauKhachHang.message)
                }
           }
           else {
                //TODO: Thêm thông báo không thành công từ 
-               alert("Có lỗi xảy ra!");
+               Modal.error({
+                    content:"Hệ thống bị lỗi! Hãy thử lại vào lần sau!"
+               })
+               //alert("Có lỗi xảy ra!");
           }
  
       }

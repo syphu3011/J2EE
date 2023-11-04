@@ -1,5 +1,5 @@
 import React from 'react';
-import {Form,Row,Col,Input, Checkbox, FormInstance} from 'antd';
+import {Form,Row,Col,Input, Checkbox, FormInstance, Modal} from 'antd';
 import {CloseOutlined } from "@ant-design/icons";
 import SocialNetWorks from './socailNetWorks';
 import Login  from './login';
@@ -91,7 +91,9 @@ export default class SignUp extends React.Component<SignUpProps, SignUpState> {
                console.log('Registration successful');
           }
           else {
-
+               Modal.error({
+                    content:"Hệ thống lỗi ! Hãy thử lại vào lần sau"
+               })
           }
      }
      render(){
@@ -158,7 +160,7 @@ export default class SignUp extends React.Component<SignUpProps, SignUpState> {
 
                                         ]}
                                    >
-                                        <Input type="date" placeholder=""/>
+                                        <Input type="date" placeholder="" size="large"/>
 
                                    </Form.Item>
                          </Col>

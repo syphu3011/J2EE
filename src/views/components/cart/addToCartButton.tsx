@@ -3,12 +3,11 @@ import { ShoppingCartOutlined} from '@ant-design/icons';
 import { useCart } from 'react-use-cart';
 import React, { useState } from "react";
 import { convertB64ToImage } from "../../../../utils/util";
+import { Link } from "react-router-dom";
 function AddToCartButton({ item,selectedColor, selectedSize,amount }) {
      const [loading, setLoading] = React.useState(false);
-     const { addItem} = useCart();
-  //   const [selectedColor] = useState(item.color[0]);
-   //  const [selectedSize] = React.useState(item.size[0]);
-    // const [quantity] = useState(1);
+     const { addItem,items} = useCart();
+
      const addProductToCart = () => {
       if (amount > 0) {
         setLoading(true);
@@ -45,9 +44,11 @@ function AddToCartButton({ item,selectedColor, selectedSize,amount }) {
            </Button>
        </Col>
        <Col>
-           <Button disabled={amount > 0 ? false:true} className="add-to-cart-button btn-2">
+            <Link to="/gio-hang/xac-nhan-thong-tin-giao-hang">
+           <Button disabled={amount > 0 ? false:true} className="add-to-cart-button btn-2" onClick={addProductToCart} loading={loading}>
              <span>Mua ngay</span>
            </Button>
+           </Link>
        </Col>
    </Row>
      );

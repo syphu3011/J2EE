@@ -110,27 +110,31 @@ export default class Login extends React.Component<LoginProps,LoginState>{
                     {this.state.showFormSignUp?(
                          <SignUp onCloseSignUp={this.handleSignUpClose} isLoggedIn={false} setIsLoggedIn={this.props.setIsLoggedIn}/>
                     ):(
-                   <Form onFinish={this.handleSubmit} ref={this.formRef}>
+                   <Form style={{width:400}}onFinish={this.handleSubmit} ref={this.formRef}>
                          <div id="close-login-btn"><CloseOutlined onClick={this.handleLoginCloseClick} /></div>
                          <h3>ĐĂNG NHẬP</h3>
                          <SocailNetworks/><br/>
                          <p className="option-text">hoặc sử dụng tài khoản của bạn</p>
                          <Form.Item
                               name="EmailorUsername" hasFeedback
-                              label="Email hoặc tên đăng nhập"
+                              label="Email"
                               labelCol= {{span:24}}
                               wrapperCol={{span:24}}
                               rules ={
                                    [
                                         {
                                              required:true,
-                                             message:"Nhập Email hoặc tên đăng nhập",
+                                             message:"Nhập Email",
                                         },
+                                        {
+                                             type:"email",
+                                             message:"Email của bạn không đúng",
+                                        }
                                         
                                    ]
                               }
                          >
-                              <Input placeholder="Nhập Email hoặc tên đăng nhập" size='large'></Input>
+                              <Input placeholder="Nhập Email của bạn" size='large'></Input>
                          </Form.Item>
                          <Form.Item
                               name="password" hasFeedback
