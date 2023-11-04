@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
-import {Badge, Button, Drawer, Menu, Space} from "antd";
+import { Link, useNavigate } from "react-router-dom";
+import {Badge, Button, Drawer, Menu, Modal, Space} from "antd";
 import {SearchOutlined,ShoppingCartOutlined,UserOutlined,LoginOutlined,PlusCircleOutlined,EditOutlined,LogoutOutlined } from "@ant-design/icons";
 import SearchItem from "../search/search";
 import Login from "../login/login";
@@ -19,12 +19,17 @@ const MenuRight =(check:{isLogin: boolean})=>{
      const [active, setActive] = React.useState(false);    
      const [activeSignUp,setActiveSignUp] = React.useState(false);
      const [isFormSubmitted, setIsFormSubmitted] = React.useState(false);
-     const {totalItems} = useCart();
+     const {totalItems,isEmpty } = useCart();
      const showDrawer=()=>{
           setOpen(true);
      }
      const onClose = () => {
           setOpen(false);
+        };
+     const onMess = () => {
+          Modal.info({
+               content:"Giỏ hàng của bạn hiện tại đang trống!",
+          })
         };
      const handleSearchClick = () => {
           setVisible(!visible);
@@ -111,7 +116,8 @@ const MenuRight =(check:{isLogin: boolean})=>{
                <SearchItem/>
           </div>
           <div className={active?"login-form-container active" :"login-form-container"}>
-          <Login onClose={handleLoginFormClose}  isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>          </div>
+               <Login onClose={handleLoginFormClose}  isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>          
+          </div>
           <div className={activeSignUp?"signup-form-container active":"signup-form-container"}>
                <SignUp onCloseSignUp={handleSignUpFormClose} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
           </div>
@@ -126,9 +132,11 @@ const MenuRight =(check:{isLogin: boolean})=>{
                          <Button onClick={()=>emptyCart()} className="btn-delete-cart">
                               Xóa tất cả
                          </Button>
-                         <Button type="primary" onClick={onClose}>
+                         <Link to={!isEmpty?"/gio-hang/xac-nhan-thong-tin-giao-hang":"/"}>
+                         <Button type="primary" onClick={!isEmpty?onClose:onMess}>
                               Thanh toán
                          </Button>
+                         </Link>
                          </Space>
                          }
                     >
