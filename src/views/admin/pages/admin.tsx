@@ -26,7 +26,7 @@ function Admin() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />}></Route>
-        <Route path="/AccesOTP" element={<LoginOTP />}></Route>
+        <Route path="/AccessOTP" element={<LoginOTP />}></Route>
         <Route path="/Admin" element={<LayoutPage />}>
           <Route index element={<HomeAdmin />} />
           <Route path="Home" element={<HomeAdmin />} />
