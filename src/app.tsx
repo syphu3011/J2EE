@@ -5,7 +5,8 @@ import Main from './views/pages/main';
 import { CartProvider } from 'react-use-cart';
 
 ReactDOM.render(
-<CartProvider>
+     <Admin />
+/* <CartProvider>
      <Main />
-</CartProvider>
+</CartProvider> */
 , document.getElementById('app'));  

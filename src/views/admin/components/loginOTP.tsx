@@ -31,9 +31,7 @@ const onFinishFailed = (errorInfo: any) => {
 };
 
 type FieldType = {
-  username?: string;
-  password?: string;
-  remember?: string;
+  OTP?: string;
 };
 export default function Login() {
   const navigate = useNavigate();
@@ -45,7 +43,7 @@ export default function Login() {
         size={[0, 48]}
       ></Space>
       <Layout>
-        <Header style={headerStyle}>Đăng Nhập</Header>
+        <Header style={headerStyle}>Xác thực đăng nhập ADMIN</Header>
         <Content style={contentStyle}>
           <div
             style={{
@@ -60,37 +58,20 @@ export default function Login() {
               wrapperCol={{ span: 16 }}
               style={{ maxWidth: 600 }}
               initialValues={{ remember: true }}
-              onFinish={() => navigate("/AccessOTP")}
+              onFinish={() => navigate("/Admin")}
               onFinishFailed={onFinishFailed}
               autoComplete="off"
             >
               <Form.Item<FieldType>
-                label="Tài khoản"
-                name="username"
-                rules={[{ required: true, message: "Hãy nhập tài khoản" }]}
+                label="Nhập mã OTP"
+                name="OTP"
+                rules={[{ required: true, message: "Hãy nhập OTP" }]}
               >
                 <Input />
               </Form.Item>
-
-              <Form.Item<FieldType>
-                label="Mật khẩu"
-                name="password"
-                rules={[{ required: true, message: "Hãy nhập mật khẩu" }]}
-              >
-                <Input.Password />
-              </Form.Item>
-
-              <Form.Item<FieldType>
-                name="remember"
-                valuePropName="checked"
-                wrapperCol={{ offset: 8, span: 16 }}
-              >
-                <Checkbox>Ghi nhớ đăng nhập</Checkbox>
-              </Form.Item>
-
               <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                 <Button type="primary" htmlType="submit">
-                  Đăng nhập
+                  Xác nhận
                 </Button>
               </Form.Item>
             </Form>

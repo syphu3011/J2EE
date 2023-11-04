@@ -1,4 +1,4 @@
-import { DatePicker, Layout, Space } from "antd";
+import { DatePicker, Layout, Space, TableColumnsType } from "antd";
 import "../../../style/product.css";
 const { Header, Content } = Layout;
 import React, { useState } from "react";
@@ -18,6 +18,14 @@ const contentStyle: React.CSSProperties = {
   color: "#fff",
   backgroundColor: "#ffffff",
 };
+interface ExpandedDataType {
+  key: React.Key;
+  name_pro_order: string;
+  size_order: string;
+  color_order: string;
+  price_order: number;
+  amount_order: number;
+}
 
 interface Item {
   key: string;
@@ -45,9 +53,9 @@ const Order = () => {
   const [data] = useState(originData);
   const columns = [
     {
-      title: "Mã phiếu nhập",
+      title: "Mã phiếu",
       dataIndex: "id_import",
-      width: "auto",
+      width: "8%",
     },
     {
       title: "Nhà cung cấp",
@@ -67,21 +75,30 @@ const Order = () => {
       title: "Tổng tiền",
       dataIndex: "total_money",
     },
-    {
-      title: "Chi tiết",
-      key: "detail_imp",
-      dataIndex: "detail",
-      width: "auto",
-      render: () => <a>chi tiết</a>,
-    },
-    {
-      key: "operation",
-      dataIndex: "delete",
-      width: "8%",
-      render: () => <a>Xóa</a>,
-    },
   ];
+  const expandedRowRender = () => {
 
+    const columns: TableColumnsType<ExpandedDataType> = [
+      { title: 'Tên sản phẩm', dataIndex: 'name_pro_order' },
+      { title: 'Kích thước', dataIndex: 'size_order' },
+      { title: 'Màu', dataIndex: 'color_order' },
+      { title: 'Giá nhập', dataIndex: 'price_order' },
+      { title: 'Số lượng', dataIndex: 'amount_order' }
+    ];
+
+    const data = [];
+    for (let i = 0; i < 3; ++i) {
+      data.push({
+        key: i.toString(),
+        name_pro_order: 'Áo',
+        size_order: 'XL',
+        color_order: 'Đen',
+        price_order: 230000,
+        amount_order: 40,
+      });
+    }
+    return <Table columns={columns} dataSource={data} pagination={false} />;
+  };
   const mergedColumns = columns.map((col) => {
     return {
       ...col,
@@ -120,9 +137,10 @@ const Order = () => {
           <Form form={form} component={false}>
             <Table
               bordered
+              expandable={{ expandedRowRender }}
               dataSource={data}
               columns={mergedColumns}
-              rowClassName="order-row"
+              rowClassName="His-import-row"
             />
           </Form>
         </Content>

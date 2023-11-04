@@ -1,4 +1,4 @@
-import { DatePicker, Layout, Space } from 'antd';
+import { DatePicker, Layout, Space, TableColumnsType } from 'antd';
 import "../../../style/product.css"
 const { Header, Content } = Layout;
 import React, { useState } from 'react';
@@ -19,6 +19,14 @@ const contentStyle: React.CSSProperties = {
   backgroundColor: '#ffffff',
 };
 
+interface ExpandedDataType {
+  key: React.Key;
+  name_pro_order: string;
+  size_order: string;
+  color_order: string;
+  price_order: number;
+  amount_order: number;
+}
 interface Item {
   key: string;
   id_order: string;
@@ -74,21 +82,12 @@ const Order = () => {
       dataIndex: 'status',
     },
     {
-      title: 'Chi tiết',
-      key: 'detail',
-      dataIndex: 'detail',
-      width: 'auto',
-      render: () => <a>chi tiết</a>,
-    },
-    {
-      title: 'Xác nhận',
       key: 'confirm',
       dataIndex: 'confirm',
       width: 'auto',
       render: () => <a>Xác nhận</a>,
     },
     {
-      title: 'Hủy',
       key: 'cancel',
       dataIndex: 'cancel',
       width: 'auto',
@@ -107,6 +106,29 @@ const Order = () => {
       }),
     };
   });
+  const expandedRowRender = () => {
+
+    const columns: TableColumnsType<ExpandedDataType> = [
+      { title: 'Tên sản phẩm', dataIndex: 'name_pro_order' },
+      { title: 'Kích thước', dataIndex: 'size_order' },
+      { title: 'Màu', dataIndex: 'color_order' },
+      { title: 'Giá', dataIndex: 'price_order' },
+      { title: 'Số lượng', dataIndex: 'amount_order' }
+    ];
+
+    const data = [];
+    for (let i = 0; i < 3; ++i) {
+      data.push({
+        key: i.toString(),
+        name_pro_order: 'Áo',
+        size_order: 'XL',
+        color_order: 'Đen',
+        price_order: 230000,
+        amount_order: 4,
+      });
+    }
+    return <Table columns={columns} dataSource={data} pagination={false} />;
+  };
   return (
     <Space direction="vertical" style={{ width: '100%' }} size={[0, 48]}>
       <Layout>
@@ -128,6 +150,7 @@ const Order = () => {
           <Form form={form} component={false}>
             <Table
               bordered
+              expandable={{ expandedRowRender }}
               dataSource={data}
               columns={mergedColumns}
               rowClassName="order-row"
