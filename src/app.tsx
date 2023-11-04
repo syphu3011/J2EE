@@ -1,13 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import Admin from "./views/admin/pages/admin";
-import Main from "./views/pages/main";
 
-import Main from './views/pages/main'; 
-import { CartProvider } from 'react-use-cart';
+// import Main from './views/pages/main'; 
+// import { CartProvider } from 'react-use-cart';
 
 ReactDOM.render(
-<CartProvider>
+     <Admin />
+/* <CartProvider>
      <Main />
-</CartProvider>
+</CartProvider> */
 , document.getElementById('app'));  

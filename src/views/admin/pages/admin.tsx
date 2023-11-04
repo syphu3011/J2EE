@@ -20,18 +20,18 @@ import Partner from "../components/pagecontent/partner/partnerInfo";
 import Provider from "../components/pagecontent/partner/provider";
 import StatNumber from "../components/pagecontent/Statistics/StatNumber";
 import Status from "../components/pagecontent/status/Status";
-
+import LoginOTP from "../components/loginOTP";
 function Admin() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />}></Route>
+        <Route path="/AccesOTP" element={<LoginOTP />}></Route>
         <Route path="/Admin" element={<LayoutPage />}>
           <Route index element={<HomeAdmin />} />
           <Route path="Home" element={<HomeAdmin />} />
           <Route path="Customers" element={<Customer />} />
           <Route path="AccountCus" element={<AccountCus />} />
-          <Route path="Products" element={<Product />} />
           <Route path="Products" element={<Product />} />
           <Route path="TypePro" element={<Typeproduct />} />
           <Route path="ProInStock" element={<Inventory />} />
