@@ -6,6 +6,8 @@ type SanPham {
     ten: String!
     anhminhhoa: String!
     mota: String!
+    gia: Int!
+    mathang: [MatHang!]
     donvi: DonVi
     loai: [Loai!]
 }
@@ -22,6 +24,12 @@ input SanPhamQuery {
     ma: Int
     ten: String
 }
+input SanPhamTimKiemQuery {
+    ma: Int
+    ten: String
+    gia_tu: Int
+    gia_den: Int
+}
 type SanPhamResponse {
     status: Int!,
     message: String!
@@ -34,7 +42,7 @@ type SanPhamQueryResponse {
 extend type Query {
     sanpham: SanPhamQueryResponse
     sanphamvoithuoctinh(input: SanPhamQuery): SanPhamQueryResponse
-    timkiemsanpham(input: SanPhamQuery): SanPhamQueryResponse
+    timkiemsanpham(input: SanPhamTimKiemQuery): SanPhamQueryResponse
 }
 extend type Mutation {
     taoSanPham(input: SanPhamInput!): SanPhamResponse

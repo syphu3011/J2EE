@@ -3,6 +3,8 @@ const aes = require('js-crypto-aes')
 const {b64ToUint8array, uint8arrayToString, stringToUint8array, uint8arrayToB64} = require("./util")
 const {readFile} = require('./readfile')
 const { getPrivateKey, getPublicKey, createAesKey } = require("./constant")
+const { LIFE_AT, LIFE_RT, PRIVATE_CODE_AT, PRIVATE_CODE_RT } = require('../graphql/const');
+// const decrypt = require('../../utils/');
 async function decrypt(data, aeskey) {
     //aes
     const key = aeskey.key
@@ -19,7 +21,9 @@ async function decrypt_all(data, aeskey) {
             }
             else {
                 if (!key.includes("message_socket")) {
-                    data[key] = (await decrypt(data[key], aeskey)).replaceAll('\\n', '\n').replaceAll("\0","");
+                    if(data[key]) {
+                        data[key] = (await decrypt(data[key], aeskey)).replaceAll('\\n', '\n').replaceAll("\0","");
+                    }
                 }
                 else {
                     data.message += data[key]
@@ -51,8 +55,9 @@ async function encrypt_all(data,aeskey) {
 }
 async function encrypt_all_with_key(data) {
     const key = await createAesKey()
+    console.log(key)
     data = await encrypt_all(data, key)
-    data.key = {key:await encryptrsa(key.key), iv: await encryptrsa(key.iv)}
+    data.key = {key:await encryptrsa(uint8arrayToB64(key.key)), iv: await encryptrsa(uint8arrayToB64(key.iv))}
     return data
 }
 
@@ -69,5 +74,13 @@ async function encryptrsa(data) {
     rsa.setOptions({ encryptionScheme: 'pkcs1' });
     const encrypted_rsa = rsa.encrypt(data, 'base64', 'utf8')
     return encrypted_rsa
+}
+async function encrypt_token(taikhoandangnhap) {
+    let data = {
+        token: jwt.sign(taikhoandangnhap, PRIVATE_CODE_AT, {expiresIn: LIFE_AT}),
+        rToken:jwt.sign(taikhoandangnhap, PRIVATE_CODE_RT, {expiresIn: LIFE_RT})
+    }
+    data = await decrypt.encrypt_all_with_key(data)
+    return data
 }
 module.exports = { encrypt_all_with_key,decrypt_all, encrypt_all, decryptrsa }

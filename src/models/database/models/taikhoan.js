@@ -37,6 +37,12 @@ module.exports = (sequelize, DataTypes) => {
             maquyen: {
                 type: DataTypes.INTEGER,
                 references: "Quyen",
+            },
+            private_key: {
+                type: DataTypes.STRING,
+            },
+            public_key: {
+                type: DataTypes.STRING,
             }
         },
         {

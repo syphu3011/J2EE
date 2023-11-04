@@ -88,7 +88,7 @@ module.exports = {
           tentaikhoan: tentaikhoan,
           maquyen: taikhoan.maquyen
         }
-        set_token(context.res, taikhoandadangky)
+        await set_token(context.res, taikhoandadangky)
         return {
           status: STATUS_CODE.create_success,
           message: "Đăng ký tài khoản thành công!",
@@ -104,10 +104,8 @@ module.exports = {
     },
     async dangNhap(root, args, context) {
       try {
-        console.log(args.input)
         const { tentaikhoan, matkhau } = args.input
         const taikhoan = await TaiKhoan.findByPk(tentaikhoan)
-        console.log(taikhoan)
         if (taikhoan) {
           const checkPassword = bcrypt.compareSync(matkhau, taikhoan.matkhau)
           if (checkPassword) {
@@ -115,10 +113,7 @@ module.exports = {
               tentaikhoan: tentaikhoan,
               maquyen: taikhoan.maquyen
             }
-            const accessToken = jwt.sign(taikhoandangnhap, PRIVATE_CODE_AT, { expiresIn: LIFE_AT })
-            const refreshToken = jwt.sign(taikhoandangnhap, PRIVATE_CODE_RT, { expiresIn: LIFE_RT })
-            context.res.cookie("token", accessToken, { secure: true, httpOnly: true, maxAge: LIFE_AT * 1000, sameSite: "none" })
-            context.res.cookie("rToken", refreshToken, { secure: true, httpOnly: true, maxAge: LIFE_RT * 1000, sameSite: "none" })
+            await set_token(context.res, taikhoandangnhap)
             const rs = {
               status: 200,
               message: "Đăng nhập thành công!"
@@ -162,8 +157,11 @@ module.exports = {
             }
             return
           }
-          const accessToken = jwt.sign(taikhoandangnhap, PRIVATE_CODE_AT, { expiresIn: LIFE_AT })
-          const refreshToken = jwt.sign(taikhoandangnhap, PRIVATE_CODE_RT, { expiresIn: LIFE_RT })
+          const taikhoandangnhap = {
+            tentaikhoan: decoded.tentaikhoan,
+            maquyen: decoded.maquyen
+          }
+          await set_token(context.res, taikhoandangnhap)
           returnContent = {
             status: 200,
             message: "Đăng nhập thành công!"
@@ -199,10 +197,7 @@ module.exports = {
                     tentaikhoan: decoded.tentaikhoan,
                     maquyen: decoded.maquyen
                   }
-                  const accessToken = jwt.sign(taikhoandangnhap, PRIVATE_CODE_AT, { expiresIn: LIFE_AT })
-                  const refreshToken = jwt.sign(taikhoandangnhap, PRIVATE_CODE_RT, { expiresIn: LIFE_RT })
-                  context.res.cookie("token", accessToken, { secure: true, httpOnly: true, maxAge: LIFE_AT * 1000, sameSite: "none" })
-                  context.res.cookie("rToken", refreshToken, { secure: true, httpOnly: true, maxAge: LIFE_RT * 1000, sameSite: "none" })
+                  await set_token(context.res, taikhoandangnhap)
                   returnContent = {
                     status: 200,
                     message: "Đăng nhập thành công!",

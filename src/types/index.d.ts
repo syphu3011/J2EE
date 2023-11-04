@@ -19,6 +19,6 @@ declare module '*.png'{
     export default path;
 }
 declare module '*.pem'{
-  const path: string;
-  export default path;
+  const content: string;
+  export default content;
 }
