@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Checkbox, Form, Input, Space } from "antd";
+import { Button, Form, Input, Space } from "antd";
 import { Layout } from "antd";
 import { useNavigate } from "react-router-dom";
 const { Header, Content } = Layout;
@@ -33,7 +33,7 @@ const onFinishFailed = (errorInfo: any) => {
 type FieldType = {
   OTP?: string;
 };
-export default function Login() {
+export default function LoginOTP() {
   const navigate = useNavigate();
   return (
     <>
@@ -64,6 +64,8 @@ export default function Login() {
             >
               <Form.Item<FieldType>
                 label="Nhập mã OTP"
+                labelAlign="left"
+                labelCol={{ span: 10}}
                 name="OTP"
                 rules={[{ required: true, message: "Hãy nhập OTP" }]}
               >

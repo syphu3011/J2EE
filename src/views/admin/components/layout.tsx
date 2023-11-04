@@ -104,7 +104,7 @@ export default function LayoutPage() {
         }}
         className="header"
       >
-        <Menu theme="dark" mode="horizontal" items={items1} onClick={log_out} />
+        <Menu style={{ width: "50%" }} theme="dark" mode="horizontal" items={items1} onClick={log_out} />
         <Search placeholder="input search text" style={{ width: "50%" }} />
         <div />
         <Badge dot>

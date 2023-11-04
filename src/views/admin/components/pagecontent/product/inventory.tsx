@@ -1,6 +1,5 @@
-import { Button, Col, Layout, Select, SelectProps, Space, Upload } from "antd";
+import { Layout } from "antd";
 import "../../../style/product.css";
-const { Content } = Layout;
 import React, { useState } from "react";
 import {
   Form,
