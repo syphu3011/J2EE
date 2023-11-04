@@ -26,7 +26,7 @@ function AddToCartButton({ item,selectedColor, selectedSize,amount }) {
           quantity:amount,
           price: item.price,
         };
-       addItem(itemToAdd);
+       addItem(itemToAdd,amount);
         message.success(`${item.name} đã được thêm vào giỏ hàng!`);
       }
        setLoading(false);
