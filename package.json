@@ -96,6 +96,7 @@
         "file-loader": "^6.2.0",
         "node-sass": "^9.0.0",
         "nodemon": "^2.0.4",
+        "raw-loader": "^4.0.2",
         "sass": "^1.69.0",
         "sass-loader": "^13.3.2",
         "style-loader": "^3.3.3",

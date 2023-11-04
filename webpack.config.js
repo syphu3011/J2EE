@@ -56,7 +56,11 @@ module.exports = {
           }
             ]
 
-          }
+          },
+        //   {
+        //     test: /\.pem$/,
+        //     use: 'raw-loader',
+        //   },
             ]
         //   {
         //     test: /\.(png|jpe?g|gif|jp2|webp)$/,
