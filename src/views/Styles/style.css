@@ -418,7 +418,7 @@ Input::placeholder{
 #btn-Search:hover{
      background-color: #F4AAC0;
 }
-.input{
+.inputSearch{
      position: absolute;
      border-radius: 2px;
      top: 100%;
@@ -432,7 +432,7 @@ Input::placeholder{
      transition: transform 0.3s ease-in-out;
      
 }
-.input.active{
+.inputSearch.active{
      transform: scaleY(1);
 }
 #footer{
