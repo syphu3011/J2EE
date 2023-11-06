@@ -2,7 +2,7 @@ declare const productData: {
     id: string;
     image: string[];
     name: string;
-    price: string;
+    price: number;
     size: string[];
     color: string[];
     category: string;

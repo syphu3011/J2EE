@@ -63,7 +63,7 @@ const StatNumber = () => {
     {
       title: "Mã loại",
       dataIndex: "id_type_stat",
-      width: "5%",
+      width: "auto",
     },
     {
       title: "Loại sản phẩm",
@@ -117,7 +117,7 @@ const StatNumber = () => {
       <Layout>
         <Header style={headerStyle}>
           <Row gutter={16}>
-            <Col className="gutter-row" span={7}>
+            <Col className="gutter-row" span={10}>
               <Form.Item
                 label="Lọc theo:"
                 labelAlign="left"
@@ -126,14 +126,14 @@ const StatNumber = () => {
                 <Select
                   allowClear
                   style={{ width: "90%" }}
-                  placeholder="Please select"
+                  placeholder="Sản phẩm/ Khách hàng/ Thời gian/ Nhân viên"
                   onChange={handleChange}
                   options={options}
                 />
               </Form.Item>
             </Col>
-            <Col className="gutter-row" span={7}></Col>
-            <Col className="gutter-row" span={7}>
+            <Col className="gutter-row" span={2}></Col>
+            <Col className="gutter-row" span={12}>
               <div
                 style={{
                   display: "flex",
@@ -141,14 +141,18 @@ const StatNumber = () => {
                   justifyContent: "center",
                 }}
               >
-                <Form.Item label="Từ ngày:">
+                <Form.Item label="Từ ngày:"
+                  labelAlign="left"
+                  labelCol={{ span: 8 }}>
                   <DatePicker
                     defaultValue={dayjs("01/01/2000", dateFormat)}
                     format={dateFormat}
                     style={{ marginRight: 10 }}
                   />
                 </Form.Item>
-                <Form.Item label="Đến ngày:">
+                <Form.Item label="Đến ngày:"
+                  labelAlign="left"
+                  labelCol={{ span: 8}}>
                   <DatePicker defaultValue={dayjs()} format={dateFormat} />
                 </Form.Item>
               </div>

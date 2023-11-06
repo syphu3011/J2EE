@@ -1,5 +1,5 @@
 
-import {  DatePicker, Layout, Select, Space } from 'antd';
+import { DatePicker, Layout, Select, Space, TableColumnsType } from 'antd';
 import "../../../style/product.css"
 const { Header, Content } = Layout;
 import React, { useState } from 'react';
@@ -19,7 +19,14 @@ const contentStyle: React.CSSProperties = {
     color: '#fff',
     backgroundColor: '#ffffff',
 };
-
+interface ExpandedDataType {
+    key: React.Key;
+    name_pro_order: string;
+    size_order: string;
+    color_order: string;
+    price_order: number;
+    amount_order: number;
+}
 interface Item {
     key: string;
     id_order: string;
@@ -80,16 +87,32 @@ const History = () => {
             title: 'Trạng thái',
             dataIndex: 'status',
         },
-        {
-            title: 'chi tiết',
-            key: 'detail',
-            dataIndex: 'detail',
-            width: 'auto',
-            render: () => <a>chi tiết</a>,
-        },
     ];
     const handleChange = (value: string) => {
         console.log(`selected ${value}`);
+    };
+    const expandedRowRender = () => {
+
+        const columns: TableColumnsType<ExpandedDataType> = [
+            { title: 'Tên sản phẩm', dataIndex: 'name_pro_order' },
+            { title: 'Kích thước', dataIndex: 'size_order' },
+            { title: 'Màu', dataIndex: 'color_order' },
+            { title: 'Giá', dataIndex: 'price_order' },
+            { title: 'Số lượng', dataIndex: 'amount_order' }
+        ];
+
+        const data = [];
+        for (let i = 0; i < 3; ++i) {
+            data.push({
+                key: i.toString(),
+                name_pro_order: 'Áo',
+                size_order: 'XL',
+                color_order: 'Đen',
+                price_order: 230000,
+                amount_order: 4,
+            });
+        }
+        return <Table columns={columns} dataSource={data} pagination={false} />;
     };
     const mergedColumns = columns.map((col) => {
         return {
@@ -115,9 +138,9 @@ const History = () => {
                             />
                         </Form.Item>
                         <Form.Item label="Đến ngày:">
-                            <DatePicker defaultValue={dayjs()} 
-                            format={dateFormat}  
-                            style={{ marginRight: 10 }} />
+                            <DatePicker defaultValue={dayjs()}
+                                format={dateFormat}
+                                style={{ marginRight: 10 }} />
                         </Form.Item>
                         <Form.Item label="Trạng thái">
                             <Select
@@ -137,6 +160,7 @@ const History = () => {
                     <Form form={form} component={false}>
                         <Table
                             bordered
+                            expandable={{ expandedRowRender }}
                             dataSource={data}
                             columns={mergedColumns}
                             rowClassName="order-row"

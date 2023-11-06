@@ -1,5 +1,5 @@
 const { Op } = require("sequelize")
-const {SanPham, sequelize, Loai, NhaCungCap} = require("../../database/models/")
+const {SanPham, sequelize, Loai, NhaCungCap, MatHang} = require("../../database/models/")
 const {STATUS_CODE, CHUCNANG} = require("../const")
 const {checkAdmin, checkPrivileges} = require("./checkToken")
 
@@ -134,10 +134,10 @@ module.exports = {
             try {
                 const {ma = "", ten = ""} = args.input
                 const sanpham = await SanPham.findAll({
-                    where: {
-                        ma: {[Op.like]: '%' + ma + '%'},
-                        ten: {[Op.like]: '%' + ten + '%'}
-                    }
+                    where: [
+                        {ma: {[Op.like]: '%' + ma + '%'}},
+                        {ten: {[Op.like]: '%' + ten + '%'}}
+                    ],
                 });
                 return {
                     status: STATUS_CODE.query_success,
@@ -155,15 +155,24 @@ module.exports = {
         },
         async timkiemsanpham(root, args, context) {
             try {
-                const {ma = "", ten = ""} = args.input
-                const sanpham = await SanPham.findAll({
+                const {ma = null, ten = "", gia_tu = 0, gia_den = 9999999999} = args.input
+                let sanpham = await SanPham.findAll({
                     where: {
-                        [Op.or]: {
-                            ma: {[Op.like]: '%' + ma + '%'},
-                            ten: {[Op.like]: '%' + ten + '%'}
+                        [Op.or]: [
+                            {ma: {[Op.between]: [ma ? ma : 0, ma ? ma: 9999999999]}},
+                            {ten: {[Op.like]: '%' + ten + '%'}},
+                        ]
+                    },
+
+                    include: [{
+                        model: MatHang,
+                        as: "MatHang",
+                        where: {
+                            giaban: {[Op.between]: [gia_tu, gia_den]}
                         }
-                    }
+                    }]
                 });
+                sanpham = sanpham.filter(sp => sp.getMatHang().length !== 0)
                 return {
                     status: STATUS_CODE.query_success,
                     message: "Lấy sản phẩm thành công!",
@@ -180,6 +189,15 @@ module.exports = {
         }
     },
     SanPham: {
+        async gia(sanpham) {
+            const mathang = await sanpham.getMatHang()
+            if (mathang.length == 0) return 0
+            const giabanlist = mathang.map(mh => mh.giaban)
+            return Math.min(...giabanlist)
+        },
+        mathang(sanpham) {
+            return sanpham.getMatHang().filter(mh => mh.matrangthaisanpham == 1)
+        },
         loai(sanpham) {
             return sanpham.getLoai()
         },

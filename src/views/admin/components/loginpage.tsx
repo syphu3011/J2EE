@@ -60,7 +60,7 @@ export default function Login() {
               wrapperCol={{ span: 16 }}
               style={{ maxWidth: 600 }}
               initialValues={{ remember: true }}
-              onFinish={() => navigate("/Admin")}
+              onFinish={() => navigate("/AccessOTP")}
               onFinishFailed={onFinishFailed}
               autoComplete="off"
             >
