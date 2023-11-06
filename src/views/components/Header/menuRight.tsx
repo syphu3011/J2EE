@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
-import {Badge, Button, Drawer, Menu, Modal, Space} from "antd";
+import {Badge, Button, Drawer, Menu, MenuProps, Modal, Space} from "antd";
 import {SearchOutlined,ShoppingCartOutlined,UserOutlined,LoginOutlined,PlusCircleOutlined,EditOutlined,LogoutOutlined } from "@ant-design/icons";
 import SearchItem from "../search/search";
 import Login from "../login/login";
@@ -56,42 +56,60 @@ const MenuRight =(check:{isLogin: boolean})=>{
      React.useEffect(() => {
           setIsLoggedIn(check.isLogin)
         }, [check.isLogin]);
-     const childrenLogin = () => {
+     const  handleLogoutClick=()=>{
+          setIsLoggedIn(false);
+     }
+     const childrenLogin = (): MenuProps['items'] => {
           return isLoggedIn
           ? [
-                {
-                  icon: <EditOutlined className="large-icon" />,
-                  label: "Cập nhật thông tin",
-                  onClick:  handleUpdateClick,
-                  key: "cap-nhat-thong-tin",
-                  className: "groupIcons"
-                },
-                {
-                  icon: <LogoutOutlined className="large-icon" />,
-                  label: "Đăng xuất",
-                  key: "logout",
-                  // onClick: handleLogoutClick,
-                  className: "groupIcons"
-                }
+               {
+                    icon:<UserOutlined className="large-icon" style={{fontSize:'18px'}} />,
+                    label:"SyPhu",
+                    key:"Username",
+                    children:[
+                         {
+                              icon: <EditOutlined className="large-icon" />,
+                              label: "Cập nhật thông tin",
+                              onClick:  handleUpdateClick,
+                              key: "cap-nhat-thong-tin",
+                              className: "groupIcons"
+                            },
+                            {
+                              icon: <LogoutOutlined className="large-icon" />,
+                              label: "Đăng xuất",
+                              key: "logout",
+                               onClick: handleLogoutClick,
+                              className: "groupIcons"
+                            }
+                    ]
+               }
               ]
             : [
-                {
-                  icon: <LoginOutlined className="large-icon" />,
-                  label: "Đăng nhập",
-                  onClick: handleLoginClick,
-                  key: "login",
-                  className: "groupIcons"
-                },
-                {
-                  icon: <PlusCircleOutlined className="large-icon" />,
-                  label: "Đăng ký",
-                  key: "createAccount",
-                  onClick: handleSignUpClick,
-                  className: "groupIcons"
-                }
+               {
+                    label:<UserOutlined className="large-icon" style={{fontWeight:'bolder',fontSize:'25px'}} />,
+                    key:"User",
+                    children:[
+                         {
+                              icon: <LoginOutlined className="large-icon" />,
+                              label: "Đăng nhập",
+                              onClick: handleLoginClick,
+                              key: "login",
+                              className: "groupIcons"
+                            },
+                            {
+                              icon: <PlusCircleOutlined className="large-icon" />,
+                              label: "Đăng ký",
+                              key: "createAccount",
+                              onClick: handleSignUpClick,
+                              className: "groupIcons"
+                            }
+                    ] 
+               }
+                
               ];
      
      }
+     const usermenu= childrenLogin()
      return(
           <div className="MenuRight" >
                <Menu className="RightMenu" mode="horizontal"  items={
@@ -104,15 +122,15 @@ const MenuRight =(check:{isLogin: boolean})=>{
                     label:<Badge count={totalItems} className="soppingCartIcon" showZero><ShoppingCartOutlined className="large-icon" onClick={showDrawer} style={{fontWeight:'bolder',fontSize:'25px'}} /></Badge>,
                     key:"Cart",
                },{
-                    label:<UserOutlined className="large-icon" style={{fontWeight:'bolder',fontSize:'25px'}} />,
-                    key:"User",
+                    // label:<UserOutlined className="large-icon" style={{fontWeight:'bolder',fontSize:'25px'}} />,
+                    // key:"User",
                     
-                    children:childrenLogin(),
-
+                    // children:childrenLogin(),
+                   ...usermenu[0]
                }
           ]
           } />
-          <div className={visible?"input active":"input"}>
+          <div className={visible?"inputSearch active":"inputSearch"}>
                <SearchItem/>
           </div>
           <div className={active?"login-form-container active" :"login-form-container"}>
@@ -132,7 +150,7 @@ const MenuRight =(check:{isLogin: boolean})=>{
                          <Button onClick={()=>emptyCart()} className="btn-delete-cart">
                               Xóa tất cả
                          </Button>
-                         <Link to={!isEmpty?"/gio-hang/xac-nhan-thong-tin-giao-hang":"/"}>
+                         <Link to={!isEmpty?"/gio-hang/xac-nhan-thong-tin-giao-hang":"#"}>
                          <Button type="primary" onClick={!isEmpty?onClose:onMess}>
                               Thanh toán
                          </Button>

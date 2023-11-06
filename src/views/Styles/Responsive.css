@@ -23,7 +23,7 @@
      .allProduct{
           margin-left:25%;
      }
-     .input{
+     .inputSearch{
           position: absolute;
           border-radius: 2px;
           top: 100%;
@@ -56,7 +56,7 @@
      .allProduct{
           margin-left:30%;
      }
-     .input{
+     .inputSearch{
           right: 12rem;
      }
      .slider_1{
@@ -91,7 +91,7 @@
      .app{
          
      }
-     .input{
+     .inputSearch{
           right: 12rem;
      }
      
@@ -141,7 +141,7 @@
      }
 }
 @media screen and (min-width:1201px) and (max-width:1700px){
-     .input{
+     .inputSearch{
           right: 13rem;
      } 
      
