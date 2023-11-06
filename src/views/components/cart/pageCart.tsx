@@ -2,7 +2,7 @@ import {Button, InputNumber, Table} from "antd"
 import { useEffect, useState } from "react";
 import { useCart } from "react-use-cart";
 const PageCart=()=>{
-     const {items,removeItem,updateItem } = useCart();
+     const {items,removeItem,updateItem, } = useCart();
      const [cartItems, setCartItems] = useState([]);
     /* useEffect(() => {
           const dataSource = items.map((product) => ({
@@ -34,7 +34,9 @@ const PageCart=()=>{
           setCartItems(updatedItems);
           updateItem(record.id, { quantity: value });
         };
-        
+        const totalSummary = items.reduce((pre, current) => {
+                 return pre + (current.price * current.quantity);
+               }, 0);
      return (<div>
           
          <Table
@@ -99,17 +101,22 @@ const PageCart=()=>{
                          }
                     ]
                }
-               summary={(data) => {
-                    const totalSummary = data.reduce((pre, current) => {
-                      return pre + (current.price * current.quantity);
-                    }, 0);
-                    return <span className="sumary-cart">Total: <p> {totalSummary.toLocaleString()}</p></span>;
-                  }}
                dataSource={items}
-
+               pagination={{
+                    pageSize: 6, // Kích thước trang mặc định
+                    //showSizeChanger: true, // Hiển thị chọn kích thước trang
+                   // pageSizeOptions: ["10", "20", "50"], // Các lựa chọn kích thước trang
+                  }}
+               // summary={(data) => {
+               //      const totalSummary = data.reduce((pre, current) => {
+               //        return pre + (current.price * current.quantity);
+               //      }, 0);
+               //      return <span className="sumary-cart">Total: <p> {totalSummary.toLocaleString()}</p></span>;
+               //    }}
+               
          >
-          
          </Table>
+         <h2 className="sumary-cart">Thành tiền: <p> {totalSummary.toLocaleString()}</p></h2>
      </div>
      )
 }

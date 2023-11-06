@@ -88,7 +88,7 @@ function ProductDetail() {
                             } sản phẩm</p>
                         </div>
                         <div className="btn-detail-product">
-                            <AddToCartButton item={thisProduct} selectedColor={selectedColor} selectedSize={selectedSize} amount={handleQuantityChange}/>
+                            <AddToCartButton item={thisProduct} selectedColor={selectedColor} selectedSize={selectedSize} amount={amount}/>
                         </div>
                         <div className="decription-product">
                             Mô tả sản phẩm : <p>

@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-
 import Main from "./views/pages/main";
 import Admin from "./views/admin/pages/admin";
 import { CartProvider } from "react-use-cart";
