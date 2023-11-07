@@ -104,13 +104,27 @@ export default function LayoutPage() {
         }}
         className="header"
       >
-        <Menu style={{ width: "50%" }} theme="dark" mode="horizontal" items={items1} onClick={log_out} />
-
-        <Search placeholder="input search text" style={{ width: "50%" }} />
-        <div />
-        <Badge dot>
-          <Avatar icon={<MailOutlined />} />
-        </Badge>
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Badge dot>
+            <Avatar icon={<MailOutlined />} />
+          </Badge>
+          <Search placeholder="input search text" style={{ width: "50%" }} />
+          <div />
+          <Menu
+            style={{ width: "10%" }}
+            theme="dark"
+            mode="horizontal"
+            items={items1}
+            onClick={log_out}
+          />
+        </div>
       </Header>
       <Layout>
         <Sider
