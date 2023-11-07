@@ -1,7 +1,7 @@
 import LayoutPage from "../components/layout";
 import "../style/leftbar.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Login from "../components/loginpage";
+import Login from "../components/loginpage/loginpage";
 import HomeAdmin from "../components/pagecontent/home";
 import Customer from "../components/pagecontent/customer/customer";
 import AccountCus from "../components/pagecontent/customer/accountCus";
@@ -20,7 +20,7 @@ import Partner from "../components/pagecontent/partner/partnerInfo";
 import Provider from "../components/pagecontent/partner/provider";
 import StatNumber from "../components/pagecontent/Statistics/StatNumber";
 import Status from "../components/pagecontent/status/Status";
-import LoginOTP from "../components/loginOTP";
+import LoginOTP from "../components/loginpage/loginOTP";
 function Admin() {
   return (
     <BrowserRouter>
