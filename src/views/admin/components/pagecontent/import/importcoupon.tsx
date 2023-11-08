@@ -1,25 +1,9 @@
-import {
-  Button,
-  Col,
-  Layout,
-  Row,
-  Select,
-  SelectProps,
-  Space,
-  Upload,
-} from "antd";
+import { Button, Col, Layout, Row, Select, SelectProps, Space } from "antd";
 import "../../../style/product.css";
 const { Header, Content } = Layout;
 import React, { useState } from "react";
-import {
-  Form,
-  Input,
-  InputNumber,
-  Popconfirm,
-  Table,
-  Typography,
-  Tag,
-} from "antd";
+import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
+import "../../../style/product.css";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 100,
@@ -322,7 +306,7 @@ const Import = () => {
                 label="Giá:"
                 labelAlign="left"
                 labelCol={{ span: 5 }}
-                style={{ width: "100%", height: 30, minWidth: "100%" }}
+                style={{ height: 30, minWidth: "90%" }}
               >
                 <Input style={{ width: "80%" }} />
               </Form.Item>
@@ -330,7 +314,7 @@ const Import = () => {
                 label="Số lượng:"
                 labelAlign="left"
                 labelCol={{ span: 5 }}
-                style={{ width: "100%", height: 30, minWidth: "100%" }}
+                style={{ height: 30, minWidth: "90%" }}
               >
                 <Input style={{ width: "80%" }} />
               </Form.Item>
