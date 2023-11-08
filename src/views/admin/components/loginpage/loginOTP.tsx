@@ -65,13 +65,20 @@ export default function LoginOTP() {
               <Form.Item<FieldType>
                 label="Nhập mã OTP"
                 labelAlign="left"
-                labelCol={{ span: 10}}
+                labelCol={{ span: 10 }}
                 name="OTP"
                 rules={[{ required: true, message: "Hãy nhập OTP" }]}
               >
                 <Input />
               </Form.Item>
-              <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+              <Form.Item
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
                 <Button type="primary" htmlType="submit">
                   Xác nhận
                 </Button>

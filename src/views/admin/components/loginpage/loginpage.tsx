@@ -83,12 +83,19 @@ export default function Login() {
               <Form.Item<FieldType>
                 name="remember"
                 valuePropName="checked"
-                wrapperCol={{ offset: 8, span: 16 }}
+                wrapperCol={{ offset: 0, span: 16 }}
               >
                 <Checkbox>Ghi nhớ đăng nhập</Checkbox>
               </Form.Item>
 
-              <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+              <Form.Item
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
                 <Button type="primary" htmlType="submit">
                   Đăng nhập
                 </Button>
