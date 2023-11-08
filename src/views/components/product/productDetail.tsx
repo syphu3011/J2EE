@@ -79,7 +79,7 @@ function ProductDetail() {
              <Row>
                 <Col flex="2">
                     <div className="card-image-active">
-                        <Image src={activeImg} id="card-detail-image" style={{borderRadius:'20px',border:'1px solid gray'}}></Image>
+                        <Image src={thisProduct.image[0]} id="card-detail-image" style={{borderRadius:'20px',border:'1px solid gray'}}></Image>
                     </div>
                 </Col>
                 <Col flex="3">
