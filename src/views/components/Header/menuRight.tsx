@@ -1,24 +1,27 @@
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import {Badge, Button, Drawer, Menu, MenuProps, Modal, Space} from "antd";
 import {SearchOutlined,ShoppingCartOutlined,UserOutlined,LoginOutlined,PlusCircleOutlined,EditOutlined,LogoutOutlined } from "@ant-design/icons";
-import SearchItem from "../search/search";
+import {SearchItem} from "../search/search";
 import Login from "../login/login";
 import SignUp from '../login/signup';
 import UpdateInformation from '../../pages/editInformation/updateInformation';
 import PageCart from '../cart/pageCart';
 import { useCart } from 'react-use-cart';
+import Search from 'antd/es/input/Search';
+import { SearchResult } from '../search/searchList';
 
 const MenuRight =(check:{isLogin: boolean})=>{
+     const [results, setResults] = useState([]);
      const {emptyCart}=useCart()
      const [open, setOpen] = useState(false);
      const [isLoggedIn,setIsLoggedIn] = React.useState(check.isLogin);
      const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
-     const [children, setChildren] = React.useState([]);
+    // const [children, setChildren] = React.useState([]);
      const [visible, setVisible] = React.useState(false);    
      const [active, setActive] = React.useState(false);    
      const [activeSignUp,setActiveSignUp] = React.useState(false);
-     const [isFormSubmitted, setIsFormSubmitted] = React.useState(false);
+    // const [isFormSubmitted, setIsFormSubmitted] = React.useState(false);
      const {totalItems,isEmpty } = useCart();
      const showDrawer=()=>{
           setOpen(true);
@@ -59,12 +62,13 @@ const MenuRight =(check:{isLogin: boolean})=>{
      const  handleLogoutClick=()=>{
           setIsLoggedIn(false);
      }
+     const username = "SyPhu"
      const childrenLogin = (): MenuProps['items'] => {
           return isLoggedIn
           ? [
                {
                     icon:<UserOutlined className="large-icon" style={{fontSize:'18px'}} />,
-                    label:"SyPhu",
+                    label:username,
                     key:"Username",
                     children:[
                          {
@@ -131,7 +135,11 @@ const MenuRight =(check:{isLogin: boolean})=>{
           ]
           } />
           <div className={visible?"inputSearch active":"inputSearch"}>
-               <SearchItem/>
+               <SearchItem setResults={setResults}/>
+               {
+                    results && results.length > 0 && <SearchResult results={results}/>
+               
+               }
           </div>
           <div className={active?"login-form-container active" :"login-form-container"}>
                <Login onClose={handleLoginFormClose}  isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>          
