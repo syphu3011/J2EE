@@ -100,7 +100,6 @@ export default function LayoutPage() {
         style={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
         }}
         className="header"
       >
