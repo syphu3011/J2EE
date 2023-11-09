@@ -147,7 +147,10 @@ const Typeproduct = () => {
       console.log("Validate Failed:", errInfo);
     }
   };
-
+  const handleDelete = (key: React.Key) => {
+    const newData = data.filter((item) => item.key !== key);
+    setData(newData);
+  };
   const columns = [
     {
       title: "Mã",
@@ -217,10 +220,17 @@ const Typeproduct = () => {
       },
     },
     {
-      key: "operation",
-      dataIndex: "delete",
+      dataIndex: "delete_type",
       width: "8%",
-      render: () => <a>Xóa</a>,
+      render: (_, record: { key: React.Key }) =>
+        data.length >= 1 ? (
+          <Popconfirm
+            title="Bạn thật sự muốn xóa?"
+            onConfirm={() => handleDelete(record.key)}
+          >
+            <a>Xóa</a>
+          </Popconfirm>
+        ) : null,
     },
   ];
   for (let i = 10; i < 36; i++) {
