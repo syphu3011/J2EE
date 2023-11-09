@@ -1,5 +1,5 @@
 const { Op, literal } = require("sequelize")
-const {Loai, sequelize} = require("../../database/models")
+const {Loai, sequelize, SanPham, MatHang} = require("../../database/models")
 const {STATUS_CODE} = require("../const")
 module.exports = {
     Mutation: {
@@ -83,6 +83,26 @@ module.exports = {
                 }
             }
         },
+        async loaiLon(root, args, context){
+            try {
+                const rs = {
+                    status: STATUS_CODE.query_success,
+                    message: "Lấy danh sách loại thành công!",
+                    data: await Loai.findAll({
+                        where: {
+                            maloaicha: null
+                        }
+                    })
+                }
+                return rs;
+            }
+            catch(e) {
+                return {
+                    status: STATUS_CODE.query_fail,
+                    message: "Loại không tồn tại!" 
+                }
+            }
+        },
         async loaivoithuoctinh(root, args, context) {
             try {
                 const {ma = "", ten = "", mota} = args.input
@@ -136,8 +156,26 @@ module.exports = {
         }
     },
     Loai: {
-        sanpham(loai) {return loai.getSanPham()},
-        loaicha(loai) {return loai.getLoaicha()},
-        loaicon(loai) {return loai.getLoaicon()}
+        async sanpham(loai) {
+            let loaicon = await loai.getLoaicon()
+            let danhsachsanpham = []
+            let sanphamloai = await loai.getSanPham()
+            danhsachsanpham.push(...sanphamloai)
+            for (const lc of loaicon) {
+                let sanphamloaicon = await lc.getSanPham()
+                danhsachsanpham.push(...sanphamloaicon)
+            }
+            for (let i = 0; i < danhsachsanpham.length; i++) {
+                const sanpham = danhsachsanpham[i]
+                const mh = await sanpham.getMatHang()
+                if (mh.length == 0) {
+                    danhsachsanpham.splice(i, 1)
+                    i -= 1
+                }
+            }
+            return danhsachsanpham
+        },
+        async loaicha(loai) {return await loai.getLoaicha()},
+        async loaicon(loai) {return await loai.getLoaicon()}
     }
 }

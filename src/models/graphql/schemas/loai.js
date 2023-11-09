@@ -38,6 +38,7 @@ type loaiQueryVoiThuocTinhResponse {
 }
 extend type Query {
     loai: loaiQueryResponse!
+    loaiLon: loaiQueryResponse!
     loaivoithuoctinh(input: loaiInput!): loaiQueryResponse!
     timkiemloai(input: loaiInput!): loaiQueryResponse!
 }

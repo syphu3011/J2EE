@@ -2,6 +2,7 @@ const { Op } = require("sequelize")
 const {SanPham, sequelize, Loai, NhaCungCap, MatHang} = require("../../database/models/")
 const {STATUS_CODE, CHUCNANG} = require("../const")
 const {checkAdmin, checkPrivileges} = require("./checkToken")
+const { fetchImageB64 } = require("../../utils/util")
 
 module.exports = {
     Mutation: {
@@ -155,11 +156,13 @@ module.exports = {
         },
         async timkiemsanpham(root, args, context) {
             try {
-                const {ma = null, ten = "", gia_tu = 0, gia_den = 9999999999} = args.input
+                let {ma = null, ten = "", gia_tu = -1, gia_den = -1} = args.input
+                gia_tu = gia_tu == -1 ? 0 : gia_tu
+                gia_den = gia_den == -1 ? 9999999999 : gia_den
                 let sanpham = await SanPham.findAll({
                     where: {
                         [Op.or]: [
-                            {ma: {[Op.between]: [ma ? ma : 0, ma ? ma: 9999999999]}},
+                            {ma: {[Op.between]: [ma == -1 ? ma : 0, ma ? ma == -1: 9999999999]}},
                             {ten: {[Op.like]: '%' + ten + '%'}},
                         ]
                     },
@@ -203,6 +206,10 @@ module.exports = {
         },
         donvi(sanpham) {
             return sanpham.getDonVi()
+        },
+        anhminhhoa(sanpham){
+            const name = sanpham.anhminhhoa
+            return fetchImageB64(name)
         }
     }
 }

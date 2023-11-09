@@ -1,29 +1,25 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-  class MatHang extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
+const {HangTrongKho} = require("../../database/models")
+module.exports =  {
+  MatHang: {
+    async soluong(mathang) {
+      const hangtrongkho = await HangTrongKho.findAll({
+        where: {
+          masanpham: mathang.masanpham,
+          mamau: mathang.mamau,
+          makichco: mathang.makichco,
+        }
+      })
+      const rs = hangtrongkho.map((product) => product.soluong).reduce((acc, current) => acc + current, 0);
+      return rs
+    },
+    mau(mathang) {
+      return mathang.getMau()
+    },
+    kichco(mathang) {
+      return mathang.getKichCo()
+    },
+    trangthaisanpham(mathang) {
+      return mathang.getTrangThaiSanPham()
     }
   }
-  MatHang.init({
-    masanpham: DataTypes.INTEGER,
-    mamau: DataTypes.INTEGER,
-    makichco: DataTypes.INTEGER,
-    madonvi: DataTypes.INTEGER,
-    matrangthaisanpham: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'MatHang',
-    tableName: 'MatHang',
-    timestamps: false
-  });
-  return MatHang;
 };

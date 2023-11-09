@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Loai.belongsToMany(models.SanPham, {as: 'SanPham', through: 'ChiTietLoaiSanPham', foreignKey: 'maloai'})
-      Loai.hasMany(models.Loai, {as: 'loaicon', foreignKey: 'ma'})
+      Loai.hasMany(models.Loai, {as: 'loaicon', foreignKey: 'maloaicha'})
       Loai.belongsTo(models.Loai, {as: 'loaicha', foreignKey: 'maloaicha'})
     }
   }
