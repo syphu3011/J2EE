@@ -10,4 +10,5 @@ const MatHangType = require('./mathang');
 const ChucNangType = require('./chucnang')
 const QuyenType = require('./quyen')
 const TaiKhoanType = require('./taikhoan')
-module.exports = [SanPhamType, LoaiType, NhaCungCapType, TrangThaiNhaCungCapType, PhieuNhapType, MauType, DonViType, KichCoType, MatHangType, ChucNangType, TaiKhoanType, QuyenType]
+const TrangThaiSanPhamType = require('./trangthaisanpham')
+module.exports = [SanPhamType, LoaiType, NhaCungCapType, TrangThaiNhaCungCapType, PhieuNhapType, MauType, DonViType, KichCoType, MatHangType, ChucNangType, TaiKhoanType, QuyenType, TrangThaiSanPhamType]

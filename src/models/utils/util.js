@@ -1,3 +1,5 @@
+const fs = require('fs') 
+const {resolve} = require('path') 
 function utf8ToB64(str) {
     return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
         return String.fromCharCode(parseInt(p1, 16))
@@ -33,4 +35,10 @@ function generateKeyAndIV() {
     const iv = new Uint8Array(Array.from({length: 14}, () => Math.floor(Math.random() * 254)))
     return {key, iv}
 }
-module.exports = {b64ToUint8array, utf8ToB64, b64ToUtf8, stringToUint8array, uint8arrayToB64, uint8arrayToString, generateKeyAndIV}
+function fetchImageB64(imageName) {
+    console.log(resolve("image/" + imageName))
+    const image = fs.readFileSync("image/" + imageName) 
+    const imageBase64 = new Buffer(image).toString('base64') 
+    return imageBase64
+}
+module.exports = {b64ToUint8array, utf8ToB64, b64ToUtf8, stringToUint8array, uint8arrayToB64, uint8arrayToString, generateKeyAndIV, fetchImageB64}

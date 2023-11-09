@@ -3,9 +3,11 @@ const {gql} = require('apollo-server-express')
 module.exports = gql`
 type MatHang {
   masanpham: Int!
-  mamau: Int!
-  makichco: Int!
-  matrangthaisanpham: Int!
+  mau: Mau!
+  kichco: KichCo!
+  giaban: Int
+  soluong: Int!
+  trangthaisanpham: TrangThaiSanPham
 }
 input MatHangInput {
   masanpham: Int!

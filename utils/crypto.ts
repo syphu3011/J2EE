@@ -5,6 +5,9 @@ import { b64ToUint8array, b64ToUtf8, stringToUint8array, uint8arrayToB64, uint8a
 import { readFile } from "./readfile";
 import {getPrivateKey, getPublicKey} from "./constant";
 export async function encrypt(data, aeskey) {
+    if (typeof data == "number") {
+        data = data + "khongduocdat@@@@@@@"
+    }
     data = data.replace(/  /g," ")
     //aes
     const key = aeskey.key

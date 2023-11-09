@@ -1,16 +1,18 @@
 import { useParams } from "react-router-dom"
-import productData from "./productData"
+import {getProductData} from "./productData"
 import { Col, Row, Image, InputNumber} from "antd"
 import { useEffect, useState } from "react";
 import AddToCartButton from "../cart/addToCartButton";
 import { useCart } from "react-use-cart";
+import { convertB64ToImage } from "../../../../utils/util";
 
 function ProductDetail() {
     const {updateItem}=useCart();
     const {nameId,Id} = useParams()
-    const thisProduct = productData.find(prod =>prod.id===Id && prod.name=== nameId)
-    const [activeImg, setActiveImage] = useState(thisProduct.image[0])
+    const thisProduct = getProductData().find(prod =>prod.ma===Id && prod.ten=== nameId)
+    const [activeImg, setActiveImage] = useState(convertB64ToImage(thisProduct.anhminhhoa))
     const [amount, setAmount] = useState(1);
+    const [isFirst, setIsFirst] = useState(true);
     const handleQuantityChange = (value) => {
         console.log('changed', value);
         setAmount(value);
@@ -18,18 +20,59 @@ function ProductDetail() {
       };
     
     
-      const [selectedColor, setSelectedColor] = useState(thisProduct.color[0]);
-      const [selectedSize, setSelectedSize] = useState(thisProduct.size[0]);
+      const [selectedColor, setSelectedColor] = useState(thisProduct.mathang[0].mau.ten);
+      const [selectedSize, setSelectedSize] = useState(thisProduct.mathang[0].kichco.ten);
+      const [selectedMH, setSelectedMH] = useState(thisProduct.mathang[0]);
+      const [listColor, setListColor] = useState([]);
+      const [listSize, setListSize] = useState([]);
       const handleColorChange = (color) => {
         setSelectedColor(color);
-        console.log('changed', color);
+        const mh = thisProduct.mathang.find(mh => 
+            mh.mau.ten == color && mh.kichco.ten == selectedSize
+        )
+        setSelectedMH(mh)
+        if (mh.soluong < amount) {
+            setAmount(mh.soluong)
+        }
+        if (mh.soluong > 0 && amount == 0) {
+            setAmount(1)
+        }
       };
     
       const handleSizeChange = (size) => {
         setSelectedSize(size);
-        console.log('changed', size);
+        const mh = thisProduct.mathang.find(mh => 
+            mh.mau.ten == selectedColor && mh.kichco.ten == size
+        )
+        setSelectedMH(mh)
+        if (mh.soluong < amount) {
+            setAmount(mh.soluong)
+        }
+        if (mh.soluong > 0 && amount == 0) {
+            setAmount(1)
+        }
       };
       let imageCount = 0
+      useEffect(() => {
+        if (isFirst) {
+            const colors = thisProduct.mathang.map(prod => prod.mau.ten).reduce((unique, mau) => {
+                if (!unique.includes(mau)) {
+                unique.push(mau);
+                }
+                return unique;
+            }, []);
+            const sizes = thisProduct.mathang.map(prod => prod.kichco.ten).reduce((unique, kichco) => {
+                if (!unique.includes(kichco)) {
+                unique.push(kichco);
+                }
+                return unique;
+            }, []);
+            setListColor(colors)
+            setListSize(sizes)
+            setAmount(selectedMH.soluong > 0 ? 1 : 0)
+            setIsFirst(false)
+        }
+      })
      return (
         
          <div className="product-detail-container">
@@ -38,53 +81,42 @@ function ProductDetail() {
                     <div className="card-image-active">
                         <Image src={thisProduct.image[0]} id="card-detail-image" style={{borderRadius:'20px',border:'1px solid gray'}}></Image>
                     </div>
-                    <div className="card-detail-image-silder">
-                        {thisProduct.image.map((image, index) => {
-                            if (imageCount < 3) {
-                                imageCount++;
-                                return (
-                                    <Image src={image} id="card-slider-image" preview={false} onClick={()=>setActiveImage(image)} style={{borderRadius:'10px',border:'1px solid gray'}}/>
-                                );
-                            }
-                             return null;
-                        })}
-                    </div>
                 </Col>
                 <Col flex="3">
                     <div className="inform-product-detail-container">
-                        <h1>{thisProduct.name}</h1>
+                        <h1>{thisProduct.ten}</h1>
                         <div className="category-productId">
-                            <span>Loại : {thisProduct.category}</span>
-                            <span>Mã SP :{thisProduct.id}</span>
+                            <span>Loại : {thisProduct.loai.ten}</span>
+                            <span>Mã SP :{thisProduct.ma}</span>
                         </div>
                         <div className="price-detail-product">
-                            Giá: <p>{thisProduct.price.toLocaleString()}</p>
+                            Giá: <p>{selectedMH.giaban.toLocaleString()}</p>
                         </div>
                         <div className="color-groups">
-                            Màu sắc: {thisProduct.color.map((color, index) => (
-                                <p className={`color-1 color color-${color}  ${
-                                    selectedColor === color ? 'selected' : ''
-                                  }`} key={index} style={{marginTop:'-2px'}} onClick={() => handleColorChange(color)}></p>
+                            Màu sắc: {listColor.map((mau, index) => (
+                                <p className={`color-1 color  ${
+                                    selectedColor === mau ? 'selected' : ''
+                                  }`} key={index} style={{marginTop:'-2px',backgroundColor: "#"+mau}} onClick={() => handleColorChange(mau)}></p>
                                 ))}
                         </div>
                         <div className="size-detail-product">
                             Kích thước : {
-                                thisProduct.size.map((size, index) =>(
-                                    <p className={`size-product  ${selectedSize === size ? 'selected' : ''
-                                }`} key={index}  onClick={() => handleSizeChange(size)}>{size}</p>
+                                listSize.map((kichco, index) =>(
+                                    <p className={`size-product  ${selectedSize === kichco ? 'selected' : ''
+                                }`} key={index}  onClick={() => handleSizeChange(kichco)}>{kichco}</p>
                                 ))
                             }
 
                         </div>
                         <div className="state-product-detail">
                             Trạng thái :{
-                                thisProduct.state === 1 ? <p>Còn hàng</p>  :<p>Hết hàng</p>
+                                1 === 1 ? <p>Còn hàng</p>  :<p>Hết hàng</p>
                             }
                         </div>
                         <div className="quantity-product">
-                            Số lượng : <InputNumber min={1} max={10} value={amount} onChange={handleQuantityChange}/>
+                            Số lượng : <InputNumber min={selectedMH.soluong > 0 ? 1 : 0} max={selectedMH.soluong} value={amount} onChange={handleQuantityChange}/>
                             <p>Còn {
-                                thisProduct.quantity
+                                selectedMH.soluong
                             } sản phẩm</p>
                         </div>
                         <div className="btn-detail-product">
@@ -92,7 +124,7 @@ function ProductDetail() {
                         </div>
                         <div className="decription-product">
                             Mô tả sản phẩm : <p>
-                                {thisProduct.decription}
+                                {thisProduct.mota}
                             </p>
                         </div>
                     </div>

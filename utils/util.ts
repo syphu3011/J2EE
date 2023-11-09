@@ -29,3 +29,6 @@ export function generateKeyAndIV() {
     const iv = new Uint8Array(Array.from({length: 14}, () => Math.floor(Math.random() * 254)))
     return {key, iv}
 }
+export function convertB64ToImage(b64) {
+    return 'data:image/png;base64,' + b64
+}

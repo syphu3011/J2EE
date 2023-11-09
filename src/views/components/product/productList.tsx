@@ -2,7 +2,8 @@ import { Button, Card, Col, Row, Select, Typography,Image, Pagination } from "an
 import React from "react";
 import AddToCartButton from "../cart/addToCartButton";
 import { Link } from "react-router-dom";
-import productData from "./productData";
+import { getProducts } from "../../../controllers/modules/customer/products";
+import {getProductData} from "./productData1";
 interface ProductProps{
  // category?:string;
 }
@@ -11,13 +12,15 @@ interface ProductState{
   maxValue: number,
 }
 export default class Product extends React.PureComponent<ProductProps,ProductState>{
+  // productResponse
+  productData = getProductData()
   constructor(props) {
     super(props);
     this.state = {
       minValue: 0,
       maxValue: 8,
-      
     };
+    // this.productResponse = getProducts(-1, "", -1, -1)
   }
   
   handleChange = value => {
@@ -43,7 +46,7 @@ export default class Product extends React.PureComponent<ProductProps,ProductSta
   return(
     <div className="product-container">
         <div className="title-product">
-            <h2>{productData[0].category}</h2>
+            <h2>{this.productData[0].category}</h2>
             <div className="title-swap-product">
               <Typography.Text>Sắp xếp </Typography.Text>
               <Select 
@@ -64,8 +67,8 @@ export default class Product extends React.PureComponent<ProductProps,ProductSta
         <div className="content-product">
           <div className="product-content-container">
             {
-              productData && productData.length>0 && 
-                                   productData.slice(this.state.minValue,this.state.maxValue)
+              this.productData && this.productData.length>0 && 
+                                   this.productData.slice(this.state.minValue,this.state.maxValue)
                                    /*filteredProducts
                                    .filter(
                                      (product) =>
@@ -93,7 +96,7 @@ export default class Product extends React.PureComponent<ProductProps,ProductSta
               <div className="pagination-product">
               <Pagination defaultCurrent={1} defaultPageSize={numEachPage} //default size of page
                                                       onChange={this.handleChange}
-                                                                  total={productData.length} //total number of card data available
+                                                                  total={this.productData.length} //total number of card data available
 /> 
               </div>
             </div>

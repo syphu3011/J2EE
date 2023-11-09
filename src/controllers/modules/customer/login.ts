@@ -16,6 +16,6 @@ message
 }
 export async function authentication() {
     let rq = `mutation{dangNhapVoiToken{status
-message}}`
-return request(rq)
+    message}}`
+    return request(rq)
 }

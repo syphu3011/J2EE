@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      ChiTietPhieuNhap.hasOne(models.HangTrongKho)
+      // ChiTietPhieuNhap.hasOne(models.HangTrongKho)
     }
   }
   ChiTietPhieuNhap.init({
