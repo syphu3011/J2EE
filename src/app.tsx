@@ -1,6 +1,5 @@
 
 import ReactDOM from "react-dom";
-
 import Main from "./views/pages/main";
 import Admin from "./views/admin/pages/admin";
 import { CartProvider } from "react-use-cart";
@@ -24,3 +23,4 @@ switch (param) {
     break;
 }
 ReactDOM.render(component_render, document.getElementById("app"));
+// ReactDOM.render(<Admin />, document.getElementById("app"));

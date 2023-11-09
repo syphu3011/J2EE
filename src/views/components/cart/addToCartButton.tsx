@@ -44,7 +44,6 @@ function AddToCartButton({ item,selectedColor, selectedSize,amount }) {
            </Button>
        </Col>
        <Col>
-
             <Link to="/gio-hang/xac-nhan-thong-tin-giao-hang">
             <Button disabled={amount > 0 ? false:true} onClick={addProductToCart} loading={loading} className="add-to-cart-button btn-2">
              <span>Mua ngay</span>

@@ -1,1 +1,1 @@
-export default function LoginOTP(): import("react/jsx-runtime").JSX.Element;
+export default function Login(): import("react/jsx-runtime").JSX.Element;
