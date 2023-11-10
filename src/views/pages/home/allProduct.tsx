@@ -31,6 +31,8 @@ export default function AllProduct() {
   //  let productData
   const [productWithCategoryComponent, setProductWithCategoryComponent] = useState([]);
   const [allProductComponent, setAllProductComponent] = useState();
+  const [cardData, setCardData] = useState([]);
+  const [productCategoryData, setProductCategoryData] = useState([]);
   function setUpCarousel(productData, slidesToShow, rows, className, dataAos) {
     return <div className={className} data-aos={dataAos}>
       <Carousel
@@ -79,8 +81,14 @@ export default function AllProduct() {
           let productWithCategoryComponentTemp = [];
           let allProductComponentTemp = [];
           let allProducts = []
+          let allLoai = []
           for (const category of productWithCategory) {
             if (category.sanpham.length > 0) {
+              let loai = {image:"",name:"", key:""}
+              loai.image = convertB64ToImage(category.anhminhhoa)
+              loai.name = category.ten
+              loai.key = category.ten.replace(/[\u0300-\u036f]/g, '')
+              allLoai.push(loai)
               let productData1 = category.sanpham;
               allProducts.push(...productData1)
               productWithCategoryComponentTemp.push(
@@ -103,6 +111,8 @@ export default function AllProduct() {
             }
           }
           setProductData(allProducts)
+          setCardData(allLoai)
+          setProductCategoryData(productWithCategory)
           setAllProductComponent(setUpCarousel(allProducts, 5, 1, "sliderProduct", "fade-up") as any)
           setProductWithCategoryComponent(productWithCategoryComponentTemp);
         }
@@ -114,7 +124,7 @@ export default function AllProduct() {
 
   return (
     <div>
-      <CardMenu />
+      <CardMenu cardData={cardData} productCategoryData={productCategoryData}/>
       {productWithCategoryComponent}
 
       <div id="sale_2" data-aos="fade-up">
