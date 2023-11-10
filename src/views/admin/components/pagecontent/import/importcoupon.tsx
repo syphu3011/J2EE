@@ -4,6 +4,7 @@ const { Header, Content } = Layout;
 import React, { useState } from "react";
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
 import "../../../style/product.css";
+import { Footer } from "antd/es/layout/layout";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 100,
@@ -18,7 +19,11 @@ const contentStyle: React.CSSProperties = {
   color: "#fff",
   backgroundColor: "#ffffff",
 };
-
+const footerStyle: React.CSSProperties = {
+  textAlign: 'center',
+  color: '#fff',
+  backgroundColor: '#ffffff',
+};
 interface Item {
   key: string;
   id_pro_imp: string;
@@ -390,6 +395,11 @@ const Import = () => {
             />
           </Form>
         </Content>
+        <Footer style={footerStyle}><Button type="primary" style={{ width: "40%" }}>
+                  Xác nhận nhập hàng
+                </Button>
+        </Footer>
+                
       </Layout>
     </Space>
   );

@@ -20,10 +20,9 @@ const contentStyle: React.CSSProperties = {
 
 interface Item {
   key: string;
-  id_att: string;
-  name_att: string;
-  type_att: string;
-  describe: string;
+  id_status: string;
+  name_status: string;
+  type_status: string;
 }
 
 const originData: Item[] = [];
@@ -34,10 +33,9 @@ const handleChange = (value: string[]) => {
 for (let i = 0; i < 20; i++) {
   originData.push({
     key: i.toString(),
-    id_att: `${i}`,
-    name_att: `Đỏ ${i}`,
-    type_att: "Màu",
-    describe: `Đây là quần áo`,
+    id_status: `${i}`,
+    name_status: `trạng thái ${i}`,
+    type_status: `Khách hàng`
   });
 }
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
@@ -210,7 +208,7 @@ const Status = () => {
         <Header style={headerStyle}>
           <Row gutter={16}>
             <Col className="gutter-row" span={8}>
-              <Form.Item label="Tên:" labelAlign="left" labelCol={{ span: 5 }}>
+              <Form.Item label="Tên:" labelAlign="left" labelCol={{ span: 6 }}>
                 <Input />
               </Form.Item>
             </Col>
@@ -218,7 +216,7 @@ const Status = () => {
               <Form.Item
                 label="Trạng thái của"
                 labelAlign="left"
-                labelCol={{ span: 5 }}
+                labelCol={{ span: 8 }}
                 style={{ width: "100%", height: 30, minWidth: "100%" }}
               >
                 <Select

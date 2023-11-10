@@ -292,15 +292,16 @@ const Product = () => {
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
         <Header style={headerStyle}>
-          <Row gutter={16}>
-            <Col className="gutter-row" span={5}>
-              <Form.Item label="Tên:" labelAlign="left" labelCol={{ span: 5 }}>
-                <Input />
+          <Row gutter={16} >
+            <Col className="gutter-row" span={5} style={{ flexFlow: 'row'}}>
+              <Form.Item label="Tên" labelAlign="left" labelCol={{ span: 4 }}
+              >
+                <Input/>
               </Form.Item>
               <Form.Item
                 label="Loại"
                 labelAlign="left"
-                labelCol={{ span: 5 }}
+                labelCol={{ span: 4 }}
                 style={{ width: "100%", height: 30, minWidth: "100%" }}
               >
                 <Select
@@ -414,6 +415,7 @@ const Product = () => {
             />
           </Form>
         </Content>
+              
       </Layout>
     </Space>
   );
