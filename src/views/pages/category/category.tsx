@@ -3,7 +3,7 @@ import React from 'react';
 import  FilterProduct from '../../components/filter/leftFilter';
 import Product from '../../components/product/productList';
 
-export default function Category() {
+export default function Category({productData}) {
           return(
                <div className="pageProduct">
                     <Row>
@@ -19,7 +19,7 @@ export default function Category() {
                               <Image src="/src/views/components/Image/bannerHeader/Banner7.png" id="product-banner"/>
                               </div>
                               <div className="product">
-                                   <Product />
+                                   <Product productData={productData}/>
                               </div>
                          </Col>
                     </Row>

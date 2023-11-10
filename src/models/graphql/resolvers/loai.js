@@ -1,6 +1,7 @@
 const { Op, literal } = require("sequelize")
 const {Loai, sequelize, SanPham, MatHang} = require("../../database/models")
 const {STATUS_CODE} = require("../const")
+const { fetchImageB64 } = require("../../utils/util")
 module.exports = {
     Mutation: {
         async taoLoai(root, args, context) {
@@ -176,6 +177,17 @@ module.exports = {
             return danhsachsanpham
         },
         async loaicha(loai) {return await loai.getLoaicha()},
-        async loaicon(loai) {return await loai.getLoaicon()}
+        async loaicon(loai) {return await loai.getLoaicon()},
+        anhminhhoa(loai){
+            const name = loai.anhminhhoa
+            let rs
+            try {
+                rs = fetchImageB64(name)
+            }
+            catch(e) {
+                rs = name
+            }
+            return rs
+        }
     }
 }
