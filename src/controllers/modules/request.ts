@@ -6,7 +6,7 @@ export async function request(rq, variables = {}) {
         const rsToServer = axios_default.post(CONFIG_CALL.DEFAULT_URL + '/api',
             { query: rq, variables: variables})
         let rs = rsToServer.then(response => {
-            return response.data
+            return response
         }
         ).catch(e => {
             console.log(e)
@@ -30,8 +30,9 @@ export async function request(rq, variables = {}) {
 export async function requestTo(path, data?) {
     try {
         console.log(path)
+        data = data ? data:{}
         const rsToServer = axios_default.post(CONFIG_CALL.DEFAULT_URL + path,
-            { data: data})
+            {...data})
         let rs = rsToServer.then(response => {
             return response.data
         }

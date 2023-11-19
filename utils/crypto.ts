@@ -1,9 +1,10 @@
 import jsencrypt from "jsencrypt";
 import aes from 'js-crypto-aes'
-import browser_rsa from "browser-rsa";
 import { b64ToUint8array, b64ToUtf8, stringToUint8array, uint8arrayToB64, uint8arrayToString, utf8ToB64 } from "./util";
 import { readFile } from "./readfile";
 import {getPrivateKey, getPublicKey} from "./constant";
+let publicKeyForServer
+let privateKeyForClient
 export async function encrypt(data, aeskey) {
     if (typeof data == "number") {
         data = data + "khongduocdat@@@@@@@"
@@ -32,7 +33,8 @@ export async function decrypt(data, aeskey) {
     const key = aeskey.key
     const iv = aeskey.iv
     const uint8_aes = b64ToUint8array(data)
-    const decrypted = uint8arrayToString(aes.decrypt(uint8_aes, key, {name: 'AES-CTR',iv,tagLength: 16}))
+    const data_d = await aes.decrypt(uint8_aes, key, {name: 'AES-CTR',iv,tagLength: 16})
+    const decrypted = uint8arrayToString(data_d)
     return decrypted ? decrypted : ""
 }
 export async function decrypt_all(data, aeskey) {
@@ -42,29 +44,36 @@ export async function decrypt_all(data, aeskey) {
                 continue
             }
             if (typeof data[key] === 'object') {
-                data[key] = await decrypt_all(data, aeskey)
+                data[key] = await decrypt_all(data[key], aeskey)
             }
             else {
-                if (!key.includes("message_socket")) {
-                    data[key] = (await decrypt(data[key], aeskey)).replace(/\\n/g, '\n');
-                }
-                else {
-                    data.message += data[key]
-                }
+                data[key] = (await decrypt(data[key], aeskey)).replace(/\\n/g, '\n');
             }
         }
     }
     return data
 }
-export async function encryptrsa(data) {
-    const key = await getPublicKey()
+export async function encryptrsa(data, pkey=null) {
+    console.log(pkey+"pkey")
+    const key = pkey ? pkey : await getPublicKey()
+    console.log(key+"key")
     const rsa = new jsencrypt()
     rsa.setPublicKey(key)
+    console.log(rsa.encrypt(data))
     return rsa.encrypt(data)
 }
-export async function decryptrsa(data) {
-    const key = await getPrivateKey()
+export async function decryptrsa(data ,pkey=null) {
+    const key = pkey ? pkey : (await generateKeyRSA()).private
     const rsa = new jsencrypt()
     rsa.setPrivateKey(key)
+    console.log(rsa.decrypt(data))
     return rsa.decrypt(data)
+}
+export async function generateKeyRSA() {
+    const rsa = new jsencrypt({default_key_size: '2048'})
+    if (!publicKeyForServer || !privateKeyForClient) {
+        publicKeyForServer = rsa.getPublicKey()
+        privateKeyForClient = rsa.getPrivateKey()
+    }
+    return {public: publicKeyForServer, private: privateKeyForClient}
 }

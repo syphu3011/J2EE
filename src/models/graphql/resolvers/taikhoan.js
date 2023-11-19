@@ -1,6 +1,7 @@
 const { Op, literal } = require("sequelize")
-const { KhachHang, NhanVien, TaiKhoan, sequelize } = require("../../database/models")
+const { KhachHang, NhanVien, TaiKhoan, sequelize, Quyen } = require("../../database/models")
 const bcrypt = require("bcrypt");
+const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { STATUS_CODE, PRIVATE_CODE_AT, PRIVATE_CODE_RT, LIFE_AT, LIFE_RT, MAIL } = require("../const");
 const { set_token } = require("../../utils/token");
@@ -143,132 +144,217 @@ module.exports = {
         message: "Xác thực không thành công!"
       }
     },
-    async dangNhapAdminVoiToken(root, args, context) {
-      const { token, rToken } = args.input
-      let returnContent = ""
-      jwt.verify(token, PRIVATE_CODE_AT, async function (err, decoded) {
-        if (!err) {
-          const taikhoan = await TaiKhoan.findByPk(decoded.tentaikhoan)
-
-          if (taikhoan.maquyen == 1) {
-            returnContent = {
-              status: 400,
-              message: "Bạn không có quyền vào trang quản trị!",
-            }
-            return
-          }
-          const taikhoandangnhap = {
-            tentaikhoan: decoded.tentaikhoan,
-            maquyen: decoded.maquyen
-          }
-          await set_token(context.res, taikhoandangnhap)
-          returnContent = {
-            status: 200,
-            message: "Đăng nhập thành công!"
-          }
-          return
-        }
-        else {
-          jwt.verify(rToken, PRIVATE_CODE_RT, async function (err, decoded) {
-            if (!err) {
-              const taikhoan = await TaiKhoan.findByPk(decoded.tentaikhoan)
-              if (taikhoan) {
-                if (taikhoan.maquyen == 1) {
-                  returnContent = {
-                    status: 400,
-                    message: "Bạn không có quyền vào trang quản trị!",
-                  }
-                  return
-                }
-                const nhanvien = await NhanVien.findAll({
-                  where: {
-                    tentaikhoan: decoded.tentaikhoan
-                  }
-                })
-                if (nhanvien.maquyen == 2) {
-                  returnContent = {
-                    status: 400,
-                    message: "Tài khoản đã bị khóa",
-                  }
-                  return
-                }
-                else {
-                  const taikhoandangnhap = {
-                    tentaikhoan: decoded.tentaikhoan,
-                    maquyen: decoded.maquyen
-                  }
-                  await set_token(context.res, taikhoandangnhap)
-                  returnContent = {
-                    status: 200,
-                    message: "Đăng nhập thành công!",
-                  }
-                  return
-                }
-              }
-            }
-            else {
+    async dangNhapAdmin(root, args, context) {
+      try {
+        const { tentaikhoan, matkhau } = args.input
+        const taikhoan = await TaiKhoan.findByPk(tentaikhoan)
+        if (taikhoan) {
+          const checkPassword = bcrypt.compareSync(matkhau, taikhoan.matkhau)
+          if (checkPassword) {
+            if (taikhoan.maquyen == 1) {
               returnContent = {
                 status: 400,
-                message: "Phiên đăng nhập đã hết!",
+                message: "Bạn không có quyền vào trang quản trị!",
               }
-              return
+              return returnContent
+            }
+            else {
+              const taikhoandangnhap = {
+                tentaikhoan: tentaikhoan,
+                maquyen: taikhoan.maquyen
+              }
+              const nhanvien = await NhanVien.findAll({
+                where: {
+                  tentaikhoan: tentaikhoan
+                }
+              })
+              if (nhanvien.length > 0 && nhanvien.matrangthai != 2) {
+                await set_token(context.res, taikhoandangnhap)
+                const quyen = await Quyen.findByPk(taikhoan.maquyen)
+                const chucnang = await quyen.getChucNang()
+                const chucnangreturn = chucnang.reduce((acc, cur) => cur.ten + "," + acc, "")
+                const otp = Math.random().toString(36).slice(-8)
+                const otphash = bcryptjs.hashSync(otp, bcryptjs.genSaltSync(10))
+                // context.res.cookie("otp", otphash, {maxAge: 60 * 1000, sameSite: "none"})
+                var transporter = nodemailer.createTransport({ // config mail server
+                  service: 'Gmail',
+                  auth: {
+                    user: MAIL.USERNAME,
+                    pass: MAIL.PASSWORD
+                  }
+                });
+                var mainOptions = { // thiết lập đối tượng, nội dung gửi mail
+                  from: MAIL.USERNAME,
+                  to: tentaikhoan,
+                  subject: 'OTP đăng nhập admin',
+                  text: 'Đây là OTP của bạn. Có giá trị trong vòng 60s: ' + otp
+                }
+                await transporter.sendMail(mainOptions);
+                return {
+                  status: 200,
+                  message: "Đăng nhập thành công",
+                  data: {
+                    chucnang: chucnangreturn,
+                    otp: otphash
+                  }
+                }
+              }
+              else {
+                return {
+                  status: 400,
+                  message: "Đăng nhập không thành công",
+                  data: {
+                    chucnang: "",
+                    otp: ""
+                  }
+                }
+              }
+            }
+          }
+        }
+        else {
+          return {
+            status: 400,
+            message: "Tên tài khoản hoặc mật khẩu không chính xác!",
+            data: {
+              chucnang: "",
+              otp: ""
+            }
+          }
+        }
+      } catch (error) {
+        return {
+          status: 400,
+          message: "Có lỗi xảy ra!",
+          data: {
+            chucnang: "",
+            otp: ""
+          }
+        }
+      }
+    },
+    async dangNhapAdminVoiToken(root, args, context) {
+      try {
+        const taikhoan = context.taikhoan
+        if (taikhoan) {
+          if (taikhoan.maquyen == 1) {
+            return {
+              status: 400,
+              message: "Bạn không có quyền vào trang quản trị!",
+              data: {
+                chucnang: "",
+                otp: ""
+              }
+            }
+          }
+          const nhanvien = await NhanVien.findAll({
+            where: {
+              tentaikhoan: taikhoan.tentaikhoan
             }
           })
+          if (nhanvien[0].matrangthai == 2) {
+            return {
+              status: 400,
+              message: "Tài khoản đã bị khóa",
+              data: {
+                chucnang: "",
+                otp: ""
+              }
+            }
+          }
+          else {
+            const taikhoandangnhap = {
+              tentaikhoan: taikhoan.tentaikhoan,
+              maquyen: taikhoan.maquyen
+            }
+            const quyen = await Quyen.findByPk(taikhoan.maquyen)
+            const chucnang = await quyen.getChucNang()
+            const chucnangreturn = chucnang.reduce((acc, cur) => cur.ten + "," + acc, "")
+            await set_token(context.res, taikhoandangnhap)
+            return {
+              status: 200,
+              message: "Đăng nhập thành công!",
+              data: {
+                chucnang: chucnangreturn,
+                otp: ""
+              }
+            }
+          }
         }
-      })
-      return returnContent
-    },
-    async suaTaiKhoan(root, args, context) {
-      let transaction
-      try {
-        transaction = await sequelize.transaction()
-        const { ma, ten } = args.input
-        const taikhoan = await TaiKhoan.findByPk(ma)
-        await taikhoan.update({ ten })
-        await taikhoan.save()
-        transaction.commit()
-        return {
-          status: STATUS_CODE.update_success,
-          message: "Sửa tài khoản thành công!",
+        else {
+          return {
+            status: 400,
+            message: "Phiên đăng nhập đã hết!",
+            data: {
+              chucnang: "",
+              otp: ""
+            }
+          }
         }
       }
-      catch (e) {
-        transaction.rollback()
+      catch(e) {
         return {
-          status: STATUS_CODE.update_fail,
-          message: "Bị lỗi! Sửa tài khoản không thành công!",
-        }
-      }
-    },
-    async xoaTaiKhoan(root, args, context) {
-      let transaction
-      try {
-        transaction = await sequelize.transaction()
-        const { ma, ten } = args.input
-        const taikhoan = await TaiKhoan.findByPk(ma)
-        await taikhoan.setSanPham([])
-        await taikhoan.destroy()
-        await taikhoan.save()
-        transaction.commit()
-        return {
-          status: STATUS_CODE.update_success,
-          message: "Xóa tài khoản thành công!",
-        }
-      }
-      catch (e) {
-        transaction.rollback()
-        return {
-          status: STATUS_CODE.update_fail,
-          message: "Bị lỗi! Xóa tài khoản không thành công!",
+          status: 400,
+          message: "Có lỗi xảy ra!",
+          data: {
+            chucnang: "",
+            otp: ""
+          }
         }
       }
     }
+  ,
+  async suaTaiKhoan(root, args, context) {
+    let transaction
+    try {
+      transaction = await sequelize.transaction()
+      const { ma, ten } = args.input
+      const taikhoan = await TaiKhoan.findByPk(ma)
+      await taikhoan.update({ ten })
+      await taikhoan.save()
+      transaction.commit()
+      return {
+        status: STATUS_CODE.update_success,
+        message: "Sửa tài khoản thành công!",
+      }
+    }
+    catch (e) {
+      transaction.rollback()
+      return {
+        status: STATUS_CODE.update_fail,
+        message: "Bị lỗi! Sửa tài khoản không thành công!",
+      }
+    }
   },
-  Query: {
-  },
-  TaiKhoan: {
-    quyen(taikhoan) {
-      return taikhoan.getQuyen()
+  async xoaTaiKhoan(root, args, context) {
+    let transaction
+    try {
+      transaction = await sequelize.transaction()
+      const { ma, ten } = args.input
+      const taikhoan = await TaiKhoan.findByPk(ma)
+      await taikhoan.setSanPham([])
+      await taikhoan.destroy()
+      await taikhoan.save()
+      transaction.commit()
+      return {
+        status: STATUS_CODE.update_success,
+        message: "Xóa tài khoản thành công!",
+      }
+    }
+    catch (e) {
+      transaction.rollback()
+      return {
+        status: STATUS_CODE.update_fail,
+        message: "Bị lỗi! Xóa tài khoản không thành công!",
+      }
     }
   }
+},
+  Query: {
+},
+TaiKhoan: {
+  quyen(taikhoan) {
+    return taikhoan.getQuyen()
+  }
+}
 }

@@ -1,8 +1,12 @@
 import { request } from '../request';
 
 export async function login(username, password) {
-    const rq = `mutation dangNhap($username:String!,$password:String!){dangNhap(input:{tentaikhoan: $username, matkhau: $password}){status
+    const rq = `mutation dangNhapAdmin($username:String!,$password:String!){dangNhapAdmin(input:{tentaikhoan: $username, matkhau: $password}){status
 message
+data {
+    chucnang
+    otp
+}
 }}` 
     const variables = {
         username: username,
@@ -11,7 +15,12 @@ message
     return request(rq, variables)
 }
 export async function authentication() {
-    let rq = `mutation{dangNhapAdmin{status
-message}}`
-return request(rq)
+    let rq = `mutation{dangNhapAdminVoiToken{status
+        message
+        data {
+            chucnang
+            otp
+        }
+    }}`
+    return request(rq)
 }

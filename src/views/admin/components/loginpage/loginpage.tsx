@@ -1,7 +1,9 @@
-import React from "react";
-import { Button, Checkbox, Form, Input, Space } from "antd";
+import React, { useEffect, useState } from "react";
+import { Button, Checkbox, Form, Input, Space} from "antd";
+import {authentication, login as loginAdmin} from '../../../../controllers/modules/admin/login'
 import { Layout } from "antd";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 const { Header, Content } = Layout;
 
 const headerStyle: React.CSSProperties = {
@@ -30,6 +32,7 @@ const onFinishFailed = (errorInfo: any) => {
   console.log("Failed:", errorInfo);
 };
 
+
 type FieldType = {
   username?: string;
   password?: string;
@@ -37,7 +40,31 @@ type FieldType = {
 };
 export default function Login() {
   const navigate = useNavigate();
+  const [isNotLoggedIn, setIsNotLoggedIn] = useState(false)
+  const login = async (value) => {
+    const rsLogin = await loginAdmin(value.username, value.password)
+    if (rsLogin && rsLogin.data && rsLogin.data.dangNhapAdmin && rsLogin.data.dangNhapAdmin.status == 200) {
+      Cookies.set("otp", rsLogin.data.dangNhapAdmin.data.otp)
+      navigate("/AccessOTP")
+    }
+    else {
+      //TODO: làm thông báo lỗi
+      alert("Tên tài khoản hoặc mật khẩu không chính xác!")
+    }
+  }
+  useEffect(() => {
+    authentication().then(rs => {
+      if (rs.data && rs.data.dangNhapAdminVoiToken) {
+        Cookies.set("chucnang", rs.data.dangNhapAdminVoiToken.data.chucnang)
+        navigate("/Admin")
+      }
+      else {
+        setIsNotLoggedIn(true)
+      }
+  })
+  })
   return (
+    isNotLoggedIn ? 
     <>
       <Space
         direction="vertical"
@@ -60,7 +87,7 @@ export default function Login() {
               wrapperCol={{ span: 16 }}
               style={{ maxWidth: 600 }}
               initialValues={{ remember: true }}
-              onFinish={() => navigate("/AccessOTP")}
+              onFinish={login}
               onFinishFailed={onFinishFailed}
               autoComplete="off"
             >
@@ -104,6 +131,6 @@ export default function Login() {
           </div>
         </Content>
       </Layout>
-    </>
+    </>:<></>
   );
 }

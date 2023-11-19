@@ -16,6 +16,11 @@ const verifyToken = async (token, rtoken, res) => {
       const rs = (await jwtVerify(token, PRIVATE_CODE_AT))
       // console.log(rs.err)
       if (!rs.err) {
+        const taikhoandangnhap = {
+          tentaikhoan: rs.decoded.tentaikhoan,
+          maquyen: rs.decoded.maquyen
+        }
+        await set_token(res, taikhoandangnhap)
         return await TaiKhoan.findByPk(rs.decoded.tentaikhoan);
       }
       else {

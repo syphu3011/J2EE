@@ -2,6 +2,8 @@ import React from "react";
 import { Button, Form, Input, Space } from "antd";
 import { Layout } from "antd";
 import { useNavigate } from "react-router-dom";
+import bcrypt from "bcryptjs"
+import Cookies from 'js-cookie';
 const { Header, Content } = Layout;
 
 const headerStyle: React.CSSProperties = {
@@ -35,6 +37,16 @@ type FieldType = {
 };
 export default function LoginOTP() {
   const navigate = useNavigate();
+  const checkOTP = (value) => {
+    if(bcrypt.compareSync(value.OTP, Cookies.get("otp"))) {
+      Cookies.remove("otp")
+      navigate("/Admin")
+    }
+    else {
+      //TODO: Làm cái thông báo ở đây
+      alert("OTP bạn vừa nhập không đúng!")
+    }
+  }
   return (
     <>
       <Space
@@ -58,7 +70,7 @@ export default function LoginOTP() {
               wrapperCol={{ span: 16 }}
               style={{ maxWidth: 600 }}
               initialValues={{ remember: true }}
-              onFinish={() => navigate("/Admin")}
+              onFinish={checkOTP}
               onFinishFailed={onFinishFailed}
               autoComplete="off"
             >
