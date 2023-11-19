@@ -6,6 +6,8 @@ import ForgotPaswords from './forgotPassword';
 import SignUp from './signup';
 import SuccessLogin from '../alert/LoginSuccess';
 import { login } from '../../../controllers/modules/customer/login';
+import { authentication } from '../../../controllers/modules/admin/login';
+import Cookies from 'js-cookie';
 interface LoginProps{
      onClose:()=>void;
      isLoggedIn:boolean;
@@ -20,6 +22,7 @@ interface LoginState{
 }
 export default class Login extends React.Component<LoginProps,LoginState>{
      formRef = React.createRef<FormInstance>();
+          
      constructor(props: LoginProps) {
           super(props);
           this.state = {

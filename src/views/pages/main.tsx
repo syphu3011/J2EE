@@ -13,19 +13,36 @@ import Footer from "../components/footer/footer";
 import ChatApp from '../components/chat/app';
 import { authentication } from '../../controllers/modules/customer/login';
 import Login from '../components/login/login';
-import { encrypt } from '../../../utils/crypto';
+import { postKeyToServer } from '../../controllers/modules/key';
+import { requestTo } from '../../controllers/modules/request';
 export default class Main extends React.Component<any, any>   
 {   
     constructor(props) {
         super(props);
         this.state = {
-            isAuth: false
+            isAuth: false,
+            isReady: false
         }
     }   
     componentDidMount () {
-        authentication().then(rs => this.setState({
-            isAuth: rs.data.dangNhapVoiToken.status==200
-        }))
+        postKeyToServer().then(rsKey => {
+            authentication().then(rs => {
+                console.log(rs)
+                this.setState({
+                isAuth: rs.data.dangNhapVoiToken.status==200,
+                isReady: true
+            })})
+            
+        })
+        let isProcessedClose = false
+        window.addEventListener('onbeforeunload', function (e) {  
+            e.preventDefault()
+            requestTo('/close').then(rs => {
+                window.close();
+            }).catch(e => {
+                window.close()
+            })
+        }); 
     }
     render() {  
         
@@ -35,7 +52,7 @@ export default class Main extends React.Component<any, any>
                
                 <Layout>
                     <Header isLogin={this.state.isAuth}/>
-                    <PageContent/>
+                    {this.state.isReady ? <PageContent/> : <></>}
                    <ChatApp/>
                     <Footer/>
                     
