@@ -4,8 +4,9 @@ module.exports = gql`
 type Loai {
     ma: ID!
     ten: String!
-    anhminhhoa: String!
-    mota: String!
+    anhminhhoa: String
+    tenanhminhhoa: String
+    mota: String
     loaicha: Loai
     loaicon: [Loai]
     sanpham: [SanPham]
@@ -14,6 +15,7 @@ input loaiInput {
     ma: Int
     ten: String!
     anhminhhoa: String
+    b64anhminhhoa: String
     mota: String!
     maloaicha: Int
 }

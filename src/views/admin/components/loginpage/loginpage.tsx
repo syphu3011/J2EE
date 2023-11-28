@@ -4,6 +4,10 @@ import {authentication, login as loginAdmin} from '../../../../controllers/modul
 import { Layout } from "antd";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import LoadingPage from "../../../loadingPage";
+import { postKeyToServer } from "../../../../controllers/modules/key";
+import { getIsLogin, setIsLogin, setIsOTP } from "../../../../../utils/constant";
+import { authenticationAdmin } from "../../../../../utils/util";
 const { Header, Content } = Layout;
 
 const headerStyle: React.CSSProperties = {
@@ -41,10 +45,14 @@ type FieldType = {
 export default function Login() {
   const navigate = useNavigate();
   const [isNotLoggedIn, setIsNotLoggedIn] = useState(false)
+  const [isReady, setIsReady] = useState(false)
   const login = async (value) => {
     const rsLogin = await loginAdmin(value.username, value.password)
     if (rsLogin && rsLogin.data && rsLogin.data.dangNhapAdmin && rsLogin.data.dangNhapAdmin.status == 200) {
-      Cookies.set("otp", rsLogin.data.dangNhapAdmin.data.otp)
+      setIsLogin(true)
+      const dateExpires = new Date()
+      dateExpires.setTime(dateExpires.getTime() + 60000)
+      Cookies.set("checkOTP", "true", {expires: dateExpires})
       navigate("/AccessOTP")
     }
     else {
@@ -53,18 +61,24 @@ export default function Login() {
     }
   }
   useEffect(() => {
-    authentication().then(rs => {
-      if (rs.data && rs.data.dangNhapAdminVoiToken) {
-        Cookies.set("chucnang", rs.data.dangNhapAdminVoiToken.data.chucnang)
-        navigate("/Admin")
-      }
-      else {
-        setIsNotLoggedIn(true)
-      }
-  })
+    if (!isReady) {
+      if (!getIsLogin())
+        authenticationAdmin((rs) => {
+          setIsReady (true)
+          if (rs.data && rs.data.dangNhapAdminVoiToken && rs.data.dangNhapAdminVoiToken.status == '200') {
+            // Cookies.set("chucnang", rs.data.dangNhapAdminVoiToken.data.chucnang)
+            setIsLogin(true)
+            setIsOTP(true)
+            navigate("/Admin")
+          }
+          else {
+            setIsNotLoggedIn(true)
+          }
+      })
+    }
   })
   return (
-    isNotLoggedIn ? 
+    isReady ? 
     <>
       <Space
         direction="vertical"
@@ -131,6 +145,6 @@ export default function Login() {
           </div>
         </Content>
       </Layout>
-    </>:<></>
+    </>:<LoadingPage/>
   );
 }

@@ -1,4 +1,8 @@
-import {nfc, nfd, nfkc} from 'unorm'
+import { RcFile } from "antd/es/upload";
+import { postKeyToServer } from "../src/controllers/modules/key";
+import { authentication } from "../src/controllers/modules/admin/login";
+import { authentication as authenticationC } from "../src/controllers/modules/customer/login";
+
 export function utf8ToB64(str) {
     return window.btoa(str);
 }
@@ -20,11 +24,8 @@ export function uint8arrayToString(buf) {
 }
 
 export function stringToUint8array(str) {
-    var buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
-    var bufView = new Uint8Array(buf);
-    for (var i = 0, strLen = str.length; i < strLen; i++) {
-        bufView[i] = str.charCodeAt(i);
-    }
+    const encoder = new TextEncoder()
+    const bufView = encoder.encode(str)
     return bufView;
 }
 export function generateKeyAndIV() {
@@ -36,4 +37,28 @@ export function generateKeyAndIV() {
 }
 export function convertB64ToImage(b64) {
     return 'data:image/png;base64,' + b64
+}
+export const getBase64AndName = (img: RcFile, callback: (url: string, name: string) => void) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => {
+        console.log(reader.result as string)
+        callback(reader.result as string, img.name)
+    });
+    reader.readAsDataURL(img);
+    console.log(img)
+
+  };
+export const authenticationAdmin = (callback?) => {
+    postKeyToServer().then(rsk => {
+        authentication().then(rs => {
+            callback(rs)
+        })
+    })
+}
+export const authenticationCustomer = (callback?) => {
+    postKeyToServer().then(rsk => {
+        authenticationC().then(rs => {
+            callback(rs)
+        })
+    })
 }

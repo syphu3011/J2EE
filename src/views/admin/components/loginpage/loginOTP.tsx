@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Form, Input, Space } from "antd";
 import { Layout } from "antd";
 import { useNavigate } from "react-router-dom";
 import bcrypt from "bcryptjs"
 import Cookies from 'js-cookie';
+import { getIsLogin, getIsOTP } from "../../../../../utils/constant";
+import { otp } from "../../../../controllers/modules/admin/login";
 const { Header, Content } = Layout;
 
 const headerStyle: React.CSSProperties = {
@@ -37,16 +39,36 @@ type FieldType = {
 };
 export default function LoginOTP() {
   const navigate = useNavigate();
-  const checkOTP = (value) => {
-    if(bcrypt.compareSync(value.OTP, Cookies.get("otp"))) {
-      Cookies.remove("otp")
+  const checkOTP = async (value) => {
+    const rsOTP = await otp(value.OTP)
+    if (rsOTP.data && rsOTP.data.xacThucOTP && rsOTP.data.xacThucOTP.status == "200") {
+      window.localStorage.setItem("chucnang", rsOTP.data.xacThucOTP.data.chucnang)
       navigate("/Admin")
     }
     else {
       //TODO: Làm cái thông báo ở đây
-      alert("OTP bạn vừa nhập không đúng!")
+      if (rsOTP.data && rsOTP.data.xacThucOTP) {
+        alert(rsOTP.data.xacThucOTP.message)
+        if (rsOTP.data.xacThucOTP.status === "401") {
+          navigate("/LoginAdmin")
+        }
+      }
+      else {
+        alert("Có lỗi xảy ra!")
+      }
     }
   }
+  useEffect(() => {
+    if (!getIsLogin() && !Cookies.get("checkOTP")) {
+      navigate("/LoginAdmin")
+    }
+    else if (getIsOTP()) {
+      navigate("/Admin")
+    }
+    else if (!Cookies.get("checkOTP")) {
+
+    }
+  }, [])
   return (
     <>
       <Space

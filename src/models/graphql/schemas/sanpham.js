@@ -5,20 +5,22 @@ type SanPham {
     ma: ID!
     ten: String!
     anhminhhoa: String!
+    tenanhminhhoa: String!
     mota: String!
-    gia: Int!
-    mathang: [MatHang!]
+    gia: Int
+    mathang: [MatHang]
     donvi: DonVi
-    loai: [Loai!]
+    loai: [Loai]
 }
 input SanPhamInput {
     ma: Int
     ten: String!
     anhminhhoa: String!
+    b64anhminhhoa: String!
     mota: String!
     maloai: [Int!]
     madonvi: Int!
-    manhacungcap: [Int!]
+    manhacungcap: [Int]
 }
 input SanPhamQuery {
     ma: Int

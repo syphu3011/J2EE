@@ -5,7 +5,8 @@ const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { STATUS_CODE, PRIVATE_CODE_AT, PRIVATE_CODE_RT, LIFE_AT, LIFE_RT, MAIL } = require("../const");
 const { set_token } = require("../../utils/token");
-var nodemailer = require('nodemailer')
+var nodemailer = require('nodemailer');
+const { pushToArrayHaveNotOTP, getArrayHaveNotOTP } = require("../../utils/constant");
 module.exports = {
   Mutation: {
     async quenMatKhauKhachHang(root, args, context) {
@@ -159,23 +160,16 @@ module.exports = {
               return returnContent
             }
             else {
-              const taikhoandangnhap = {
-                tentaikhoan: tentaikhoan,
-                maquyen: taikhoan.maquyen
-              }
               const nhanvien = await NhanVien.findAll({
                 where: {
                   tentaikhoan: tentaikhoan
                 }
               })
               if (nhanvien.length > 0 && nhanvien.matrangthai != 2) {
-                await set_token(context.res, taikhoandangnhap)
-                const quyen = await Quyen.findByPk(taikhoan.maquyen)
-                const chucnang = await quyen.getChucNang()
-                const chucnangreturn = chucnang.reduce((acc, cur) => cur.ten + "," + acc, "")
                 const otp = Math.random().toString(36).slice(-8)
                 const otphash = bcryptjs.hashSync(otp, bcryptjs.genSaltSync(10))
                 // context.res.cookie("otp", otphash, {maxAge: 60 * 1000, sameSite: "none"})
+                // gửi mail
                 var transporter = nodemailer.createTransport({ // config mail server
                   service: 'Gmail',
                   auth: {
@@ -189,13 +183,20 @@ module.exports = {
                   subject: 'OTP đăng nhập admin',
                   text: 'Đây là OTP của bạn. Có giá trị trong vòng 60s: ' + otp
                 }
-                await transporter.sendMail(mainOptions);
+                transporter.sendMail(mainOptions);
+                const taikhoandangnhap = {
+                  tentaikhoan: tentaikhoan,
+                  maquyen: taikhoan.maquyen,
+                  daxacthuc: "false",
+                  otp: otphash,
+                  timestamp: Date.now()+""
+                }
+                await set_token(context.res, taikhoandangnhap)
                 return {
                   status: 200,
                   message: "Đăng nhập thành công",
                   data: {
-                    chucnang: chucnangreturn,
-                    otp: otphash
+                    chucnang: ""
                   }
                 }
               }
@@ -236,17 +237,36 @@ module.exports = {
     async dangNhapAdminVoiToken(root, args, context) {
       try {
         const taikhoan = context.taikhoan
+        if (!taikhoan.daxacthuc) {
+          return {
+            status: 400,
+            message: "Bạn chưa đăng nhập!",
+            data: {
+              chucnang: ""
+            }
+          }
+        }
+        if (taikhoan.daxacthuc == "false") {
+          return {
+            status: 400,
+            message: "Bạn chưa xác thực OTP",
+            data: {
+              chucnang: ""
+            }
+          }
+        }
         if (taikhoan) {
+          // xác thực quyền
           if (taikhoan.maquyen == 1) {
             return {
               status: 400,
               message: "Bạn không có quyền vào trang quản trị!",
               data: {
-                chucnang: "",
-                otp: ""
+                chucnang: ""
               }
             }
           }
+          // kiểm tra nhân viên
           const nhanvien = await NhanVien.findAll({
             where: {
               tentaikhoan: taikhoan.tentaikhoan
@@ -257,15 +277,17 @@ module.exports = {
               status: 400,
               message: "Tài khoản đã bị khóa",
               data: {
-                chucnang: "",
-                otp: ""
+                chucnang: ""
               }
             }
           }
           else {
+            // xác thực thành công
             const taikhoandangnhap = {
               tentaikhoan: taikhoan.tentaikhoan,
-              maquyen: taikhoan.maquyen
+              maquyen: taikhoan.maquyen,
+              daxacthuc: "true",
+              otp: null
             }
             const quyen = await Quyen.findByPk(taikhoan.maquyen)
             const chucnang = await quyen.getChucNang()
@@ -275,8 +297,7 @@ module.exports = {
               status: 200,
               message: "Đăng nhập thành công!",
               data: {
-                chucnang: chucnangreturn,
-                otp: ""
+                chucnang: chucnangreturn
               }
             }
           }
@@ -286,8 +307,7 @@ module.exports = {
             status: 400,
             message: "Phiên đăng nhập đã hết!",
             data: {
-              chucnang: "",
-              otp: ""
+              chucnang: ""
             }
           }
         }
@@ -297,13 +317,76 @@ module.exports = {
           status: 400,
           message: "Có lỗi xảy ra!",
           data: {
-            chucnang: "",
-            otp: ""
+            chucnang: ""
           }
         }
       }
     }
   ,
+  async xacThucOTP (root, args, context) {
+    const taikhoan = context.taikhoan
+    const {otp} = args.input
+    const timestamp = Date.now()+""
+    if (taikhoan) { 
+      if (taikhoan.otp) {
+        if (timestamp - taikhoan.timestamp > 60000) {
+          return {
+            status: 401,
+            message: "OTP đã quá thời hạn!",
+            data: {
+              chucnang: ""
+            }
+          }
+        }
+        if (bcrypt.compareSync(otp, taikhoan.otp)) {
+          const taikhoandangnhap = {
+            tentaikhoan: taikhoan.tentaikhoan,
+            maquyen: taikhoan.maquyen,
+            daxacthuc: "true",
+            otp: null
+          }
+          await set_token(context.res, taikhoandangnhap)
+          const quyen = await Quyen.findByPk(taikhoan.maquyen)
+          const chucnang = await quyen.getChucNang()
+          const chucnangreturn = chucnang.reduce((acc, cur) => cur.ten + "," + acc, "")
+          return {
+            status: 200,
+            message: "Đăng nhập thành công!",
+            data: {
+              chucnang: chucnangreturn
+            }
+          }
+        }
+        else {
+          return {
+            status: 400,
+            message: "OTP không hợp lệ!",
+            data: {
+              chucnang: ""
+            }
+          }
+        }
+      }
+      else {
+        return {
+          status: 400,
+          message: "Bạn không cần xác thực OTP!",
+          data: {
+            chucnang: ""
+          }
+        }
+      }
+    }
+    else {
+      return {
+        status: 400,
+        message: "Bạn phải đăng nhập trước!",
+        data: {
+          chucnang: ""
+        }
+      }
+    }
+  },
   async suaTaiKhoan(root, args, context) {
     let transaction
     try {

@@ -19,6 +19,6 @@ module.exports = async ({ req, res }) => {
   if ((token || rToken)) {
     taikhoan = await verifyToken(token, rToken, res)
   }
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+  res.setHeader('Access-Control-Allow-Origin', process.env.ORIGIN);
   return {taikhoan, res, req};
 };
