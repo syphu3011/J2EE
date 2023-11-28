@@ -30,9 +30,11 @@ input TaiKhoanTokenInput {
 input ForgotPasswordInput {
   tentaikhoan: String!
 }
+input OTPInput {
+  otp: String!
+}
 type ChucNangAdminResponse {
   chucnang: String
-  otp: String
 }
 type TaiKhoanQueryResponse {
   status: Int!
@@ -68,6 +70,7 @@ extend type Mutation {
   dangNhap(input: TaiKhoanInput):DangNhapResponse
   dangNhapVoiToken: DangNhapTokenResponse
   dangNhapAdminVoiToken:DangNhapAdminResponse
+  xacThucOTP(input: OTPInput):DangNhapAdminResponse
   dangNhapAdmin(input: TaiKhoanInput):DangNhapAdminResponse
   suaTaiKhoan(input: TaiKhoanInput): TaiKhoanResponse
   xoaTaiKhoan(ma: Int!): TaiKhoanResponse

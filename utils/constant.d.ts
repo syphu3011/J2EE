@@ -1,2 +1,14 @@
 export declare function getPrivateKey(): Promise<any>;
 export declare function getPublicKey(): Promise<any>;
+export declare function setKey(publicK: any, privateK: any): void;
+export declare function setKeyNew(publicN: any, privateN: any): void;
+export declare function setPublicNew(publicN: any): void;
+export declare function setPrivateNew(privateN: any): void;
+export declare function getPublicNew(): any;
+export declare function getPrivateNew(): any;
+export declare function getIsFirst(): boolean;
+export declare function setIsFirst(isFirst: any): void;
+export declare function setIsLogin(isLogin: any): void;
+export declare function getIsLogin(): boolean;
+export declare function setIsOTP(isOTP: any): void;
+export declare function getIsOTP(): boolean;

@@ -1,6 +1,7 @@
 const { Op, literal } = require("sequelize")
 const {DonVi, sequelize} = require("../../database/models")
 const {STATUS_CODE} = require("../const")
+const { checkAndResolveAdmin } = require("./checkToken")
 module.exports = {
     Mutation: {
       async taoDonVi(root, args, context) {
@@ -70,22 +71,35 @@ module.exports = {
       }
     },
     Query: {
-      donvi: async () => {
+      donvi: async (root, args, context) => {
         try {
-          const rs = {
-            status: STATUS_CODE.query_success,
-            message: "Lấy danh sách đơn vị thành công!",
-            data: await DonVi.findAll()
-          }
+          const rs = await checkAndResolveAdmin(context.taikhoan, async (nhanvien_data) => {
+            try {
+              context.dont_need_encrypt = true
+              const rs = {
+                status: STATUS_CODE.query_success,
+                message: "Lấy danh sách đơn vị thành công!",
+                data: await DonVi.findAll()
+              }
+              return rs
+            }
+            catch (e) {
+              return {
+                status: STATUS_CODE.query_fail,
+                message: "Lấy danh sách đơn vị không thành công!",
+                data: null
+              }
+            }
+          })
           return rs
-        }
-        catch (e) {
+      }
+      catch (e) {
           return {
-            status: STATUS_CODE.query_fail,
-            message: "Lấy danh sách đơn vị không thành công!",
-            data: null
+              status: STATUS_CODE.query_fail,
+              message: "Lấy danh sách loại không thành công!",
+              data: []
           }
-        }
+      }
       },
       donvivoithuoctinh: async (root, args, context) => {
         try {

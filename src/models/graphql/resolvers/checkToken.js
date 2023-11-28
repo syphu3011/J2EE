@@ -1,4 +1,5 @@
-const {KhachHang, NhanVien} = require("../../database/models")
+const {KhachHang, NhanVien, LichSuHeThong} = require("../../database/models");
+const { STATUS_CODE } = require("../const");
 async function checkAdmin(taikhoan) {
     try {
         const nhanvien = await NhanVien.findAll({
@@ -35,6 +36,94 @@ async function checkAdmin(taikhoan) {
             data: null
         }
     }
+}
+async function checkAndResolveAdmin (taikhoan, callback, noidunglichsu, name_func=null) {
+    if (taikhoan) {
+        if (name_func) {
+            const check_pri = await checkPrivileges(taikhoan, name_func)
+            if (check_pri) {
+                const rs = await callback(check_pri)
+                if (rs.status == '200' || rs.status == '201') {
+                    if (noidunglichsu && noidunglichsu !== "") {
+                        const noidunglichsu_full = `${check_pri.ma} ${check_pri.ten} ${noidunglichsu}`
+                        await LichSuHeThong.create({ noidung: noidunglichsu_full })
+                    }
+                }
+                return rs
+            }
+        }
+        else {
+            const check_admin = await checkAdmin(taikhoan)
+            if (check_admin) {
+                const rs = await callback(check_admin)
+                if (rs.status == '200' || rs.status == '201') {
+                    if (noidunglichsu && noidunglichsu !== "") {
+                        const noidunglichsu_full = `${check_admin.data.ma} ${check_admin.data.ten} ${noidunglichsu}`
+                        await LichSuHeThong.create({ noidung: noidunglichsu_full })
+                    }
+                }
+                return rs
+            }
+        }
+    }
+    return {
+        status: STATUS_CODE.query_fail,
+        message: "Có lỗi xảy ra!",
+        data: []
+    }
+}
+async function checkAndResolveWithOutData (taikhoan, callback, noidunglichsu, name_func=null) {
+    if (taikhoan) {
+        if (name_func) {
+            const check_pri = await checkPrivileges(taikhoan, name_func)
+            if (check_pri) {
+                const rs = await callback(check_pri)
+                if (rs.status == '200' || rs.status == '201') {
+                    if (noidunglichsu && noidunglichsu !== "") {
+                        const noidunglichsu_full = `${check_pri.ma} ${check_pri.ten} ${noidunglichsu}`
+                        await LichSuHeThong.create({ noidung: noidunglichsu_full })
+                    }
+                }
+                return rs
+            }
+        }
+        else {
+            const check_admin = await checkAdmin(taikhoan)
+            if (check_admin) {
+                const rs = await callback(check_admin)
+                if (rs.status == '200' || rs.status == '201') {
+                    if (noidunglichsu && noidunglichsu !== "") {
+                        const noidunglichsu_full = `${check_admin.data.ma} ${check_admin.data.ten} ${noidunglichsu}`
+                        await LichSuHeThong.create({ noidung: noidunglichsu_full })
+                    }
+                }
+                return rs
+            }
+        }
+    }
+    return {
+        status: STATUS_CODE.query_fail,
+        message: "Có lỗi xảy ra!",
+    }
+}
+async function checkPrivileges (taikhoan,name_func){
+    let admin = await checkAdmin(taikhoan)
+    let checkPri = false
+    if (admin.status == 400) {
+        return false
+    }
+    const quyen = await taikhoan.getQuyen()
+    const chucnangs = await quyen.getChucNang()
+    for (const chucnang of chucnangs) {
+        if (chucnang.ten == name_func) {
+            checkPri = true
+            break
+        }
+    }
+    if (checkPri){
+        return admin.data
+    }
+    return checkPri
 }
 module.exports={checkKhachHang:async function (taikhoan) {
     try {
@@ -73,24 +162,9 @@ module.exports={checkKhachHang:async function (taikhoan) {
         }
     }
 }
-, checkAdmin: checkAdmin,
-checkPrivileges: async function (taikhoan,name_func){
-    let admin = await checkAdmin(taikhoan)
-    let checkPri = false
-    if (admin.status == 400) {
-        return false
-    }
-    const quyen = await taikhoan.getQuyen()
-    const chucnangs = await quyen.getChucNang()
-    for (const chucnang of chucnangs) {
-        if (chucnang.ten == name_func) {
-            checkPri = true
-            break
-        }
-    }
-    if (checkPri){
-        return admin.data
-    }
-    return checkPri
-}
+, checkAdmin,
+checkPrivileges
+, 
+checkAndResolveAdmin,
+checkAndResolveWithOutData
 }

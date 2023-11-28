@@ -10,7 +10,8 @@ async function decrypt(data, aeskey) {
     const key = aeskey.key
     const iv = aeskey.iv
     const uint8_aes = b64ToUint8array(data)
-    const decrypted = uint8arrayToString(await aes.decrypt(uint8_aes, key, {name: 'AES-CTR',iv,tagLength: 16}))
+    const uint8_decrypted = await aes.decrypt(uint8_aes, key, {name: 'AES-CTR',iv,tagLength: 16})
+    const decrypted = uint8arrayToString(uint8_decrypted)
     return decrypted ?   decrypted : ""
 }
 

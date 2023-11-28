@@ -1,5 +1,6 @@
 import * as React from 'react';  
 //import Test from '../components/test';
+import LoadingPage  from '../loadingPage';
 import axios from 'axios';
 import {Layout} from "antd";
 import Header from'../components/Header/header';
@@ -15,6 +16,7 @@ import { authentication } from '../../controllers/modules/customer/login';
 import Login from '../components/login/login';
 import { postKeyToServer } from '../../controllers/modules/key';
 import { requestTo } from '../../controllers/modules/request';
+import { authenticationAdmin, authenticationCustomer } from '../../../utils/util';
 export default class Main extends React.Component<any, any>   
 {   
     constructor(props) {
@@ -25,14 +27,11 @@ export default class Main extends React.Component<any, any>
         }
     }   
     componentDidMount () {
-        postKeyToServer().then(rsKey => {
-            authentication().then(rs => {
-                console.log(rs)
-                this.setState({
+        authenticationCustomer((rs) => {
+            this.setState({
                 isAuth: rs.data.dangNhapVoiToken.status==200,
                 isReady: true
-            })})
-            
+            })
         })
         let isProcessedClose = false
         window.addEventListener('onbeforeunload', function (e) {  
@@ -47,18 +46,16 @@ export default class Main extends React.Component<any, any>
     render() {  
         
         return (
+            this.state.isReady ?(
             <div >
-                <BrowserRouter>
-               
                 <Layout>
                     <Header isLogin={this.state.isAuth}/>
-                    {this.state.isReady ? <PageContent/> : <></>}
+                    <PageContent/> 
                    <ChatApp/>
                     <Footer/>
                     
                 </Layout>
-            </BrowserRouter>
-          </div>
+          </div>): <LoadingPage />
         
    ) }  
 }  
