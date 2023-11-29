@@ -1,1 +1,3 @@
-export default function Category(): import("react/jsx-runtime").JSX.Element;
+export default function Category({ productData }: {
+    productData: any;
+}): import("react/jsx-runtime").JSX.Element;

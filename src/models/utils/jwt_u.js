@@ -18,20 +18,28 @@ const verifyToken = async (token, rtoken, res) => {
       if (!rs.err) {
         const taikhoandangnhap = {
           tentaikhoan: rs.decoded.tentaikhoan,
-          maquyen: rs.decoded.maquyen
+          maquyen: rs.decoded.maquyen,
+          daxacthuc: rs.decoded.daxacthuc ? rs.decoded.daxacthuc : "false"
         }
         await set_token(res, taikhoandangnhap)
-        return await TaiKhoan.findByPk(rs.decoded.tentaikhoan);
+        const taikhoan = await TaiKhoan.findByPk(rs.decoded.tentaikhoan);
+        taikhoan.daxacthuc = rs.decoded.daxacthuc ? rs.decoded.daxacthuc : "false"
+        return taikhoan
       }
       else {
         const rf = (await jwtVerify(rtoken, PRIVATE_CODE_RT))
         if  (!rf.err) {
           const taikhoandangnhap = {
             tentaikhoan: rf.decoded.tentaikhoan,
-            maquyen: rf.decoded.maquyen
+            maquyen: rf.decoded.maquyen,
+            otp: rf.decoded.otp,
+            daxacthuc: rf.decoded.daxacthuc ? rf.decoded.daxacthuc : "false"
           }
           await set_token(res, taikhoandangnhap)
-          return await TaiKhoan.findByPk(rf.decoded.tentaikhoan);
+          const taikhoan = await TaiKhoan.findByPk(rf.decoded.tentaikhoan);
+          taikhoan.daxacthuc = rf.decoded.daxacthuc ? rf.decoded.daxacthuc : "false"
+          taikhoan.otp = rf.decoded.otp
+          return taikhoan
         }
         return null
       }

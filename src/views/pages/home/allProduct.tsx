@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
-import { Image, Carousel, Card } from "antd";
-const root_directory_source = "http://localhost:3301/image/";
+import { Image, Carousel, Card,Skeleton } from "antd";
+// const root_directory_source = CON"image/";
 // const sale = `${root_directory_source}sale1.png`;
 // const sale2  = `${root_directory_source}sale2.png`;
 // const sale3  = `${root_directory_source}sale3.png`;
@@ -33,6 +33,7 @@ export default function AllProduct() {
   const [allProductComponent, setAllProductComponent] = useState();
   const [cardData, setCardData] = useState([]);
   const [productCategoryData, setProductCategoryData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true)
   function setUpCarousel(productData, slidesToShow, rows, className, dataAos) {
     return <div className={className} data-aos={dataAos}>
       <Carousel
@@ -115,6 +116,7 @@ export default function AllProduct() {
           setProductCategoryData(productWithCategory)
           setAllProductComponent(setUpCarousel(allProducts, 5, 1, "sliderProduct", "fade-up") as any)
           setProductWithCategoryComponent(productWithCategoryComponentTemp);
+          setIsLoading(false)
         }
       }
     }
@@ -123,6 +125,22 @@ export default function AllProduct() {
   }, []);
 
   return (
+    isLoading ?(
+      <div style={{display: 'flex', flexDirection: 'column', alignItems: "center", justifyContent: "center", width: '100%', height: '100%', paddingTop: '20px', paddingBottom: '20px'}}>
+        <Skeleton.Image active={true}/><br/>
+      <Skeleton.Input active={true} size={"large"} block={true} /><br/>
+    <Skeleton.Input active={true} size={"large"} block={true}/><br/>
+    <Skeleton.Input active={true} size={"large"} block={true}/><br/>
+    <Skeleton.Input active={true} size={"large"} block={true}/><br/>
+    <Skeleton.Input active={true} size={"large"} block={true}/><br/>
+    <Skeleton.Input active={true} size={"large"} block={true}/><br/>
+    <Skeleton.Input active={true} size={"large"} block={true}/><br/>
+    <Skeleton.Input active={true} size={"large"} block={true}/><br/>
+    <Skeleton.Input active={true} size={"large"} block={true}/><br/>
+    <Skeleton.Input active={true} size={"large"} block={true}/><br/>
+    <Skeleton.Input active={true} size={"large"} block={true}/><br/>
+    <Skeleton.Input active={true} size={"large"} block={true}/><br/>
+    </div>) :
     <div>
       <CardMenu cardData={cardData} productCategoryData={productCategoryData}/>
       {productWithCategoryComponent}

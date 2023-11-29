@@ -54,23 +54,19 @@ export async function decrypt_all(data, aeskey) {
     return data
 }
 export async function encryptrsa(data, pkey=null) {
-    console.log(pkey+"pkey")
     const key = pkey ? pkey : await getPublicKey()
-    console.log(key+"key")
     const rsa = new jsencrypt()
     rsa.setPublicKey(key)
-    console.log(rsa.encrypt(data))
     return rsa.encrypt(data)
 }
 export async function decryptrsa(data ,pkey=null) {
     const key = pkey ? pkey : (await generateKeyRSA()).private
     const rsa = new jsencrypt()
     rsa.setPrivateKey(key)
-    console.log(rsa.decrypt(data))
     return rsa.decrypt(data)
 }
 export async function generateKeyRSA() {
-    const rsa = new jsencrypt({default_key_size: '2048'})
+    const rsa = new jsencrypt({default_key_size: '1024'})
     if (!publicKeyForServer || !privateKeyForClient) {
         publicKeyForServer = rsa.getPublicKey()
         privateKeyForClient = rsa.getPrivateKey()

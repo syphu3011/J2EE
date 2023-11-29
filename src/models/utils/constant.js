@@ -6,6 +6,7 @@ let PRIVATE_KEY
 let PUBLIC_KEY
 let aeskey
 let keyUser = {}
+let ARRAY_HAVE_NOT_OTP = []
 async function getPrivateKey() {
     PRIVATE_KEY = PRIVATE_KEY ? PRIVATE_KEY : await readFile("server_pem/pem/7N3KJx+lkV09B/8OGvOPBmAqZXLQ.pem")
     return PRIVATE_KEY 
@@ -58,6 +59,17 @@ function pushToKeyUser(data) {
 function getKeyUser(user) {
     return keyUser[user]
 }
+function pushToArrayHaveNotOTP(e) {
+    ARRAY_HAVE_NOT_OTP.push(e)
+}
+function removeFromArrayHaveNotOTP(e) {
+    ARRAY_HAVE_NOT_OTP.reduce((ele) => {
+        ele != e
+    })
+}
+function getArrayHaveNotOTP() {
+    return ARRAY_HAVE_NOT_OTP
+}
 module.exports = {
-    getPublicKey,getPrivateKey, getAesKey, createAesKey, generateKeyRSAUser, pushToKeyUser, getKeyUser
+    getPublicKey,getPrivateKey, getAesKey, createAesKey, generateKeyRSAUser, pushToKeyUser, getKeyUser, pushToArrayHaveNotOTP, removeFromArrayHaveNotOTP, getArrayHaveNotOTP
 }

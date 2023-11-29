@@ -33,8 +33,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             ten: DataTypes.STRING,
             ngaysinh: DataTypes.DATE,
-            sodienthoai: DataTypes.INTEGER,
-            socccd: DataTypes.INTEGER,
+            sodienthoai: DataTypes.STRING,
             ngaythamgia: DataTypes.DATE,
             tentaikhoan: {
                 type: DataTypes.STRING,
