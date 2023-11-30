@@ -13,6 +13,11 @@ export declare function editProduct(id: number, name: string, description: strin
     message: string;
     data: any;
 }>;
+export declare function removeProduct(id: number): Promise<import("axios").AxiosResponse<any, any> | {
+    status: number;
+    message: string;
+    data: any;
+}>;
 export declare function getAllCategory(): Promise<import("axios").AxiosResponse<any, any> | {
     status: number;
     message: string;

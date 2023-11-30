@@ -69,6 +69,19 @@ export function editProduct(id: number, name: string, description: string, cate:
     }
     return request(query, variables)
 }
+export function removeProduct(id: number) {
+    const query = 
+    `mutation removeProduct($id: Int!) {
+        xoaSanPham(ma: $id) {
+            status
+            message
+        }
+    } `
+    const variables = {
+        id
+    }
+    return request(query, variables)
+}
 export function getAllCategory() {
     const query = `query getCategory {
         loai {

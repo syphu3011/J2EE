@@ -3,8 +3,4 @@ export declare function getProducts(id?: number, name?: string, from?: number, t
     message: string;
     data: any;
 }>;
-export declare function getProductsWithAllCategory(): Promise<import("axios").AxiosResponse<any, any> | {
-    status: number;
-    message: string;
-    data: any;
-}>;
+export declare function getProductsWithAllCategory(): Promise<any>;

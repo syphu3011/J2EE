@@ -16,7 +16,7 @@ module.exports = {
           }
           quyen.addChucNang(list_chucnang)
           quyen.save()
-          transaction.commit()
+          await transaction.commit()
           return {
             status: STATUS_CODE.create_success,
             message: "Thêm quyền thành công!",
@@ -24,7 +24,7 @@ module.exports = {
           }
         } 
         catch(e) {
-          transaction.rollback()
+          await transaction.rollback()
           return {
             status: STATUS_CODE.create_fail,
             message: "Bị lỗi! Thêm quyền không thành công!",
@@ -40,7 +40,7 @@ module.exports = {
           const quyen = await Quyen.findByPk(ma)
           await quyen.update({ten})
           await quyen.save()
-          transaction.commit()
+          await transaction.commit()
           return {
             status: STATUS_CODE.update_success,
             message: "Sửa quyền thành công!",
@@ -48,7 +48,7 @@ module.exports = {
           }
         } 
         catch(e) {
-          transaction.rollback()
+          await transaction.rollback()
           return {
             status: STATUS_CODE.update_fail,
             message: "Bị lỗi! Sửa quyền không thành công!",
@@ -65,7 +65,7 @@ module.exports = {
           await quyen.setSanPham([])
           await quyen.destroy()
           await quyen.save()
-          transaction.commit()
+          await transaction.commit()
           return {
             status: STATUS_CODE.update_success,
             message: "Xóa quyền thành công!",
@@ -73,7 +73,7 @@ module.exports = {
           }
         } 
         catch(e) {
-          transaction.rollback()
+          await transaction.rollback()
           return {
             status: STATUS_CODE.update_fail,
             message: "Bị lỗi! Xóa quyền không thành công!",

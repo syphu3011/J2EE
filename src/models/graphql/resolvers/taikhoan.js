@@ -32,15 +32,15 @@ module.exports = {
             subject: 'CẤP LẠI MẬT KHẨU',
             text: 'Đây là mật khẩu mới của bạn. Đừng cung cấp cho bất kỳ ai. Mật khẩu: ' + new_password
           }
-          transporter.sendMail(mainOptions, function (err, info) {
+          transporter.sendMail(mainOptions, async function (err, info) {
             if (err) {
-              transaction.rollback()
+              await transaction.rollback()
               return {
                 status: 400,
                 message: "Cấp lại mật khẩu không thành công!"
               }
             } else {
-              transaction.commit()
+              await transaction.commit()
               return {
                 status: 200,
                 message: "Cấp lại mật khẩu thành công!"
@@ -49,7 +49,7 @@ module.exports = {
           });
         }
         else {
-          transaction.rollback()
+          await transaction.rollback()
           return {
             status: 400,
             message: "Cấp lại mật khẩu không thành công!"
@@ -57,7 +57,7 @@ module.exports = {
         }
       }
       catch (e) {
-        transaction.rollback()
+        await transaction.rollback()
         return {
           status: 400,
           message: "Cấp lại mật khẩu không thành công!"
@@ -84,7 +84,7 @@ module.exports = {
         const matkhaubam = bcrypt.hashSync(matkhau, bcrypt.genSaltSync(10))
         const taikhoan = await TaiKhoan.create({ tentaikhoan, matkhau: matkhaubam, maquyen: maquyen ? maquyen : 1 })
         const khachhang = await KhachHang.create({ ten, ngaysinh, sodienthoai, tentaikhoan: taikhoan.tentaikhoan, matrangthai: 1, email: tentaikhoan })
-        transaction.commit()
+        await transaction.commit()
 
         const taikhoandadangky = {
           tentaikhoan: tentaikhoan,
@@ -97,7 +97,7 @@ module.exports = {
         }
       }
       catch (e) {
-        transaction.rollback()
+        await transaction.rollback()
         return {
           status: STATUS_CODE.create_fail,
           message: "Bị lỗi! Đăng ký tài khoản không thành công!",
@@ -395,14 +395,14 @@ module.exports = {
       const taikhoan = await TaiKhoan.findByPk(ma)
       await taikhoan.update({ ten })
       await taikhoan.save()
-      transaction.commit()
+      await transaction.commit()
       return {
         status: STATUS_CODE.update_success,
         message: "Sửa tài khoản thành công!",
       }
     }
     catch (e) {
-      transaction.rollback()
+      await transaction.rollback()
       return {
         status: STATUS_CODE.update_fail,
         message: "Bị lỗi! Sửa tài khoản không thành công!",
@@ -418,14 +418,14 @@ module.exports = {
       await taikhoan.setSanPham([])
       await taikhoan.destroy()
       await taikhoan.save()
-      transaction.commit()
+      await transaction.commit()
       return {
         status: STATUS_CODE.update_success,
         message: "Xóa tài khoản thành công!",
       }
     }
     catch (e) {
-      transaction.rollback()
+      await transaction.rollback()
       return {
         status: STATUS_CODE.update_fail,
         message: "Bị lỗi! Xóa tài khoản không thành công!",

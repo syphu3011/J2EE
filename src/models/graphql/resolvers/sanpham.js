@@ -31,7 +31,7 @@ module.exports = {
                         const rs = await SanPham.create({ ten, anhminhhoa: rs_addimage.name_image + (count == 0 ? "" : "_" + count)+"."+rs_addimage.ext, madonvi, mota })
                         await rs.addLoai(loais)
                         await rs.addNhaCungCap(nhacungcaps)
-                        transaction.commit()
+                        await transaction.commit()
                         const response = {
                             status: STATUS_CODE.create_success,
                             message: "Thêm sản phẩm thành công!",
@@ -39,7 +39,7 @@ module.exports = {
                         return response
                     }
                     catch (e) {
-                        transaction.rollback()
+                        await transaction.rollback()
                         return {
                             status: STATUS_CODE.create_fail,
                             message: "Bị lỗi! Thêm sản phẩm không thành công!"
@@ -90,14 +90,14 @@ module.exports = {
                             }
                         }
                         await sanpham.save()
-                        transaction.commit()
+                        await transaction.commit()
                         return {
                             status: STATUS_CODE.update_success,
                             message: "Sửa sản phẩm thành công!"
                         }
                     }
                     catch (e) {
-                        transaction.rollback()
+                        await transaction.rollback()
                         return {
                             status: STATUS_CODE.update_fail,
                             message: "Bị lỗi! Sửa sản phẩm không thành công!"
@@ -123,14 +123,14 @@ module.exports = {
                         await sanpham.setLoai([])
                         await sanpham.setNhaCungCap([])
                         await sanpham.destroy()
-                        transaction.commit
+                        await transaction.commit()
                         return {
                             status: STATUS_CODE.delete_success,
                             message: "Xóa sản phẩm thành công!"
                         }
                     }
                     catch (e) {
-                        transaction.rollback()
+                        await transaction.rollback()
                         return {
                             status: STATUS_CODE.delete_fail,
                             message: "Bị lỗi! Xóa sản phẩm không thành công!"
@@ -263,10 +263,17 @@ module.exports = {
     },
     SanPham: {
         async gia(sanpham) {
-            const mathang = await sanpham.getMatHang()
-            if (mathang.length == 0) return 0
-            const giabanlist = mathang.map(mh => mh.giaban)
-            return Math.min(...giabanlist)
+            // const mathang = await sanpham.getMatHang()
+            // if (mathang.length == 0) return 0
+            // const giabanlist = mathang.map(mh => mh.giaban)
+            // return Math.min(...giabanlist)
+            const hangtrongkho_min = await HangTrongKho.findOne({
+                attributes: [sequelize.fn('min', sequelize.col('giaban'))],
+                where: {
+                    masanpham: sanpham.ma,
+                }
+            })
+            return hangtrongkho_min.giaban
         },
         mathang(sanpham) {
             return sanpham.getMatHang().filter(mh => mh.matrangthaisanpham == 1)
