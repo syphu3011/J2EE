@@ -1,22 +1,4 @@
 {
-<<<<<<< Updated upstream
-  "name": "j2ee",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "VMTP",
-  "license": "ISC",
-  "dependencies": {
-    "apollo-server-express": "^2.17.0",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "mysql2": "^2.2.5",
-    "sequelize": "^6.3.5"
-  }
-=======
     "name": "j2ee",
     "version": "1.0.0",
     "description": "",
@@ -24,18 +6,21 @@
     "author": "VMTP",
     "license": "ISC",
     "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "concurrently \"serve dist --ssl-cert cert.pem --ssl-key key.pem -p 8080 \" \"webpack --watch\"",
         "start": "concurrently \"node src/models/index.js\" \"webpack\"",
         "build": "webpack"
     },
     "dependencies": {
+        "apollo-server-express": "^2.17.0",
+        "dotenv": "^8.2.0",
+        "express": "^4.17.1",
         "@types/react": "^18.2.23",
         "aes-encryption": "^1.0.4",
         "antd": "^5.9.3",
         "antd-img-crop": "^4.13.0",
         "aos": "^3.0.0-beta.6",
         "apollo-datasource": "^0.7.0",
-        "apollo-server-express": "^2.13.0",
         "assert": "^2.1.0",
         "axios": "^1.5.1",
         "babel-core": "^6.26.3",
@@ -53,8 +38,6 @@
         "crypto": "^1.0.1",
         "crypto-browserify": "^3.12.0",
         "dayjs": "^1.11.10",
-        "dotenv": "^8.6.0",
-        "express": "^4.17.1",
         "fs": "^0.0.1-security",
         "graphql": "^15.0.0",
         "graphql-resolvers": "^0.4.2",
@@ -122,5 +105,4 @@
         "crypto": false,
         "stream": false
     }
->>>>>>> Stashed changes
 }
