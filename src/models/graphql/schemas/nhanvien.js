@@ -4,12 +4,12 @@ module.exports = gql`
     type NhanVien {
         ma: ID!
         ten: String!
-        ngaysinh: String!
-        sodienthoai: Int!
-        socccd: Int!
-        tentaikhoan: String!
-        matrangthai: Int!
-        email: String!
+        ngaysinh: String
+        sodienthoai: String
+        socccd: String
+        tentaikhoan: String
+        matrangthai: Int
+        email: String
     }
 
     input NhanVienInput {

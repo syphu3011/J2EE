@@ -9,14 +9,14 @@ module.exports = {
           transaction = await sequelize.transaction()
           const {ma, ten} = args.input
           const hoadon = await HoaDon.create({ma, ten})
-          transaction.commit()
+          await transaction.commit()
           return {
             status: STATUS_CODE.create_success,
             message: "Thêm hóa đơn thành công!",
           }
         } 
         catch(e) {
-          transaction.rollback()
+          await transaction.rollback()
           return {
             status: STATUS_CODE.create_fail,
             message: "Bị lỗi! Thêm hóa đơn không thành công!",
@@ -31,14 +31,14 @@ module.exports = {
           const hoadon = await HoaDon.findByPk(ma)
           await hoadon.update({ten})
           await hoadon.save()
-          transaction.commit()
+          await transaction.commit()
           return {
             status: STATUS_CODE.update_success,
             message: "Sửa hóa đơn thành công!",
           }
         } 
         catch(e) {
-          transaction.rollback()
+          await transaction.rollback()
           return {
             status: STATUS_CODE.update_fail,
             message: "Bị lỗi! Sửa hóa đơn không thành công!"
@@ -54,14 +54,14 @@ module.exports = {
           await hoadon.setSanPham([])
           await hoadon.destroy()
           await hoadon.save()
-          transaction.commit()
+          await transaction.commit()
           return {
             status: STATUS_CODE.update_success,
             message: "Xóa hóa đơn thành công!"
           }
         } 
         catch(e) {
-          transaction.rollback()
+          await transaction.rollback()
           return {
             status: STATUS_CODE.update_fail,
             message: "Bị lỗi! Xóa hóa đơn không thành công!"

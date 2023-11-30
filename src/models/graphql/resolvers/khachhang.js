@@ -10,7 +10,7 @@ module.exports = {
     //     transaction = await sequelize.transaction()
     //     const {ma, ten} = args.input
     //     const khachhang = await khachhang.create({ma, ten})
-    //     transaction.commit()
+    //     await transaction.commit()
     //     return {
     //       status: STATUS_CODE.create_success,
     //       message: "Thêm đơn vị thành công!",
@@ -18,7 +18,7 @@ module.exports = {
     //     }
     //   } 
     //   catch(e) {
-    //     transaction.rollback()
+    //     await transaction.rollback()
     //     return {
     //       status: STATUS_CODE.create_fail,
     //       message: "Bị lỗi! Thêm đơn vị không thành công!",
@@ -36,14 +36,14 @@ module.exports = {
             const khachhang = await KhachHang.findByPk(ma)
             await khachhang.update({ ten, ngaysinh, sodienthoai})
             await khachhang.save()
-            transaction.commit()
+            await transaction.commit()
             return {
               status: STATUS_CODE.update_success,
               message: "Sửa thông tin khách hàng thành công!",
             }
           }
           catch (e) {
-            transaction.rollback()
+            await transaction.rollback()
             return {
               status: STATUS_CODE.update_fail,
               message: "Bị lỗi! Sửa thông tin khách hàng không thành công!",
@@ -66,14 +66,14 @@ module.exports = {
         const khachhang = await KhachHang.findByPk(ma)
         await khachhang.update({ ten, ngaysinh, sodienthoai})
         await khachhang.save()
-        transaction.commit()
+        await transaction.commit()
         return {
           status: STATUS_CODE.update_success,
           message: "Sửa thông tin khách hàng thành công!",
         }
       }
       catch (e) {
-        transaction.rollback()
+        await transaction.rollback()
         return {
           status: STATUS_CODE.update_fail,
           message: "Bị lỗi! Sửa thông tin khách hàng không thành công!",
@@ -90,7 +90,7 @@ module.exports = {
             const khachhang = await KhachHang.findByPk(ma)
             await khachhang.update({ matrangthai})
             await khachhang.save()
-            transaction.commit()
+            await transaction.commit()
             return {
               status: STATUS_CODE.update_success,
               message: "Sửa thông tin khách hàng thành công!",
@@ -122,14 +122,14 @@ module.exports = {
             const taikhoan = await TaiKhoan.findByPk(khachhang.tentaikhoan)
             await khachhang.destroy()
             await taikhoan.destroy()
-            transaction.commit()
+            await transaction.commit()
             return {
               status: STATUS_CODE.update_success,
               message: "Xóa thông tin khách hàng thành công!",
             }
           }
           catch (e) {
-            transaction.rollback()
+            await transaction.rollback()
             return {
               status: STATUS_CODE.update_fail,
               message: "Bị lỗi! Xóa thông tin khách hàng không thành công!",
@@ -139,7 +139,7 @@ module.exports = {
       }
       catch (e) {
         if (transaction) {
-          transaction.rollback()
+          await transaction.rollback()
         }
         return {
           status: STATUS_CODE.update_fail,

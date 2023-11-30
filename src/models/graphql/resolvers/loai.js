@@ -17,14 +17,14 @@ module.exports = {
                         const count = rs_addimage.repeat
                         // thêm loại
                         const loai = await Loai.create({ ten, anhminhhoa: rs_addimage.name_image + (count == 0 ? "" : "_" + count) + "." + rs_addimage.ext, mota, maloaicha })
-                        transaction.commit()
+                        await transaction.commit()
                         return {
                             status: STATUS_CODE.create_success,
                             message: "Thêm loại thành công!"
                         }
                     }
                     catch (e) {
-                        transaction.rollback()
+                        await transaction.rollback()
                         return {
                             status: STATUS_CODE.create_fail,
                             message: "Bị lỗi! Thêm loại không thành công!"
@@ -53,14 +53,14 @@ module.exports = {
                         const loai = await Loai.findByPk(ma)
                         await loai.update({ ten, mota, anhminhhoa: rs_addimage.name_image + (count == 0 ? "" : "_" + count) + "." + rs_addimage.ext, maloaicha })
                         await loai.save()
-                        transaction.commit()
+                        await transaction.commit()
                         return {
                             status: STATUS_CODE.update_success,
                             message: "Sửa loại thành công!"
                         }
                     }
                     catch (e) {
-                        transaction.rollback()
+                        await transaction.rollback()
                         return {
                             status: STATUS_CODE.update_fail,
                             message: "Bị lỗi! Sửa loại không thành công!"
@@ -83,14 +83,14 @@ module.exports = {
                         transaction = await sequelize.transaction()
                         const loai = await Loai.findByPk(args.ma)
                         await loai.destroy()
-                        transaction.commit()
+                        await transaction.commit()
                         return {
                             status: STATUS_CODE.delete_success,
                             message: "Xóa loại thành công!"
                         }
                     }
                     catch (e) {
-                        transaction.rollback()
+                        await transaction.rollback()
                         return {
                             status: STATUS_CODE.delete_fail,
                             message: "Bị lỗi! Xóa loại không thành công!"
@@ -139,34 +139,22 @@ module.exports = {
         },
         async loaiLon(root, args, context) {
             try {
-                const rs = await checkAndResolveAdmin(context.taikhoan, async (nhanvien_data) => {
-                    try {
-                        context.dont_need_encrypt = true
-                        const rs = {
-                            status: STATUS_CODE.query_success,
-                            message: "Lấy danh sách loại thành công!",
-                            data: await Loai.findAll({
-                                where: {
-                                    maloaicha: null
-                                }
-                            })
+                context.dont_need_encrypt = true
+                const rs = {
+                    status: STATUS_CODE.query_success,
+                    message: "Lấy danh sách loại thành công!",
+                    data: await Loai.findAll({
+                        where: {
+                            maloaicha: null
                         }
-                        return rs;
-                    }
-                    catch (e) {
-                        return {
-                            status: STATUS_CODE.query_fail,
-                            message: "Loại không tồn tại!",
-                            data: []
-                        }
-                    }
-                })
-                return rs
+                    })
+                }
+                return rs;
             }
             catch (e) {
                 return {
                     status: STATUS_CODE.query_fail,
-                    message: "Lấy danh sách loại không thành công!",
+                    message: "Loại không tồn tại!",
                     data: []
                 }
             }

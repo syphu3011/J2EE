@@ -10,4 +10,6 @@ const TaiKhoanResolvers = require('./taikhoan')
 const MatHangResolvers = require('./mathang')
 const KhachHangResolvers = require('./khachhang')
 const LichSuHeThongResolvers = require('./lichsuhethong');
-module.exports = [SanPhamResolvers, LoaiResolvers, NhaCungCapResolvers, TrangThaiNhaCungCapResolvers, PhieuNhapResolvers, MatHangResolvers, DonViResolvers, ChucNangResolvers, TaiKhoanResolvers, QuyenResolvers, KhachHangResolvers]
+const HangTrongKhoResolvers = require('./hangtrongkho');
+const ChiTietPhieuNhapResolvers = require('./chitietphieunhap');
+module.exports = [SanPhamResolvers, LoaiResolvers, NhaCungCapResolvers, TrangThaiNhaCungCapResolvers, PhieuNhapResolvers, MatHangResolvers, DonViResolvers, ChucNangResolvers, TaiKhoanResolvers, QuyenResolvers, KhachHangResolvers, LichSuHeThongResolvers, HangTrongKhoResolvers, ChiTietPhieuNhapResolvers]

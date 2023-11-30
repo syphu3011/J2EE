@@ -31,14 +31,14 @@ module.exports = {
                     email,
                     matrangthai,
                 });
-                transaction.commit();
+                await transaction.commit();
                 const response = {
                     status: STATUS_CODE.create_success,
                     message: "Thêm nhân viên thành công!",
                 };
                 return response;
             } catch (e) {
-                transaction.rollback();
+                await transaction.rollback();
                 return {
                     status: STATUS_CODE.create_fail,
                     message: "Bị lỗi! Thêm nhân viên không thành công!",

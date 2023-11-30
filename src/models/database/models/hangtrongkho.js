@@ -9,34 +9,40 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            HangTrongKho.belongsTo(models.ChiTietPhieuNhap, {as: "SanPhamKho", foreignKey: "masanpham"})
-            HangTrongKho.belongsTo(models.ChiTietPhieuNhap, {as: "MauKho", foreignKey: "mamau"})
-            HangTrongKho.belongsTo(models.ChiTietPhieuNhap, {as: "KichCoKho", foreignKey: "makichco"})
+            HangTrongKho.belongsTo(models.ChiTietPhieuNhap, {as: "SanPhamKho", foreignKey: "masanpham", constraints: false})
+            HangTrongKho.belongsTo(models.ChiTietPhieuNhap, {as: "MauKho", foreignKey: "mamau",constraints: false} )
+            HangTrongKho.belongsTo(models.ChiTietPhieuNhap, {as: "KichCoKho", foreignKey: "makichco", constraints: false})
+            HangTrongKho.belongsTo(models.SanPham, {as: "SanPham", foreignKey: "masanpham"})
+            HangTrongKho.belongsTo(models.Mau, {as: "Mau", foreignKey: "mamau"})
+            HangTrongKho.belongsTo(models.KichCo, {as: "KichCo", foreignKey: "makichco"})
+            HangTrongKho.belongsTo(models.PhieuNhap, {as: "PhieuNhap", foreignKey: "maphieunhap"})
         }
     }
     HangTrongKho.init(
         {
             masanpham: {
                 type: DataTypes.INTEGER,
-                primaryKey: true,
-                references: "MatHang",
+                // primaryKey: true,
+                // references: "MatHang",
             },
             maphieunhap: {
                 type: DataTypes.INTEGER,
-                primaryKey: true,
-                references: "MatHang",
+                // primaryKey: true,
+                // references: "MatHang",
             },
             mamau: {
                 type: DataTypes.INTEGER,
-                primaryKey: true,
-                references: "MatHang",
+                // primaryKey: true,
+                // references: "MatHang",
             },
             makichco: {
                 type: DataTypes.INTEGER,
-                primaryKey: true,
-                references: "MatHang",
+                // primaryKey: true,
+                // references: "MatHang",
             },
             soluong: DataTypes.INTEGER,
+            gianhap:DataTypes.INTEGER,
+            giaban: DataTypes.INTEGER
         },
         {
             sequelize,

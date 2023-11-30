@@ -55,7 +55,7 @@ function addImage(anhminhhoa, b64anhminhhoa) {
     let count = 0
     let check_existed = false
     const ext = path.extname(anhminhhoa).replace('.', '')
-    const name_image = anhminhhoa.replace(ext, "")
+    const name_image = anhminhhoa.replace("."+ext, "")
     var base64Data = b64anhminhhoa.replace(`data:image\/${ext};base64,`, "");
     if (fs.existsSync('image' + '/' + anhminhhoa)) {
         const b64Exist = fs.readFileSync('image' + '/' + anhminhhoa, { encoding: 'base64' })

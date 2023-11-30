@@ -54,14 +54,14 @@ module.exports = {
                 transaction = await sequelize.transaction()
                 const {ten} = args.input
                 await TrangThaiNhaCungCap.create({ten})
-                transaction.commit()
+                await transaction.commit()
                 return {
                     status: STATUS_CODE.create_success,
                     message: "Thêm trạng thái nhà cung cấp thành công"
                 }
             }
             catch(e) {
-                transaction.rollback()
+                await transaction.rollback()
                 return {
                     status: STATUS_CODE.create_fail,
                     message: "Bị lỗi! Thêm trạng thái nhà cung cấp không thành công!"
@@ -76,14 +76,14 @@ module.exports = {
                 const ttncc = await TrangThaiNhaCungCap.findByPk(ma) 
                 await ttncc.update(ten)
                 await ttncc.save()
-                transaction.commit()
+                await transaction.commit()
                 return {
                     status: STATUS_CODE.create_success,
                     message: "Sửa trạng thái nhà cung cấp thành công"
                 }
             }
             catch(e) {
-                transaction.rollback()
+                await transaction.rollback()
                 return {
                     status: STATUS_CODE.create_fail,
                     message: "Bị lỗi! Sửa trạng thái nhà cung cấp không thành công!"
@@ -98,14 +98,14 @@ module.exports = {
                 const ttncc = await TrangThaiNhaCungCap.findByPk(ma)
                 await ttncc.setNhaCungCap([])
                 await ttncc.destroy()
-                transaction.commit()
+                await transaction.commit()
                 return {
                     status: STATUS_CODE.delete_success,
                     message: "Xóa trạng thái nhà cung cấp thành công!"
                 }
             }
             catch(e) {
-                transaction.rollback()
+                await transaction.rollback()
                 return  {
                     status: STATUS_CODE.delete_fail,
                     message: "Bị lỗi!Xóa trạng thái nhà cung cấp không thành công!"

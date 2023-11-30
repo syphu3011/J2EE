@@ -9,14 +9,14 @@ module.exports = {
         transaction = await sequelize.transaction()
         const { ma, ten } = args.input
         const chucnang = await ChucNang.create({ ma, ten })
-        transaction.commit()
+        await transaction.commit()
         return {
           status: STATUS_CODE.create_success,
           message: "Thêm chức năng thành công!",
         }
       }
       catch (e) {
-        transaction.rollback()
+        await transaction.rollback()
         return {
           status: STATUS_CODE.create_fail,
           message: "Bị lỗi! Thêm chức năng không thành công!",
@@ -31,14 +31,14 @@ module.exports = {
         const chucnang = await ChucNang.findByPk(ma)
         await chucnang.update({ ten })
         await chucnang.save()
-        transaction.commit()
+        await transaction.commit()
         return {
           status: STATUS_CODE.update_success,
           message: "Sửa chức năng thành công!",
         }
       }
       catch (e) {
-        transaction.rollback()
+        await transaction.rollback()
         return {
           status: STATUS_CODE.update_fail,
           message: "Bị lỗi! Sửa chức năng không thành công!",
@@ -53,14 +53,14 @@ module.exports = {
         const chucnang = await ChucNang.findByPk(ma)
         await chucnang.destroy()
         await chucnang.save()
-        transaction.commit()
+        await transaction.commit()
         return {
           status: STATUS_CODE.update_success,
           message: "Xóa chức năng thành công!",
         }
       }
       catch (e) {
-        transaction.rollback()
+        await transaction.rollback()
         return {
           status: STATUS_CODE.update_fail,
           message: "Bị lỗi! Xóa chức năng không thành công!",
