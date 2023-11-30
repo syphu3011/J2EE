@@ -1,13 +1,15 @@
-import { Button, Col, Layout, Row, Select, SelectProps, Space } from "antd";
+import { Button, Checkbox, Col, Divider, Layout, Row, Select, SelectProps, Space, Tag } from "antd";
 import "../../../style/product.css";
 import React, { useState } from "react";
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
+import { CheckboxChangeEvent } from "antd/es/checkbox";
+import { CheckboxValueType } from "antd/es/checkbox/Group";
 const { Header, Content } = Layout;
 const headerStyle: React.CSSProperties = {
   color: "#000000",
-  minHeight: 60,
+  minHeight: 140,
   paddingInline: 10,
-  lineHeight: "180px",
+  lineHeight: "140px",
   backgroundColor: "#ffffff",
 };
 const contentStyle: React.CSSProperties = {
@@ -17,25 +19,26 @@ const contentStyle: React.CSSProperties = {
   color: "#fff",
   backgroundColor: "#ffffff",
 };
-
+const plainOptions = ['Xem', 'Thêm', 'Xóa', 'Sửa', 'Tìm kiếm'];
+const defaultCheckedList = ['Xem'];
 interface Item {
   key: string;
-  id_status: string;
-  name_status: string;
-  type_status: string;
+  id_permission: string;
+  name_permission: string;
+  detail_permission: string[];
 }
 
 const originData: Item[] = [];
-const options: SelectProps["options"] = [];
+const optionsst: SelectProps["options"] = [];
 const handleChange = (value: string[]) => {
   console.log(`selected ${value}`);
 };
 for (let i = 0; i < 20; i++) {
   originData.push({
     key: i.toString(),
-    id_status: `${i}`,
-    name_status: `trạng thái ${i}`,
-    type_status: `Khách hàng`
+    id_permission: `${i}`,
+    name_permission: `trạng thái ${i}`,
+    detail_permission: ["Thêm", "Xóa"]
   });
 }
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
@@ -47,7 +50,7 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   index: number;
   children: React.ReactNode;
 }
-
+const CheckboxGroup = Checkbox.Group;
 const EditableCell: React.FC<EditableCellProps> = ({
   editing,
   dataIndex,
@@ -89,12 +92,16 @@ const Status = () => {
   const isEditing = (record: Item) => record.key === editingKey;
 
   const edit = (record: Partial<Item> & { key: React.Key }) => {
-    form.setFieldsValue({ name: "", numberphone: "", ...record });
+    form.setFieldsValue({ name_permission: "", detail_permission: "", ...record });
     setEditingKey(record.key);
   };
 
   const cancel = () => {
     setEditingKey("");
+  };
+  const handleDelete = (key: React.Key) => {
+    const newData = data.filter((item) => item.key !== key);
+    setData(newData);
   };
 
   const save = async (key: React.Key) => {
@@ -123,19 +130,27 @@ const Status = () => {
   const columns = [
     {
       title: "Mã",
-      dataIndex: "id_status",
+      dataIndex: "id_permission",
       width: "auto",
     },
     {
-      title: "Tên trạng thái",
-      dataIndex: "name_status",
+      title: "Tên quyền",
+      dataIndex: "name_permission",
       width: "auto",
       editable: true,
     },
     {
-      title: "Loại trạng thái",
-      dataIndex: "type_status",
+      title: "Chi tiết quyền",
+      dataIndex: "detail_permission",
       width: "auto",
+      editable: true,
+      render: (detail_permission: String[]) => (
+        <>
+          {detail_permission.map((tag) => (
+            <Tag>{tag.toUpperCase()}</Tag>
+          ))}
+        </>
+      ),
     },
     {
       dataIndex: "editcus",
@@ -165,28 +180,30 @@ const Status = () => {
       },
     },
     {
-      key: "operation",
-      dataIndex: "delete",
+      dataIndex: "delete_permiss",
       width: "8%",
-      render: () => <a>Xóa</a>,
+      render: (_, record: { key: React.Key }) =>
+        data.length >= 1 ? (
+          <Popconfirm
+            title="Bạn thật sự muốn xóa?"
+            onConfirm={() => handleDelete(record.key)}
+          >
+            <a>Xóa</a>
+          </Popconfirm>
+        ) : null,
     },
   ];
-  options.push({
-    value: `Customer`,
-    label: `Khách hàng`,
-  });
-  options.push({
-    value: `Product`,
-    label: `Sản phẩm`,
-  });
-  options.push({
-    value: `Staff`,
-    label: `Nhân viên`,
-  });
-  options.push({
-    value: `Partner`,
-    label: `Đối tác`,
-  });
+  const [checkedList, setCheckedList] = useState<CheckboxValueType[]>(defaultCheckedList);
+
+  const checkAll = plainOptions.length === checkedList.length;
+  const indeterminate = checkedList.length > 0 && checkedList.length < plainOptions.length;
+  const onChange = (list: CheckboxValueType[]) => {
+    setCheckedList(list);
+  };
+
+  const onCheckAllChange = (e: CheckboxChangeEvent) => {
+    setCheckedList(e.target.checked ? plainOptions : []);
+  }
   const mergedColumns = columns.map((col) => {
     if (!col.editable) {
       return col;
@@ -208,40 +225,56 @@ const Status = () => {
         <Header style={headerStyle}>
           <Row gutter={16}>
             <Col className="gutter-row" span={8}>
-              <Form.Item label="Tên:" labelAlign="left" labelCol={{ span: 6 }}>
-                <Input />
+              <Form.Item label="Tên:"
+                labelAlign="left"
+                labelCol={{ span: 6 }}
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "row",
+                  minHeight: '100%'
+                }}>
+                <Input style={{ width: "100%" }} />
               </Form.Item>
             </Col>
-            <Col className="gutter-row" span={8}>
+            <Col className="gutter-row" span={10}>
               <Form.Item
-                label="Trạng thái của"
+                label="Quyền"
                 labelAlign="left"
-                labelCol={{ span: 8 }}
+                labelCol={{ span: 10 }}
                 style={{ width: "100%", height: 30, minWidth: "100%" }}
               >
-                <Select
-                  placeholder="Hãy chọn"
-                  onChange={handleChange}
-                  options={options}
-                />
+                <>
+                  <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}>
+                    Chọn hết
+                  </Checkbox>
+                  <Divider />
+                  <CheckboxGroup options={plainOptions} value={checkedList} onChange={onChange} />
+                </>
               </Form.Item>
             </Col>
-            <Col className="gutter-row" span={8}>
-              <div
+            <Col className="gutter-row" span={6}>
+            <div
                 style={{
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
-                  alignItems: "center",
+                  minHeight: 120,
+                  
                 }}
               >
                 <Button
                   type="primary"
-                  style={{ width: "30%", marginBottom: 30 }}
+                  style={{ width: "60%", marginBottom:10 }}
                 >
                   Thêm
                 </Button>
+                <Button type="primary" style={{ width: "60%" }}>
+                  Làm mới
+                </Button>
               </div>
+
             </Col>
           </Row>
         </Header>
@@ -256,7 +289,7 @@ const Status = () => {
               bordered
               dataSource={data}
               columns={mergedColumns}
-              rowClassName="editable-row"
+              rowClassName="editable-permission"
               pagination={{
                 onChange: cancel,
               }}
