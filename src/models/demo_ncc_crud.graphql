@@ -1,0 +1,69 @@
+query getNhaCungCap {
+  nhacungcap {
+    status
+    message
+    data {
+      ma
+      ten
+      diachi
+      dienthoai
+      trangthai {
+        ma
+        ten
+      }
+      sanpham {
+        ten
+      }
+    }
+  }
+}
+query getNhaCungCapVoiMa {
+  nhacungcapvoima(ma: 10) {
+    status
+    message
+    data {
+      ma
+      ten
+      diachi
+      dienthoai
+      trangthai {
+        ma
+        ten
+      }
+      sanpham {
+        ma
+        ten
+      }
+    }
+  }
+}
+mutation suaNCC{
+  suaNhaCungCap(input: {
+    ma: 1
+    ten: "ncc5"
+    diachi: "q6"
+    dienthoai: "0303020230"
+    matrangthaincc: 2
+  }) {
+    status
+    message
+  }
+}
+mutation taoNCC{
+  taoNhaCungCap(input: {
+    ten: "ncc5"
+    diachi: "q6"
+    dienthoai: "0303020230"
+    matrangthaincc: 1
+    masanpham: [1,2]
+  }) {
+    status
+    message
+  }
+}
+mutation xoaNCC {
+  xoaNhaCungCap(input: {ma: 2}) {
+    status
+    message
+  }
+}

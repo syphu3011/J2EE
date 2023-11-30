@@ -99,7 +99,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
               message: `Hãy nhập ${title}!`,
             },
           ]}
-        > 
+        >
           {inputNode}
         </Form.Item>
       ) : (

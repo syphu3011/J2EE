@@ -1,2 +1,1 @@
-declare const thaotest: () => import("react/jsx-runtime").JSX.Element;
-export default thaotest;
+export default function thaotest(): import("react/jsx-runtime").JSX.Element;

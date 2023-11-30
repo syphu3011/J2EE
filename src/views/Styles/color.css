@@ -1,0 +1,88 @@
+.color-groups {
+     display: flex;
+     flex-wrap: wrap;
+     color:#b4b2b2;
+     font-size: 30px;
+     margin-left: 17px;
+     margin-top:10px;
+}
+   
+   .color {
+     width: 30px;
+     height: 30px;
+     margin:10px;
+     padding:2px;
+     cursor: pointer;
+     border-radius: 50%;
+     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+   }
+   .color:hover{
+     border:1px solid black;
+   }
+   .color:active{
+    outline-color: red;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+   }
+   .color.selected {
+    width:50px;
+    height:50px;
+    border:3px solid #eff0ee;
+    border-style: double;
+    box-shadow: 0px 4px 4px 0px rgba(221, 126, 126, 0.25);
+
+  }
+   .color-white {
+     background-color: white;
+   }
+   
+   .color-black {
+     background-color: black;
+   }
+   
+   .color-yellow {
+     background-color: yellow;
+   }
+   
+   .color-blue {
+     background-color: blue;
+   }
+   
+   .color-red {
+     background-color: red;
+   }
+   
+   .active-color {
+     border: 2px solid black;
+   }
+   .color-Aqua{
+     background-color: #00FFFF;
+   }
+   .color-Bisque{
+     background-color: #FFE4C4;
+   }
+   .color-brown{
+     background-color: #A52A2A;
+   }
+   .color-chartreuse{
+     background-color: #7fff00;
+   }
+   .color-cornflowerBlue{
+     background-color: #6495ed;
+   }
+   .color-gray{
+     background-color: gray;
+   }
+   .color-green{
+     background-color: #228;
+   }
+   .color-yellow{
+     background-color: yellow;
+   }
+   .color-purple{
+     background-color: purple;
+   }
+   .color-pink{
+    background-color: pink;
+   }
+   
