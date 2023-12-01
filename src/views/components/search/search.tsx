@@ -1,11 +1,11 @@
 import { Button, Form, Input } from "antd";
 import React, { useState } from "react";
 import {SearchOutlined} from "@ant-design/icons";
-import productData from "../product/productData";
+import {getProductData} from "../product/productData";
 export const SearchItem = ({setResults})=>{
      const [input,setInput] = useState("");
      const getData = (value)=>{
-          const results = productData.filter((item) => {
+          const results = getProductData().filter((item) => {
                return value && item.name && item.name.toLowerCase().includes(value);
              }).slice(0, 5);
              setResults(results);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import getStringFromSwitch from "./Breadcrumb";
 import { GiClothes } from "react-icons/gi";
 import { IoReceiptSharp } from "react-icons/io5";
@@ -19,6 +19,10 @@ import type { MenuProps } from "antd";
 import { Avatar, Badge, Breadcrumb, Layout, Menu, theme } from "antd";
 import { Outlet, useNavigate } from "react-router-dom";
 import Search from "antd/es/input/Search";
+import { getIsLogin } from "../../../../utils/constant";
+import { postKeyToServer } from "../../../controllers/modules/key";
+import { authentication } from "../../../controllers/modules/admin/login";
+import { authenticationAdmin } from "../../../../utils/util";
 
 const { Header, Content, Sider } = Layout;
 const items1: MenuItem[] = [
@@ -76,7 +80,7 @@ const items: MenuItem[] = [
     getItem("Biểu đồ", "Chart"),
   ]),
   getItem("Tin nhắn hỗ trợ", "Message", <MessageOutlined />),
-  getItem("Trạng thái", "Status", <TbStatusChange />),
+  getItem("Quyền", "Status", <TbStatusChange />),
 ];
 
 export default function LayoutPage() {
@@ -93,24 +97,46 @@ export default function LayoutPage() {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
-
+  useEffect(() => {
+    if (!getIsLogin()) {
+      authenticationAdmin((rs) => {
+        if (rs.data.dangNhapAdminVoiToken.status !== 200) {
+          alert(JSON.stringify(rs.data.dangNhapAdminVoiToken))
+          navigate("/LoginAdmin")
+        }
+      })
+    }
+  }, [])
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Header
         style={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
         }}
         className="header"
       >
-        <Menu style={{ width: "50%" }} theme="dark" mode="horizontal" items={items1} onClick={log_out} />
-
-        <Search placeholder="input search text" style={{ width: "50%" }} />
-        <div />
-        <Badge dot>
-          <Avatar icon={<MailOutlined />} />
-        </Badge>
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Badge dot>
+            <Avatar icon={<MailOutlined />} />
+          </Badge>
+          <Search placeholder="input search text" style={{ width: "50%" }} />
+          <div />
+          <Menu
+            style={{ width: "10%" }}
+            theme="dark"
+            mode="horizontal"
+            items={items1}
+            onClick={log_out}
+          />
+        </div>
       </Header>
       <Layout>
         <Sider

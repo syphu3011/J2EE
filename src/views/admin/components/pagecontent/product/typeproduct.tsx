@@ -27,7 +27,7 @@ const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 120,
   paddingInline: 10,
-  lineHeight: "180px",
+  lineHeight: "120px",
   backgroundColor: "#ffffff",
 };
 const contentStyle: React.CSSProperties = {
@@ -147,7 +147,10 @@ const Typeproduct = () => {
       console.log("Validate Failed:", errInfo);
     }
   };
-
+  const handleDelete = (key: React.Key) => {
+    const newData = data.filter((item) => item.key !== key);
+    setData(newData);
+  };
   const columns = [
     {
       title: "Mã",
@@ -217,10 +220,17 @@ const Typeproduct = () => {
       },
     },
     {
-      key: "operation",
-      dataIndex: "delete",
+      dataIndex: "delete_type",
       width: "8%",
-      render: () => <a>Xóa</a>,
+      render: (_, record: { key: React.Key }) =>
+        data.length >= 1 ? (
+          <Popconfirm
+            title="Bạn thật sự muốn xóa?"
+            onConfirm={() => handleDelete(record.key)}
+          >
+            <a>Xóa</a>
+          </Popconfirm>
+        ) : null,
     },
   ];
   for (let i = 10; i < 36; i++) {
@@ -292,7 +302,8 @@ const Typeproduct = () => {
                   valuePropName="fileList"
                   getValueFromEvent={normFile}
                 >
-                  <Upload action="/upload.do" listType="picture-card">
+                  <Upload action="/upload.do" listType="picture-card"
+                  maxCount = {1}>
                     <div>
                       <PlusOutlined />
                       <div style={{ marginTop: 8 }}>Upload</div>

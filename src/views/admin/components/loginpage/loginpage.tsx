@@ -1,7 +1,13 @@
-import React from "react";
-import { Button, Checkbox, Form, Input, Space } from "antd";
+import React, { useEffect, useState } from "react";
+import { Button, Checkbox, Form, Input, Space} from "antd";
+import {authentication, login as loginAdmin} from '../../../../controllers/modules/admin/login'
 import { Layout } from "antd";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import LoadingPage from "../../../loadingPage";
+import { postKeyToServer } from "../../../../controllers/modules/key";
+import { getIsLogin, setIsLogin, setIsOTP } from "../../../../../utils/constant";
+import { authenticationAdmin } from "../../../../../utils/util";
 const { Header, Content } = Layout;
 
 const headerStyle: React.CSSProperties = {
@@ -30,6 +36,7 @@ const onFinishFailed = (errorInfo: any) => {
   console.log("Failed:", errorInfo);
 };
 
+
 type FieldType = {
   username?: string;
   password?: string;
@@ -37,7 +44,41 @@ type FieldType = {
 };
 export default function Login() {
   const navigate = useNavigate();
+  const [isNotLoggedIn, setIsNotLoggedIn] = useState(false)
+  const [isReady, setIsReady] = useState(false)
+  const login = async (value) => {
+    const rsLogin = await loginAdmin(value.username, value.password)
+    if (rsLogin && rsLogin.data && rsLogin.data.dangNhapAdmin && rsLogin.data.dangNhapAdmin.status == 200) {
+      setIsLogin(true)
+      const dateExpires = new Date()
+      dateExpires.setTime(dateExpires.getTime() + 60000)
+      Cookies.set("checkOTP", "true", {expires: dateExpires})
+      navigate("/AccessOTP")
+    }
+    else {
+      //TODO: làm thông báo lỗi
+      alert("Tên tài khoản hoặc mật khẩu không chính xác!")
+    }
+  }
+  useEffect(() => {
+    if (!isReady) {
+      if (!getIsLogin())
+        authenticationAdmin((rs) => {
+          setIsReady (true)
+          if (rs.data && rs.data.dangNhapAdminVoiToken && rs.data.dangNhapAdminVoiToken.status == '200') {
+            // Cookies.set("chucnang", rs.data.dangNhapAdminVoiToken.data.chucnang)
+            setIsLogin(true)
+            setIsOTP(true)
+            navigate("/Admin")
+          }
+          else {
+            setIsNotLoggedIn(true)
+          }
+      })
+    }
+  })
   return (
+    isReady ? 
     <>
       <Space
         direction="vertical"
@@ -60,7 +101,7 @@ export default function Login() {
               wrapperCol={{ span: 16 }}
               style={{ maxWidth: 600 }}
               initialValues={{ remember: true }}
-              onFinish={() => navigate("/AccessOTP")}
+              onFinish={login}
               onFinishFailed={onFinishFailed}
               autoComplete="off"
             >
@@ -83,12 +124,19 @@ export default function Login() {
               <Form.Item<FieldType>
                 name="remember"
                 valuePropName="checked"
-                wrapperCol={{ offset: 8, span: 16 }}
+                wrapperCol={{ offset: 0, span: 16 }}
               >
                 <Checkbox>Ghi nhớ đăng nhập</Checkbox>
               </Form.Item>
 
-              <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+              <Form.Item
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
                 <Button type="primary" htmlType="submit">
                   Đăng nhập
                 </Button>
@@ -97,6 +145,6 @@ export default function Login() {
           </div>
         </Content>
       </Layout>
-    </>
+    </>:<LoadingPage/>
   );
 }

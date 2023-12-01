@@ -6,7 +6,8 @@ type PhieuNhap {
   ngaynhap: String
   # nhanvien: NhanVien
   nhacungcap: NhaCungCap
-  mathang: [MatHang]
+  mathang: [ChiTietPhieuNhap]
+  nhanvien: NhanVien
   ghichu: String
 }
 input NhapMatHangInput {
@@ -15,6 +16,7 @@ input NhapMatHangInput {
   makichco: Int!
   soluong: Int!
   gianhap: Int!
+  giaban: Int!
 }
 input PhieuNhapInput {
   ma: ID

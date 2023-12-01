@@ -10,9 +10,11 @@ async function decrypt(data, aeskey) {
     const key = aeskey.key
     const iv = aeskey.iv
     const uint8_aes = b64ToUint8array(data)
-    const decrypted = uint8arrayToString(await aes.decrypt(uint8_aes, key, {name: 'AES-CTR',iv,tagLength: 16}))
+    const uint8_decrypted = await aes.decrypt(uint8_aes, key, {name: 'AES-CTR',iv,tagLength: 16})
+    const decrypted = uint8arrayToString(uint8_decrypted)
     return decrypted ?   decrypted : ""
 }
+
 async function decrypt_all(data, aeskey) {
     if (data) {
         for (const key in data) {
@@ -20,13 +22,8 @@ async function decrypt_all(data, aeskey) {
                 data[key] = await decrypt_all(data[key], aeskey)
             }
             else {
-                if (!key.includes("message_socket")) {
-                    if(data[key]) {
-                        data[key] = (await decrypt(data[key], aeskey)).replaceAll('\\n', '\n').replaceAll("\0","");
-                    }
-                }
-                else {
-                    data.message += data[key]
+                if(data[key]) {
+                    data[key] = (await decrypt(data[key], aeskey)).replaceAll('\\n', '\n').replaceAll("\0","");
                 }
             }
         }
@@ -53,24 +50,36 @@ async function encrypt_all(data,aeskey) {
     
     return data
 }
-async function encrypt_all_with_key(data) {
-    const key = await createAesKey()
-    console.log(key)
+async function encrypt_all_with_key(data, key_rsa, res) {
+    const key = createAesKey()
     data = await encrypt_all(data, key)
-    data.key = {key:await encryptrsa(uint8arrayToB64(key.key)), iv: await encryptrsa(uint8arrayToB64(key.iv))}
+    data.key = {key:await encryptrsa(uint8arrayToB64(key.key), key_rsa), iv: await encryptrsa(uint8arrayToB64(key.iv), key_rsa)}
+    res.setHeader('hello', data.key.key)
+    res.setHeader('wait',data.key.iv)
     return data
 }
-
-async function decryptrsa(data) {
-    const private_key = await getPrivateKey()
-    const rsa = new node_rsa(private_key)
-    rsa.setOptions({ encryptionScheme: 'pkcs1' });
-    const decrypted_rsa = rsa.decrypt(data, 'utf8')
-    return decrypted_rsa
+async function encrypt_with_key(data, key_rsa, res) {
+    const key = createAesKey()
+    data = await encrypt(data, key)
+    res.setHeader('hello', await encryptrsa(uint8arrayToB64(key.key), key_rsa))
+    res.setHeader('wait',await encryptrsa(uint8arrayToB64(key.iv), key_rsa))
+    return data
 }
-async function encryptrsa(data) {
-    const public_key = await getPublicKey()
-    const rsa = new node_rsa(public_key)
+async function decryptrsa(data, key = null) {
+    try {
+        const private_key = !key ? await getPrivateKey():key
+        const rsa = new node_rsa(private_key)
+        rsa.setOptions({ encryptionScheme: 'pkcs1' });
+        const decrypted_rsa = rsa.decrypt(data, 'utf8')
+        return decrypted_rsa
+    }
+    catch(e) {
+        console.log(e)
+        return ""
+    }
+}
+async function encryptrsa(data, key) {
+    const rsa = new node_rsa(key)
     rsa.setOptions({ encryptionScheme: 'pkcs1' });
     const encrypted_rsa = rsa.encrypt(data, 'base64', 'utf8')
     return encrypted_rsa
@@ -83,4 +92,4 @@ async function encrypt_token(taikhoandangnhap) {
     data = await decrypt.encrypt_all_with_key(data)
     return data
 }
-module.exports = { encrypt_all_with_key,decrypt_all, encrypt_all, decryptrsa }
+module.exports = { encrypt_all_with_key,decrypt_all, encrypt_all, decryptrsa, decrypt, encrypt,encrypt_with_key}

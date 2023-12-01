@@ -1,25 +1,10 @@
-import {
-  Button,
-  Col,
-  Layout,
-  Row,
-  Select,
-  SelectProps,
-  Space,
-  Upload,
-} from "antd";
+import { Button, Col, Layout, Row, Select, SelectProps, Space } from "antd";
 import "../../../style/product.css";
 const { Header, Content } = Layout;
 import React, { useState } from "react";
-import {
-  Form,
-  Input,
-  InputNumber,
-  Popconfirm,
-  Table,
-  Typography,
-  Tag,
-} from "antd";
+import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
+import "../../../style/product.css";
+import { Footer } from "antd/es/layout/layout";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 100,
@@ -34,7 +19,11 @@ const contentStyle: React.CSSProperties = {
   color: "#fff",
   backgroundColor: "#ffffff",
 };
-
+const footerStyle: React.CSSProperties = {
+  textAlign: 'center',
+  color: '#fff',
+  backgroundColor: '#ffffff',
+};
 interface Item {
   key: string;
   id_pro_imp: string;
@@ -150,7 +139,10 @@ const Import = () => {
       console.log("Validate Failed:", errInfo);
     }
   };
-
+  const handleDelete = (key: React.Key) => {
+    const newData = data.filter((item) => item.key !== key);
+    setData(newData);
+  };
   const columns = [
     {
       title: "Mã",
@@ -224,10 +216,17 @@ const Import = () => {
       },
     },
     {
-      key: "operation",
-      dataIndex: "delete",
+      dataIndex: "delete_import",
       width: "8%",
-      render: () => <a>Xóa</a>,
+      render: (_, record: { key: React.Key }) =>
+        data.length >= 1 ? (
+          <Popconfirm
+            title="Bạn thật sự muốn xóa?"
+            onConfirm={() => handleDelete(record.key)}
+          >
+            <a>Xóa</a>
+          </Popconfirm>
+        ) : null,
     },
   ];
   for (let i = 10; i < 36; i++) {
@@ -322,7 +321,7 @@ const Import = () => {
                 label="Giá:"
                 labelAlign="left"
                 labelCol={{ span: 5 }}
-                style={{ width: "100%", height: 30, minWidth: "100%" }}
+                style={{ height: 30, minWidth: "90%" }}
               >
                 <Input style={{ width: "80%" }} />
               </Form.Item>
@@ -330,7 +329,7 @@ const Import = () => {
                 label="Số lượng:"
                 labelAlign="left"
                 labelCol={{ span: 5 }}
-                style={{ width: "100%", height: 30, minWidth: "100%" }}
+                style={{ height: 30, minWidth: "90%" }}
               >
                 <Input style={{ width: "80%" }} />
               </Form.Item>
@@ -396,6 +395,11 @@ const Import = () => {
             />
           </Form>
         </Content>
+        <Footer style={footerStyle}><Button type="primary" style={{ width: "40%" }}>
+                  Xác nhận nhập hàng
+                </Button>
+        </Footer>
+                
       </Layout>
     </Space>
   );

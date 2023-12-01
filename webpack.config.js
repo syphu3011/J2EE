@@ -28,11 +28,13 @@ module.exports = {
         devMiddleware: {
             publicPath: "/",
         },
+        hot: false,
+        liveReload: false,
         headers: {
-        "Access-Control-Allow-Origin": "http://localhost:3000",
+        "Access-Control-Allow-Origin": "https://localhost:8080",
         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-        "Access-Control-Allow-Headers": 'Origin, X-Requested-With, Content-Type, Accept'
-        }
+        "Access-Control-Allow-Headers": 'Origin, X-Requested-With, Content-Type, Accept, hello, wait'
+        },
     },
     module: {
         rules: [
@@ -57,10 +59,6 @@ module.exports = {
             ]
 
           },
-        //   {
-        //     test: /\.pem$/,
-        //     use: 'raw-loader',
-        //   },
             ]
         //   {
         //     test: /\.(png|jpe?g|gif|jp2|webp)$/,
@@ -104,5 +102,6 @@ module.exports = {
     ],
 
     mode: "development",
+    devtool: 'inline-source-map',
     
 };

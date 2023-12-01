@@ -13,7 +13,17 @@ const PRIVATE_CODE_RT = "dkfxsse3r"
 const LIFE_AT = 10
 const LIFE_RT = 3600 * 72
 const CHUCNANG = Object.freeze({
-    THEMSANPHAM: "themSanPham"
+    THEMSANPHAM: "themSanPham",
+    XOASANPHAM: "xoaSanPham",
+    SUASANPHAM: "suaSanPham",
+    THEMLOAI: "themLoai",
+    SUALOAI: "suaLoai",
+    XOALOAI: "xoaLoai",
+    SUAKHACHHANG: "suaKhachHang",
+    XOAKHACHHANG: "xoaKhachHang",
+    XEMKHO: "xemKho",
+    SUAKHO: "suaKho",
+    NHAPHANG: "nhapHang"
 }
 )
 const MAIL = Object.freeze({

@@ -117,7 +117,7 @@ const StatNumber = () => {
       <Layout>
         <Header style={headerStyle}>
           <Row gutter={16}>
-            <Col className="gutter-row" span={10}>
+            <Col className="gutter-row" span={8}>
               <Form.Item
                 label="Lọc theo:"
                 labelAlign="left"
@@ -133,7 +133,7 @@ const StatNumber = () => {
               </Form.Item>
             </Col>
             <Col className="gutter-row" span={2}></Col>
-            <Col className="gutter-row" span={12}>
+            <Col className="gutter-row" span={14}>
               <div
                 style={{
                   display: "flex",
@@ -141,18 +141,22 @@ const StatNumber = () => {
                   justifyContent: "center",
                 }}
               >
-                <Form.Item label="Từ ngày:"
+                <Form.Item
+                  label="Từ ngày"
                   labelAlign="left"
-                  labelCol={{ span: 8 }}>
+                  labelCol={{ span: 7 }}
+                >
                   <DatePicker
                     defaultValue={dayjs("01/01/2000", dateFormat)}
                     format={dateFormat}
                     style={{ marginRight: 10 }}
                   />
                 </Form.Item>
-                <Form.Item label="Đến ngày:"
+                <Form.Item
+                  label="Đến ngày"
                   labelAlign="left"
-                  labelCol={{ span: 8}}>
+                  labelCol={{ span: 7 }}
+                >
                   <DatePicker defaultValue={dayjs()} format={dateFormat} />
                 </Form.Item>
               </div>

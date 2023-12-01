@@ -13,7 +13,10 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       PhieuNhap.belongsTo(models.NhaCungCap, {as: "NhaCungCap", foreignKey: "manhacungcap"})
       PhieuNhap.belongsToMany(models.MatHang, {as: "MatHang", through: "ChiTietPhieuNhap", foreignKey: "maphieunhap", uniqueKey: "maphieunhap"})
-      // PhieuNhap.belongsTo(models.NhanVien, {as: "NhanVien", foreignKey: "manhanvien"})
+      PhieuNhap.belongsToMany(models.MatHang, {as: "MatHangKho", through: "HangTrongKho", foreignKey: "maphieunhap" ,uniqueKey: "maphieunhap"})
+      
+      PhieuNhap.belongsTo(models.NhanVien, {as: "NhanVien", foreignKey: "manhanvien"})
+      PhieuNhap.hasMany(models.ChiTietPhieuNhap, {as: "ChiTietPhieuNhap", foreignKey: "maphieunhap"})
     }
   }
   PhieuNhap.init({

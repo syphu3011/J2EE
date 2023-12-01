@@ -1,5 +1,5 @@
 import React from "react";
-import Login from "../loginpage";
+import Login from "../loginpage/loginpage";
 
 export default class HomeAdmin extends React.Component {
   render() {
