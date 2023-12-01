@@ -27,6 +27,7 @@ import Status from "./views/admin/components/pagecontent/status/Status";
 import LoginOTP from "./views/admin/components/loginpage/loginOTP";
 import LayoutPage from "./views/admin/components/layout";
 import { postKeyToServer } from "./controllers/modules/key";
+import Invoice from "./views/components/Invoice/invoice";
 const param = window.location.search;
 let component_render;
 switch (param) {
@@ -45,6 +46,7 @@ switch (param) {
               </CartProvider>
             }
           />
+          <Route path=""/>
           <Route path="/LoginAdmin" element={<Login />}></Route>
           <Route path="/AccessOTP" element={<LoginOTP />}></Route>
           <Route path="/Admin" element={<LayoutPage />}>
