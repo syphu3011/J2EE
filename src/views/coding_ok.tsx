@@ -29,7 +29,7 @@ export default class Coding_ok extends React.Component<any, any> {
     }
     componentDidMount() {
         postKeyToServer().then((rsk) => {
-            getAllProduct().then((rs) => {
+            getCustomer().then((rs) => {
                 this.setState({
                     test: rs,
                 });
@@ -42,6 +42,6 @@ export default class Coding_ok extends React.Component<any, any> {
         });
     }
     render() {
-        return <div>{JSON.stringify(this.state.test)}</div>;
+        return <div> {JSON.stringify(this.state.test)}</div>;
     }
 }
