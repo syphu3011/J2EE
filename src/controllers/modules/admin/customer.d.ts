@@ -13,6 +13,11 @@ export declare function blockCustomer(id: number): Promise<import("axios").Axios
     message: string;
     data: any;
 }>;
+export declare function openCustomer(id: number): Promise<import("axios").AxiosResponse<any, any> | {
+    status: number;
+    message: string;
+    data: any;
+}>;
 export declare function removeCustomer(id: number): Promise<import("axios").AxiosResponse<any, any> | {
     status: number;
     message: string;

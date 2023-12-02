@@ -65,69 +65,72 @@ module.exports = {
             }
           }
         }
-        return await callback(null)
+        // return await callback(null)
         return await checkAndResolveAdmin(context.taikhoan, callback, "đã nhập hàng", CHUCNANG.NHAPHANG)
       },
       async suaPhieuNhap(root, args, context) {
-        let transaction
-        try {
-          transaction = await sequelize.transaction()
-          const {
-          ma,
-          manhacungcap,
-          mathang,
-          manhanvien, ghichu} = args.input
-          // kiểm tra ràng buộc xem nó dính hóa đơn nào chưa
-          // chưa thì cho sửa
-          // const chitiethoadon = await ChiTietHoaDon.findOne({
-          //   where: {
-          //     maphieunhap: ma
-          //   }
-          // })
-          // if (!chitiethoadon) {
-            // cập nhật các thông tin ở phiếu nhập
-            const phieunhap = await PhieuNhap.findByPk(ma)
-            await phieunhap.update({manhacungcap, manhanvien, ghichu})
-            await phieunhap.setMatHang([])
-            let checknew = false
-            // xóa mặt hàng thừa thải nếu xóa phiếu nhập
-            // await xoaHangTrongKho(ma)
-            await xoaMatHangDu(ma, phieunhap.mannhacungcap)
-            for (e of mathang) {
-              const {masanpham, mamau, makichco, soluong, gianhap} = e
-              let mathangfind = await MatHang.findOne({
-                where: {
-                  masanpham: masanpham,
-                  mamau: mamau,
-                  makichco: makichco
-                }
-              })
-              if (!mathangfind) {
-                mathangfind = await MatHang.create({masanpham, mamau, makichco, matrangthaisanpham: 1})
-                checknew = true
-              }
-              await phieunhap.addMatHang(mathangfind, {through: {masanpham, makichco, mamau, soluong, gianhap}})
-              // const ma = phieunhap.ma
-            // await HangTrongKho.create({maphieunhap: ma, masanpham, mamau, makichco, soluong})
-              await phieunhap.save()
-            }
-            await transaction.commit()
-            return {
-              status: STATUS_CODE.update_success,
-              message: "Sửa phiếu nhập thành công!" + (checknew ? "Có 1 vài mặt hàng mới, hãy định giá bán!" : ""),
-              data: phieunhap
-            }
-          // }
-          // return 
-        } 
-        catch(e) {
-          await transaction.rollback()
-          return {
-            status: STATUS_CODE.update_fail,
-            message: "Bị lỗi! Sửa phiếu nhập không thành công!",
-            data: []
-          }
-        }
+        // async function callback(nhanvien_data) {
+        //   let transaction
+        //   try {
+        //     transaction = await sequelize.transaction()
+        //     const {
+        //     ma,
+        //     manhacungcap,
+        //     mathang,
+        //     manhanvien, ghichu} = args.input
+        //     // kiểm tra ràng buộc xem nó dính hóa đơn nào chưa
+        //     // chưa thì cho sửa
+        //     // const chitiethoadon = await ChiTietHoaDon.findOne({
+        //     //   where: {
+        //     //     maphieunhap: ma
+        //     //   }
+        //     // })
+        //     // if (!chitiethoadon) {
+        //       // cập nhật các thông tin ở phiếu nhập
+        //       const phieunhap = await PhieuNhap.findByPk(ma)
+        //       await phieunhap.update({manhacungcap, manhanvien, ghichu})
+        //       await phieunhap.setMatHang([])
+        //       let checknew = false
+        //       // xóa mặt hàng thừa thải nếu xóa phiếu nhập
+        //       // await xoaHangTrongKho(ma)
+        //       await xoaMatHangDu(ma, phieunhap.mannhacungcap)
+        //       for (e of mathang) {
+        //         const {masanpham, mamau, makichco, soluong, gianhap} = e
+        //         let mathangfind = await MatHang.findOne({
+        //           where: {
+        //             masanpham: masanpham,
+        //             mamau: mamau,
+        //             makichco: makichco
+        //           }
+        //         })
+        //         if (!mathangfind) {
+        //           mathangfind = await MatHang.create({masanpham, mamau, makichco, matrangthaisanpham: 1})
+        //           checknew = true
+        //         }
+        //         await phieunhap.addMatHang(mathangfind, {through: {masanpham, makichco, mamau, soluong, gianhap}})
+        //         // const ma = phieunhap.ma
+        //       // await HangTrongKho.create({maphieunhap: ma, masanpham, mamau, makichco, soluong})
+        //         await phieunhap.save()
+        //       }
+        //       await transaction.commit()
+        //       return {
+        //         status: STATUS_CODE.update_success,
+        //         message: "Sửa phiếu nhập thành công!" + (checknew ? "Có 1 vài mặt hàng mới, hãy định giá bán!" : ""),
+        //         data: phieunhap
+        //       }
+        //     // }
+        //     // return 
+        //   } 
+        //   catch(e) {
+        //     await transaction.rollback()
+        //     return {
+        //       status: STATUS_CODE.update_fail,
+        //       message: "Bị lỗi! Sửa phiếu nhập không thành công!",
+        //       data: []
+        //     }
+        //   }
+        // }
+        // return await checkAndResolveAdmin(context.taikhoan, callback, "đã nhập hàng", CHUCNANG.NHAPHANG)
       },
       async xoaPhieuNhap(root, args, context) {
         const {ma} = args

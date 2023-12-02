@@ -53,7 +53,20 @@ export async function blockCustomer(id: number ){
     }
     return request(query, variables)
 }
-
+export async function openCustomer(id: number ){
+    const query =  `
+    mutation openCustomer ($id: ID, $id_status: Int!) {
+        chuyenTrangThaiKhachHang(input:{ma: $id, matrangthai: $id_status}) {
+            status
+            message
+        }
+    }
+    `
+    const variables = {
+        id, id_status: 1
+    }
+    return request(query, variables)
+}
 export async function removeCustomer(id: number) {
     const query =  `
     mutation removeCustomer ($id: Int!) {

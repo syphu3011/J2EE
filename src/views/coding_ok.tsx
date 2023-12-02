@@ -6,6 +6,8 @@ import { addCate, getAllCate, removeCate } from '../controllers/modules/admin/ca
 import { blockCustomer, editCustomer, getCustomer, removeCustomer } from '../controllers/modules/admin/customer';
 import { editProductInStock, getProductInStock } from '../controllers/modules/admin/productInStock';
 import { importProduct, importProductHistory, removeImportProduct } from '../controllers/modules/admin/importProduct';
+import { addProvider, editProvider, getProvider, removeProvider } from '../controllers/modules/admin/provider';
+import { addPrivileges, editPrivileges, getPrivileges, removePrivileges } from '../controllers/modules/admin/privileges';
 
 export default class Coding_ok extends React.Component<any, any>   
 {   
@@ -35,6 +37,38 @@ export default class Coding_ok extends React.Component<any, any>
                 }
             }
         }
+        async function testProvider(number) {
+            let rs = await addProvider("Thử nghiệm thêm nhà cung cấp", "Quận 7", "0334171858", 1)
+            self.setState({
+                test: self.state.test + JSON.stringify(rs) + '\n'
+            })
+            rs = await editProvider(number, "Thử nghiệm sửa nhà cung cấp", "Quận 7", "0334171858", 1)
+            self.setState({
+                test: self.state.test + JSON.stringify(rs) + '\n'
+            })
+            rs = await removeProvider(number)
+            self.setState({
+                test: self.state.test + JSON.stringify(rs) + '\n'
+            })
+        }
+        async function testPrivileges(number) {
+            // let rs = await getPrivileges()
+            // self.setState({
+            //     test: self.state.test + JSON.stringify(rs) + '\n'
+            // })
+            // let rs = await addPrivileges("Thử nghiệm thêm quyền", [{ma: 1},{ma: 3},{ma:4},{ma: 6},{ma: 7},{ma: 8}])
+            // self.setState({
+            //     test: self.state.test + JSON.stringify(rs) + '\n'
+            // })
+            // let rs = await editPrivileges(number, "Thử nghiệm sửa quyền", [{ma: 1},{ma: 3},{ma:4},{ma: 6},{ma: 7},{ma: 8},{ma: 9},{ma: 10},{ma: 11},{ma:12}])
+            // self.setState({
+            //     test: self.state.test + JSON.stringify(rs) + '\n'
+            // })
+            let rs = await removePrivileges(number)
+            self.setState({
+                test: self.state.test + JSON.stringify(rs) + '\n'
+            })
+        }
         postKeyToServer().then(rsk => {
             // importProduct(1,1,[{masanpham: 1, makichco: 1, mamau: 1,soluong: 40,gianhap: 100000, giaban: 200000},
             //     {masanpham: 6, makichco: 1, mamau: 1,soluong: 40,gianhap: 100000, giaban: 200000},
@@ -51,11 +85,19 @@ export default class Coding_ok extends React.Component<any, any>
             //             })
             //     })
             // removeImport()
-            getProductsWithAllCategory().then((rs) => {
-                this.setState({
-                    test: JSON.stringify(rs)
-                })
-            })
+            // getProductsWithAllCategory().then((rs) => {
+            //     this.setState({
+            //         test: JSON.stringify(rs)
+            //     })
+            // })
+
+            // getProvider().then(rs => {
+            //     this.setState({
+            //         test: JSON.stringify(rs)
+            //     })
+            // })
+            // testProvider(5)
+            testPrivileges(5)
         })
     }
     render() {  
