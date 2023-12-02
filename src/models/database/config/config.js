@@ -8,6 +8,7 @@ module.exports = {
     host: '192.168.1.241',
     dialect: 'mysql',
     use_env_variable: 'DATABASE_URL',
+    //timezone: '+07:00',
     // dialectOptions: {
     //   socketPath: '/var/run/mysqld/mysqld.sock'
     // }

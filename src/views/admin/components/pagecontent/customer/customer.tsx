@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
-import { getCustomer,  } from "../../../../../controllers/modules/admin/customer";
+import { editCustomer, getCustomer,  } from "../../../../../controllers/modules/admin/customer";
 import { useNavigate } from "react-router-dom";
 import Item from "antd/es/list/Item";
 import {
@@ -8,6 +8,9 @@ import {
   convertB64ToImage,
   getBase64AndName,
 } from "../../../../../../utils/util";
+import { Image, Skeleton } from "antd";
+
+
 
 interface Item {
   key: string;
@@ -19,7 +22,7 @@ interface Item {
   status: string;
 }
 
-const originData: Item[] = [];
+
 // for (let i = 0; i < 20; i++) {
 //   originData.push({
     // key: i.toString(),
@@ -79,20 +82,30 @@ const EditableCell: React.FC<EditableCellProps> = ({
 
 const Customer = () => {
 
-  //Chuyển hướng
-const navigate = useNavigate()
+  const originData: Item[] = [];
+    //Chuyển hướng
+  const navigate = useNavigate()
 
-const [reload, setReload] = useState(true);
-const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const [reload, setReload] = useState(true);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const [isReady, setIsReady] = useState(false);
+
   const [form] = Form.useForm();
   const [data, setData] = useState(originData);
   const [editingKey, setEditingKey] = useState("");
 
   const isEditing = (record: Item) => record.key === editingKey;
-
+  
+  // Action edit
   const edit = (record: Partial<Item> & { key: React.Key }) => {
     form.setFieldsValue({ name: "", numberphone: "", birthday: "", ...record });
     setEditingKey(record.key);
+    setIdEdit(parseInt(record.id))
+    setNameEdit(record.name)
+    setNumberphoneEdit(record.numberphone.toString())
+    setBirthdayEdit(record.birthday)
+    setIsEdit(true)
+    
   };
 
   const cancel = () => {
@@ -127,6 +140,32 @@ const [isFirstLoad, setIsFirstLoad] = useState(true);
     setData(newData);
   };
 
+  // Update customer
+  // To save variable
+  const [isEdit, setIsEdit] = useState(false);
+  const [idEdit, setIdEdit] = useState(0);
+  const [nameEdit, setNameEdit] = useState("");
+  const [birthdayEdit, setBirthdayEdit] = useState("")
+  const [numberphoneEdit, setNumberphoneEdit] = useState("")
+
+
+  const handleIdEditChange = (newId) => {
+  setIdEdit(parseInt(newId));
+};
+
+const handleNameEditChange = (newName) => {
+  setNameEdit(newName);
+};
+
+const handleNumberphoneEditChange = (newNumberphone) => {
+  setNumberphoneEdit(newNumberphone.toString());
+};
+
+const handleBirthdayEditChange = (newBirthday) => {
+  setBirthdayEdit(newBirthday);
+};
+
+  
   const columns = [
     {
       title: "Mã",
@@ -169,7 +208,10 @@ const [isFirstLoad, setIsFirstLoad] = useState(true);
         return editable ? (
           <span>
             <Typography.Link
-              onClick={() => save(record.key)}
+              onClick={() => {
+                
+                // customerAction()
+              }}
               style={{ marginRight: 8 }}
             >
               Lưu
@@ -178,7 +220,8 @@ const [isFirstLoad, setIsFirstLoad] = useState(true);
               <a>Hủy</a>
             </Popconfirm>
           </span>
-        ) : (
+        ) 
+        : (
           <Typography.Link
             disabled={editingKey !== ""}
             onClick={() => edit(record)}
@@ -218,32 +261,59 @@ const [isFirstLoad, setIsFirstLoad] = useState(true);
       }),
     };
   });
+  //##################################################
+const customerAction = () =>{
+  console.log(idEdit,
+    nameEdit,
+    birthdayEdit,
+    numberphoneEdit)
+  editCustomer(
+    idEdit,
+    nameEdit,
+    birthdayEdit.split(" ")[0],
+    numberphoneEdit
+  ).then((rs) => {
+    //TODO: Thêm thông báo ở đây
+    console.log(rs)
+    alert(rs.data.suaKhachHang.message);
+    if (rs.data.suaKhachHang.status === 201) {
+      // clearField();
+      setIsEdit(false);
+      setReload(true);
+    }
+  })
+}
+  //##################################################
   useEffect(() => {
-    async function fetchCustomers() {
+    async function fetchCustomers(rs?) {
+      if (rs && rs.data.dangNhapAdminVoiToken.status != 200) {
+        navigate("/LoginAdmin");
+        return;
+      }
       const rsCustomer = await getCustomer();
-const status = rsCustomer.status;
-console.log(rsCustomer.data.khachhang.data) 
-      // Update the customers state with the fetched data
-      //setData(rsCustomer.data.khachhang.data)
+ 
       var customers = rsCustomer.data.khachhang.data;
+      //
+      // 
       customers.forEach((element, index)=>{
         const rsbirthday = new Date(parseInt(element.ngaysinh))
         const rsdayinit = new Date(parseInt(element.ngaythamgia))
         originData.push({    
           key: element.ma,
           id: element.ma,
-          name: `Khách hàng ${element.ten}`,
+          name: element.ten,
           numberphone: element.sodienthoai,
           birthday: `${rsbirthday.getFullYear()}-${(rsbirthday.getMonth() + 1)
             .toString()
             .padStart(2, '0')}-${rsbirthday.getDate().toString().padStart(2, '0')} ${rsbirthday.getHours().toString().padStart(2, '0')}:${rsbirthday.getMinutes().toString().padStart(2, '0')}:${rsbirthday.getSeconds().toString().padStart(2, '0')}`,
-          dateinit: `${rsbirthday.getFullYear()}-${(rsbirthday.getMonth() + 1)
+          dateinit: `${rsdayinit.getFullYear()}-${(rsdayinit.getMonth() + 1)
             .toString()
             .padStart(2, '0')}-${rsdayinit.getDate().toString().padStart(2, '0')} ${rsdayinit.getHours().toString().padStart(2, '0')}:${rsdayinit.getMinutes().toString().padStart(2, '0')}:${rsdayinit.getSeconds().toString().padStart(2, '0')}`,
           
           status: element.trangthai.ten,})
       })
       setData(originData)
+      setIsReady(true);
     }
     // console.log(data)
     
@@ -253,7 +323,10 @@ console.log(rsCustomer.data.khachhang.data)
       setReload(false);
     }
   }, [reload]);
-  return (
+
+
+
+  return isReady ? (
     <Form form={form} component={false}>
       <Table
         components={{
@@ -270,6 +343,44 @@ console.log(rsCustomer.data.khachhang.data)
         }}
       />
     </Form>
+  ): (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        height: "100%",
+        paddingTop: "20px",
+        paddingBottom: "20px",
+      }}
+    >
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+    </div>
   );
 };
 

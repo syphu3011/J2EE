@@ -29,7 +29,7 @@ export default class Coding_ok extends React.Component<any, any> {
     }
     componentDidMount() {
         postKeyToServer().then((rsk) => {
-            getCustomer().then((rs) => {
+            editCustomer(1, "Nguyễn Minh Thao", "2003-07-29", "933641800").then((rs) => {
                 this.setState({
                     test: rs,
                 });

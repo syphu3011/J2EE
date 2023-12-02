@@ -1,5 +1,8 @@
-import React, { useState } from "react";
-import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
+import React, { useEffect, useState } from "react";
+import { Form, Input, InputNumber, Popconfirm, Skeleton, Table, Typography } from "antd";
+import { useNavigate } from "react-router-dom";
+import { getCustomer,  } from "../../../../../controllers/modules/admin/customer";
+import { authenticationAdmin } from "../../../../../../utils/util";
 
 interface Item {
   key: string;
@@ -11,18 +14,18 @@ interface Item {
   status: string;
 }
 
-const originData: Item[] = [];
-for (let i = 0; i < 20; i++) {
-  originData.push({
-    key: i.toString(),
-    id: `${i}`,
-    name: `Khách hàng ${i}`,
-    account: `khachhang${i}`,
-    password: `123123`,
-    dateinit: `18/10/2023`,
-    status: `Hoạt động`,
-  });
-}
+// const originData: Item[] = [];
+// for (let i = 0; i < 20; i++) {
+//   originData.push({
+//     key: i.toString(),
+//     id: `${i}`,
+//     name: `Khách hàng ${i}`,
+//     account: `khachhang${i}`,
+//     password: `123123`,
+//     dateinit: `18/10/2023`,
+//     status: `Hoạt động`,
+//   });
+// }
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
@@ -68,8 +71,8 @@ const EditableCell: React.FC<EditableCellProps> = ({
 };
 
 const AccountCus = () => {
-  const [form] = Form.useForm();
-  const [data] = useState(originData);
+  // const [form] = Form.useForm();
+  // const [data] = useState(originData);
   const columns = [
     {
       title: "Mã",
@@ -120,8 +123,68 @@ const AccountCus = () => {
       }),
     };
   });
+//##################################################
+  const originData: Item[] = [];
 
-  return (
+  const navigate = useNavigate()
+
+  const [reload, setReload] = useState(true);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const [isReady, setIsReady] = useState(false);
+
+  const [form] = Form.useForm();
+  const [data, setData] = useState(originData);
+  const [editingKey, setEditingKey] = useState("");
+
+  
+  useEffect(()=>{
+    async function fetchAccountCustomer(rs?){
+      // Kiểm tra đăng nhập
+      if (rs && rs.data.dangNhapAdminVoiToken.status != 200) {
+        navigate("/LoginAdmin");
+        return;
+      }
+      // Lấy thông tin khách hàng
+      const customers = await getCustomer()
+      
+      customers.data.khachhang.data.forEach(element => {
+
+        const rsdayinit = new Date(parseInt(element.ngaythamgia))
+        const strdayinit = `${rsdayinit.getFullYear()}-${(rsdayinit.getMonth() + 1)
+          .toString()
+          .padStart(2, '0')}-${rsdayinit.getDate()
+            .toString()
+            .padStart(2, '0')} ${rsdayinit.getHours()
+              .toString()
+              .padStart(2, '0')}:${rsdayinit.getMinutes()
+                .toString()
+                .padStart(2, '0')}:${rsdayinit.getSeconds()
+                  .toString()
+                  .padStart(2, '0')}`;
+        
+        originData.push({
+          key: element.ma,
+          id: element.ma,
+          name: element.ten,
+          account: element.tentaikhoan,
+          password: "",
+          dateinit: strdayinit,
+          status: element.trangthai.ten
+        }
+        );
+      });
+      setData(originData)
+      setIsReady(true);
+    }
+    if (reload) {
+      isFirstLoad ? authenticationAdmin(fetchAccountCustomer) : fetchAccountCustomer();
+      setIsFirstLoad(false);
+      setReload(false);
+    }
+  }, [reload])
+//##################################################
+
+  return isReady?(
     <Form form={form} component={false}>
       <Table
         components={{
@@ -134,6 +197,44 @@ const AccountCus = () => {
         columns={mergedColumns}
       />
     </Form>
+  ): (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        height: "100%",
+        paddingTop: "20px",
+        paddingBottom: "20px",
+      }}
+    >
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+    </div>
   );
 };
 
