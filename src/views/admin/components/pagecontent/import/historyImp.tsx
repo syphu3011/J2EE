@@ -20,11 +20,13 @@ const contentStyle: React.CSSProperties = {
 };
 interface ExpandedDataType {
   key: React.Key;
-  name_pro_order: string;
-  size_order: string;
-  color_order: string;
-  price_order: number;
-  amount_order: number;
+  id_pro_imp: string;
+  name_pro_imp: string;
+  size_imp: string;
+  color_imp: string;
+  price_imp: number;
+  amount_imp: number;
+  image_imp: string;
 }
 
 interface Item {
@@ -77,24 +79,36 @@ const Order = () => {
     },
   ];
   const expandedRowRender = () => {
-
+    type TableColumnsType<id_pro_imp> = {
+      title: string;
+      dataIndex: keyof id_pro_imp;
+      render?: (text: any, record: id_pro_imp) => React.ReactNode;
+    }[];
     const columns: TableColumnsType<ExpandedDataType> = [
-      { title: 'Tên sản phẩm', dataIndex: 'name_pro_order' },
-      { title: 'Kích thước', dataIndex: 'size_order' },
-      { title: 'Màu', dataIndex: 'color_order' },
-      { title: 'Giá nhập', dataIndex: 'price_order' },
-      { title: 'Số lượng', dataIndex: 'amount_order' }
+      { title: 'Mã sản phẩm', dataIndex: 'id_pro_imp' },
+      { title: 'Tên sản phẩm', dataIndex: 'name_pro_imp' },
+      { title: 'Kích thước', dataIndex: 'size_imp' },
+      { title: 'Màu', dataIndex: 'color_imp' },
+      { title: 'Giá nhập', dataIndex: 'price_imp' },
+      { title: 'Số lượng', dataIndex: 'amount_imp' },
+      { 
+      title: 'Hình ảnh', 
+      dataIndex: 'image_imp', 
+      render: (text, record) => <img src={record.image_imp} alt={record.id_pro_imp} style={{ maxWidth: 30, maxHeight: 30 }} />,
+  },
     ];
 
     const data = [];
     for (let i = 0; i < 3; ++i) {
       data.push({
         key: i.toString(),
-        name_pro_order: 'Áo',
-        size_order: 'XL',
-        color_order: 'Đen',
-        price_order: 230000,
-        amount_order: 40,
+        id_pro_imp: i.toString(),
+        name_pro_imp: 'Áo',
+        size_imp: 'XL',
+        color_imp: 'Đen',
+        price_imp: 230000,
+        amount_imp: 40,
+        image_imp:"https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
       });
     }
     return <Table columns={columns} dataSource={data} pagination={false} />;

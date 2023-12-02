@@ -121,12 +121,12 @@ const StatNumber = () => {
               <Form.Item
                 label="Lọc theo:"
                 labelAlign="left"
-                labelCol={{ span: 5 }}
+                labelCol={{ span: '10%'}}
               >
                 <Select
                   allowClear
-                  style={{ width: "90%" }}
-                  placeholder="Sản phẩm/ Khách hàng/ Thời gian/ Nhân viên"
+                  style={{ width: "80%" }}
+                  placeholder="Chọn mục muốn thống kê"
                   onChange={handleChange}
                   options={options}
                 />
