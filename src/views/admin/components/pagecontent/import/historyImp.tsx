@@ -79,6 +79,7 @@ const Order = () => {
     },
   ];
   const expandedRowRender = () => {
+   
     type TableColumnsType<id_pro_imp> = {
       title: string;
       dataIndex: keyof id_pro_imp;
@@ -111,7 +112,7 @@ const Order = () => {
         image_imp:"https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
       });
     }
-    return <Table columns={columns} dataSource={data} pagination={false} />;
+    return <Table style={{marginLeft:'8%'}} columns={columns} dataSource={data} pagination={false} />;
   };
   const mergedColumns = columns.map((col) => {
     return {
