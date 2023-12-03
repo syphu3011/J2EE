@@ -6,7 +6,7 @@ interface HeaderProps {
    }
 class Header extends React.Component<HeaderProps> {
      state = {
-          prevScrollPos: window.screenY,
+          prevScrollPos: window.scrollY,
           isVisible: true,
           isLogin: false
         };
