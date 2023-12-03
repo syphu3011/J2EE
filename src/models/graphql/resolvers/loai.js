@@ -259,6 +259,9 @@ module.exports = {
                     i -= 1
                 }
             }
+            danhsachsanpham = [...new Map(danhsachsanpham.map(item =>
+                [item['ma'], item])).values()];
+              
             return danhsachsanpham
         },
         async loaicha(loai) { return await loai.getLoaicha() },

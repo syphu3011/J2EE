@@ -1,5 +1,5 @@
 import * as React from 'react';  
-import { getProducts, getProductsWithAllCategory, getProductsWithAllCategoryT } from "../controllers/modules/customer/products";
+import { getProducts, getProductsWithAllCategory} from "../controllers/modules/customer/products";
 import { getAllProduct } from '../controllers/modules/admin/product';
 import { postKeyToServer } from '../controllers/modules/key';
 import { addCate, getAllCate, removeCate } from '../controllers/modules/admin/cate';
@@ -103,7 +103,7 @@ export default class Coding_ok extends React.Component<any, any>
             //         test: JSON.stringify(rs)
             //     })
             // })
-            getProductsWithAllCategoryT().then(rs => {
+            getProductsWithAllCategory().then(rs => {
                 this.setState({
                     test: JSON.stringify(rs)
                 })
