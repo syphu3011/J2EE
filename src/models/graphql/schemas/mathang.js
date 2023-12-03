@@ -13,7 +13,6 @@ input MatHangInput {
   masanpham: Int!
   mamau: Int!
   makichco: Int!
-  matrangthaisanpham: Int!
 }
 # type MatHangQueryResponse {
 #   status: Int!

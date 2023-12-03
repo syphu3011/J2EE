@@ -22,6 +22,7 @@ input HangTrongKhoInput {
   mancc: Int
   gianhap: Int
   giaban: Int
+  matrangthai: Int
 }
 type HangTrongKhoQueryResponse {
   status: Int!
@@ -37,6 +38,7 @@ extend type Query {
   timkiemhangtrongkho(input: HangTrongKhoInput): HangTrongKhoQueryResponse
 }
 extend type Mutation {
-  suaHangTrongKho(input: HangTrongKhoInput): HangTrongKhoResponse
+  suaHangTrongKho(input: HangTrongKhoInput): HangTrongKhoResponse,
+  ngungbanhoacban(input: HangTrongKhoInput): HangTrongKhoResponse
 }
 `

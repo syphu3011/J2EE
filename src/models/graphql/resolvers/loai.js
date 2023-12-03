@@ -242,15 +242,19 @@ module.exports = {
             let loaicon = await loai.getLoaicon()
             let danhsachsanpham = []
             let sanphamloai = await loai.getSanPham()
+            // sanphamloai = sanphamloai.filter(sp => sp.matrangthai == 1)
             danhsachsanpham.push(...sanphamloai)
             for (const lc of loaicon) {
                 let sanphamloaicon = await lc.getSanPham()
+                // sanphamloai = sanphamloai.filter(sp => sp.matrangthai == 1)
                 danhsachsanpham.push(...sanphamloaicon)
             }
             for (let i = 0; i < danhsachsanpham.length; i++) {
                 const sanpham = danhsachsanpham[i]
-                const mh = await sanpham.getMatHang()
-                if (mh.length == 0) {
+                let mh = await sanpham.getHangTrongKho()
+                mh = mh.filter(e => e.matrangthai == 1)
+                const soluong = mh.map((product) => product.soluong).reduce((acc, current) => acc + current, 0);
+                if (mh.length == 0 || soluong == 0) {
                     danhsachsanpham.splice(i, 1)
                     i -= 1
                 }

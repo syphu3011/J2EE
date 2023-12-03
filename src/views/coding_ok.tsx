@@ -1,5 +1,5 @@
 import * as React from 'react';  
-import { getProducts, getProductsWithAllCategory } from "../controllers/modules/customer/products";
+import { getProducts, getProductsWithAllCategory, getProductsWithAllCategoryT } from "../controllers/modules/customer/products";
 import { getAllProduct } from '../controllers/modules/admin/product';
 import { postKeyToServer } from '../controllers/modules/key';
 import { addCate, getAllCate, removeCate } from '../controllers/modules/admin/cate';
@@ -97,7 +97,17 @@ export default class Coding_ok extends React.Component<any, any>
             //     })
             // })
             // testProvider(5)
-            testPrivileges(5)
+            // testPrivileges(5)
+            // editCustomer(1, 'Nguyễn Văn Sỹ Phú', '2002-11-30', '0334171858').then(rs => {
+            //     this.setState({
+            //         test: JSON.stringify(rs)
+            //     })
+            // })
+            getProductsWithAllCategoryT().then(rs => {
+                this.setState({
+                    test: JSON.stringify(rs)
+                })
+            })
         })
     }
     render() {  

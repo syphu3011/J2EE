@@ -1,5 +1,5 @@
 const { Op } = require("sequelize")
-const { SanPham, sequelize, Loai, NhaCungCap, MatHang } = require("../../database/models/")
+const { SanPham, sequelize, Loai, NhaCungCap, MatHang, HangTrongKho, PhieuNhap } = require("../../database/models/")
 const { STATUS_CODE, CHUCNANG } = require("../const")
 const { checkAdmin, checkPrivileges, checkAndResolveWithOutData, checkAndResolveAdmin } = require("./checkToken")
 const { fetchImageB64, addImage } = require("../../utils/util")
@@ -120,9 +120,16 @@ module.exports = {
                         transaction = await sequelize.transaction()
                         const ma = args.ma
                         const sanpham = await SanPham.findByPk(ma)
-                        await sanpham.setLoai([])
-                        await sanpham.setNhaCungCap([])
-                        await sanpham.destroy()
+                        try {
+                            await sanpham.setLoai([])
+                            await sanpham.setNhaCungCap([])
+                            await sanpham.destroy()
+                        }
+                        catch (e) {
+                            await transaction.rollback()
+                            transaction = await sequelize.transaction()
+                            await sanpham.update({matrangthai: 2})
+                        }
                         await transaction.commit()
                         return {
                             status: STATUS_CODE.delete_success,
@@ -152,7 +159,11 @@ module.exports = {
                 const rs = await checkAndResolveAdmin(context.taikhoan, async (nhanvien_data) => {
                     context.dont_need_encrypt = true
                     try {
-                        const sanpham = await SanPham.findAll();
+                        const sanpham = await SanPham.findAll({
+                            where: {
+                                matrangthai: 1
+                            }
+                        });
                         return {
                             status: STATUS_CODE.query_success,
                             message: "Lấy danh sách sản phẩm thành công!",
@@ -267,16 +278,14 @@ module.exports = {
             // if (mathang.length == 0) return 0
             // const giabanlist = mathang.map(mh => mh.giaban)
             // return Math.min(...giabanlist)
-            const hangtrongkho_min = await HangTrongKho.findOne({
-                attributes: [sequelize.fn('min', sequelize.col('giaban'))],
-                where: {
-                    masanpham: sanpham.ma,
-                }
-            })
-            return hangtrongkho_min.giaban
+            const hangtrongkho_min = await sequelize.query(`
+            select min(giaban) giaban from HangTrongKho, PhieuNhap where masanpham = ${sanpham.ma} AND matrangthai = 1 AND maphieunhap = PhieuNhap.ma GROUP BY PhieuNhap.ma, masanpham ORDER BY PhieuNhap.ngaynhap  ASC LIMIT 1
+            `)
+            return hangtrongkho_min[0][0] ? hangtrongkho_min[0][0].giaban : 0
         },
-        mathang(sanpham) {
-            return sanpham.getMatHang().filter(mh => mh.matrangthaisanpham == 1)
+        async mathang(sanpham) {
+            const mathang_list = await sanpham.getMatHang()
+            return mathang_list
         },
         async loai(sanpham) {
             try {

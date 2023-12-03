@@ -127,8 +127,13 @@ module.exports = {
             const { ma } = args
             const khachhang = await KhachHang.findByPk(ma)
             const taikhoan = await TaiKhoan.findByPk(khachhang.tentaikhoan)
-            await khachhang.destroy()
-            await taikhoan.destroy()
+            try {
+              await khachhang.destroy()
+              await taikhoan.destroy()
+            }
+            catch {
+              await khachhang.update({matrangthai: 2})
+            }
             await transaction.commit()
             return {
               status: STATUS_CODE.update_success,

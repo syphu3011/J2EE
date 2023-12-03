@@ -1,16 +1,24 @@
-const {HangTrongKho, PhieuNhap} = require("../../database/models")
+const {HangTrongKho, PhieuNhap, sequelize} = require("../../database/models")
 module.exports =  {
   MatHang: {
     async soluong(mathang) {
-      const hangtrongkho = await HangTrongKho.findAll({
-        where: {
-          masanpham: mathang.masanpham,
-          mamau: mathang.mamau,
-          makichco: mathang.makichco,
-        }
-      })
-      const rs = hangtrongkho.map((product) => product.soluong).reduce((acc, current) => acc + current, 0);
-      return rs
+      // const hangtrongkho = await HangTrongKho.findAll({
+      //   where: {
+      //     masanpham: mathang.masanpham,
+      //     mamau: mathang.mamau,
+      //     makichco: mathang.makichco,
+      //     matrangthai: 1
+      //   }
+      // })
+      // const rs = hangtrongkho.map((product) => product.soluong).reduce((acc, current) => acc + current, 0);
+      const hangtrongkho_min = await sequelize.query(`
+      select sum(soluong) soluong
+      from HangTrongKho, PhieuNhap 
+      where masanpham = ${mathang.masanpham} AND mamau = ${mathang.mamau} AND makichco = ${mathang.makichco} AND matrangthai = 1 AND maphieunhap = PhieuNhap.ma 
+      GROUP BY PhieuNhap.ma, masanpham 
+      ORDER BY PhieuNhap.ngaynhap  ASC LIMIT 1
+      `)
+      return hangtrongkho_min[0][0] ? hangtrongkho_min[0][0].soluong : 0
     },
     mau(mathang) {
       return mathang.getMau()
@@ -18,35 +26,18 @@ module.exports =  {
     kichco(mathang) {
       return mathang.getKichCo()
     },
-    trangthaisanpham(mathang) {
-      return mathang.getTrangThaiSanPham()
-    },
+    // trangthaisanpham(mathang) {
+    //   return mathang.getTrangThaiSanPham()
+    // },
     async giaban(mathang) {
-      const hangtrongkho = await HangTrongKho.findAll({
-        where: {
-          masanpham: mathang.masanpham,
-          mamau: mathang.mamau,
-          makichco: mathang.makichco
-        }
-      })
-      let phieunhap_min
-      for (const e of hangtrongkho) {
-        const phieunhap_new = await PhieuNhap.findByPk(e.maphieunhap)
-        if (phieunhap_min) {
-          if (phieunhap_new.ngaynhap < phieunhap_min.ngaynhap) {
-            phieunhap_min = phieunhap_new
-          }
-        }
-        else {
-          phieunhap_min = phieunhap_new
-        }
-      }
-      if (!phieunhap_min) {
-        return 0
-      }
-      return hangtrongkho.filter(e => {
-        return e.maphieunhap == phieunhap_min.ma
-      })[0].giaban
+      const hangtrongkho_min = await sequelize.query(`
+      select min(giaban) giaban 
+      from HangTrongKho, PhieuNhap 
+      where masanpham = ${mathang.masanpham} AND mamau = ${mathang.mamau} AND makichco = ${mathang.makichco} AND matrangthai = 1 AND maphieunhap = PhieuNhap.ma 
+      GROUP BY PhieuNhap.ma, masanpham 
+      ORDER BY PhieuNhap.ngaynhap  ASC LIMIT 1
+      `)
+      return hangtrongkho_min[0][0] ? hangtrongkho_min[0][0].giaban : 0
     }
   }
 };

@@ -4,9 +4,9 @@ module.exports = gql`
 type SanPham {
     ma: ID!
     ten: String!
-    anhminhhoa: String!
-    tenanhminhhoa: String!
-    mota: String!
+    anhminhhoa: String
+    tenanhminhhoa: String
+    mota: String
     gia: Int
     mathang: [MatHang]
     donvi: DonVi

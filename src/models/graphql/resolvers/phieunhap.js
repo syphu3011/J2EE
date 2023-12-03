@@ -35,7 +35,7 @@ module.exports = {
               })
 
               if (!mathangfind) {
-                mathangfind = await MatHang.create({masanpham, mamau, makichco, matrangthaisanpham: 1})
+                mathangfind = await MatHang.create({masanpham, mamau, makichco})
                 checknew = true
               }
               await ChiTietPhieuNhap.create({maphieunhap: phieunhap.ma, masanpham, makichco, mamau, soluong, gianhap})

@@ -62,8 +62,15 @@ module.exports = {
         try {
           transaction = await sequelize.transaction()
           const ncc = await NhaCungCap.findByPk(ma)
-          await ncc.setSanPham([])
-          await ncc.destroy()
+          try {
+            await ncc.setSanPham([])
+            await ncc.destroy()
+          }
+          catch (e) {
+            await transaction.rollback()
+            transaction = await sequelize.transaction()
+            await ncc.update({matrangthaincc: 2})
+          }
           await transaction.commit()
           return {
             status: STATUS_CODE.delete_success,
@@ -171,8 +178,10 @@ module.exports = {
     trangthai(nhacungcap) {
       return nhacungcap.getTrangThai();
     },
-    sanpham(nhacungcap) {
-      return nhacungcap.getSanPham();
+    async sanpham(nhacungcap) {
+      let sanpham =  await nhacungcap.getSanPham();
+      sanpham = sanpham.filter(sp => sp.matrangthai == 1)
+      return sanpham
     },
   },
 };
