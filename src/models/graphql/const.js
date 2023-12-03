@@ -23,7 +23,10 @@ const CHUCNANG = Object.freeze({
     XOAKHACHHANG: "xoaKhachHang",
     XEMKHO: "xemKho",
     SUAKHO: "suaKho",
-    NHAPHANG: "nhapHang"
+    NHAPHANG: "nhapHang",
+    THEMNHACUNGCAP: "themNhaCungCap",
+    XOANHACUNGCAP: "xoaNhaCungCap",
+    SUANHACUNGCAP: "suaNhaCungCap"
 }
 )
 const MAIL = Object.freeze({

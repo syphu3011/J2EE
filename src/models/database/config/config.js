@@ -8,6 +8,7 @@ module.exports = {
     host: '192.168.1.241',
     dialect: 'mysql',
     use_env_variable: 'DATABASE_URL',
+    timezone: '+07:00',
     // dialectOptions: {
     //   socketPath: '/var/run/mysqld/mysqld.sock'
     // }
@@ -20,6 +21,7 @@ module.exports = {
     host: '127.0.0.1',
     dialect: 'postgres',
     use_env_variable: 'TEST_DATABASE_URL',
+    timezone: '+07:00',
   },
   development: {
     username: 'root',
@@ -28,5 +30,6 @@ module.exports = {
     host: '127.0.0.1',
     dialect: 'postgres',
     use_env_variable: 'DATABASE_URL',
+    timezone: '+07:00',
   },
 };

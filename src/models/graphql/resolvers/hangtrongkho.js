@@ -34,6 +34,36 @@ module.exports = {
       }
       return await checkAndResolveAdmin(context.taikhoan, callback, `đã sửa sản phẩm trong kho có mã là ${masanpham} ${maphieunhap} ${mamau} ${makichco}. 
       Giá mới: ${giaban} `, CHUCNANG.SUAKHO)
+    },
+    async ngungbanhoacban(root, args, context) {
+      const {masanpham, maphieunhap, mamau, makichco, matrangthai} = args.input
+      async function callback(data) {
+        let transaction
+        try {
+          transaction = await sequelize.transaction()
+          const hangtrongkho = await HangTrongKho.findOne({
+            where: {
+              masanpham, maphieunhap, mamau, makichco
+            }
+          })
+          await hangtrongkho.update({ matrangthai })
+          await hangtrongkho.save()
+          await transaction.commit()
+          return {
+            status: STATUS_CODE.update_success,
+            message: matrangthai == 1 ? "Hàng này được bán lại!" : "Hàng này ngừng bán!"
+          }
+        }
+        catch (e) {
+          await transaction.rollback()
+          return {
+            status: STATUS_CODE.update_fail,
+            message: "Bị lỗi! Sửa giá bán không thành công!",
+          }
+        }
+      }
+      return await checkAndResolveAdmin(context.taikhoan, callback, `đã sửa sản phẩm trong kho có mã là ${masanpham} ${maphieunhap} ${mamau} ${makichco}. 
+      Mã tráng thái hàng: ${matrangthai} `, CHUCNANG.SUAKHO)
     }
   },
   Query: {

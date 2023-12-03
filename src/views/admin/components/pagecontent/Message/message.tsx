@@ -4,7 +4,7 @@ import ChatFeed from "./ChatFeed";
 import "../../../style/chat.css";
 
 export default function message() {
-  const projectID = "6435ddff-5205-4710-996e-2d114b08aebb";
+  const projectID = "ad8657c0-1c30-4c4b-a6c3-ba407fcd696b";
   return (
     <ChatEngine
       minHeight="1200px"

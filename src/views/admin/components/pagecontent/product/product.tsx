@@ -540,7 +540,7 @@ const Product = () => {
               >
                 <Button
                   type="primary"
-                  style={{ width: "70%", marginBottom: 30 }}
+                  style={{ width: "70%", marginBottom: '5%' }}
                   onClick={productAction}
                 >
                   {isEdit ? "Sửa" : "Thêm"}
@@ -548,17 +548,17 @@ const Product = () => {
                 {isEdit ? (
                   <Button
                     type="primary"
-                    style={{ width: "70%" }}
+                    style={{ width: "70%" , marginBottom: '5%', marginTop: '5%'  }}
                     onClick={() => {
                       setIsEdit(false);
                     }}
                   >
-                    Thêm
+                    Hủy
                   </Button>
                 ) : (
                   <></>
                 )}
-                <Button type="primary" style={{ width: "70%" }}>
+                <Button type="primary" style={{ width: "70%", marginTop: '5%' }}>
                   Làm mới
                 </Button>
               </div>

@@ -20,7 +20,6 @@ module.exports = (sequelize, DataTypes) => {
       MatHang.belongsToMany(models.KhachHang, {as: 'SanPhamGioHang', through: 'ChiTietGioHang', foreignKey: 'masanpham'})
       MatHang.belongsToMany(models.KhachHang, {as: 'MauGioHang', through: 'ChiTietGioHang', foreignKey: 'mamau'})
       MatHang.belongsToMany(models.KhachHang, {as: 'KichCoGioHang', through: 'ChiTietGioHang', foreignKey: 'makichco'})
-      MatHang.belongsTo(models.TrangThaiSanPham, {as: 'TrangThaiSanPham', foreignKey: 'matrangthaisanpham'})
       MatHang.belongsTo(models.Mau, {as: 'Mau', foreignKey: 'mamau'})
       MatHang.belongsTo(models.KichCo, {as: 'KichCo', foreignKey: 'makichco'})
     }
@@ -34,8 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     makichco: {
       type: DataTypes.INTEGER,
-    },
-    matrangthaisanpham: DataTypes.INTEGER
+    }
   }, {
     sequelize,
     modelName: 'MatHang',
