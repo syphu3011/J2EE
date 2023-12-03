@@ -81,13 +81,20 @@ module.exports = {
       }
     },
     async chuyenTrangThaiKhachHang(root, args, context) {
+      const { ma, matrangthai} = args.input
       try {
         return await checkAndResolveAdmin(context.taikhoan, async (nhanvien_data) => {
           let transaction
+          
           try {
             transaction = await sequelize.transaction()
-            const { ma, matrangthai} = args.input
             const khachhang = await KhachHang.findByPk(ma)
+            if (khachhang.matrangthai == matrangthai) {
+              return {
+                status: STATUS_CODE.update_success,
+                message: "Thông tin không có gì thay đổi!",
+              }
+            }
             await khachhang.update({ matrangthai})
             await khachhang.save()
             await transaction.commit()
@@ -102,7 +109,7 @@ module.exports = {
               message: "Bị lỗi! Sửa thông tin khách hàng không thành công!",
             }
           }
-        }, "đã xóa thông tin khách hàng có mã là "+args.ma+"!", CHUCNANG.SUAKHACHHANG)
+        }, "đã chuyển trạng thái khách hàng có mã là "+ma+" thành "+matrangthai+"!", CHUCNANG.SUAKHACHHANG)
       }
       catch (e) {
         return {
@@ -120,8 +127,13 @@ module.exports = {
             const { ma } = args
             const khachhang = await KhachHang.findByPk(ma)
             const taikhoan = await TaiKhoan.findByPk(khachhang.tentaikhoan)
-            await khachhang.destroy()
-            await taikhoan.destroy()
+            try {
+              await khachhang.destroy()
+              await taikhoan.destroy()
+            }
+            catch {
+              await khachhang.update({matrangthai: 2})
+            }
             await transaction.commit()
             return {
               status: STATUS_CODE.update_success,

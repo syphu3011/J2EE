@@ -1,20 +1,13 @@
 {
-    "cleanUrls": false,
-    "rewrites": [
-      {
-        "source": "!^/.*\\..*$",
-        "destination": "/index.html"
-      }
-    ],
-    "headers": [
-      {
-        "source": "/*.html",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
-          }
-        ]
-      }
-    ]
-  }
+  "headers": [
+    {
+      "source": "/*.html",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
+        }
+      ]
+    }
+  ]
+}

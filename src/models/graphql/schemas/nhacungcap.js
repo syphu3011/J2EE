@@ -24,14 +24,14 @@ input NhaCungCapUpdateInput {
   diachi: String!
   dienthoai: String!
   matrangthaincc: Int!
-  masanpham: [Int!]
+  masanpham: [Int]
 }
 input NhaCungCapInput {
   ten: String!
   diachi: String!
   dienthoai: String!
   matrangthaincc: Int!
-  masanpham: [Int!]
+  masanpham: [Int]
 }
 input NhaCungCapQueryInput {
   ma: Int

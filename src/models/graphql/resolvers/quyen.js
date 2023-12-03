@@ -12,7 +12,9 @@ module.exports = {
           let list_chucnang = []
           for (const _chucnang of chucnang) {
             const chucnangget = await ChucNang.findByPk(_chucnang.ma)
-            list_chucnang.push(chucnangget)
+            if (chucnangget) {
+              list_chucnang.push(chucnangget)
+            }
           }
           quyen.addChucNang(list_chucnang)
           quyen.save()
@@ -36,9 +38,31 @@ module.exports = {
         let transaction
         try {
           transaction = await sequelize.transaction()
-          const {ma, ten} = args.input
+          const {ma, ten, chucnang} = args.input
+          if (ma == 2) {
+            return {
+              status: 400,
+              message: 'Bạn không thể sửa quyền quản trị!',
+              data: []
+            }
+          }
+          if (ma == 1) {
+            return {
+              status: 400,
+              message: 'Bạn không thể sửa quyền khách hàng!',
+              data: []
+            }
+          }
           const quyen = await Quyen.findByPk(ma)
+          let list_chucnang = []
+          for (const _chucnang of chucnang) {
+            const chucnangget = await ChucNang.findByPk(_chucnang.ma)
+            if (chucnangget) {
+              list_chucnang.push(chucnangget)
+            }
+          }
           await quyen.update({ten})
+          await quyen.setChucNang(list_chucnang)
           await quyen.save()
           await transaction.commit()
           return {
@@ -60,9 +84,23 @@ module.exports = {
         let transaction
         try {
           transaction = await sequelize.transaction()
-          const {ma, ten} = args.input
+          const {ma, ten} = args
+          if (ma == 2) {
+            return {
+              status: 400,
+              message: 'Bạn không thể xóa quyền quản trị!',
+              data: []
+            }
+          }
+          if (ma == 1) {
+            return {
+              status: 400,
+              message: 'Bạn không thể xóa quyền khách hàng!',
+              data: []
+            }
+          }
           const quyen = await Quyen.findByPk(ma)
-          await quyen.setSanPham([])
+          await quyen.setChucNang([])
           await quyen.destroy()
           await quyen.save()
           await transaction.commit()
@@ -88,14 +126,14 @@ module.exports = {
           const sanpham = await Quyen.findAll();
           return {
               status: STATUS_CODE.query_success,
-              message: "Lấy danh sách sản phẩm thành công!",
+              message: "Lấy danh sách quyền thành công!",
               data: sanpham
           }
         }
         catch (e) {
             return {
                 status: STATUS_CODE.query_fail,
-                message: "Sản phẩm không tồn tại!",
+                message: "Quyền không tồn tại!",
                 data: []
             }
         }

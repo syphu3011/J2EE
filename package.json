@@ -6,7 +6,7 @@
     "author": "VMTP",
     "license": "ISC",
     "scripts": {
-        "dev": "concurrently \"serve dist --ssl-cert cert.pem --ssl-key key.pem -p 8080 \" \"webpack --watch\"",
+        "dev": "concurrently \"serve dist --ssl-cert cert.pem --ssl-key key.pem -p 8080 -c ../serve.json\" \"webpack --watch\"",
         "start": "concurrently \"node src/models/index.js\" \"webpack\"",
         "build": "webpack"
     },

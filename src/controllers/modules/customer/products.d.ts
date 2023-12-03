@@ -4,3 +4,4 @@ export declare function getProducts(id?: number, name?: string, from?: number, t
     data: any;
 }>;
 export declare function getProductsWithAllCategory(): Promise<any>;
+export declare function getProductsWithAllCategoryT(): Promise<any>;
