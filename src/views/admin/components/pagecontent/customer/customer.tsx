@@ -100,41 +100,77 @@ const Customer = () => {
   const edit = (record: Partial<Item> & { key: React.Key }) => {
     form.setFieldsValue({ name: "", numberphone: "", birthday: "", ...record });
     setEditingKey(record.key);
-    setIdEdit(parseInt(record.id))
-    setNameEdit(record.name)
-    setNumberphoneEdit(record.numberphone.toString())
-    setBirthdayEdit(record.birthday)
-    setIsEdit(true)
-    
+    // setIdEdit(parseInt(record.id))
+    // setNameEdit(record.name)
+    // setNumberphoneEdit(record.numberphone.toString())
+    // setBirthdayEdit(record.birthday)
+    // setIsEdit(true)
+    // console.log(
+    //   idEdit,
+    //   nameEdit,
+    //   birthdayEdit.split(" ")[0],
+    //   numberphoneEdit)
   };
 
   const cancel = () => {
     setEditingKey("");
   };
 
+  //
   const save = async (key: React.Key) => {
     try {
+      // Kiểm tra và lấy giá trị từ các trường trong form
       const row = (await form.validateFields()) as Item;
-
+  
+      // Tạo một bản sao mới của mảng data để tránh thay đổi trực tiếp trên state
       const newData = [...data];
+  
+      // Tìm vị trí của phần tử có key tương ứng trong mảng newData
       const index = newData.findIndex((item) => key === item.key);
+  
       if (index > -1) {
+        // Nếu tìm thấy phần tử, thực hiện cập nhật giá trị của phần tử đó
         const item = newData[index];
         newData.splice(index, 1, {
           ...item,
           ...row,
         });
+console.log("Update cai nay ne: " +newData[index].id+ newData[index].name)
+        
+        // Cập nhật state data với mảng newData đã được chỉnh sửa
         setData(newData);
+        // Xóa giá trị của editingKey để kết thúc quá trình chỉnh sửa
         setEditingKey("");
+
+
+        editCustomer(parseInt(newData[index].id), 
+          newData[index].name, 
+          newData[index].birthday.split(" ")[0], 
+          newData[index].numberphone.toString())
+        .then((rs) => {
+          //TODO: Thêm thông báo ở đây
+          console.log(rs)
+          alert(rs.data.suaKhachHang.message);
+          if (rs.data.suaKhachHang.status === 201) {
+            // clearField();
+            //setIsEdit(false);
+            setReload(true);
+          }
+        })
       } else {
+        // Nếu không tìm thấy phần tử, thêm phần tử mới vào mảng newData
         newData.push(row);
+        // Cập nhật state data với mảng newData đã được chỉnh sửa
         setData(newData);
+        // Xóa giá trị của editingKey để kết thúc quá trình chỉnh sửa
         setEditingKey("");
       }
     } catch (errInfo) {
+      // Xử lý lỗi nếu có
       console.log("Validate Failed:", errInfo);
     }
   };
+  //
   const handleDelete = (key: React.Key) => {
     const newData = data.filter((item) => item.key !== key);
     setData(newData);
@@ -154,6 +190,7 @@ const Customer = () => {
 };
 
 const handleNameEditChange = (newName) => {
+  console.log(newName)
   setNameEdit(newName);
 };
 
@@ -177,18 +214,21 @@ const handleBirthdayEditChange = (newBirthday) => {
       dataIndex: "name",
       width: "auto",
       editable: true,
+      name: "name"
     },
     {
       title: "Số điện thoại",
       dataIndex: "numberphone",
       width: "auto",
       editable: true,
+      name:"numberphone"
     },
     {
       title: "Ngày sinh",
       dataIndex: "birthday",
       width: "auto",
       editable: true,
+      name:"birthday"
     },
     {
       title: "Ngày tham gia",
@@ -209,8 +249,7 @@ const handleBirthdayEditChange = (newBirthday) => {
           <span>
             <Typography.Link
               onClick={() => {
-                
-                // customerAction()
+                save(record.key)
               }}
               style={{ marginRight: 8 }}
             >
@@ -263,25 +302,27 @@ const handleBirthdayEditChange = (newBirthday) => {
   });
   //##################################################
 const customerAction = () =>{
-  console.log(idEdit,
-    nameEdit,
-    birthdayEdit,
-    numberphoneEdit)
-  editCustomer(
+  console.log(
     idEdit,
-    nameEdit,
+    form.getFieldValue('name'),
     birthdayEdit.split(" ")[0],
-    numberphoneEdit
-  ).then((rs) => {
-    //TODO: Thêm thông báo ở đây
-    console.log(rs)
-    alert(rs.data.suaKhachHang.message);
-    if (rs.data.suaKhachHang.status === 201) {
-      // clearField();
-      setIsEdit(false);
-      setReload(true);
-    }
-  })
+    numberphoneEdit)
+    console.log(data)
+  // editCustomer(
+  //   idEdit,
+  //   nameEdit,
+  //   birthdayEdit.split(" ")[0]C,
+  //   numberphoneEdit
+  // ).then((rs) => {
+  //   //TODO: Thêm thông báo ở đây
+  //   console.log(rs)
+  //   alert(rs.data.suaKhachHang.message);
+  //   if (rs.data.suaKhachHang.status === 201) {
+  //     // clearField();
+  //     setIsEdit(false);
+  //     setReload(true);
+  //   }
+  // })
 }
   //##################################################
   useEffect(() => {
@@ -324,8 +365,6 @@ const customerAction = () =>{
     }
   }, [reload]);
 
-
-
   return isReady ? (
     <Form form={form} component={false}>
       <Table
@@ -341,6 +380,7 @@ const customerAction = () =>{
         pagination={{
           onChange: cancel,
         }}
+
       />
     </Form>
   ): (
