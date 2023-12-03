@@ -23,6 +23,7 @@ import AccStaff from "./views/admin/components/pagecontent/staff/accountStaff";
 import Partner from "./views/admin/components/pagecontent/partner/partnerInfo";
 import Provider from "./views/admin/components/pagecontent/partner/provider";
 import StatNumber from "./views/admin/components/pagecontent/Statistics/StatNumber";
+import StatChart from "./views/admin/components/pagecontent/Statistics/StatChart";
 import Status from "./views/admin/components/pagecontent/status/Status";
 import LoginOTP from "./views/admin/components/loginpage/loginOTP";
 import LayoutPage from "./views/admin/components/layout";
@@ -65,7 +66,7 @@ switch (param) {
             <Route path="InforPart" element={<Partner />} />
             <Route path="Provider" element={<Provider />} />
             <Route path="Number" element={<StatNumber />} />
-            <Route path="Chart" element={<StatNumber />} />
+            <Route path="Chart" element={<StatChart />} />
             <Route path="Status" element={<Status />} />
           </Route>
         </Routes>

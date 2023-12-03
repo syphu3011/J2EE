@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
             HangTrongKho.belongsTo(models.Mau, {as: "Mau", foreignKey: "mamau"})
             HangTrongKho.belongsTo(models.KichCo, {as: "KichCo", foreignKey: "makichco"})
             HangTrongKho.belongsTo(models.PhieuNhap, {as: "PhieuNhap", foreignKey: "maphieunhap"})
+            HangTrongKho.belongsTo(models.TrangThaiSanPham, {as: 'TrangThaiSanPham', foreignKey: 'matrangthai'}) 
         }
     }
     HangTrongKho.init(
@@ -42,7 +43,8 @@ module.exports = (sequelize, DataTypes) => {
             },
             soluong: DataTypes.INTEGER,
             gianhap:DataTypes.INTEGER,
-            giaban: DataTypes.INTEGER
+            giaban: DataTypes.INTEGER,
+            matrangthai: DataTypes.INTEGER,
         },
         {
             sequelize,
