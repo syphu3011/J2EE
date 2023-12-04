@@ -3,12 +3,31 @@ const {gql} = require('apollo-server-express')
 module.exports = gql`
 type HoaDon {
   ma: ID!
-  ten: String!
-  sanpham: [SanPham]
+  ngaylap: String!
+  sanpham: [ChiTietHoaDon]
+  nhanvien: NhanVien
+  khachhang: KhachHang
+  trangthaihoadon: TrangThaiHoaDon
+  email: String
+  sodienthoai: String
+}
+input ChiTietHoaDonInput {
+  masanpham: Int
+  mamau: Int
+  makichco: Int
+  maphieunhap: Int
+  soluong: Int
+  gia: Int
 }
 input HoaDonInput {
   ma: ID
-  ten: String!
+  sanpham: [ChiTietHoaDonInput]
+  manhanvien: Int
+  makhachhang: Int
+  matrangthai: Int  
+  diachi: String
+  sodienthoai: String
+  email: String
 }
 type HoaDonQueryResponse {
   status: Int!
@@ -21,12 +40,13 @@ type HoaDonResponse {
 }
 extend type Query {
   hoadon: HoaDonQueryResponse
+  hoadondaxuly: HoaDonQueryResponse
+  hoadonchuaxuly: HoaDonQueryResponse
   hoadonvoithuoctinh(input: HoaDonInput): HoaDonQueryResponse
   timkiemhoadon(input: HoaDonInput): HoaDonQueryResponse
 }
 extend type Mutation {
   taoHoaDon(input: HoaDonInput): HoaDonResponse
-  suaHoaDon(input: HoaDonInput): HoaDonResponse
-  xoaHoaDon(ma: Int!): HoaDonResponse
+  xacnhanhoachuyhoadon(input: HoaDonInput): HoaDonResponse
 }
 `

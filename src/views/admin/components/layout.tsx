@@ -101,12 +101,12 @@ export default function LayoutPage() {
     if (!getIsLogin()) {
       authenticationAdmin((rs) => {
         if (rs.data.dangNhapAdminVoiToken.status !== 200) {
-          alert(JSON.stringify(rs.data.dangNhapAdminVoiToken))
-          navigate("/LoginAdmin")
+          alert(JSON.stringify(rs.data.dangNhapAdminVoiToken));
+          navigate("/LoginAdmin");
         }
-      })
+      });
     }
-  }, [])
+  }, []);
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Header
@@ -121,13 +121,16 @@ export default function LayoutPage() {
             width: "100%",
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between",
+            justifyContent: "flex-end",
           }}
         >
-          <Badge dot>
+          {/* <Badge dot>
             <Avatar icon={<MailOutlined />} />
-          </Badge>
-          <Search placeholder="input search text" style={{ width: "50%" }} />
+          </Badge> */}
+          <Search
+            placeholder="input search text"
+            style={{ width: "50%", marginRight: "20%" }}
+          />
           <div />
           <Menu
             style={{ width: "10%" }}

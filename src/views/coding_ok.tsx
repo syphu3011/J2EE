@@ -8,6 +8,9 @@ import { editProductInStock, getProductInStock } from '../controllers/modules/ad
 import { importProduct, importProductHistory, removeImportProduct } from '../controllers/modules/admin/importProduct';
 import { addProvider, editProvider, getProvider, removeProvider } from '../controllers/modules/admin/provider';
 import { addPrivileges, editPrivileges, getPrivileges, removePrivileges } from '../controllers/modules/admin/privileges';
+import { addStaff, editStaff, getStaff, grantAccount, removeAccount, removeStaff } from '../controllers/modules/admin/staff';
+import { buy } from '../controllers/modules/customer/buy';
+import { cancelOrder, confirmOrder, getOrders } from '../controllers/modules/admin/order';
 
 export default class Coding_ok extends React.Component<any, any>   
 {   
@@ -103,11 +106,30 @@ export default class Coding_ok extends React.Component<any, any>
             //         test: JSON.stringify(rs)
             //     })
             // })
-            getProductsWithAllCategory().then(rs => {
-                this.setState({
-                    test: JSON.stringify(rs)
-                })
-            })
+            // getProductsWithAllCategory().then(rs => {
+            //     this.setState({
+            //         test: JSON.stringify(rs)
+            //     })
+            // })
+            // getStaff().then(rs => {
+            //     this.setState({
+            //         test: JSON.stringify(rs)
+            //     })
+            // })
+            // addStaff("Thử nghiệm nhân viên 2", "2002-12-30", "0329382999", "0302955392").then(rs => {
+                // removeAccount("aimabietneee@gmail.com")
+                // buy(0,"279 Lâm Văn Bền", [{
+                //     masanpham: 6,
+                //     makichco: 1,
+                //     mamau: 5,
+                //     soluong: 20
+                // }])
+                confirmOrder(26)
+                // getOrders()
+                // getProductInStock()
+            // })
+            // editStaff(4, "Thử nghiệm nhân viên 2", "2002-12-30", "0329382999", "0302955392", 1)
+            // removeStaff(4)
         })
     }
     render() {  
@@ -116,6 +138,5 @@ export default class Coding_ok extends React.Component<any, any>
             <div >
                {JSON.stringify(this.state.test)} 
           </div>
-        
    ) }  
 }  
