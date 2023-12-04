@@ -49,6 +49,11 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.INTEGER,
                 references: "KhachHang",
             },
+            diachi: {
+                type: DataTypes.STRING,
+            },
+            sodienthoai: DataTypes.STRING,
+            email: DataTypes.STRING,
         },
         {
             sequelize,

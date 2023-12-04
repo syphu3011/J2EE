@@ -1,32 +1,31 @@
 const {gql} = require('apollo-server-express')
 
 module.exports = gql`
-type DonVi {
+type TrangThaiHoaDon {
   ma: ID!
   ten: String!
-  sanpham: [SanPham]
 }
-input DonViInput {
+input TrangThaiHoaDonInput {
   ma: ID
   ten: String!
 }
-type DonViQueryResponse {
+type TrangThaiHoaDonQueryResponse {
   status: Int!
   message: String!
-  data: [DonVi!]!
+  data: [TrangThaiHoaDon!]!
 }
-type DonViResponse {
+type TrangThaiHoaDonResponse {
   status: Int!
   message: String!
 }
 extend type Query {
-  donvi: DonViQueryResponse
-  donvivoithuoctinh(input: DonViInput): DonViQueryResponse
-  timkiemdonvi(input: DonViInput): DonViQueryResponse
+  trangthaihoadon: TrangThaiHoaDonQueryResponse
+  trangthaihoadonvoithuoctinh(input: TrangThaiHoaDonInput): TrangThaiHoaDonQueryResponse
+  timkiemtrangthaihoadon(input: TrangThaiHoaDonInput): TrangThaiHoaDonQueryResponse
 }
 extend type Mutation {
-  taoDonVi(input: DonViInput): DonViResponse
-  suaDonVi(input: DonViInput): DonViResponse
-  xoaDonVi(ma: Int!): DonViResponse
+  taoTrangThaiHoaDon(input: TrangThaiHoaDonInput): TrangThaiHoaDonResponse
+  suaTrangThaiHoaDon(input: TrangThaiHoaDonInput): TrangThaiHoaDonResponse
+  xoaTrangThaiHoaDon(ma: Int!): TrangThaiHoaDonResponse
 }
 `

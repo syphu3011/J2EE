@@ -11,6 +11,7 @@ type HangTrongKho {
   ncc: NhaCungCap
   gianhap: Int
   giaban: Int
+  soluong: Int
 }
 input HangTrongKhoInput {
   masanpham: Int

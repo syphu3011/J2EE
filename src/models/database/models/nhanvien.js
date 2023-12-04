@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             // define association here
             NhanVien.belongsTo(models.TrangThaiNhanVien, {
-                as: "NhanVien",
+                as: "TrangThaiNhanVien",
                 foreignKey: "matrangthai",
             });
             NhanVien.belongsTo(models.TaiKhoan, {
@@ -37,8 +37,7 @@ module.exports = (sequelize, DataTypes) => {
             matrangthai: {
                 type: DataTypes.INTEGER,
                 references: "TrangThaiNhanVien",
-            },
-            email: DataTypes.STRING,
+            }
         },
         {
             sequelize,

@@ -9,7 +9,10 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-
+            ChiTietHoaDon.belongsTo(models.SanPham, {as: "SanPham", foreignKey: "masanpham"})
+            ChiTietHoaDon.belongsTo(models.Mau, {as: "Mau", foreignKey: "mamau"})
+            ChiTietHoaDon.belongsTo(models.KichCo, {as: "KichCo", foreignKey: "makichco"})
+            ChiTietHoaDon.belongsTo(models.PhieuNhap, {as: "PhieuNhap", foreignKey: "maphieunhap"})
         }
     }
     ChiTietHoaDon.init(
@@ -32,10 +35,12 @@ module.exports = (sequelize, DataTypes) => {
                 // references: 'Mau',
                 // referencesKey: 'ma' 
             },
+            maphieunhap: {
+                type: DataTypes.INTEGER,
+                allowNull: false
+            },
             mahoadon: {
                 type: DataTypes.INTEGER,
-                primaryKey: true,
-                references: "KhachHang",
             },
             soluong: DataTypes.INTEGER,
             gia: DataTypes.INTEGER,

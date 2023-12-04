@@ -85,7 +85,8 @@ module.exports = {
           }
         }
       }
-      return await checkAndResolveAdmin(context.taikhoan, callback, "", CHUCNANG.XEMKHO)
+      return await callback(null)
+      // return await checkAndResolveAdmin(context.taikhoan, callback, "", CHUCNANG.XEMKHO)
     }
   },
   HangTrongKho: {
@@ -111,16 +112,16 @@ module.exports = {
       const phieunhap = await hangtrongkho.getPhieuNhap()
       return phieunhap.getNhaCungCap()
     }, 
-    gianhap: async (hangtrongkho) => {
-      const chitietphieunhap = await ChiTietPhieuNhap.findOne({
-        where: {
-          masanpham: hangtrongkho.masanpham,
-          mamau: hangtrongkho.mamau,
-          makichco: hangtrongkho.makichco,
-          maphieunhap: hangtrongkho.maphieunhap
-        }
-      })
-      return chitietphieunhap.gianhap
-    }
+    // gianhap: async (hangtrongkho) => {
+      // const chitietphieunhap = await ChiTietPhieuNhap.findOne({
+      //   where: {
+      //     masanpham: hangtrongkho.masanpham,
+      //     mamau: hangtrongkho.mamau,
+      //     makichco: hangtrongkho.makichco,
+      //     maphieunhap: hangtrongkho.maphieunhap
+      //   }
+      // })
+    //   return hangtrongkho.gianhap
+    // }
   }
 }

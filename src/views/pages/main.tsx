@@ -8,7 +8,7 @@ import "../Styles/style.css";
 import "../Styles/Responsive.css";
 import "../components/content/menuCard"
 import PageContent from '../components/content/content';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Outlet } from 'react-router-dom';
 //import ChatApp from '../components/chat/app';
 import Footer from "../components/footer/footer";
 import ChatApp from '../components/chat/app';
@@ -17,6 +17,9 @@ import Login from '../components/login/login';
 import { postKeyToServer } from '../../controllers/modules/key';
 import { requestTo } from '../../controllers/modules/request';
 import { authenticationAdmin, authenticationCustomer } from '../../../utils/util';
+import { getProductsWithAllCategory } from '../../controllers/modules/customer/products';
+import { setProductData } from '../components/product/productData';
+import Cookies from 'js-cookie';
 export default class Main extends React.Component<any, any>   
 {   
     constructor(props) {
@@ -28,10 +31,29 @@ export default class Main extends React.Component<any, any>
     }   
     componentDidMount () {
         authenticationCustomer((rs) => {
-            this.setState({
-                isAuth: rs.data.dangNhapVoiToken.status==200,
-                isReady: true
-            })
+            if (!Cookies.get('isLoaded')) {
+                getProductsWithAllCategory().then(rsp => {
+                    let productWithCategory = rsp.data.loaiLon.data;
+                    let allProducts = []
+                    for (const category of productWithCategory) {
+                        let productData1 = category.sanpham;
+                        allProducts.push(...productData1)
+                    }
+                    setProductData(rsp, allProducts).then (rsss => {
+                        Cookies.set('isLoaded', 'true', {expires:1})
+                        this.setState({
+                            isAuth: rs.data.dangNhapVoiToken.status==200,
+                            isReady: true
+                        })
+                    })
+                })
+            }
+            else {
+                this.setState({
+                    isAuth: rs.data.dangNhapVoiToken.status==200,
+                    isReady: true
+                })
+            }
         })
         let isProcessedClose = false
         window.addEventListener('onbeforeunload', function (e) {  
@@ -50,7 +72,7 @@ export default class Main extends React.Component<any, any>
             <div >
                 <Layout>
                     <Header isLogin={this.state.isAuth}/>
-                    <PageContent/> 
+                    <Outlet/>
                    <ChatApp/>
                     <Footer/>
                     

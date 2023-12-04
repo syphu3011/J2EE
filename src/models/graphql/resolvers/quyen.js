@@ -1,14 +1,16 @@
 const { Op, literal } = require("sequelize")
-const {Quyen, ChucNang, sequelize} = require("../../database/models")
-const {STATUS_CODE} = require("../const")
+const { Quyen, ChucNang, sequelize } = require("../../database/models")
+const { checkAndResolveAdmin} = require("./checkToken")
+const { STATUS_CODE, CHUCNANG } = require("../const")
 module.exports = {
-    Mutation: {
-      async taoQuyen(root, args, context) {
+  Mutation: {
+    async taoQuyen(root, args, context) {
+      async function callback(e) {
         let transaction
         try {
           transaction = await sequelize.transaction()
-          const {ten, chucnang} = args.input
-          const quyen = await Quyen.create({ten})
+          const { ten, chucnang } = args.input
+          const quyen = await Quyen.create({ ten })
           let list_chucnang = []
           for (const _chucnang of chucnang) {
             const chucnangget = await ChucNang.findByPk(_chucnang.ma)
@@ -24,8 +26,8 @@ module.exports = {
             message: "Thêm quyền thành công!",
             data: quyen
           }
-        } 
-        catch(e) {
+        }
+        catch (e) {
           await transaction.rollback()
           return {
             status: STATUS_CODE.create_fail,
@@ -33,12 +35,15 @@ module.exports = {
             data: []
           }
         }
-      },
-      async suaQuyen(root, args, context) {
+      }
+      return await checkAndResolveAdmin(context.taikhoan, callback, "đã thêm quyền", CHUCNANG.THEMQUYEN)
+    },
+    async suaQuyen(root, args, context) {
+      const { ma, ten, chucnang } = args.input
+      async function callback(e) {
         let transaction
         try {
           transaction = await sequelize.transaction()
-          const {ma, ten, chucnang} = args.input
           if (ma == 2) {
             return {
               status: 400,
@@ -61,7 +66,7 @@ module.exports = {
               list_chucnang.push(chucnangget)
             }
           }
-          await quyen.update({ten})
+          await quyen.update({ ten })
           await quyen.setChucNang(list_chucnang)
           await quyen.save()
           await transaction.commit()
@@ -70,8 +75,8 @@ module.exports = {
             message: "Sửa quyền thành công!",
             data: quyen
           }
-        } 
-        catch(e) {
+        }
+        catch (e) {
           await transaction.rollback()
           return {
             status: STATUS_CODE.update_fail,
@@ -79,12 +84,15 @@ module.exports = {
             data: []
           }
         }
-      },
-      async xoaQuyen(root, args, context) {
+      }
+      return await checkAndResolveAdmin(context.taikhoan, callback, "đã sửa quyền có id là " + ma, CHUCNANG.SUAQUYEN)
+    },
+    async xoaQuyen(root, args, context) {
+      const { ma, ten } = args
+      async function callback(e) {
         let transaction
         try {
           transaction = await sequelize.transaction()
-          const {ma, ten} = args
           if (ma == 2) {
             return {
               status: 400,
@@ -109,8 +117,8 @@ module.exports = {
             message: "Xóa quyền thành công!",
             data: quyen
           }
-        } 
-        catch(e) {
+        }
+        catch (e) {
           await transaction.rollback()
           return {
             status: STATUS_CODE.update_fail,
@@ -119,29 +127,34 @@ module.exports = {
           }
         }
       }
-    },
-    Query: {
-      async quyen() {
+      return await checkAndResolveAdmin(context.taikhoan, callback, "đã xóa quyền có id là " + ma, CHUCNANG.XOAQUYEN)
+    }
+  },
+  Query: {
+    async quyen() {
+      async function callback(e) {
         try {
           const sanpham = await Quyen.findAll();
           return {
-              status: STATUS_CODE.query_success,
-              message: "Lấy danh sách quyền thành công!",
-              data: sanpham
+            status: STATUS_CODE.query_success,
+            message: "Lấy danh sách quyền thành công!",
+            data: sanpham
           }
         }
         catch (e) {
-            return {
-                status: STATUS_CODE.query_fail,
-                message: "Quyền không tồn tại!",
-                data: []
-            }
+          return {
+            status: STATUS_CODE.query_fail,
+            message: "Quyền không tồn tại!",
+            data: []
+          }
         }
       }
-    },
-    Quyen: {
-      chucnang(quyen) {
-        return quyen.getChucNang()
-      }
+      return await checkAndResolveAdmin(context.taikhoan, callback, "đã xóa quyền có id là " + ma, CHUCNANG.THEMQUYEN)
     }
+  },
+  Quyen: {
+    chucnang(quyen) {
+      return quyen.getChucNang()
+    }
+  }
 }
