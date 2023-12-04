@@ -26,6 +26,7 @@ import {setProductData, getProductData} from "../../components/product/productDa
 import { getProductsWithAllCategory } from "../../../controllers/modules/customer/products";
 import { fetchImage } from "../../../../utils/readfile";
 import { convertB64ToImage } from "../../../../utils/util";
+import Cookies from "js-cookie";
 export default function AllProduct() {
   let productWithCategory;
   //  let productData
@@ -111,7 +112,9 @@ export default function AllProduct() {
               );
             }
           }
-          setProductData(allProducts)
+          // setProductData('data',allProducts)
+          setProductData(rs, allProducts)
+          Cookies.set('isLoaded', 'true', {expires:1})
           setCardData(allLoai)
           setProductCategoryData(productWithCategory)
           setAllProductComponent(setUpCarousel(allProducts, 5, 1, "sliderProduct", "fade-up") as any)
