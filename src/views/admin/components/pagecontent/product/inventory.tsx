@@ -277,6 +277,8 @@ const Inventory = () => {
       //
       console.log(productsInstock.length);
       productsInstock.forEach((element, index) => {
+        console.log("chiu luon a");
+        console.log(element.soluong);
         //  Convert Timestamp to Date
         const dateInit = new Date(parseInt(element.phieunhap.ngaynhap));
         // Format to date time
@@ -312,7 +314,7 @@ const Inventory = () => {
           partner: element.ncc.ten,
           price_inp: element.gianhap,
           price_out: element.giaban,
-          amount: 0,
+          amount: element.soluong,
           id_import: element.phieunhap.ma,
           id_color: element.mau.ma,
           id_size: element.kichthuoc.ma,
