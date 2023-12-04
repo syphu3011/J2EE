@@ -4,6 +4,11 @@ const { Header, Content } = Layout;
 import React, { useState } from "react";
 import { Form, Table } from "antd";
 import dayjs from "dayjs";
+import TableType from "./Table/TableType";
+import TableProduct from "./Table/TableProduct";
+import TableCustomer from "./Table/TableCustomer";
+import TableStaff from "./Table/TableStaff";
+import TableDate from "./Table/TableDate";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 60,
@@ -19,19 +24,24 @@ const contentStyle: React.CSSProperties = {
   backgroundColor: "#ffffff",
 };
 
-interface Item {
-  key: string;
-  id_type_stat: string;
-  name_type_stat: string;
-  provider_type_stat: string;
-  amount_sell_type: number;
-  income_type: number;
-  expenses_type: number;
-  profits_type: number;
-}
-
-const originData: Item[] = [];
 const options: SelectProps["options"] = [];
+const options2: SelectProps["options"] = [];
+options2.push({
+  value: "Days",
+  label: "Thứ",
+});
+options2.push({
+  value: "Months",
+  label: "Tháng",
+});
+options2.push({
+  value: "Years",
+  label: "Năm",
+});
+options.push({
+  value: "LSP",
+  label: "Loại sản phẩm",
+});
 options.push({
   value: "KH",
   label: `Khách hàng`,
@@ -40,77 +50,40 @@ options.push({
   value: "SP",
   label: "Sản phẩm",
 });
-const handleChange = (value: string[]) => {
-  console.log(`selected ${value}`);
-};
-for (let i = 0; i < 7; i++) {
-  originData.push({
-    key: i.toString(),
-    id_type_stat: `${i}`,
-    name_type_stat: `Áo quần ${i}`,
-    provider_type_stat: "000000",
-    amount_sell_type: 12,
-    income_type: 15000000,
-    expenses_type: 3200000,
-    profits_type: 15000000 - 3200000,
-  });
-}
+options.push({
+  value: "NV",
+  label: "Nhân viên",
+});
+options.push({
+  value: "TG",
+  label: "Thời gian",
+});
 
 const StatNumber = () => {
   const [form] = Form.useForm();
-  const [data, setData] = useState(originData);
-  const columns = [
-    {
-      title: "Mã loại",
-      dataIndex: "id_type_stat",
-      width: "auto",
-    },
-    {
-      title: "Loại sản phẩm",
-      dataIndex: "name_type_stat",
-      width: "auto",
-      editable: true,
-    },
-    {
-      title: "Nhà cung cấp",
-      dataIndex: "provider_type_stat",
-      width: "auto",
-    },
-    {
-      title: "Số lượng bán",
-      dataIndex: "amount_sell_type",
-      width: "auto",
-    },
-    {
-      title: "Thu",
-      dataIndex: "income_type",
-      width: "auto",
-      editable: true,
-    },
-    {
-      title: "Chi",
-      dataIndex: "expenses_type",
-      width: "auto",
-      editable: true,
-    },
-    {
-      title: "Lợi nhuận",
-      dataIndex: "profits_type",
-      width: "auto",
-    },
-  ];
-
-  const mergedColumns = columns.map((col) => {
-    return {
-      ...col,
-      onCell: (record: Item) => ({
-        record,
-        inputType: col.dataIndex === "numberphone" ? "number" : "text",
-        dataIndex: col.dataIndex,
-        title: col.title,
-      }),
-    };
-  });
+  const [table, setTable] = useState(TableType);
+  const [display, setDisplay] = useState("none");
+  const ChangeStat = (value: string) => {
+    if (value == "Days") {
+    } else if (value == "Months") {
+    } else {
+    }
+  };
+  const ChangeStatDate = (value: string) => {
+    console.log(`selected ${value}`);
+    if (value == "SP") {
+      setTable(TableProduct);
+    } else if (value == "KH") {
+      setTable(TableCustomer);
+    } else if (value == "NV") {
+      setTable(TableStaff);
+    } else if (value == "TG") {
+      setTable(TableDate);
+      setDisplay("inline-block");
+    } else {
+      setTable(TableType);
+    }
+  };
   const dateFormat = "DD/MM/YYYY";
   return (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
@@ -121,14 +94,21 @@ const StatNumber = () => {
               <Form.Item
                 label="Lọc theo:"
                 labelAlign="left"
-                labelCol={{ span: '10%'}}
+                labelCol={{ span: "10%" }}
               >
                 <Select
                   allowClear
-                  style={{ width: "80%" }}
+                  style={{ width: "40%" }}
                   placeholder="Chọn mục muốn thống kê"
-                  onChange={handleChange}
+                  onChange={ChangeStat}
                   options={options}
+                />
+                <Select
+                  id="Select-date"
+                  allowClear
+                  style={{ width: "40%", display: `${display}` }}
+                  onChange={ChangeStatDate}
+                  options={options2}
                 />
               </Form.Item>
             </Col>
@@ -165,53 +145,7 @@ const StatNumber = () => {
         </Header>
         <Content style={contentStyle}>
           <Form form={form} component={false}>
-            <Table
-              bordered
-              dataSource={data}
-              columns={mergedColumns}
-              pagination={false}
-              scroll={{ x: 800, y: 600 }}
-              summary={(pageData) => {
-                let total_profits = 0;
-                let total_amount_sell_type = 0;
-                let total_income_type = 0;
-                let total_expenses_type = 0;
-                pageData.forEach(
-                  ({
-                    profits_type,
-                    amount_sell_type,
-                    income_type,
-                    expenses_type,
-                  }) => {
-                    total_profits += profits_type;
-                    total_amount_sell_type += amount_sell_type;
-                    total_income_type += income_type;
-                    total_expenses_type += expenses_type;
-                  }
-                );
-                return (
-                  <Table.Summary fixed>
-                    <Table.Summary.Row>
-                      <Table.Summary.Cell index={0}></Table.Summary.Cell>
-                      <Table.Summary.Cell index={1}>Tổng</Table.Summary.Cell>
-                      <Table.Summary.Cell index={2}></Table.Summary.Cell>
-                      <Table.Summary.Cell index={3}>
-                        {total_amount_sell_type}
-                      </Table.Summary.Cell>
-                      <Table.Summary.Cell index={4}>
-                        {total_income_type}
-                      </Table.Summary.Cell>
-                      <Table.Summary.Cell index={5}>
-                        {total_expenses_type}
-                      </Table.Summary.Cell>
-                      <Table.Summary.Cell index={6}>
-                        {total_profits}
-                      </Table.Summary.Cell>
-                    </Table.Summary.Row>
-                  </Table.Summary>
-                );
-              }}
-            />
+            {table}
           </Form>
         </Content>
       </Layout>
