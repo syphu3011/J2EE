@@ -1,6 +1,7 @@
 const { Op, literal } = require("sequelize")
 const { ChucNang, sequelize } = require("../../database/models")
-const {STATUS_CODE} = require("../const")
+const {checkAndResolveAdmin} = require("./checkToken")
+const {STATUS_CODE, CHUCNANG} = require("../const")
 module.exports = {
   Mutation: {
     async taoChucNang(root, args, context) {
@@ -71,21 +72,24 @@ module.exports = {
   },
   Query: {
     chucnang: async () => {
-      try {
-        const rs = {
-          status: STATUS_CODE.query_success,
-          message: "Lấy danh sách chức năng thành công!",
-          data: await ChucNang.findAll()
+      async function callback(e) {
+        try { 
+          const rs = {
+            status: STATUS_CODE.query_success,
+            message: "Lấy danh sách chức năng thành công!",
+            data: await ChucNang.findAll()
+          }
+          return rs
         }
-        return rs
-      }
-      catch (e) {
-        return {
-          status: STATUS_CODE.query_fail,
-          message: "Lấy danh sách chức năng không thành công!",
-          data: null
+        catch (e) {
+          return {
+            status: STATUS_CODE.query_fail,
+            message: "Lấy danh sách chức năng không thành công!",
+            data: null
+          }
         }
       }
+      return await checkAndResolveAdmin(context.taikhoan, callback, "", CHUCNANG.THEMQUYEN)
     },
     chucnangvoithuoctinh: async (root, args, context) => {
       try {

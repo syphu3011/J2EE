@@ -3,8 +3,9 @@ const {gql} = require('apollo-server-express')
 module.exports = gql`
 type HoaDon {
   ma: ID!
-  ten: String!
-  sanpham: [SanPham]
+  ngaylap: String!
+  sanpham: [HangTrongKho]
+  trangthaihoadon: TrangThaiHoaDon
 }
 input HoaDonInput {
   ma: ID

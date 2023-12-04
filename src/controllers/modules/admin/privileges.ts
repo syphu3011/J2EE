@@ -17,6 +17,20 @@ export function getPrivileges() {
     `
     return request(query)
 }
+export function getFeatures() {
+    const query = `query getFeatures {
+        chucnang {
+            status
+            message
+            data {
+                ma
+                ten
+            }
+        }
+    }
+    `
+    return request(query)
+}
 export function addPrivileges(name: String, features: {ma: number}[]) {
     // features is list id of ChucNang
     const query = `mutation addProvider($name: String!, $features: [QuyenChucNang]) {
