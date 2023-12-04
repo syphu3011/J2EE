@@ -5,8 +5,8 @@ import {getProductData} from "../product/productData";
 export const SearchItem = ({setResults})=>{
      const [input,setInput] = useState("");
      const getData = async (value)=>{
-          const results = (await getProductData('data')).filter((item) => {
-               return value && item.name && item.name.toLowerCase().includes(value);
+          const results = (await getProductData("data")).filter((item) => {
+               return value && item.ten && item.ten.toLowerCase().includes(value);
              }).slice(0, 5);
              setResults(results);
            };

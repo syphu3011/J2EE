@@ -53,7 +53,7 @@ export default function AllProduct() {
     return productData.map((product) => (
       <div>
         <Card key={product.ma + ""} className="card_1">
-          <Link to={`/products/${product.ma}/${product.ten}`}>
+          <Link to={`/products/${product.ma}`}>
             <Image
               src={convertB64ToImage(product.anhminhhoa)}
               className="image-card"

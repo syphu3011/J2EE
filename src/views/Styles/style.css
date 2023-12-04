@@ -211,9 +211,11 @@ width:15%;
      padding:0;
 }
  .card_1{
+     flex: 1;
      position: relative;
      overflow: hidden;
      max-height: 800px;
+     max-width: 400px;
      margin : 10px;
      border-radius: 1rem;
      background: linear-gradient(180deg, rgba(244, 170, 192, 0.00) 24.48%, rgb(255, 198, 215) 67.71%);     ;
@@ -222,6 +224,7 @@ width:15%;
      text-align: center;
      box-shadow:3px 3px 6px rgba(128,128,128,.3),
       -3px -3px 6px rgba(255,255,255,.3) !important;
+     flex-direction: column; /* Sắp xếp nội dung theo chiều dọc */
 
 }
 .card_1:hover{
@@ -790,9 +793,9 @@ box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0
 }
 /*page product*/
 .pageProduct{
-     height:auto;
+     /* height:auto; */
      width:100%;
-     margin-top:25px;
+     /* margin-top:25px; */
      background: white;
 }
 .filter{
@@ -825,7 +828,7 @@ box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0
 .title-product{
      display:flex;
      justify-content: space-between;
-     padding:2rem;
+     padding:1rem;
 }
 .title-product h2{
      text-transform: uppercase;
@@ -839,9 +842,13 @@ box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0
      padding-bottom: 2rem;
 }
 .product-content-container{
-     display:flex;
+     /* display:flex;
      flex-wrap: wrap;
-     padding : 2rem;
+     padding : 2rem; */
+     display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Cột co dãn với độ rộng tối thiểu là 300px và tối đa là 1fr */
+     grid-gap: 20px; /* Khoảng cách giữa các cột */
+     padding: 1rem;
 }
 .pagination-product{
      text-align: center;
@@ -856,9 +863,10 @@ box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0
 /*product detail*/
 .product-detail-container{
      width: 100%;
-     height:auto !important;
+     /* height:auto !important; */
+     height: calc(100vh - 75px);
      background-color: white;
-     margin-top:25px;
+     /* margin-top:25px; */
 }
 .card-image-active{
      justify-content: center;
@@ -995,10 +1003,11 @@ box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0
 }
 /*Checkout*/
 .checkout-containter{
-     height:55rem;
+     /* height:55rem; */
+     height: calc(100vh - 75px);
      width:100%;
      background-color: white;
-     padding: 2rem;
+     /* padding: 2rem; */
 }
 
 .checkout-containter h1{
@@ -1046,7 +1055,8 @@ box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0
      top: 8%;
      right: -105%;
      z-index: 1;
-     height:55rem;
+     /* height:55rem; */
+     height: calc(100vh - 75px);
      width: 100%;
      box-shadow: 0 0.5em 3rem -1rem rgba(0,0,0,0.5);
      transition: all .6s ease-out;
