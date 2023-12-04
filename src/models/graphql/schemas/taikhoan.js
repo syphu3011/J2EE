@@ -70,6 +70,7 @@ extend type Mutation {
   dangNhap(input: TaiKhoanInput):DangNhapResponse
   dangNhapVoiToken: DangNhapTokenResponse
   dangNhapAdminVoiToken:DangNhapAdminResponse
+  dangxuat: DangNhapResponse
   xacThucOTP(input: OTPInput):DangNhapAdminResponse
   dangNhapAdmin(input: TaiKhoanInput):DangNhapAdminResponse
   suaTaiKhoan(input: TaiKhoanInput): TaiKhoanResponse

@@ -42,6 +42,7 @@ extend type Query {
   hoadon: HoaDonQueryResponse
   hoadondaxuly: HoaDonQueryResponse
   hoadonchuaxuly: HoaDonQueryResponse
+  lichsudonhang: HoaDonQueryResponse
   hoadonvoithuoctinh(input: HoaDonInput): HoaDonQueryResponse
   timkiemhoadon(input: HoaDonInput): HoaDonQueryResponse
 }

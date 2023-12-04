@@ -11,6 +11,7 @@ import { addPrivileges, editPrivileges, getPrivileges, removePrivileges } from '
 import { addStaff, editStaff, getStaff, grantAccount, removeAccount, removeStaff } from '../controllers/modules/admin/staff';
 import { buy } from '../controllers/modules/customer/buy';
 import { cancelOrder, confirmOrder, getOrders } from '../controllers/modules/admin/order';
+import { getHistoryOrders } from '../controllers/modules/customer/historyorders';
 
 export default class Coding_ok extends React.Component<any, any>   
 {   
@@ -124,9 +125,10 @@ export default class Coding_ok extends React.Component<any, any>
                 //     mamau: 5,
                 //     soluong: 20
                 // }])
-                confirmOrder(26)
+                // confirmOrder(26)
                 // getOrders()
                 // getProductInStock()
+                getHistoryOrders()
             // })
             // editStaff(4, "Thử nghiệm nhân viên 2", "2002-12-30", "0329382999", "0302955392", 1)
             // removeStaff(4)

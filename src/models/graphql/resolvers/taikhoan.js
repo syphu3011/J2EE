@@ -431,6 +431,25 @@ module.exports = {
         message: "Bị lỗi! Xóa tài khoản không thành công!",
       }
     }
+  },
+  dangxuat(root, args, context) {
+    try {
+      context.res.clearCookie("haizz")
+      context.res.clearCookie("getout")
+      context.res.clearCookie("token")
+      context.res.clearCookie("rToken")
+      context.res.clearCookie("chucnang")
+      return {
+        status: 200,
+        message: "Đăng xuất thành công!"
+      }
+    }
+    catch(e) {
+      return {
+        status: 400,
+        message: "Đăng xuất không thành công!"
+      }
+    }
   }
 },
   Query: {
