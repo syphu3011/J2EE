@@ -3,7 +3,7 @@ import { getProducts, getProductsWithAllCategory} from "../controllers/modules/c
 import { getAllProduct } from '../controllers/modules/admin/product';
 import { postKeyToServer } from '../controllers/modules/key';
 import { addCate, getAllCate, removeCate } from '../controllers/modules/admin/cate';
-import { blockCustomer, editCustomer, getCustomer, removeCustomer } from '../controllers/modules/admin/customer';
+import { blockCustomer, editCustomer, getCustomer, openCustomer, removeCustomer } from '../controllers/modules/admin/customer';
 import { editProductInStock, getProductInStock } from '../controllers/modules/admin/productInStock';
 import { importProduct, importProductHistory, removeImportProduct } from '../controllers/modules/admin/importProduct';
 import { addProvider, editProvider, getProvider, removeProvider } from '../controllers/modules/admin/provider';
@@ -100,11 +100,11 @@ export default class Coding_ok extends React.Component<any, any>
             // })
             // testProvider(5)
             // testPrivileges(5)
-            // editCustomer(1, 'Nguyễn Văn Sỹ Phú', '2002-11-30', '0334171858').then(rs => {
-            //     this.setState({
-            //         test: JSON.stringify(rs)
-            //     })
-            // })
+            openCustomer(1).then(rs => {
+                this.setState({
+                    test: JSON.stringify(rs)
+                })
+            })
             // getProductsWithAllCategory().then(rs => {
             //     this.setState({
             //         test: JSON.stringify(rs)
@@ -117,12 +117,12 @@ export default class Coding_ok extends React.Component<any, any>
             // })
             // addStaff("Thử nghiệm nhân viên 2", "2002-12-30", "0329382999", "0302955392").then(rs => {
                 // removeAccount("aimabietneee@gmail.com")
-                buy(0,"279 Lâm Văn Bền", [{
-                    masanpham: 1,
-                    makichco: 1,
-                    mamau: 1,
-                    soluong: 100
-                }])
+                // buy(0,"279 Lâm Văn Bền", [{
+                //     masanpham: 1,
+                //     makichco: 1,
+                //     mamau: 1,
+                //     soluong: 100
+                // }])
             // })
             // editStaff(4, "Thử nghiệm nhân viên 2", "2002-12-30", "0329382999", "0302955392", 1)
             // removeStaff(4)

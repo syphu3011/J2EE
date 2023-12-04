@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
-import { editCustomer, getCustomer,  } from "../../../../../controllers/modules/admin/customer";
+import { editCustomer, getCustomer, removeCustomer,  } from "../../../../../controllers/modules/admin/customer";
 import { useNavigate } from "react-router-dom";
 import Item from "antd/es/list/Item";
 import {
@@ -135,7 +135,7 @@ const Customer = () => {
           ...item,
           ...row,
         });
-console.log("Update cai nay ne: " +newData[index].id+ newData[index].name)
+        console.log("Update cai nay ne: " + newData[index].id + ", "+ newData[index].name)
         
         // Cập nhật state data với mảng newData đã được chỉnh sửa
         setData(newData);
@@ -171,10 +171,25 @@ console.log("Update cai nay ne: " +newData[index].id+ newData[index].name)
     }
   };
   //
-  const handleDelete = (key: React.Key) => {
-    const newData = data.filter((item) => item.key !== key);
-    setData(newData);
-  };
+  // Xử lý xóa phần tử từ mảng dữ liệu
+const handleDelete = (key: React.Key) => {
+  // Tạo một mảng mới (newData) bằng cách sử dụng phương thức filter trên mảng data
+  // Giữ lại các phần tử có giá trị key không trùng khớp với key được truyền vào hàm
+  removeCustomer(parseInt(key.toString())).then((rs) => {
+    //TODO: Thêm thông báo ở đây
+    console.log(rs)
+    alert(rs.data.xoaKhachHang.message);
+    if (rs.data.xoaKhachHang.status === 201) {
+      // clearField();
+      //setIsEdit(false);
+      setReload(true);
+    }
+  })
+  const newData = data.filter((item) => item.key !== key);
+
+  // Cập nhật giá trị của biến data bằng newData
+  setData(newData);
+};
 
   // Update customer
   // To save variable
@@ -185,22 +200,22 @@ console.log("Update cai nay ne: " +newData[index].id+ newData[index].name)
   const [numberphoneEdit, setNumberphoneEdit] = useState("")
 
 
-  const handleIdEditChange = (newId) => {
-  setIdEdit(parseInt(newId));
-};
+//   const handleIdEditChange = (newId) => {
+//   setIdEdit(parseInt(newId));
+// };
 
-const handleNameEditChange = (newName) => {
-  console.log(newName)
-  setNameEdit(newName);
-};
+// const handleNameEditChange = (newName) => {
+//   console.log(newName)
+//   setNameEdit(newName);
+// };
 
-const handleNumberphoneEditChange = (newNumberphone) => {
-  setNumberphoneEdit(newNumberphone.toString());
-};
+// const handleNumberphoneEditChange = (newNumberphone) => {
+//   setNumberphoneEdit(newNumberphone.toString());
+// };
 
-const handleBirthdayEditChange = (newBirthday) => {
-  setBirthdayEdit(newBirthday);
-};
+// const handleBirthdayEditChange = (newBirthday) => {
+//   setBirthdayEdit(newBirthday);
+// };
 
   
   const columns = [
