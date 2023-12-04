@@ -2,6 +2,8 @@ import {Menu} from "antd";
 //import React from "react";
 import {CaretDownOutlined} from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import Test from "../test";
+import Thaotest from "../thaotest";
 function MenuLeft(){
      //render(){
      const navigate = useNavigate();
@@ -156,7 +158,9 @@ function MenuLeft(){
                               style:{marginTop:'5px'},
                          }
                          ]}/>
-     </div>)
+     </div>
+     
+     )
      }
 
 //}

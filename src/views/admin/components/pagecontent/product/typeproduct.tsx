@@ -27,7 +27,7 @@ const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 120,
   paddingInline: 10,
-  lineHeight: "180px",
+  lineHeight: "120px",
   backgroundColor: "#ffffff",
 };
 const contentStyle: React.CSSProperties = {
@@ -302,7 +302,8 @@ const Typeproduct = () => {
                   valuePropName="fileList"
                   getValueFromEvent={normFile}
                 >
-                  <Upload action="/upload.do" listType="picture-card">
+                  <Upload action="/upload.do" listType="picture-card"
+                  maxCount = {1}>
                     <div>
                       <PlusOutlined />
                       <div style={{ marginTop: 8 }}>Upload</div>

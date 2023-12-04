@@ -49,6 +49,7 @@ import { useNavigate } from "react-router-dom";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 180,
+  width: '100%',
   paddingInline: 20,
   marginBottom: 10,
   lineHeight: "180px",
@@ -57,6 +58,7 @@ const headerStyle: React.CSSProperties = {
 const contentStyle: React.CSSProperties = {
   textAlign: "center",
   minHeight: 120,
+  width: '100%',
   lineHeight: "120px",
   color: "#fff",
   backgroundColor: "#ffffff",
@@ -235,36 +237,36 @@ const Product = () => {
   const productAction = () => {
     isEdit
       ? editProduct(
-          idEdit,
-          nameEdit,
-          descriptEdit,
-          cateEdit,
-          unitEdit,
-          b64Edit,
-          nameImageEdit
-        ).then((rs) => {
-          //TODO: Thêm thông báo ở đây
-          alert(rs.data.suaSanPham.message);
-          if (rs.data.suaSanPham.status === 201) {
-            clearField();
-            setIsEdit(false);
-            setReload(true);
-          }
-        })
+        idEdit,
+        nameEdit,
+        descriptEdit,
+        cateEdit,
+        unitEdit,
+        b64Edit,
+        nameImageEdit
+      ).then((rs) => {
+        //TODO: Thêm thông báo ở đây
+        alert(rs.data.suaSanPham.message);
+        if (rs.data.suaSanPham.status === 201) {
+          clearField();
+          setIsEdit(false);
+          setReload(true);
+        }
+      })
       : addProduct(
-          nameAdd,
-          descriptAdd,
-          cateAdd,
-          unitAdd,
-          b64Add,
-          nameImageAdd
-        ).then((rs) => {
-          alert(rs.data.taoSanPham.message);
-          if (rs.data.taoSanPham.status === 201) {
-            clearField();
-            setReload(true);
-          }
-        });
+        nameAdd,
+        descriptAdd,
+        cateAdd,
+        unitAdd,
+        b64Add,
+        nameImageAdd
+      ).then((rs) => {
+        alert(rs.data.taoSanPham.message);
+        if (rs.data.taoSanPham.status === 201) {
+          clearField();
+          setReload(true);
+        }
+      });
   };
   const clearField = () => {
     handleChangeCate([]);
@@ -310,6 +312,12 @@ const Product = () => {
       title: "Tên sản phẩm",
       dataIndex: "ten",
       width: "15%",
+      editable: true,
+    },
+    {
+      title: "Đơn vị tính",
+      dataIndex: "donvi",
+      width: "auto",
       editable: true,
     },
     {
@@ -445,8 +453,12 @@ const Product = () => {
       <Layout>
         <Header style={headerStyle}>
           <Row gutter={16} style={{ marginBottom: "20px" }}>
-            <Col className="gutter-row" span={5} style={{ flexFlow: "row" }}>
-              <Form.Item label="Tên" labelAlign="left" labelCol={{ span: 4 }}>
+            <Col className="gutter-row" span={7} style={{ flexFlow: "row" }}>
+              <Form.Item
+                label="Tên"
+                labelAlign="left"
+                labelCol={{ span: 5 }}
+                style={{ width: "100%", minHeight: 30, minWidth: "100%" }}>
                 <Input
                   value={isEdit ? nameEdit : nameAdd}
                   onChange={handleChangeName}
@@ -455,8 +467,8 @@ const Product = () => {
               <Form.Item
                 label="Loại"
                 labelAlign="left"
-                labelCol={{ span: 4 }}
-                style={{ width: "100%", height: 30, minWidth: "100%" }}
+                labelCol={{ span: 5 }}
+                style={{ width: "100%", minHeight: 30, minWidth: "100%" }}
               >
                 <Select
                   mode="multiple"
@@ -471,7 +483,7 @@ const Product = () => {
               <Form.Item
                 label="Đơn vị"
                 labelAlign="left"
-                labelCol={{ span: 4 }}
+                labelCol={{ span: 5 }}
                 style={{ width: "100%", height: 30, minWidth: "100%" }}
               >
                 <Select
@@ -482,7 +494,7 @@ const Product = () => {
                 />
               </Form.Item>
             </Col>
-            <Col className="gutter-row" span={5}>
+            <Col className="gutter-row" span={7}>
               <div>
                 <Form.Item label="Mô tả">
                   <TextArea
@@ -493,7 +505,7 @@ const Product = () => {
                 </Form.Item>
               </div>
             </Col>
-            <Col className="gutter-row" span={6}>
+            <Col className="gutter-row" span={7}>
               <div>
                 <Form.Item
                   label="Ảnh"
@@ -503,8 +515,8 @@ const Product = () => {
                 >
                   <Upload
                     action="/upload.do"
-                    beforeUpload={beforeUpload}
                     listType="picture-card"
+                    beforeUpload={beforeUpload}
                     onChange={handleChangeImage}
                     onRemove={onRemoveUpload}
                     fileList={isEdit ? fileListEdit : fileListAdd}
@@ -528,7 +540,7 @@ const Product = () => {
               >
                 <Button
                   type="primary"
-                  style={{ width: "70%", marginBottom: 30 }}
+                  style={{ width: "70%", marginBottom: '5%' }}
                   onClick={productAction}
                 >
                   {isEdit ? "Sửa" : "Thêm"}
@@ -536,17 +548,17 @@ const Product = () => {
                 {isEdit ? (
                   <Button
                     type="primary"
-                    style={{ width: "70%" }}
+                    style={{ width: "70%" , marginBottom: '5%', marginTop: '5%'  }}
                     onClick={() => {
                       setIsEdit(false);
                     }}
                   >
-                    Thêm
+                    Hủy
                   </Button>
                 ) : (
                   <></>
                 )}
-                <Button type="primary" style={{ width: "70%" }}>
+                <Button type="primary" style={{ width: "70%", marginTop: '5%' }}>
                   Làm mới
                 </Button>
               </div>

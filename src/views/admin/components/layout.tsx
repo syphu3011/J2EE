@@ -80,7 +80,7 @@ const items: MenuItem[] = [
     getItem("Biểu đồ", "Chart"),
   ]),
   getItem("Tin nhắn hỗ trợ", "Message", <MessageOutlined />),
-  getItem("Trạng thái", "Status", <TbStatusChange />),
+  getItem("Quyền", "Status", <TbStatusChange />),
 ];
 
 export default function LayoutPage() {
