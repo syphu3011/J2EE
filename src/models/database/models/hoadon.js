@@ -49,6 +49,9 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.INTEGER,
                 references: "KhachHang",
             },
+            diachi: {
+                type: DataTypes.INTEGER,
+            }
         },
         {
             sequelize,
