@@ -1,4 +1,15 @@
-import { Button, Checkbox, Col, Divider, Layout, Row, Select, SelectProps, Space, Tag } from "antd";
+import {
+  Button,
+  Checkbox,
+  Col,
+  Divider,
+  Layout,
+  Row,
+  Select,
+  SelectProps,
+  Space,
+  Tag,
+} from "antd";
 import "../../../style/product.css";
 import React, { useState } from "react";
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
@@ -11,6 +22,8 @@ const headerStyle: React.CSSProperties = {
   paddingInline: 10,
   lineHeight: "140px",
   backgroundColor: "#ffffff",
+  maxHeight: "100%",
+  height: "unset",
 };
 const contentStyle: React.CSSProperties = {
   textAlign: "center",
@@ -19,8 +32,8 @@ const contentStyle: React.CSSProperties = {
   color: "#fff",
   backgroundColor: "#ffffff",
 };
-const plainOptions = ['Xem', 'Thêm', 'Xóa', 'Sửa', 'Tìm kiếm'];
-const defaultCheckedList = ['Xem'];
+const plainOptions = ["Xem", "Thêm", "Xóa", "Sửa", "Tìm kiếm"];
+const defaultCheckedList = ["Xem"];
 interface Item {
   key: string;
   id_permission: string;
@@ -38,7 +51,7 @@ for (let i = 0; i < 20; i++) {
     key: i.toString(),
     id_permission: `${i}`,
     name_permission: `trạng thái ${i}`,
-    detail_permission: ["Thêm", "Xóa"]
+    detail_permission: ["Thêm", "Xóa"],
   });
 }
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
@@ -92,7 +105,11 @@ const Status = () => {
   const isEditing = (record: Item) => record.key === editingKey;
 
   const edit = (record: Partial<Item> & { key: React.Key }) => {
-    form.setFieldsValue({ name_permission: "", detail_permission: "", ...record });
+    form.setFieldsValue({
+      name_permission: "",
+      detail_permission: "",
+      ...record,
+    });
     setEditingKey(record.key);
   };
 
@@ -193,17 +210,19 @@ const Status = () => {
         ) : null,
     },
   ];
-  const [checkedList, setCheckedList] = useState<CheckboxValueType[]>(defaultCheckedList);
+  const [checkedList, setCheckedList] =
+    useState<CheckboxValueType[]>(defaultCheckedList);
 
   const checkAll = plainOptions.length === checkedList.length;
-  const indeterminate = checkedList.length > 0 && checkedList.length < plainOptions.length;
+  const indeterminate =
+    checkedList.length > 0 && checkedList.length < plainOptions.length;
   const onChange = (list: CheckboxValueType[]) => {
     setCheckedList(list);
   };
 
   const onCheckAllChange = (e: CheckboxChangeEvent) => {
     setCheckedList(e.target.checked ? plainOptions : []);
-  }
+  };
   const mergedColumns = columns.map((col) => {
     if (!col.editable) {
       return col;
@@ -225,48 +244,54 @@ const Status = () => {
         <Header style={headerStyle}>
           <Row gutter={16}>
             <Col className="gutter-row" span={8}>
-              <Form.Item label="Tên:"
+              <Form.Item
+                label="Tên:"
                 labelAlign="left"
                 labelCol={{ span: 6 }}
                 style={{
                   width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  flexDirection: "row",
-                  minHeight: '100%'
-                }}>
-                <Input style={{ width: "100%" }} />
+                  minHeight: "100%",
+                }}
+              >
+                <Input style={{ width: "80%" }} />
               </Form.Item>
             </Col>
             <Col className="gutter-row" span={10}>
               <Form.Item
                 label="Quyền"
                 labelAlign="left"
-                labelCol={{ span: 10 }}
-                style={{ width: "100%", height: 30, minWidth: "100%" }}
+                labelCol={{ span: 3 }}
+                style={{ minHeight: 30, minWidth: "100%" }}
               >
                 <>
-                  <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}>
+                  <Checkbox
+                    indeterminate={indeterminate}
+                    onChange={onCheckAllChange}
+                    checked={checkAll}
+                  >
                     Chọn hết
                   </Checkbox>
                   <Divider />
-                  <CheckboxGroup options={plainOptions} value={checkedList} onChange={onChange} />
+                  <CheckboxGroup
+                    options={plainOptions}
+                    value={checkedList}
+                    onChange={onChange}
+                  />
                 </>
               </Form.Item>
             </Col>
             <Col className="gutter-row" span={6}>
-            <div
+              <div
                 style={{
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
                   minHeight: 120,
-                  
                 }}
               >
                 <Button
                   type="primary"
-                  style={{ width: "60%", marginBottom:10 }}
+                  style={{ width: "60%", marginBottom: 10 }}
                 >
                   Thêm
                 </Button>
@@ -274,7 +299,6 @@ const Status = () => {
                   Làm mới
                 </Button>
               </div>
-
             </Col>
           </Row>
         </Header>

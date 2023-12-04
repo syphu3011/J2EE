@@ -4,10 +4,12 @@ module.exports = gql`
 type HoaDon {
   ma: ID!
   ngaylap: String!
-  sanpham: [HangTrongKho]
+  sanpham: [ChiTietHoaDon]
   nhanvien: NhanVien
   khachhang: KhachHang
   trangthaihoadon: TrangThaiHoaDon
+  email: String
+  sodienthoai: String
 }
 input ChiTietHoaDonInput {
   masanpham: Int
@@ -24,6 +26,8 @@ input HoaDonInput {
   makhachhang: Int
   matrangthai: Int  
   diachi: String
+  sodienthoai: String
+  email: String
 }
 type HoaDonQueryResponse {
   status: Int!
@@ -36,11 +40,13 @@ type HoaDonResponse {
 }
 extend type Query {
   hoadon: HoaDonQueryResponse
+  hoadondaxuly: HoaDonQueryResponse
+  hoadonchuaxuly: HoaDonQueryResponse
   hoadonvoithuoctinh(input: HoaDonInput): HoaDonQueryResponse
   timkiemhoadon(input: HoaDonInput): HoaDonQueryResponse
 }
 extend type Mutation {
   taoHoaDon(input: HoaDonInput): HoaDonResponse
-  xacNhanHoacHuyHoaDon(input: HoaDonInput): HoaDonResponse
+  xacnhanhoachuyhoadon(input: HoaDonInput): HoaDonResponse
 }
 `

@@ -27,6 +27,7 @@ export function getProductInStock() {
                     ma
                     ten
                 }
+                soluong
                 gianhap
                 giaban
             }

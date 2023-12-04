@@ -50,8 +50,10 @@ module.exports = (sequelize, DataTypes) => {
                 references: "KhachHang",
             },
             diachi: {
-                type: DataTypes.INTEGER,
-            }
+                type: DataTypes.STRING,
+            },
+            sodienthoai: DataTypes.STRING,
+            email: DataTypes.STRING,
         },
         {
             sequelize,
