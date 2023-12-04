@@ -158,7 +158,7 @@ export default class Login extends React.Component<LoginProps,LoginState>{
 
                          </Form.Item>
                          <Form.Item>
-                              <Form.Item name="remember" valuePropName="checked" noStyle>
+                              <Form.Item name="remember" valuePropName="checked" noStyle className="check">
                                    <Checkbox>Nhớ mật khẩu</Checkbox>
                               </Form.Item>
                               <div className="login-form-forgot" onClick={this.handleForgotPasswordClick}>

@@ -1,4 +1,4 @@
-@media screen and (min-width:500px) and (max-width:934px){
+@media screen and (min-width:540px) and (max-width:934px){
      .app{
           width:100%;
           margin: 0 auto;
@@ -8,21 +8,23 @@
      }
      .Leftmenu{
           width:100%;
+          font-size: 12px;
      }
      .MenuRight{
-          width:10%;
+          width:100%;
          text-align: center;
      }
      .RightMenu{
           justify-content: center;
           
      }
-     .banner{
-          /* margin-top:76px; */
+     /* /* .banner{
+          /* margin-top:76px;
           width:100%;
-     }
+     } */
+    
      .allProduct{
-          margin-left:25%;
+          /* margin-left:25%; */
      }
      .inputSearch{
           position: absolute;
@@ -30,6 +32,39 @@
           top: 100%;
           right: 8rem;
           
+     }
+     .mainAllProduct{
+          display: block;
+     }
+     .bannerSale{
+          display: none;
+     
+     }
+     .slider_1{
+          width:100%;
+     }
+     .Card_footer{
+          justify-content:center ;
+          background: linear-gradient(180deg, rgba(244, 170, 192, 0.76) 0%, rgba(244, 170, 192, 0.00) 100%);
+          box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.25);
+     }
+     .icon-card-footer{
+      font-size: 20px;
+      margin-top: -5px;
+      font-weight: bolder;
+      margin-bottom: 10px;
+      
+     }
+     .Card_footer p{
+          font-size: 12px;
+          font-weight: bolder;
+          text-align: center;
+     }
+     .produtcsAll{
+          display: none;
+     }
+     #sale_2{
+          display:none;
      }
 }
 @media screen and (min-width:750px) and (max-width:1600px){
@@ -48,25 +83,32 @@
      
      .MenuRight{
           width:100%;
-         text-align: center;
+         /* text-align: center; */
      }
      .RightMenu{
           justify-content: center;
           
      }
      .allProduct{
-          margin-left:30%;
+          /* margin-left:30%; */
      }
      .inputSearch{
           right: 12rem;
      }
-     .slider_1{
-          margin:5px;
+     .mainAllProduct{
+          display: block;
      }
-     #card_1{
+     .bannerSale{
+          display: none;
+     
+     }
+     .slider_1{
+          width:100%;
+     }
+     .card_1{
           margin: 5px;
      }
-     #card_1 p{
+     .card_1 p{
           font-size: 15px;
      }
      .ant-carousel .slick-prev,
@@ -83,26 +125,31 @@
      height:28px;
   background-color: #f4aac062;
 
-}
-
-
-     
+}    
 } 
 @media screen and (min-width:901px) and (max-width:1200px){
      .app{
-         
+         width: 95%;
+         margin:0 auto;
      }
      .inputSearch{
           right: 12rem;
      }
      
-     .slider_1{
-          margin:2px;
+     .mainAllProduct{
+          display: block;
      }
-     #card_1{
+     .bannerSale{
+          display: none;
+     
+     }
+     .slider_1{
+          width:100%;
+     }
+     .card_1{
           margin: 5px;
      }
-     #card_1 p{
+     .card_1 p{
           font-size: 15px;
      }.ant-carousel .slick-prev,
      .ant-carousel .slick-next,
