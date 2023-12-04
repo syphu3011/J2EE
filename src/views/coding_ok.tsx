@@ -9,6 +9,7 @@ import { importProduct, importProductHistory, removeImportProduct } from '../con
 import { addProvider, editProvider, getProvider, removeProvider } from '../controllers/modules/admin/provider';
 import { addPrivileges, editPrivileges, getPrivileges, removePrivileges } from '../controllers/modules/admin/privileges';
 import { addStaff, editStaff, getStaff, grantAccount, removeAccount, removeStaff } from '../controllers/modules/admin/staff';
+import { buy } from '../controllers/modules/customer/buy';
 
 export default class Coding_ok extends React.Component<any, any>   
 {   
@@ -115,7 +116,13 @@ export default class Coding_ok extends React.Component<any, any>
             //     })
             // })
             // addStaff("Thử nghiệm nhân viên 2", "2002-12-30", "0329382999", "0302955392").then(rs => {
-                removeAccount("aimabietneee@gmail.com")
+                // removeAccount("aimabietneee@gmail.com")
+                buy(0,"279 Lâm Văn Bền", [{
+                    masanpham: 1,
+                    makichco: 1,
+                    mamau: 1,
+                    soluong: 100
+                }])
             // })
             // editStaff(4, "Thử nghiệm nhân viên 2", "2002-12-30", "0329382999", "0302955392", 1)
             // removeStaff(4)

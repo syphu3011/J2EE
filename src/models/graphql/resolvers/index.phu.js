@@ -13,4 +13,5 @@ const LichSuHeThongResolvers = require('./lichsuhethong');
 const HangTrongKhoResolvers = require('./hangtrongkho');
 const ChiTietPhieuNhapResolvers = require('./chitietphieunhap');
 const NhanVienResolvers = require('./nhanvien');
-module.exports = [SanPhamResolvers, LoaiResolvers, NhaCungCapResolvers, TrangThaiNhaCungCapResolvers, PhieuNhapResolvers, MatHangResolvers, DonViResolvers, ChucNangResolvers, TaiKhoanResolvers, QuyenResolvers, KhachHangResolvers, LichSuHeThongResolvers, HangTrongKhoResolvers, ChiTietPhieuNhapResolvers, NhanVienResolvers]
+const HoaDonResolvers = require('./hoadon');
+module.exports = [SanPhamResolvers, LoaiResolvers, NhaCungCapResolvers, TrangThaiNhaCungCapResolvers, PhieuNhapResolvers, MatHangResolvers, DonViResolvers, ChucNangResolvers, TaiKhoanResolvers, QuyenResolvers, KhachHangResolvers, LichSuHeThongResolvers, HangTrongKhoResolvers, ChiTietPhieuNhapResolvers, NhanVienResolvers, HoaDonResolvers]

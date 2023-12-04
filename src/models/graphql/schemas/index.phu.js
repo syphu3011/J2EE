@@ -18,4 +18,6 @@ const HangTrongKhoType = require('./hangtrongkho')
 const ChiTietPhieuNhapType = require('./chitietphieunhap')
 const NhanVienType = require('./nhanvien'); 
 const TrangThaiNhanVienType = require('./trangthainhanvien')
-module.exports = [SanPhamType, LoaiType, NhaCungCapType, TrangThaiNhaCungCapType, PhieuNhapType, MauType, DonViType, KichCoType, MatHangType, ChucNangType, TaiKhoanType, QuyenType, TrangThaiSanPhamType, KhachHangType, LichSuHeThongType, TrangThaiKhachHangType, HangTrongKhoType, ChiTietPhieuNhapType, NhanVienType, TrangThaiNhanVienType]
+const HoaDonType = require('./hoadon')
+const TrangThaiHoaDonType = require('./trangthaihoadon')
+module.exports = [SanPhamType, LoaiType, NhaCungCapType, TrangThaiNhaCungCapType, PhieuNhapType, MauType, DonViType, KichCoType, MatHangType, ChucNangType, TaiKhoanType, QuyenType, TrangThaiSanPhamType, KhachHangType, LichSuHeThongType, TrangThaiKhachHangType, HangTrongKhoType, ChiTietPhieuNhapType, NhanVienType, TrangThaiNhanVienType, HoaDonType, TrangThaiHoaDonType]
