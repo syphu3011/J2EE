@@ -1,6 +1,10 @@
 import { Col, DatePicker, Layout, Row, Select, SelectProps, Space } from "antd";
 //import "../../../style/product.css";
 import { Bar, Line, Pie } from "react-chartjs-2";
+import { CategoryScale, Chart,LinearScale,  BarElement} from "chart.js";
+
+Chart.register([CategoryScale,LinearScale, BarElement]);
+
 const { Header, Content } = Layout;
 import React, { useState } from "react";
 import dayjs from "dayjs";
@@ -65,6 +69,7 @@ const StatChart = () => {
       },
     ],
   });
+  
   return (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
@@ -84,5 +89,5 @@ const StatChart = () => {
       </Layout>
     </Space>
   );
-          };
+};
 export default StatChart;
