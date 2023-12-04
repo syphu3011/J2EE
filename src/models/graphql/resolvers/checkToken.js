@@ -78,7 +78,7 @@ async function checkAndResolveWithOutData (taikhoan, callback, noidunglichsu, na
             const check_pri = await checkPrivileges(taikhoan, name_func)
             if (check_pri) {
                 const rs = await callback(check_pri)
-                if (rs.status == '200' || rs.status == '201') {
+                if (rs.status == '200' || rs.status == '201' || rs.status == 200 || rs.status == 201) {
                     if (noidunglichsu && noidunglichsu !== "") {
                         const noidunglichsu_full = `${check_pri.ma} ${check_pri.ten} ${noidunglichsu}`
                         await LichSuHeThong.create({ noidung: noidunglichsu_full })

@@ -42,8 +42,7 @@ module.exports = (sequelize, DataTypes) => {
             matrangthai: {
                 type: DataTypes.INTEGER,
                 references: "TrangThaiKhachHang",
-            },
-            email: DataTypes.STRING,
+            }
         },
         {
             sequelize,
