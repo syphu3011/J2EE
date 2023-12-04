@@ -9,7 +9,7 @@ import LoadingPage from "../../loadingPage";
 
 function ProductDetail() {
     const {updateItem}=useCart();
-    const {nameId,Id} = useParams()
+    const {Id} = useParams()
     let [thisProduct, setThisProduct] = useState<any>()
     // const [activeImg, setActiveImage] = useState(convertB64ToImage(thisProduct.anhminhhoa))
     const [amount, setAmount] = useState(1);
@@ -57,7 +57,7 @@ function ProductDetail() {
       useEffect(() => {
         async function process () {
             if (isFirst) {
-                thisProduct = (await getProductData("data")).find(e => {return e.ten == nameId && e.ma == Id })
+                thisProduct = (await getProductData("data")).find(e => {return e.ma == Id })
                 setThisProduct(thisProduct)
                 const colors = thisProduct.mathang.map(prod => prod.mau.ten).reduce((unique, mau) => {
                     if (!unique.includes(mau)) {
@@ -82,7 +82,7 @@ function ProductDetail() {
             }
         }
         process()
-      })
+      },[])
      return (
         isFirst ? <LoadingPage/>:
          <div className="product-detail-container">

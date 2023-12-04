@@ -22,7 +22,7 @@ export default class BannerHeader extends React.Component {
     return (
       <Carousel autoplay>
         {imageUrls.map((imageUrl, index) => (
-        <div key={index}>
+        <div key={index} className="bannerCarousel">
           <Image src={imageUrl} alt={`Image ${index + 1}`} className="Headerbanner" />
         </div>
         ))}
