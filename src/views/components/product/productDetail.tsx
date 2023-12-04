@@ -5,12 +5,13 @@ import { useEffect, useState } from "react";
 import AddToCartButton from "../cart/addToCartButton";
 import { useCart } from "react-use-cart";
 import { convertB64ToImage } from "../../../../utils/util";
+import LoadingPage from "../../loadingPage";
 
 function ProductDetail() {
     const {updateItem}=useCart();
     const {nameId,Id} = useParams()
-    const thisProduct = getProductData().find(prod =>prod.ma===Id && prod.ten=== nameId)
-    const [activeImg, setActiveImage] = useState(convertB64ToImage(thisProduct.anhminhhoa))
+    let [thisProduct, setThisProduct] = useState<any>()
+    // const [activeImg, setActiveImage] = useState(convertB64ToImage(thisProduct.anhminhhoa))
     const [amount, setAmount] = useState(1);
     const [isFirst, setIsFirst] = useState(true);
     const handleQuantityChange = (value) => {
@@ -20,9 +21,9 @@ function ProductDetail() {
       };
     
     
-      const [selectedColor, setSelectedColor] = useState(thisProduct.mathang[0].mau.ten);
-      const [selectedSize, setSelectedSize] = useState(thisProduct.mathang[0].kichco.ten);
-      const [selectedMH, setSelectedMH] = useState(thisProduct.mathang[0]);
+      const [selectedColor, setSelectedColor] = useState<any>();
+      const [selectedSize, setSelectedSize] = useState<any>();
+      let [selectedMH, setSelectedMH] = useState<any>();
       const [listColor, setListColor] = useState([]);
       const [listSize, setListSize] = useState([]);
       const handleColorChange = (color) => {
@@ -54,27 +55,36 @@ function ProductDetail() {
       };
       let imageCount = 0
       useEffect(() => {
-        if (isFirst) {
-            const colors = thisProduct.mathang.map(prod => prod.mau.ten).reduce((unique, mau) => {
-                if (!unique.includes(mau)) {
-                unique.push(mau);
-                }
-                return unique;
-            }, []);
-            const sizes = thisProduct.mathang.map(prod => prod.kichco.ten).reduce((unique, kichco) => {
-                if (!unique.includes(kichco)) {
-                unique.push(kichco);
-                }
-                return unique;
-            }, []);
-            setListColor(colors)
-            setListSize(sizes)
-            setAmount(selectedMH.soluong > 0 ? 1 : 0)
-            setIsFirst(false)
+        async function process () {
+            if (isFirst) {
+                thisProduct = (await getProductData("data")).find(e => {return e.ten == nameId && e.ma == Id })
+                setThisProduct(thisProduct)
+                const colors = thisProduct.mathang.map(prod => prod.mau.ten).reduce((unique, mau) => {
+                    if (!unique.includes(mau)) {
+                    unique.push(mau);
+                    }
+                    return unique;
+                }, []);
+                const sizes = thisProduct.mathang.map(prod => prod.kichco.ten).reduce((unique, kichco) => {
+                    if (!unique.includes(kichco)) {
+                    unique.push(kichco);
+                    }
+                    return unique;
+                }, []);
+                setListColor(colors)
+                setListSize(sizes)
+                setSelectedColor(thisProduct.mathang[0].mau.ten)
+                setSelectedSize(thisProduct.mathang[0].kichco.ten)
+                selectedMH = thisProduct.mathang[0]
+                setSelectedMH(thisProduct.mathang[0])
+                setAmount(selectedMH.soluong > 0 ? 1 : 0)
+                setIsFirst(false)
+            }
         }
+        process()
       })
      return (
-        
+        isFirst ? <LoadingPage/>:
          <div className="product-detail-container">
              <Row>
                 <Col flex="2">

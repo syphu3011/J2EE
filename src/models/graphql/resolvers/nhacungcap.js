@@ -90,20 +90,23 @@ module.exports = {
   },
   Query: {
     nhacungcap: async () => {
-      try {
-        const rs = {
-          status: STATUS_CODE.query_success,
-          message: "Lấy nhà cung cấp thành công!",
-          data: await NhaCungCap.findAll()
+      async function callback(e) {
+        try {
+          const rs = {
+            status: STATUS_CODE.query_success,
+            message: "Lấy nhà cung cấp thành công!",
+            data: await NhaCungCap.findAll()
+          }
+          return rs
         }
-        return rs
-      }
-      catch (e) {
-        return {
-          status: STATUS_CODE.query_fail,
-          message: "Nhà cung cấp không tồn tại!"
+        catch (e) {
+          return {
+            status: STATUS_CODE.query_fail,
+            message: "Nhà cung cấp không tồn tại!"
+          }
         }
       }
+      return await checkAndResolveAdmin(context.taikhoan, callback,  CHUCNANG.THEMNHACUNGCAP)
     },
     // async nhacungcapvoithuoctinh(root, args, context) {
     //   try {

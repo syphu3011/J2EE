@@ -8,7 +8,9 @@ module.exports = gql`
         sodienthoai: String
         socccd: String
         tentaikhoan: String
-        matrangthai: Int
+        matkhau: String
+        trangthai: TrangThaiNhanVien
+        quyen: Quyen
         email: String
     }
 
@@ -16,13 +18,19 @@ module.exports = gql`
         ma: Int
         ten: String!
         ngaysinh: String!
-        sodienthoai: Int!
-        socccd: Int!
-        tentaikhoan: String!
+        sodienthoai: String!
+        socccd: String!
+        tentaikhoan: String
+        maquyen: Int
         matrangthai: Int!
-        email: String!
+        email: String
     }
-
+    input TaiKhoanNhanVienInput {
+        manhanvien: Int
+        tentaikhoan: String
+        matkhau: String
+        maquyen: Int
+    }
     input NhanVienQuery {
         ma: Int
         ten: String
@@ -48,8 +56,10 @@ module.exports = gql`
     }
 
     extend type Mutation {
-        taoNhanVien(input: NhanVienInput!): NhanVienResponse
+        themNhanVien(input: NhanVienInput!): NhanVienResponse
         suaNhanVien(input: NhanVienInput!): NhanVienResponse
         xoaNhanVien(ma: Int!): NhanVienResponse
+        captaikhoan(input: TaiKhoanNhanVienInput): NhanVienResponse
+        xoataikhoan(input: TaiKhoanNhanVienInput): NhanVienResponse
     }
 `;

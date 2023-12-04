@@ -4,16 +4,16 @@ import {SearchOutlined} from "@ant-design/icons";
 import {getProductData} from "../product/productData";
 export const SearchItem = ({setResults})=>{
      const [input,setInput] = useState("");
-     const getData = (value)=>{
-          const results = getProductData().filter((item) => {
+     const getData = async (value)=>{
+          const results = (await getProductData('data')).filter((item) => {
                return value && item.name && item.name.toLowerCase().includes(value);
              }).slice(0, 5);
              setResults(results);
            };
      
-     const handleChange=(value)=>{
+     const handleChange=async (value)=>{
           setInput(value);
-          getData(value);
+          await getData(value);
           
      }
      return(
