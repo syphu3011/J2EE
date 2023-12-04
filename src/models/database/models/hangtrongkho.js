@@ -17,6 +17,10 @@ module.exports = (sequelize, DataTypes) => {
             HangTrongKho.belongsTo(models.KichCo, {as: "KichCo", foreignKey: "makichco"})
             HangTrongKho.belongsTo(models.PhieuNhap, {as: "PhieuNhap", foreignKey: "maphieunhap"})
             HangTrongKho.belongsTo(models.TrangThaiSanPham, {as: 'TrangThaiSanPham', foreignKey: 'matrangthai'}) 
+            HangTrongKho.belongsToMany(models.HoaDon, {as: 'HoaDonSanPham',through:'ChiTietHoaDon', foreignKey:"masanpham"})
+            HangTrongKho.belongsToMany(models.HoaDon, {as: 'HoaDonMau',through:'ChiTietHoaDon', foreignKey:"mamau"})
+            HangTrongKho.belongsToMany(models.HoaDon, {as: 'HoaDonKichCo',through:'ChiTietHoaDon', foreignKey:"makichco"})
+            HangTrongKho.belongsToMany(models.HoaDon, {as: 'HoaDonPhieuNhap',through:'ChiTietHoaDon', foreignKey:"maphieunhap"})
         }
     }
     HangTrongKho.init(

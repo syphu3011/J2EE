@@ -10,6 +10,7 @@ import { addProvider, editProvider, getProvider, removeProvider } from '../contr
 import { addPrivileges, editPrivileges, getPrivileges, removePrivileges } from '../controllers/modules/admin/privileges';
 import { addStaff, editStaff, getStaff, grantAccount, removeAccount, removeStaff } from '../controllers/modules/admin/staff';
 import { buy } from '../controllers/modules/customer/buy';
+import { cancelOrder, confirmOrder, getOrders } from '../controllers/modules/admin/order';
 
 export default class Coding_ok extends React.Component<any, any>   
 {   
@@ -117,12 +118,15 @@ export default class Coding_ok extends React.Component<any, any>
             // })
             // addStaff("Thử nghiệm nhân viên 2", "2002-12-30", "0329382999", "0302955392").then(rs => {
                 // removeAccount("aimabietneee@gmail.com")
-                buy(0,"279 Lâm Văn Bền", [{
-                    masanpham: 1,
-                    makichco: 1,
-                    mamau: 1,
-                    soluong: 100
-                }])
+                // buy(0,"279 Lâm Văn Bền", [{
+                //     masanpham: 6,
+                //     makichco: 1,
+                //     mamau: 5,
+                //     soluong: 20
+                // }])
+                confirmOrder(26)
+                // getOrders()
+                // getProductInStock()
             // })
             // editStaff(4, "Thử nghiệm nhân viên 2", "2002-12-30", "0329382999", "0302955392", 1)
             // removeStaff(4)
@@ -134,6 +138,5 @@ export default class Coding_ok extends React.Component<any, any>
             <div >
                {JSON.stringify(this.state.test)} 
           </div>
-        
    ) }  
 }  
