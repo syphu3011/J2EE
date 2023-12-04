@@ -1,2 +1,2 @@
-export declare function setProductData(prod: any): void;
-export declare function getProductData(): any;
+export declare function setProductData(prodCate: any, prod: any): Promise<any>;
+export declare function getProductData(key: any): Promise<any>;

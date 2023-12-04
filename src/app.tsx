@@ -27,6 +27,12 @@ import Status from "./views/admin/components/pagecontent/status/Status";
 import LoginOTP from "./views/admin/components/loginpage/loginOTP";
 import LayoutPage from "./views/admin/components/layout";
 import { postKeyToServer } from "./controllers/modules/key";
+import ProductDetail from "./views/components/product/productDetail";
+import PageContent from "./views/components/content/content";
+import DeliveryInform from "./views/components/cart/deliveryInform";
+import CategoryMediate from "./views/pages/category/CategoryMediate";
+import UpdateInformation from "./views/pages/editInformation/updateInformation";
+import Home from "./views/pages/home/home";
 const param = window.location.search;
 let component_render;
 switch (param) {
@@ -38,13 +44,19 @@ switch (param) {
       <HashRouter>
         <Routes>
           <Route
-            index path="/"
+            path="/"
             element={
               <CartProvider>
                 <Main />
               </CartProvider>
             }
-          />
+          >
+            <Route path='/' element={<Home/>}></Route>
+            <Route path="/:categoryId" element={<CategoryMediate/>}></Route>
+            <Route path="/cap-nhat-thong-tin" element={<UpdateInformation/>}></Route>
+            <Route path="/products/:Id/:nameId" element={<ProductDetail/>}></Route>
+            <Route path="/gio-hang/xac-nhan-thong-tin-giao-hang" element={<DeliveryInform />}></Route>
+          </Route>
           <Route path="/LoginAdmin" element={<Login />}></Route>
           <Route path="/AccessOTP" element={<LoginOTP />}></Route>
           <Route path="/Admin" element={<LayoutPage />}>

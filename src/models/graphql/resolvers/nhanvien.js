@@ -4,8 +4,10 @@ const {
     sequelize,
     HoaDon,
     PhieuNhap,
+    TaiKhoan
 } = require("../../database/models/");
 const {STATUS_CODE} = require("../const");
+const bcrypt = require("bcrypt")
 
 module.exports = {
     Mutation: {
@@ -18,8 +20,7 @@ module.exports = {
                     ngaysinh,
                     sodienthoai,
                     socccd,
-                    tentaikhoan,
-                    email,
+                    maquyen,
                     matrangthai,
                 } = args.input;
                 const rs = await NhanVien.create({
@@ -27,8 +28,7 @@ module.exports = {
                     ngaysinh,
                     sodienthoai,
                     socccd,
-                    tentaikhoan,
-                    email,
+                    maquyen,
                     matrangthai,
                 });
                 await transaction.commit();
@@ -55,8 +55,6 @@ module.exports = {
                     ngaysinh,
                     sodienthoai,
                     socccd,
-                    tentaikhoan,
-                    email,
                     matrangthai,
                 } = args.input;
 
@@ -74,8 +72,7 @@ module.exports = {
                     ngaysinh,
                     sodienthoai,
                     socccd,
-                    tentaikhoan,
-                    email,
+                    maquyen,
                     matrangthai,
                 });
 
@@ -95,6 +92,95 @@ module.exports = {
                 };
             }
         },
+        async xoaNhanVien(root, args, context) {
+            const {ma} = args
+            let transaction
+            try {
+                transaction = await sequelize.transaction()
+                const nhanvien = await NhanVien.findByPk(ma) 
+                try {
+                    await nhanvien.destroy()
+                }
+                catch (e) {
+                    await nhanvien.update({matrangthai: 2}) 
+                }
+                await transaction.commit()
+                return {
+                    status: 200,
+                    message: "Xóa nhân viên thành công!"
+                }
+            }   
+            catch(e) {
+                await transaction.rollback()
+                return {
+                    status: 400,
+                    message: "Xóa nhân viên không thành công!"
+                }
+            }
+        },
+        async captaikhoan(root, args, context) {
+            const {tentaikhoan, matkhau, maquyen, manhanvien} = args.input 
+            let transaction
+            try {
+                transaction = await sequelize.transaction()
+                if (!(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(tentaikhoan))) {
+                    return {
+                      status: STATUS_CODE.create_fail,
+                      message: "Email không hợp lệ!"
+                    }
+                }
+                const nhanvien = await NhanVien.findByPk(manhanvien)
+                if (nhanvien.tentaikhoan) {
+                    const taikhoan = await TaiKhoan.findByPk(nhanvien.tentaikhoan)
+                    await nhanvien.update({tentaikhoan: null})
+                    await taikhoan.destroy()
+                }
+                const matkhaubam = bcrypt.hashSync(matkhau, bcrypt.genSaltSync(10))
+                const them_tai_khoan = await TaiKhoan.create({
+                    tentaikhoan, matkhau:matkhaubam, maquyen
+                })
+                await nhanvien.update({tentaikhoan})
+                await transaction.commit()
+                return {
+                    status: 201,
+                    message: "Cấp tài khoản cho nhân viên thành công!"
+                }
+            }
+            catch(e) {
+                await transaction.rollback()
+                return {
+                    status: 400,
+                    message: "Cấp tài khoản cho nhân viên không thành công!"
+                }
+            }
+        },
+        async xoataikhoan(root, args, context) {
+            const {tentaikhoan} = args.input 
+            let transaction
+            try {
+                transaction = await sequelize.transaction()
+                const nhanvien = await NhanVien.findOne({
+                    where: {
+                        tentaikhoan
+                    }
+                })
+                await nhanvien.update({tentaikhoan: null})
+                const taikhoan = await TaiKhoan.findByPk(tentaikhoan)
+                await taikhoan.destroy()
+                await transaction.commit()
+                return {
+                    status: 200,
+                    message: "Xóa tài khoản thành công!"
+                }
+            }
+            catch(e) {
+                await transaction.rollback()
+                return {
+                    status: 400,
+                    message: "Xóa tài khoản không thành công!"
+                }
+            }
+        }
     },
     Query: {
         nhanvien: async () => {
@@ -160,7 +246,9 @@ module.exports = {
             }
         },
     },
-    Query: {
-    
+    NhanVien: {
+        trangthai: (nhanvien) => {
+            return nhanvien.getTrangThaiNhanVien()
+        }
     }
 };
