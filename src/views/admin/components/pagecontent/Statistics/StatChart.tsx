@@ -3,7 +3,7 @@ import { Col, DatePicker, Layout, Row, Select, SelectProps, Space } from "antd";
 import { Bar, Line, Pie } from "react-chartjs-2";
 const { Header, Content } = Layout;
 import React, { useState } from "react";
-import dayjs from "dayjs";
+
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 60,
@@ -61,28 +61,25 @@ const StatChart = () => {
         data: UserData.map((data) => data.userGain),
         backgroundColor: "rgba(75,192,192,1)",
         borderColor: "black",
-        borderWidth: 1
+        borderWidth: 1,
       },
     ],
   });
   return (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
-        <Header style={headerStyle}>
-        </Header>
+        <Header style={headerStyle}></Header>
         <Content style={contentStyle}>
-      
-              <Bar data={chartData} />
-            {/* <div style={{ width: 700 }}>
+          <Bar data={chartData} />
+          {/* <div style={{ width: 700 }}>
               <Line data={chartData} />
             </div>
             <div style={{ width: 700 }}>
               <Pie data={chartData} />
             </div> */}
-
         </Content>
       </Layout>
     </Space>
   );
-          };
+};
 export default StatChart;
