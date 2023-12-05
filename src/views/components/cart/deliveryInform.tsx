@@ -69,9 +69,10 @@ const DeliveryInform = () => {
           setMax(newMaxValue);
         };
      const handleSubmitDeliver=async({fullname,phone,email,address})=>{
-          const formValues=[fullname,phone,email,address]
-          console.log("Form values:", formValues);
-          setFormValues(formValues);
+          // const formValues=[fullname,phone,email,address]
+          // console.log("Form values:", formValues);
+          // setFormValues(formValues);
+          
           form.resetFields();
           emptyCart();
           Modal.success({

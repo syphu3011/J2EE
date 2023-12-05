@@ -76,30 +76,30 @@ const treeData: DataNode[]=[
                               key:"parka-fashion",
                          }
                     ]
-               }
-          ]
-     },
-     {
-          title:"Phụ kiện",
-          key:"phukien",
-          children:[
-               {
-                    title:"Nón",
-                    key:"non"
                },{
-                    title:"Nơ cài",
-                    key:"nocai",
+                    title:"Phụ kiện",
+                    key:"phukien",
+                    children:[
+                         {
+                              title:"Nón",
+                              key:"non"
+                         },{
+                              title:"Nơ cài",
+                              key:"nocai",
+                         },
+                         {
+                              title:"Vớ",
+                              key:"vo",
+                         },
+                         {
+                              title:"Thắt lưng",
+                              key:"thatlung",
+                         }
+                    ]
                },
-               {
-                    title:"Vớ",
-                    key:"vo",
-               },
-               {
-                    title:"Thắt lưng",
-                    key:"thatlung",
-               }
           ]
      },
+     
      {
           title:"Kích cỡ",
           key:"size",
@@ -153,7 +153,7 @@ const treeData: DataNode[]=[
           ]
      },
 ]
-export default function FilterProduct(){
+export default function FilterProduct({ onColorSelect }){
      const [expandedKeys, setExpandedKeys] = useState<React.Key[]>(['types','shirt', 'trousers','size','phukien','price','dress','jackets']);//mo rong not dung trong cay
      const onExpand = (expandedKeysValue: React.Key[]) => {
           console.log('onExpand', expandedKeysValue);
@@ -169,7 +169,7 @@ export default function FilterProduct(){
                </Tree>
                <div>
                     <span>Màu sắc</span>
-                    <ColorGroups/>
+                    <ColorGroups onColorSelect={onColorSelect}/>
                </div>
           </div>
      )

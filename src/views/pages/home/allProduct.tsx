@@ -53,7 +53,7 @@ export default function AllProduct() {
     return productData.map((product) => (
       <div>
         <Card key={product.ma + ""} className="card_1">
-          <Link to={`/products/${product.ma}/${product.ten}`}>
+          <Link to={`/products/${product.ma}`}>
             <Image
               src={convertB64ToImage(product.anhminhhoa)}
               className="image-card"
@@ -95,9 +95,9 @@ export default function AllProduct() {
               allProducts.push(...productData1)
               productWithCategoryComponentTemp.push(
                 <>
-                  <div className="allProduct" data-aos="fade-left">
+                  <div className="allProduct" data-aos="fade-right">
                     <div>
-                      <h3>{category.ten}</h3>
+                      <h3>Bộ Sưu Tập {category.ten}</h3>
                     </div>
                   </div>
                   <div className="mainAllProduct">
@@ -151,7 +151,7 @@ export default function AllProduct() {
       <div id="sale_2" data-aos="fade-up">
         <Image src={sale2}></Image>
       </div>
-      <div>
+      <div className="produtcsAll">
         <div className="allProduct_2" data-aos="fade-left">
           <div>
             <h3>TỔNG SẢN PHẨM</h3>
@@ -159,7 +159,7 @@ export default function AllProduct() {
         </div>
         {allProductComponent}
       </div>
-      <div>
+      {/* <div>
         <div id="sale_2" data-aos="fade-up">
           <Image src={sale3}></Image>
         </div>
@@ -169,7 +169,7 @@ export default function AllProduct() {
           </div>
         </div>
         
-      </div>
+      </div> */}
       <div id="card_footer">
         <Card className="Card_footer">
           <CheckCircleOutlined className="icon-card-footer" />

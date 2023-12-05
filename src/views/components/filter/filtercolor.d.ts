@@ -1,3 +1,5 @@
 import "../../Styles/color.css";
-declare const ColorGroups: () => import("react/jsx-runtime").JSX.Element;
+declare const ColorGroups: ({ onColorSelect }: {
+    onColorSelect: any;
+}) => import("react/jsx-runtime").JSX.Element;
 export default ColorGroups;
