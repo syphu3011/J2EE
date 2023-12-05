@@ -9,8 +9,8 @@ module.exports = {
         let transaction
         try {
           transaction = await sequelize.transaction()
-          const {makhachhang, diachi, sanpham, email, sodienthoai} = args.input
-          const hoadon = await HoaDon.create({makhachhang, diachi, matrangthaihoadon: 1, email, sodienthoai})
+          const {makhachhang, diachi, sanpham, email, sodienthoai, tenkhachhang} = args.input
+          const hoadon = await HoaDon.create({makhachhang, diachi, matrangthaihoadon: 1, email, sodienthoai, tenkhachhang})
           let hangtrongkho_list = []
           for (const sp of sanpham) {
             const hangtrongkho = await HangTrongKho.findOne({
@@ -28,6 +28,15 @@ module.exports = {
             })
             const mau = await Mau.findByPk(sp.mamau)
             const kichco = await KichCo.findByPk(sp.makichco)
+            //hết hàng hoặc ko có
+            if (!hangtrongkho) {
+              await transaction.rollback()
+              return {
+                status: 400,
+                message: "Hàng có mã "+sp.masanpham+ ", màu " + mau.ten + ", size: "+kichco.ten+ " đã hết hoặc không tồn tại!"+"Quý khách vui lòng đặt lại!" 
+              }
+            }
+            //ngưng bán
             if (hangtrongkho.matrangthai == 2) {
               await transaction.rollback()
               return {
@@ -35,6 +44,7 @@ module.exports = {
                 message: "Hàng có mã "+sp.masanpham+ ", màu " + mau.ten + ", size: "+kichco.ten+ " đã ngưng bán!"+"Quý khách vui lòng đặt lại!" 
               }
             }
+            //thiếu hàng
             if (hangtrongkho.soluong < sp.soluong) {
               await transaction.rollback()
               return {
