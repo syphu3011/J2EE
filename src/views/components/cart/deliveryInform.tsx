@@ -1,10 +1,10 @@
 import { Avatar, Breadcrumb, Col, Empty, Form, FormInstance, Input, List, Modal, Pagination, Row } from "antd";
 import Login from "../login/login";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {ArrowLeftOutlined} from "@ant-design/icons";
 import { useCart } from "react-use-cart";
-
-
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable'
 interface DeliveryProps{
      setIsLoggedIn:(isLoggedIn:boolean)=>void;
 }
@@ -68,18 +68,153 @@ const DeliveryInform = () => {
           setMin(newMinValue);
           setMax(newMaxValue);
         };
-     const handleSubmitDeliver=async({fullname,phone,email,address})=>{
+        const convertToNonAccentVietnamese = (string) => {
+          var accentVietnamese = 'àáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴĐ';
+          var nonAccentVietnamese = 'aaaaaaaaaaaaaaaaaeeeeeeeeeeeiiiiiooooooooooooooooouuuuuuuuuuuyyyyydAAAAAAAAAAAAAAAAAEEEEEEEEEEEIIIIIOOOOOOOOOOOOOOOOOUUUUUUUUUUUYYYYYYD';
+                
+          let result = '';
+          for (let i = 0; i < string.length; i++) {
+            const char = string[i];
+            const index = accentVietnamese.indexOf(char);
+            if (index !== -1) {
+              result += nonAccentVietnamese[index];
+            } else {
+              result += char;
+            }
+          }
+        
+          return result;
+        };
+        
+        const generateAndDownloadPDF = async (invoiceDetails, productList) => {
+          const doc = new jsPDF();
+          //const { autoTable } = require('jspdf-autotable').default;
+        
+          const centerText = (text, y) => {
+            const textWidth = doc.getTextWidth(text);
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const x = (pageWidth - textWidth) / 2;
+            doc.text(text, x, y);
+            doc.setFont('Arial', 'bold');
+          };
+        
+          centerText('BILL', 10);
+          doc.text('Recipient\'s Name: ' + convertToNonAccentVietnamese(invoiceDetails.fullname), 10, 20);
+          doc.text('Phone: ' + invoiceDetails.phone, 10, 30);
+          doc.text('Email: '+ invoiceDetails.email, 10, 40);
+          doc.text('Delivery Address: ' + convertToNonAccentVietnamese(invoiceDetails.address), 10, 50);
+        
+          const tableData = productList.map(product => [
+               convertToNonAccentVietnamese(product.name),
+            product.quantity,
+            product.price
+          ]);
+        
+          const startY = 60;
+          const rowHeight = 15;
+          const columns = [
+            { header: 'Product', dataKey: 'product' },
+            { header: 'Quantity', dataKey: 'quantity' },
+            { header: 'Price', dataKey: 'price' }
+          ];
+        
+          doc.setFont('Arial', 'bold');
+          doc.setFillColor(200, 200, 200);
+          doc.setTextColor(0, 0, 0);
+        
+          autoTable(doc, {
+            startY: startY,
+            head: [columns.map(column => column.header)],
+            body: tableData.map(rowData => ({
+              product: rowData[0],
+              quantity: rowData[1],
+              price: rowData[2]
+            })),
+            columns: columns,
+            margin: { top: 10 ,left:10, right:10, bottom:10},
+            styles: { fontSize: 12},
+            columnStyles: {
+              product: { cellWidth: 80, fontStyle: 'bold' },
+              quantity: { cellWidth: 40 },
+              price: { cellWidth: 40 }
+            }
+          });
+        
+          const totalText = 'Total: ';
+          const totalAmount = totalItemTotal.toLocaleString();
+        
+          const totalTextWidth = doc.getTextWidth(totalText);
+          const totalAmountWidth = doc.getTextWidth(totalAmount);
+          const pageHeight = doc.internal.pageSize.getHeight();
+        
+          const tableBottomY = startY + (tableData.length + 1) * rowHeight; // +1 for the header row
+          const totalY = tableBottomY + 15;
+        
+          const totalTextX = doc.internal.pageSize.getWidth() - totalTextWidth - totalAmountWidth - 15;
+          const totalAmountX = doc.internal.pageSize.getWidth() - totalAmountWidth - 15;
+        
+          doc.text(totalText, totalTextX, totalY);
+          doc.text(totalAmount, totalAmountX, totalY);
+        
+          const pdfPath = 'invoice.pdf';
+          doc.save(pdfPath);
+          // const nodemailer = require('nodemailer')
+          const fs = require('fs');
+
+          // Đọc nội dung tệp PDF
+          const pdfContent = fs.readFileSync('invoice.pdf');
+          
+          // const transporter = nodemailer.createTransport({
+          //      service: 'Gmail',
+          //      auth: {
+          //        user: 'vmtpshop@gmail.com',
+          //        pass: 'mgca fhab qtst weev',
+          //      }
+          //    });
+
+          // // Cấu hình thông tin email
+          // const mailOptions = {
+          // from: 'vmtpshop@gmail.com',
+          // to: invoiceDetails.email,
+          // subject: 'HÓA ĐƠN BẠN VỪA ĐẶT HÀNG',
+          // text: 'Cám ơn bạn đã trao niềm tin cho chúng tôi!',
+          // attachments: [
+          // {
+          // filename: pdfPath,
+          // content: pdfContent
+          // }
+          // ]
+          // };
+          // try {
+          //      // Gửi email sau khi đã lưu tệp PDF
+          //      await transporter.sendMail(mailOptions);
+          //      console.log('Email sent successfully');
+          //    } catch (error) {
+          //      console.log('Error occurred while sending email:', error);
+          // }       
+        };
+     const handleSubmitDeliver=async(invoiceDetails)=>{
           // const formValues=[fullname,phone,email,address]
           // console.log("Form values:", formValues);
           // setFormValues(formValues);
-          
-          form.resetFields();
-          emptyCart();
-          Modal.success({
-               content:"Đơn hàng đã được gửi đến cho người bán!"
-          })
+          // const invoiceDetails = {
+          //      fullname,
+          //      phone,
+          //      email,
+          //      address,
+          //      items: items, // Assuming 'items' contains the list of purchased products
+          //      total: totalItemTotal,
+          //    };
+          const { fullname, phone, email, address} = invoiceDetails;
+          // Create the PDF content using the InvoicePDF component
+          generateAndDownloadPDF(invoiceDetails, items);        
+             form.resetFields();
+             emptyCart();
+             Modal.success({
+               content: 'Đơn hàng đã được gửi đến cho người bán!',
+             });
      }  
-          
+
           //const{isLoggedIn,showFormLogin}=this.state;
           return(
                <>
@@ -131,7 +266,7 @@ const DeliveryInform = () => {
                               ]
                          }
                          >
-                              <Input addonBefore="+84" placeholder="Số điện thoại" value={isLoggedIn ? users[0].email : ""} size="large"/>
+                              <Input addonBefore="+84" placeholder="Số điện thoại" value="" size="large"/>
                          </Form.Item>
                          <Form.Item 
                          name="email"
@@ -152,7 +287,7 @@ const DeliveryInform = () => {
                               ]
                          }
                          >
-                              <Input placeholder="Nhập Email" size="large" value=""/>
+                              <Input placeholder="Nhập Email" size="large" value={isLoggedIn ? users[0].email : ""}/>
                          </Form.Item>
                          <Form.Item name="address" hasFeedback 
                          label="Địa chỉ"
@@ -196,13 +331,13 @@ const DeliveryInform = () => {
                                />
                               </List.Item>
                          ))}
-                         <p style={{fontSize:"20px",padding:"1rem"}}>Thành tiền : {totalItemTotal.toLocaleString()}</p>
+                         <p style={{fontSize:"20px",padding:"1rem",float:"right",color:"#F25181"}}>Thành tiền : {totalItemTotal.toLocaleString()} VND</p>
                         </List>
                         <Pagination
                           defaultCurrent={1}
                               total={items.length}
                          defaultPageSize={pageSize}
-                         onChange={handlePageChange}
+                         onChange={handlePageChange} style={{padding:"1rem"}}
                          />
                         </div>
                               
@@ -212,6 +347,8 @@ const DeliveryInform = () => {
           </div>
           <div className={`login-form ${showFormLogin ? 'active' : ''}`}>
           <Login onClose={handleLoginClose} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
+          </div>
+          <div>
           </div>
           </>
           

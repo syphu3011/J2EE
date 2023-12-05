@@ -6,6 +6,8 @@ import banner1 from "../../components/Image/bannerHeader/Banner6.png";
 import banner2 from "../../components/Image/bannerHeader/Banner7.png";
 import { getProductData } from '../../components/product/productData';
 import ProductItem from '../../components/product/productItem';
+import { getProductsWithAllCategory } from '../../../controllers/modules/customer/products';
+import axios from '../../../../utils/axios';
 // Inside the Product component file (productList.tsx)
 interface ProductProps {
      productData: any[]; // Update the type of productData to accept any array
@@ -14,6 +16,7 @@ interface ProductProps {
 export default function Category({ productData }) {
      const [selectedColor, setSelectedColor] = useState(null);
      const [thisProduct, setProductData] = useState([]);
+     const [selectedCategory, setSelectedCategory] = useState(null);
      // Hàm callback để xử lý khi màu được chọn
      const handleFilterByColor = (color) => {
        setSelectedColor(color); // Cập nhật màu đã chọn
@@ -24,10 +27,9 @@ export default function Category({ productData }) {
          const thisProduct = (await getProductData("data")).filter((item)=> {return item.mathang[0].mau.ten === color;}); // Thay thế 'color' bằng thông tin để lấy sản phẩm theo màu từ API
          setProductData(thisProduct);
        };
-   
+
        fetchProductByColor(color);
      };
-   
           return(
                <div className="pageProduct">
                     <Row>
