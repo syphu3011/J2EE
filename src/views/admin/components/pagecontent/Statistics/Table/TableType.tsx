@@ -32,7 +32,6 @@ const columns = [
     title: "Loại sản phẩm",
     dataIndex: "name_type_stat",
     width: "auto",
-    editable: true,
   },
   {
     title: "Nhà cung cấp",
@@ -43,23 +42,25 @@ const columns = [
     title: "Số lượng bán",
     dataIndex: "amount_sell_type",
     width: "auto",
+    sorter: (a, b) => a.amount_sell_type - b.amount_sell_type,
   },
   {
     title: "Thu",
     dataIndex: "income_type",
     width: "auto",
-    editable: true,
+    sorter: (a, b) => a.income_type - b.income_type,
   },
   {
     title: "Chi",
     dataIndex: "expenses_type",
     width: "auto",
-    editable: true,
+    sorter: (a, b) => a.expenses_type - b.expenses_type,
   },
   {
     title: "Lợi nhuận",
     dataIndex: "profits_type",
     width: "auto",
+    sorter: (a, b) => a.profits_type - b.profits_type,
   },
 ];
 const TableType = () => {

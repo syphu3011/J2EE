@@ -14,13 +14,17 @@ body,html,*{
      width:100%;
      padding:0;
 }
-
+.app{
+     width:100%;
+     margin: 0 auto;
+}
 .main{
      background-color: white;
 }
 .appHeader{
      width:100%;
-     height:50px;
+     /* height:50px; */
+     height:75px;
      margin:0 auto;
      font-family: 'Times New Roman', Times, serif;
 }
@@ -41,27 +45,30 @@ body,html,*{
 .menuHeader{
      width:100%;
      position: fixed;
+     /* top:0; */
      left: 0;
      z-index: 100;
      transition: transform 0.1s ease-in-out;
 }
-.menuHeader.visible {
+/* .menuHeader.visible {
      transform: translateY(0);
+} */
+.appHeader .menuHeader.active{
+     top: 0;
 }
-
-.menuHeader.hidden {
+/* .menuHeader.hidden {
      
-     top:0;
-     z-index: 100;
-     transform: translateY(1);
-}
+     top:0; */
+     /* z-index: 100; */
+     /* transform: translateY(1);
+} */
 .menu{
      
      display:flex;
     
 }
 .menuLeft{
-     width:90%;
+     width:100%;
 }
 .Leftmenu{
      background-color: #F4AAC0;
@@ -98,12 +105,16 @@ width:15%;
 /*banner*/
 .banner{
      width: 100%;
-     margin-top:24px;
+     /* margin-top:24px; */
      
+}
+.banner .ant-image.css-dev-only-do-not-override-3mqfnx{
+     width:100%;
 }
 .Headerbanner{
      background-size: cover;
      background-repeat: no-repeat;
+     width: 100%;
 }
 /*Menucard*/
 .cardMenu{
@@ -146,22 +157,28 @@ width:15%;
 	text-decoration: none;
 }
 .allProduct, .allProduct_2{
-     justify-content: center;
+     /* justify-content: center; */
+     padding-left:10px;
      padding:20px;
-     text-align: center;
-     border-radius: 3px;
+     
+     /* text-align: center; */
+     /* border-radius: 3px;
      background: rgba(235, 140, 169, 0.486);
-     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
-     width:auto;
-     justify-content: center;
-     width: 300px;
-     margin-left: 37%;
-     margin-right: 40%;
+     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset; */
+     /* width:auto;
+     justify-content: center;*/
+     border-left: 0.4rem solid #e70c4e;
+     width: 800px; 
+     /* margin-left: 37%; */
+     /* margin-right: 40%; */
      margin-top:10px;
      margin-bottom: 10px;
-     font-size: larger;
-     color:rgb(240, 36, 36);
+     font-size: 30px;
+     color:#e70c4e;
 
+}
+.allProduct, .allProduct_2 h3{
+    text-transform: uppercase;
 }
 .mainAllProduct{
      height:auto;
@@ -176,6 +193,7 @@ width:15%;
 }
 .slider_1{
      width:54%;
+     /* width:100%; */
      display:flex;
      justify-content: center;
      margin:20px;
@@ -193,10 +211,12 @@ width:15%;
      padding:0;
 }
  .card_1{
+     flex: 1;
      position: relative;
      overflow: hidden;
+     max-height: 800px;
+     max-width: 400px;
      margin : 10px;
-     
      border-radius: 1rem;
      background: linear-gradient(180deg, rgba(244, 170, 192, 0.00) 24.48%, rgb(255, 198, 215) 67.71%);     ;
      color: #4b4a4a;
@@ -204,6 +224,7 @@ width:15%;
      text-align: center;
      box-shadow:3px 3px 6px rgba(128,128,128,.3),
       -3px -3px 6px rgba(255,255,255,.3) !important;
+     flex-direction: column; /* Sắp xếp nội dung theo chiều dọc */
 
 }
 .card_1:hover{
@@ -219,12 +240,14 @@ width:15%;
      font-weight: 600;
      text-transform: uppercase;
      color:brown;
+     overflow: hidden;
 }
 .card_1 .image-card{
     border-radius: 1rem;
-    padding:2rem; 
+    padding:3rem; 
+    /* max-height: 350px; */
      width:100%;
-     height:350px;
+     height:300px;
      border-radius: 10px;
     background-repeat: no-repeat;
     background-size: cover;
@@ -243,6 +266,7 @@ width:15%;
      line-height: normal;
      margin:5px;
      text-align: center;
+     overflow: hidden;
 }
  .action-cart-btn{
     padding-bottom: 10px;
@@ -368,7 +392,9 @@ width:15%;
 .sliderProduct>.ant-carousel .slick-next:hover {
      width:3%;
      z-index: 3;
-  margin-right: 10px;
+  /* margin-right: 10px; */
+  margin-right: 30px;
+  margin-left: 30px;
   font-size: 25px;
   margin-top:-100px;
   color:#e70c4e;
@@ -377,7 +403,7 @@ width:15%;
   background-color: #f4aac062;
 
 }
-.sliderProduct-3 > .ant-carousel .slick-prev,
+/* .sliderProduct-3 > .ant-carousel .slick-prev,
 .sliderProduct-3 >.ant-carousel .slick-next,
 .sliderProduct-3>.ant-carousel .slick-prev:hover,
 .sliderProduct-3>.ant-carousel .slick-next:hover {
@@ -392,7 +418,7 @@ width:15%;
      height:28px;
   background-color: #f4aac062;
 
-}
+} */
 #sale_2{
      margin-top:50px;
      background-repeat: no-repeat;
@@ -435,6 +461,7 @@ Input::placeholder{
      transform: scaleY(1);
 }
 #footer{
+     width: 100%;
      height:60px;
      font-size: 15px;
      text-align: center;
@@ -447,6 +474,7 @@ Input::placeholder{
     display:flex;
     justify-content: center;
      margin-left:0;
+     flex:1 1 25rem;
 }
 .Card_footer{
      margin : 20px;
@@ -455,6 +483,7 @@ Input::placeholder{
      padding:2rem;
      background: linear-gradient(180deg, rgba(244, 170, 192, 0.76) 0%, rgba(244, 170, 192, 0.00) 100%);
      box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.25);
+     flex: auto;
 }
 .Card_footer:hover{
      border:1px solid black
@@ -518,7 +547,8 @@ Input::placeholder{
      top: 100%;
      right: -105%;
      z-index: 1000;
-     height:55rem;
+     /* height:55rem; */
+     height: calc(100vh - 75px);
      width: 100%;
      box-shadow: 0 0.5em 3rem -1rem rgba(0,0,0,0.5);
      transition: all .6s ease-out;
@@ -552,6 +582,9 @@ Input::placeholder{
      font-weight: 400;
      font-size: 20px;
      float:right;
+ }
+ .check{
+     float:left;
  }
  .login-form-container .option-text,.signup-form-container .option-text{
      color: rgba(70, 65, 66, 0.78);
@@ -760,9 +793,9 @@ box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0
 }
 /*page product*/
 .pageProduct{
-     height:auto;
+     /* height:auto; */
      width:100%;
-     margin-top:25px;
+     /* margin-top:25px; */
      background: white;
 }
 .filter{
@@ -795,7 +828,7 @@ box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0
 .title-product{
      display:flex;
      justify-content: space-between;
-     padding:2rem;
+     padding:1rem;
 }
 .title-product h2{
      text-transform: uppercase;
@@ -809,9 +842,13 @@ box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0
      padding-bottom: 2rem;
 }
 .product-content-container{
-     display:flex;
+     /* display:flex;
      flex-wrap: wrap;
-     padding : 2rem;
+     padding : 2rem; */
+     display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Cột co dãn với độ rộng tối thiểu là 300px và tối đa là 1fr */
+     grid-gap: 20px; /* Khoảng cách giữa các cột */
+     padding: 1rem;
 }
 .pagination-product{
      text-align: center;
@@ -819,14 +856,17 @@ box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0
 }
 /*badge*/
 :where(.css-dev-only-do-not-override-3mqfnx).ant-badge .ant-badge-count, :where(.css-dev-only-do-not-override-3mqfnx).ant-badge .ant-badge-dot, :where(.css-dev-only-do-not-override-3mqfnx).ant-badge .ant-scroll-number-custom-component {
-     top:19;
+     
+     position: absolute;
+     top: 19;
 }
 /*product detail*/
 .product-detail-container{
      width: 100%;
-     height:auto !important;
+     /* height:auto !important; */
+     height: calc(100vh - 75px);
      background-color: white;
-     margin-top:25px;
+     /* margin-top:25px; */
 }
 .card-image-active{
      justify-content: center;
@@ -963,10 +1003,11 @@ box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0
 }
 /*Checkout*/
 .checkout-containter{
-     height:55rem;
+     /* height:55rem; */
+     height: calc(100vh - 75px);
      width:100%;
      background-color: white;
-     padding: 2rem;
+     /* padding: 2rem; */
 }
 
 .checkout-containter h1{
@@ -1014,7 +1055,8 @@ box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0
      top: 8%;
      right: -105%;
      z-index: 1;
-     height:55rem;
+     /* height:55rem; */
+     height: calc(100vh - 75px);
      width: 100%;
      box-shadow: 0 0.5em 3rem -1rem rgba(0,0,0,0.5);
      transition: all .6s ease-out;

@@ -55,7 +55,7 @@ switch (param) {
             <Route path='/' element={<Home/>}></Route>
             <Route path="/:categoryId" element={<CategoryMediate/>}></Route>
             <Route path="/cap-nhat-thong-tin" element={<UpdateInformation/>}></Route>
-            <Route path="/products/:Id/:nameId" element={<ProductDetail/>}></Route>
+            <Route path="/products/:Id" element={<ProductDetail/>}></Route>
             <Route path="/gio-hang/xac-nhan-thong-tin-giao-hang" element={<DeliveryInform />}></Route>
           </Route>
           <Route path="/LoginAdmin" element={<Login />}></Route>
