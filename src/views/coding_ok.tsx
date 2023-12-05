@@ -147,11 +147,16 @@ export default class Coding_ok extends React.Component<any, any> {
       // testProvider(5)
       // testPrivileges(5)
 
-      getProductInStock().then((rs) => {
+      getAllCate().then((rs) => {
         this.setState({
           test: JSON.stringify(rs),
         });
       });
+      // getProductInStock().then((rs) => {
+      //   this.setState({
+      //     test: JSON.stringify(rs),
+      //   });
+      // });
       // editProductInStock(1, 43, 1, 1, 1).then((rs) => {
       //   this.setState({
       //     test: JSON.stringify(rs),
