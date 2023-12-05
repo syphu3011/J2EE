@@ -34,11 +34,13 @@ const columnsCus = [
     title: "Số đơn hàng",
     dataIndex: "amount_order_staff",
     width: "auto",
+    sorter: (a, b) => a.amount_order_staff - b.amount_order_staff,
   },
   {
     title: "Tổng tiền",
     dataIndex: "profits_staff",
     width: "auto",
+    sorter: (a, b) => a.profits_staff - b.profits_staff,
   },
 ];
 

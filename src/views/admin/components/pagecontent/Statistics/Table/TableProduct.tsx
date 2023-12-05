@@ -24,6 +24,16 @@ for (let i = 0; i < 7; i++) {
     profits_pro: 15000000 - 3200000,
   });
 }
+ProData.push({
+  key: "7",
+  id_pro_stat: `7`,
+  name_pro_stat: `Áo thun 7`,
+  provider_pro_stat: "000000",
+  amount_sell_pro: 13,
+  income_pro: 17000000,
+  expenses_pro: 3500000,
+  profits_pro: 17000000 - 3500000,
+});
 const columnsPro = [
   {
     title: "Mã sản phẩm",
@@ -34,7 +44,6 @@ const columnsPro = [
     title: "Tên sản phẩm",
     dataIndex: "name_pro_stat",
     width: "auto",
-    editable: true,
   },
   {
     title: "Nhà cung cấp",
@@ -45,23 +54,25 @@ const columnsPro = [
     title: "Số lượng bán",
     dataIndex: "amount_sell_pro",
     width: "auto",
+    sorter: (a, b) => a.amount_sell_pro - b.amount_sell_pro,
   },
   {
     title: "Thu",
     dataIndex: "income_pro",
     width: "auto",
-    editable: true,
+    sorter: (a, b) => a.income_pro - b.income_pro,
   },
   {
     title: "Chi",
     dataIndex: "expenses_pro",
     width: "auto",
-    editable: true,
+    sorter: (a, b) => a.expenses_pro - b.expenses_pro,
   },
   {
     title: "Lợi nhuận",
     dataIndex: "profits_pro",
     width: "auto",
+    sorter: (a, b) => a.profits_pro - b.profits_pro,
   },
 ];
 

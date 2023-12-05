@@ -9,6 +9,7 @@ import TableProduct from "./Table/TableProduct";
 import TableCustomer from "./Table/TableCustomer";
 import TableStaff from "./Table/TableStaff";
 import TableDate from "./Table/TableDate";
+import TableMonth from "./Table/TableMonth";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 60,
@@ -33,10 +34,6 @@ options2.push({
 options2.push({
   value: "Months",
   label: "Tháng",
-});
-options2.push({
-  value: "Years",
-  label: "Năm",
 });
 options.push({
   value: "LSP",
@@ -63,25 +60,30 @@ const StatNumber = () => {
   const [form] = Form.useForm();
   const [table, setTable] = useState(TableType);
   const [display, setDisplay] = useState("none");
-  const ChangeStat = (value: string) => {
+  const ChangeStatDate = (value: string) => {
     if (value == "Days") {
-    } else if (value == "Months") {
+      setTable(TableDate);
     } else {
+      setTable(TableMonth);
     }
   };
-  const ChangeStatDate = (value: string) => {
+  const ChangeStat = (value: string) => {
     console.log(`selected ${value}`);
     if (value == "SP") {
       setTable(TableProduct);
+      setDisplay("none");
     } else if (value == "KH") {
       setTable(TableCustomer);
+      setDisplay("none");
     } else if (value == "NV") {
       setTable(TableStaff);
+      setDisplay("none");
     } else if (value == "TG") {
       setTable(TableDate);
       setDisplay("inline-block");
     } else {
       setTable(TableType);
+      setDisplay("none");
     }
   };
   const dateFormat = "DD/MM/YYYY";
