@@ -12,6 +12,8 @@ import { addStaff, editStaff, getStaff, grantAccount, removeAccount, removeStaff
 import { buy } from '../controllers/modules/customer/buy';
 import { cancelOrder, confirmOrder, getOrders } from '../controllers/modules/admin/order';
 import { getHistoryOrders } from '../controllers/modules/customer/historyorders';
+import { statistics_revenue_days, statistics_revenue_month, top10product, top5customer, top5staff } from '../controllers/modules/admin/statistic';
+import { logout } from '../controllers/modules/customer/logout';
 
 export default class Coding_ok extends React.Component<any, any>   
 {   
@@ -73,6 +75,105 @@ export default class Coding_ok extends React.Component<any, any>
                 test: self.state.test + JSON.stringify(rs) + '\n'
             })
         }
+        async function testBuy() {
+            await buy(1,"279 Lâm Văn Bền", "sdfhk@gmail.com", '0382949382', [{
+                masanpham: 12,
+                makichco: 1,
+                mamau: 1,
+                soluong: 20
+            },{
+                masanpham: 6,
+                makichco: 1,
+                mamau: 5 ,
+                soluong: 20
+            }])
+            await buy(2,"279 Lâm Văn Bền", "sdfhk@gmail.com", '0382949382', [{
+                masanpham: 17,
+                makichco: 1,
+                mamau: 2,
+                soluong: 5
+            },{
+                masanpham: 17,
+                makichco: 3,
+                mamau: 2,
+                soluong: 5
+            }])
+            await buy(2,"279 Lâm Văn Bền", "sdfhk@gmail.com", '0382949382', [{
+                masanpham: 17,
+                makichco: 1,
+                mamau: 2,
+                soluong: 5
+            },{
+                masanpham: 17,
+                makichco: 3,
+                mamau: 2,
+                soluong: 5
+            }])
+            await buy(3,"279 Lâm Văn Bền", "sdfhk@gmail.com", '0382949382', [{
+                masanpham: 18,
+                makichco: 1,
+                mamau: 2,
+                soluong: 5
+            },{
+                masanpham: 18,
+                makichco: 2,
+                mamau: 2,
+                soluong: 5
+            },{
+                masanpham: 18,
+                makichco: 3,
+                mamau: 2,
+                soluong: 5
+            }])
+            await buy(3,"279 Lâm Văn Bền", "sdfhk@gmail.com", '0382949382', [{
+                masanpham: 18,
+                makichco: 1,
+                mamau: 2,
+                soluong: 5
+            },{
+                masanpham: 18,
+                makichco: 2,
+                mamau: 2,
+                soluong: 5
+            },{
+                masanpham: 18,
+                makichco: 3,
+                mamau: 2,
+                soluong: 5
+            }])
+            await buy(4,"279 Lâm Văn Bền", "sdfhk@gmail.com", '0382949382', [{
+                masanpham: 19,
+                makichco: 1,
+                mamau: 2,
+                soluong: 5
+            },{
+                masanpham: 19,
+                makichco: 2,
+                mamau: 2,
+                soluong: 5
+            },{
+                masanpham: 19,
+                makichco: 3,
+                mamau: 2,
+                soluong: 5
+            }])
+            await buy(4,"279 Lâm Văn Bền", "sdfhk@gmail.com", '0382949382', [{
+                masanpham: 19,
+                makichco: 1,
+                mamau: 2,
+                soluong: 5
+            },{
+                masanpham: 19,
+                makichco: 2,
+                mamau: 2,
+                soluong: 5
+            },{
+                masanpham: 19,
+                makichco: 3,
+                mamau: 2,
+                soluong: 5
+            }])
+        }
         postKeyToServer().then(rsk => {
             // importProduct(1,1,[{masanpham: 1, makichco: 1, mamau: 1,soluong: 40,gianhap: 100000, giaban: 200000},
             //     {masanpham: 6, makichco: 1, mamau: 1,soluong: 40,gianhap: 100000, giaban: 200000},
@@ -119,16 +220,20 @@ export default class Coding_ok extends React.Component<any, any>
             // })
             // addStaff("Thử nghiệm nhân viên 2", "2002-12-30", "0329382999", "0302955392").then(rs => {
                 // removeAccount("aimabietneee@gmail.com")
-                // buy(0,"279 Lâm Văn Bền", [{
-                //     masanpham: 6,
-                //     makichco: 1,
-                //     mamau: 5,
-                //     soluong: 20
-                // }])
+                // testBuy()
                 // confirmOrder(26)
                 // getOrders()
                 // getProductInStock()
-                getHistoryOrders()
+                // getHistoryOrders()
+                // top5customer('2023-11-30', '2023-12-6', 1)
+                // logout().then(rs => {
+                //     this.setState({
+                //         test: JSON.stringify(rs)
+                //     })
+                // })
+                // cancelOrder(26)
+                // top10product('2023-11-30', '2023-12-6', 2)
+                statistics_revenue_month('2023-11-30', '2023-12-6', 1)
             // })
             // editStaff(4, "Thử nghiệm nhân viên 2", "2002-12-30", "0329382999", "0302955392", 1)
             // removeStaff(4)

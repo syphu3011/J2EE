@@ -1,4 +1,4 @@
-const { Op, literal } = require("sequelize")
+const { Op, literal, where } = require("sequelize")
 const {HoaDon, sequelize, HangTrongKho, LichSuHeThong, KhachHang, Mau, KichCo, ChiTietHoaDon, NhanVien} = require("../../database/models")
 const {STATUS_CODE, MAIL, CHUCNANG} = require("../const")
 const nodemailer = require('nodemailer');
@@ -18,6 +18,9 @@ module.exports = {
                 masanpham: sp.masanpham,
                 mamau: sp.mamau,
                 makichco: sp.makichco,
+                soluong: {
+                  [Op.gt]: 0
+                }
               },
               order:[
                 ["maphieunhap", "ASC"]
@@ -148,6 +151,24 @@ module.exports = {
           }
           else {
             await hoadon.update({matrangthaihoadon: matrangthai, manhanvien: null})
+          }
+          if (matrangthai == 3) {
+            const chitiet_list = await ChiTietHoaDon.findAll({
+              where: {
+                mahoadon: ma
+              }
+            })
+            for (const chitiet of chitiet_list) {
+              await HangTrongKho.update(
+                {soluong: sequelize.literal("soluong + "+chitiet.soluong)}, 
+                {where: {
+                  masanpham: chitiet.masanpham,
+                  maphieunhap: chitiet.maphieunhap,
+                  mamau: chitiet.mamau,
+                  makichco: chitiet.makichco
+                }
+              })
+            }
           }
           if (return_rs && return_rs.status == 404) {
             await transaction.rollback()

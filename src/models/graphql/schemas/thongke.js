@@ -1,68 +1,66 @@
 const {gql} = require('apollo-server-express')
 
 module.exports = gql`
-type ThongKe {
-  tentaikhoan: String!
-  matkhau: String!
-  maquyen: Int!
-  quyen: Quyen!
+type ThongKeKhachHang {
+  hang: Int
+  ma: Int
+  ten: String
+  soluonghoadon: Int
+  tongtien: Int
 }
-input ThongKeKhachHangInput {
-  ten: String!
-  ngaysinh: String!
-  tentaikhoan: String!
-  matkhau: String!
-  xacnhanmatkhau: String!
-  sodienthoai: String!
-  maquyen: Int
+type ThongKeNhanVien {
+  hang: Int
+  ma: Int
+  ten: String
+  soluongxacnhan: Int
+  tongtien: Int
+}
+type ThongKeSanPham {
+  hang: Int
+  ma: Int
+  ten: String
+  soluongban: Int
+  tiennhap: Int
+  tienban: Int
+  loinhuan: Int
+}
+type ThongKeDoanhThu {
+  thoigian: String
+  thu: Int
+  chi: Int
+  loinhuan: Int
 }
 input ThongKeInput {
-  tentaikhoan: String!
-  matkhau: String!
-  maquyen: Int
+  tu: String!
+  den: String!
+  kieuthongke: Int
 }
-input ThongKeTokenInput {
-  tentaikhoan: String
-  token: String!
-  rToken: String!
-  maquyen: Int
-}
-input ForgotPasswordInput {
-  tentaikhoan: String!
-}
-input OTPInput {
-  otp: String!
-}
-type ChucNangAdminResponse {
-  chucnang: String
-}
-type ThongKeQueryResponse {
+type ThongKeKhachHangResponse {
   status: Int!
   message: String!
-  data: [ThongKe!]!
+  data: [ThongKeKhachHang]
 }
-type ThongKeResponse {
+type ThongKeNhanVienResponse {
   status: Int!
   message: String!
+  data: [ThongKeNhanVien]
 }
-type DangNhapResponse {
+type ThongKeSanPhamResponse {
   status: Int!
   message: String!
+  data: [ThongKeSanPham]
 }
-type DangNhapAdminResponse {
+type ThongKeDoanhThuResponse {
   status: Int!
   message: String!
-  data: ChucNangAdminResponse
-}
-type DangNhapTokenResponse {
-  status: Int!
-  message: String!
+  data: [ThongKeDoanhThu]
 }
 
 extend type Query {
-  
-}
-extend type Mutation {
-  
+  thongketop5khachhang(input: ThongKeInput): ThongKeKhachHangResponse
+  thongketop5nhanvien(input: ThongKeInput): ThongKeNhanVienResponse
+  thongketop10sanpham(input: ThongKeInput): ThongKeSanPhamResponse
+  thongkedoanhthutheongay(input: ThongKeInput): ThongKeDoanhThuResponse
+  thongkedoanhthutheothang(input: ThongKeInput): ThongKeDoanhThuResponse
 }
 `

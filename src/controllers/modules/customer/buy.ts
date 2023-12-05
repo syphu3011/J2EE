@@ -6,7 +6,7 @@ export function buy(id_customer: number, address: string, phone_number: string, 
     soluong: number
 }[]) {
     const query = `
-    mutation buy ($id_customer: ID!, $address: String!, $phone_number: String!, $email: String!, $products: [ChiTietHoaDonInput]) {
+    mutation buy ($id_customer: Int!, $address: String!, $phone_number: String!, $email: String!, $products: [ChiTietHoaDonInput]) {
         taoHoaDon(input: {
             makhachhang: $id_customer,
             diachi: $address,
@@ -20,7 +20,7 @@ export function buy(id_customer: number, address: string, phone_number: string, 
     }
     `
     const variables = {
-        id_customer, address, products
+        id_customer, address, products, email, phone_number
     }
     return request(query, variables)
 }

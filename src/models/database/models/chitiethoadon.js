@@ -19,21 +19,12 @@ module.exports = (sequelize, DataTypes) => {
         {
             masanpham: {
                 type: DataTypes.INTEGER,
-                // primaryKey: true,
-                // references: 'SanPham',
-                // referencesKey: 'ma'
             },
             makichco: {
                 type: DataTypes.INTEGER,
-                // primaryKey: true,
-                // references: 'KichCo',
-                // referencesKey: 'ma' 
             },
             mamau: {
                 type: DataTypes.INTEGER,
-                // primaryKey: true,
-                // references: 'Mau',
-                // referencesKey: 'ma' 
             },
             maphieunhap: {
                 type: DataTypes.INTEGER,
