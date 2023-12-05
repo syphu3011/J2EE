@@ -137,6 +137,24 @@ module.exports = {
                 }
             }
         },
+        loaikhachhang: async (root, args,context) => {
+            try {
+                context.dont_need_encrypt = true
+                const rs = {
+                    status: STATUS_CODE.query_success,
+                    message: "Lấy danh sách loại thành công!",
+                    data: await Loai.findAll()
+                }
+                return rs;
+            }
+            catch (e) {
+                return {
+                    status: STATUS_CODE.query_fail,
+                    message: "Loại không tồn tại!",
+                    data: []
+                }
+            }
+        },
         async loaiLon(root, args, context) {
             try {
                 context.dont_need_encrypt = true
