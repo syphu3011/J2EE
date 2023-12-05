@@ -58,7 +58,7 @@ options.push({
 
 const StatNumber = () => {
   const [form] = Form.useForm();
-  const [table, setTable] = useState(TableType);
+  const [table, setTable] = useState(TableProduct);
   const [display, setDisplay] = useState("none");
   const ChangeStatDate = (value: string) => {
     if (value == "Days") {
@@ -104,6 +104,7 @@ const StatNumber = () => {
                   placeholder="Chọn mục muốn thống kê"
                   onChange={ChangeStat}
                   options={options}
+                  defaultValue="SP"
                 />
                 <Select
                   id="Select-date"
@@ -111,6 +112,7 @@ const StatNumber = () => {
                   style={{ width: "40%", display: `${display}` }}
                   onChange={ChangeStatDate}
                   options={options2}
+                  defaultValue="Days"
                 />
               </Form.Item>
             </Col>
