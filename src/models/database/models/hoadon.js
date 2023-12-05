@@ -52,6 +52,7 @@ module.exports = (sequelize, DataTypes) => {
             diachi: {
                 type: DataTypes.STRING,
             },
+            tenkhachhang: DataTypes.STRING,
             sodienthoai: DataTypes.STRING,
             email: DataTypes.STRING,
         },

@@ -112,7 +112,7 @@ export default function AllProduct() {
               );
             }
           }
-          // setProductData('data',allProducts)
+          // setProductData(rs, allProducts)
           setProductData(rs, allProducts)
           Cookies.set('isLoaded', 'true', {expires:1})
           setCardData(allLoai)

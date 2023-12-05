@@ -21,6 +21,7 @@ input ChiTietHoaDonInput {
 }
 input HoaDonInput {
   ma: ID
+  tenkhachhang: String
   sanpham: [ChiTietHoaDonInput]
   manhanvien: Int
   makhachhang: Int
