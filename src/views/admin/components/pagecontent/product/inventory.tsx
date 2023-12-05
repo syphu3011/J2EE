@@ -1,6 +1,5 @@
-
 import "../../../style/product.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Form,
   Input,
@@ -9,7 +8,15 @@ import {
   Table,
   Typography,
   Tag,
+  Skeleton,
 } from "antd";
+import { authenticationAdmin } from "../../../../../../utils/util";
+import { getCustomer } from "../../../../../controllers/modules/admin/customer";
+import { useNavigate } from "react-router-dom";
+import {
+  editProductInStock,
+  getProductInStock,
+} from "../../../../../controllers/modules/admin/productInStock";
 const contentStyle: React.CSSProperties = {
   textAlign: "center",
   alignItems: "center",
@@ -22,10 +29,13 @@ const contentStyle: React.CSSProperties = {
 interface Item {
   key: string;
   id_pro: string;
+  id_import: string;
   name_pro: string;
   type: string[];
   color: string;
+  id_color: string;
   size: string;
+  id_size: string;
   dateinit: string;
   partner: string;
   price_inp: number;
@@ -33,22 +43,23 @@ interface Item {
   amount: number;
 }
 
-const originData: Item[] = [];
-for (let i = 0; i < 11; i++) {
-  originData.push({
-    key: i.toString(),
-    id_pro: `${i}`,
-    name_pro: `Áo quần ${i}`,
-    type: ["áo", "quần"],
-    color: "000000",
-    size: "S",
-    dateinit: "23/10/2023",
-    partner: "ABC",
-    price_inp: 90000000,
-    price_out: 100000000,
-    amount: 100,
-  });
-}
+// const originData: Item[] = [];
+// for (let i = 0; i < 11; i++) {
+//   originData.push({
+//     key: i.toString(),
+//     id_pro: `${i}`,
+//     name_pro: `Áo quần ${i}`,
+//     type: ["áo", "quần"],
+//     color: "000000",
+//     size: "S",
+//     dateinit: "23/10/2023",
+//     partner: "ABC",
+//     price_inp: 90000000,
+//     price_out: 100000000,
+//     amount: 100,
+//   });
+// }
+
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
@@ -93,8 +104,16 @@ const EditableCell: React.FC<EditableCellProps> = ({
   );
 };
 const Inventory = () => {
-  const [form] = Form.useForm();
+  // Define
+  const [isReady, setIsReady] = useState(false);
+  const originData: Item[] = [];
   const [data, setData] = useState(originData);
+  const navigate = useNavigate();
+
+  const [reload, setReload] = useState(true);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const [form] = Form.useForm();
+
   const [editingKey, setEditingKey] = useState("");
 
   const isEditing = (record: Item) => record.key === editingKey;
@@ -114,6 +133,23 @@ const Inventory = () => {
           ...item,
           ...row,
         });
+        // const newdata = newData()
+        editProductInStock(
+          parseInt(newData[index].id_pro),
+          parseInt(newData[index].id_import),
+          parseInt(newData[index].id_color),
+          parseInt(newData[index].id_size),
+          newData[index].price_out
+        ).then((rs) => {
+          //TODO: Thêm thông báo ở đây
+          console.log(rs);
+          alert(rs.data.suaHangTrongKho.message);
+          if (rs.data.suaHangTrongKho.status === 201) {
+            // clearField();
+            //setIsEdit(false);
+            setReload(true);
+          }
+        });
         setData(newData);
         setEditingKey("");
       } else {
@@ -132,7 +168,12 @@ const Inventory = () => {
 
   const columns = [
     {
-      title: "Mã",
+      title: "Mã Phiếu Nhập",
+      dataIndex: "id_import",
+      width: "auto",
+    },
+    {
+      title: "Mã Sản Phẩm",
       dataIndex: "id_pro",
       width: "auto",
     },
@@ -157,7 +198,7 @@ const Inventory = () => {
       dataIndex: "color",
       width: "auto",
       render: (color: string) => (
-        <Tag color={color} key={color}>
+        <Tag color={color} key={color} style={{ border: "1px solid black" }}>
           {color.toUpperCase()}
         </Tag>
       ),
@@ -222,6 +263,77 @@ const Inventory = () => {
       },
     },
   ];
+
+  useEffect(() => {
+    async function fetchInventory(rs?) {
+      if (rs && rs.data.dangNhapAdminVoiToken.status != 200) {
+        navigate("/LoginAdmin");
+        return;
+      }
+      const rsProductsInstock = await getProductInStock();
+
+      var productsInstock = rsProductsInstock.data.hangtrongkho.data;
+      //
+      //
+      console.log(productsInstock.length);
+      productsInstock.forEach((element, index) => {
+        console.log("chiu luon a");
+        console.log(element.soluong);
+        //  Convert Timestamp to Date
+        const dateInit = new Date(parseInt(element.phieunhap.ngaynhap));
+        // Format to date time
+        const rsDateInit = `${dateInit.getFullYear()}-${(
+          dateInit.getMonth() + 1
+        )
+          .toString()
+          .padStart(2, "0")}-${dateInit
+          .getDate()
+          .toString()
+          .padStart(2, "0")} ${dateInit
+          .getHours()
+          .toString()
+          .padStart(2, "0")}:${dateInit
+          .getMinutes()
+          .toString()
+          .padStart(2, "0")}:${dateInit
+          .getSeconds()
+          .toString()
+          .padStart(2, "0")}`;
+        const rsLoai: string[] = [];
+        element.loai.forEach((e) => {
+          rsLoai.push(e.ten);
+        });
+        originData.push({
+          key: index,
+          id_pro: element.masanpham,
+          name_pro: element.tensanpham,
+          type: rsLoai,
+          color: element.mau.ten,
+          size: element.kichthuoc.ten,
+          dateinit: rsDateInit,
+          partner: element.ncc.ten,
+          price_inp: element.gianhap,
+          price_out: element.giaban,
+          amount: element.soluong,
+          id_import: element.phieunhap.ma,
+          id_color: element.mau.ma,
+          id_size: element.kichthuoc.ma,
+        });
+      });
+      // console.log("originData " + originData.length);
+      setData(originData);
+      // console.log("Data " + data.length);
+      setIsReady(true);
+    }
+    // console.log(data)
+
+    if (reload) {
+      isFirstLoad ? authenticationAdmin(fetchInventory) : fetchInventory();
+      setIsFirstLoad(false);
+      setReload(false);
+    }
+  }, [reload]);
+
   const mergedColumns = columns.map((col) => {
     if (!col.editable) {
       return col;
@@ -237,9 +349,12 @@ const Inventory = () => {
       }),
     };
   });
-  return (
+
+  //##################################################
+  return isReady ? (
     <Form form={form} component={false}>
       <Table
+        key={Math.random()} // Thêm thuộc tính key với giá trị duy nhất
         components={{
           body: {
             cell: EditableCell,
@@ -251,9 +366,52 @@ const Inventory = () => {
         rowClassName="editable-row"
         pagination={{
           onChange: cancel,
+          pageSize: 10, // Số hàng hiển thị trên mỗi trang
+          //showSizeChanger: true, // Hiển thị chọn số hàng trên mỗi trang
+          //pageSizeOptions: ["10", "20", "30"], // Các tùy chọn số hàng trên mỗi trang
+          showTotal: (total, range) =>
+            `${range[0]}-${range[1]} of ${total} items`, // Hiển thị thông tin tổng số hàng
         }}
       />
     </Form>
+  ) : (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        height: "100%",
+        paddingTop: "20px",
+        paddingBottom: "20px",
+      }}
+    >
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+    </div>
   );
 };
 export default Inventory;

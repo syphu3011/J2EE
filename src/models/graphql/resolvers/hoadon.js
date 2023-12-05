@@ -1,5 +1,5 @@
 const { Op, literal } = require("sequelize")
-const {HoaDon, sequelize, HangTrongKho, LichSuHeThong, Mau, KichCo, ChiTietHoaDon, NhanVien} = require("../../database/models")
+const {HoaDon, sequelize, HangTrongKho, LichSuHeThong, KhachHang, Mau, KichCo, ChiTietHoaDon, NhanVien} = require("../../database/models")
 const {STATUS_CODE, MAIL, CHUCNANG} = require("../const")
 const nodemailer = require('nodemailer');
 const { checkAdmin, checkAndResolveAdmin } = require("./checkToken");
@@ -240,6 +240,36 @@ module.exports = {
             message: "Lấy danh sách hóa đơn không thành công!",
             data: null
           }
+        }
+      },
+      async lichsudonhang(root, args, context){
+        try {
+          const khachhang = await KhachHang.findOne({
+            where: {
+              tentaikhoan: context.taikhoan.tentaikhoan
+            }
+          })
+          const makhachhang = khachhang.ma
+          const hoadon = await HoaDon.findAll({
+            where: {
+              makhachhang
+            },
+            order: [
+              ['ngaylap', 'DESC']
+            ]
+          }) 
+          return {
+            status: 200,
+            message: "Lấy lịch sử đơn hàng thành công",
+            data: hoadon
+          }         
+        }
+        catch(e) {
+          return {
+            status: 400,
+            message: "Lấy lịch sử đơn hàng không thành công",
+            data: []
+          }         
         }
       },
       hoadonvoithuoctinh: async (root, args, context) => {
