@@ -5,6 +5,7 @@ import {
   Row,
   Select,
   SelectProps,
+  Skeleton,
   Space,
   Upload,
 } from "antd";
@@ -12,7 +13,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import "../../../style/product.css";
 import { Image } from "antd";
 const { Header, Content } = Layout;
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Form,
   Input,
@@ -23,6 +24,16 @@ import {
   Tag,
 } from "antd";
 import TextArea from "antd/es/input/TextArea";
+import { useNavigate } from "react-router-dom";
+import { getProductInStock } from "../../../../../controllers/modules/admin/productInStock";
+import {
+  editCate,
+  getAllCate,
+} from "../../../../../controllers/modules/admin/cate";
+import {
+  authenticationAdmin,
+  convertB64ToImage,
+} from "../../../../../../utils/util";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 120,
@@ -47,24 +58,24 @@ interface Item {
   image: string[];
 }
 
-const originData: Item[] = [];
+// const originData: Item[] = [];
 const options: SelectProps["options"] = [];
 const handleChange = (value: string[]) => {
   console.log(`selected ${value}`);
 };
-for (let i = 0; i < 20; i++) {
-  originData.push({
-    key: i.toString(),
-    id_type: `${i}`,
-    name_type: `Áo quần ${i}`,
-    oftype: ["áo", "quần"],
-    describe: `Đây là quần áo`,
-    image: [
-      "https://bizweb.dktcdn.net/100/415/697/products/nta126-xpj0wgjv-1-ko0v-hinh-mat-truoc-0.jpg",
-      "https://bizweb.dktcdn.net/100/415/697/products/ahu2keci-1-iirh-hinh-mat-truoc-01.jpg",
-    ],
-  });
-}
+// for (let i = 0; i < 20; i++) {
+//   originData.push({
+//     key: i.toString(),
+//     id_type: `${i}`,
+//     name_type: `Áo quần ${i}`,
+//     oftype: ["áo", "quần"],
+//     describe: `Đây là quần áo`,
+//     image: [
+//       "https://bizweb.dktcdn.net/100/415/697/products/nta126-xpj0wgjv-1-ko0v-hinh-mat-truoc-0.jpg",
+//       "https://bizweb.dktcdn.net/100/415/697/products/ahu2keci-1-iirh-hinh-mat-truoc-01.jpg",
+//     ],
+//   });
+// }
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
@@ -109,6 +120,16 @@ const EditableCell: React.FC<EditableCellProps> = ({
   );
 };
 const Typeproduct = () => {
+  // Define
+  const originData: Item[] = [];
+  const [isReady, setIsReady] = useState(false);
+  const navigate = useNavigate();
+  const [reload, setReload] = useState(true);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const [base64String, setBase64String] = useState("");
+
+  // ##################################################
+
   const [form] = Form.useForm();
   const [data, setData] = useState(originData);
   const [editingKey, setEditingKey] = useState("");
@@ -136,6 +157,23 @@ const Typeproduct = () => {
           ...item,
           ...row,
         });
+        // Write to database
+        // editCate(
+        //   parseInt(newData[index].id_type),
+        //   newData[index].name_type,
+        //   newData[index].describe,
+        //   parseInt(newData[index].oftype[0]),
+        //   setBase64String(newData[index].image[0]),
+        // ).then((rs) => {
+        //   //TODO: Thêm thông báo ở đây
+        //   console.log(rs);
+        //   alert(rs.data.suaHangTrongKho.message);
+        //   if (rs.data.suaHangTrongKho.status === 201) {
+        //     // clearField();
+        //     //setIsEdit(false);
+        //     setReload(true);
+        //   }
+        // });
         setData(newData);
         setEditingKey("");
       } else {
@@ -260,7 +298,49 @@ const Typeproduct = () => {
     }
     return e?.fileList;
   };
-  return (
+
+  useEffect(() => {
+    async function fetchMetaData(rs?) {
+      if (rs && rs.data.dangNhapAdminVoiToken.status != 200) {
+        navigate("/LoginAdmin");
+        return;
+      }
+      const rsFetchData = await getAllCate();
+
+      var fetchData = rsFetchData.data.loai.data;
+      //
+      //
+
+      fetchData.forEach((element, index) => {
+        console.log("chiu luon a");
+        // console.log(convertB64ToImage(element.anhminhhoa));
+        // if (element.loaicha) console.log(element.loaicha.ten);
+        originData.push({
+          key: index,
+          id_type: element.ma,
+          name_type: element.ten,
+          oftype: [element.loaicha ? element.loaicha.ten : "Không"],
+
+          describe: element.mota,
+          image: [convertB64ToImage(element.anhminhhoa)],
+        });
+      });
+      // console.log("originData " + originData.length);
+      setData(originData);
+      // console.log("Data " + data.length);
+      setIsReady(true);
+    }
+    // console.log(data)
+
+    if (reload) {
+      isFirstLoad ? authenticationAdmin(fetchMetaData) : fetchMetaData();
+      setIsFirstLoad(false);
+      setReload(false);
+    }
+  }, [reload]);
+  // ##################################################
+
+  return isReady ? (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
         <Header style={headerStyle}>
@@ -302,8 +382,11 @@ const Typeproduct = () => {
                   valuePropName="fileList"
                   getValueFromEvent={normFile}
                 >
-                  <Upload action="/upload.do" listType="picture-card"
-                  maxCount = {1}>
+                  <Upload
+                    action="/upload.do"
+                    listType="picture-card"
+                    maxCount={1}
+                  >
                     <div>
                       <PlusOutlined />
                       <div style={{ marginTop: 8 }}>Upload</div>
@@ -347,12 +430,53 @@ const Typeproduct = () => {
               rowClassName="editable-row"
               pagination={{
                 onChange: cancel,
+                pageSize: 10, // Số hàng hiển thị trên mỗi trang
+                showTotal: (total, range) =>
+                  `${range[0]}-${range[1]} of ${total} items`, // Hiển thị thông tin tổng số hàng
               }}
             />
           </Form>
         </Content>
       </Layout>
     </Space>
+  ) : (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        height: "100%",
+        paddingTop: "20px",
+        paddingBottom: "20px",
+      }}
+    >
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+    </div>
   );
 };
 export default Typeproduct;

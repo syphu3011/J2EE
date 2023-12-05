@@ -1,4 +1,4 @@
-import { Table } from "antd";
+import { Table, TableProps } from "antd";
 import { useState } from "react";
 
 interface ItemCus {
@@ -25,30 +25,40 @@ const columnsCus = [
     width: "auto",
   },
   {
-    title: "Tên sản phẩm",
+    title: "Tên khách hàng",
     dataIndex: "name_cus_stat",
     width: "auto",
-    editable: true,
   },
   {
     title: "Số đơn hàng",
     dataIndex: "amount_order_cus",
     width: "auto",
+    sorter: (a, b) => a.amount_order_cus - b.amount_order_cus,
   },
   {
-    title: "Tổng",
+    title: "Tổng tiền",
     dataIndex: "profits_cus",
     width: "auto",
+    sorter: (a, b) => a.profits_cus - b.profits_cus,
   },
 ];
+const onChange: TableProps<ItemCus>["onChange"] = (
+  pagination,
+  filters,
+  sorter,
+  extra
+) => {
+  console.log("params", pagination, filters, sorter, extra);
+};
 
-const TableProduct = () => {
+const TableCustomer = () => {
   return (
     <Table
       bordered
       dataSource={CusData}
       columns={columnsCus}
       pagination={false}
+      onChange={onChange}
       scroll={{ x: 800, y: 600 }}
       summary={(pageData) => {
         let total_profits_cus = 0;
@@ -75,4 +85,4 @@ const TableProduct = () => {
     />
   );
 };
-export default TableProduct;
+export default TableCustomer;
