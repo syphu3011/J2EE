@@ -23,6 +23,7 @@ import { getIsLogin } from "../../../../utils/constant";
 import { postKeyToServer } from "../../../controllers/modules/key";
 import { authentication } from "../../../controllers/modules/admin/login";
 import { authenticationAdmin } from "../../../../utils/util";
+import App from "./pagecontent/Message/app";
 
 const { Header, Content, Sider } = Layout;
 const items1: MenuItem[] = [
@@ -171,6 +172,7 @@ export default function LayoutPage() {
             <>
               <Outlet />
             </>
+            <App/>
           </Content>
         </Layout>
       </Layout>
