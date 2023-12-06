@@ -19,6 +19,7 @@ import { getAllCate } from "../../../../../controllers/modules/admin/cate";
 import { useNavigate } from "react-router-dom";
 import { getHistoryOrders } from "../../../../../controllers/modules/admin/order";
 import { elements } from "chart.js";
+import Item from "antd/es/list/Item";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 60,
@@ -51,7 +52,9 @@ interface Item {
   total_money: number;
   status: string;
 }
-const dateFormat = "DD/MM/YYYY";
+// const dateFormat = "DD/MM/YYYY";
+const dateFormat = "YYYY-MM-DD";
+
 // const originData: Item[] = [];
 // for (let i = 0; i < 20; i++) {
 //     originData.push({
@@ -65,11 +68,15 @@ const dateFormat = "DD/MM/YYYY";
 //         status: 'Chờ'
 //     });
 // }
-
+// const metaOriginData: Item[] = [];
+let fromDate = dayjs();
+let toDate = dayjs();
+let status = "";
 const History = () => {
   // Define
   const originData: Item[] = [];
   const exData = [];
+  const [metaData, setMetaData] = useState(originData);
 
   const [isReady, setIsReady] = useState(false);
   const [editingKey, setEditingKey] = useState("");
@@ -93,7 +100,7 @@ const History = () => {
       //
       //
       fetchData.forEach((element, index) => {
-        exData.push({ key: index, sanpham: element.sanpham });
+        exData.push({ key: element.ma, sanpham: element.sanpham });
         // console.log(expanderData);
         //  Convert Timestamp to Date
         const dateInit = new Date(parseInt(element.ngaylap));
@@ -116,9 +123,9 @@ const History = () => {
           .toString()
           .padStart(2, "0")}`;
         // console.log(convertB64ToImage(element.anhminhhoa));
-        console.log(element.tongtien);
+        // console.log(element.tongtien);
         originData.push({
-          key: index,
+          key: element.ma,
           id_order: element.ma,
           id_cus: element.khachhang.ma,
           name_cus: element.khachhang.ten,
@@ -129,7 +136,25 @@ const History = () => {
         });
       });
       // console.log("originData " + originData.length);
-      setData(originData);
+      // setFromDate(dayjs().subtract(1, "day").format(dateFormat));
+      fromDate = dayjs().subtract(1, "day");
+      // setToDate(dayjs().add(1, "day").format(dateFormat));
+      toDate = dayjs().add(1, "day");
+      status = "Tất cả";
+      // setData(originData);
+      setMetaData(originData);
+      const newData = metaData.filter((item) =>
+        isDateBetween(item.dateInit.toString(), fromDate, toDate)
+      );
+      console.log("Nhut dau nha");
+      console.log(newData);
+      setData(newData);
+      // const newData = metaData.filter((item) =>
+      //   isDateBetween(item.dateInit.toString(), fromDate, toDate)
+      // );
+
+      // setData(newData);
+
       // console.log("Data " + data.length);
       setIsReady(true);
       setExpanderData(exData);
@@ -180,6 +205,7 @@ const History = () => {
   const handleChange = (value: string) => {
     console.log(`selected ${value}`);
   };
+  // Expander
   const expandedRowRender = (record) => {
     const columns: TableColumnsType<ExpandedDataType> = [
       { title: "Tên sản phẩm", dataIndex: "name_pro_order" },
@@ -189,12 +215,12 @@ const History = () => {
       { title: "Số lượng", dataIndex: "amount_order" },
     ];
     const expanderItem = expanderData.find((item) => item.key === record.key);
-    console.log(expanderItem);
+    // console.log(expanderItem);
     const data: ExpandedDataType[] = [];
 
     expanderItem.sanpham.forEach((element, index) => {
       data.push({
-        key: index,
+        key: element.ma,
         name_pro_order: element.sanpham.ten,
         size_order: element.kichco.ten,
         color_order: element.mau.ten,
@@ -229,7 +255,62 @@ const History = () => {
   const cancel = () => {
     setEditingKey("");
   };
+  // compare date
+  function isDateBetween(date1, date2, date3) {
+    const startDate = new Date(date2);
+    const endDate = new Date(date3);
+    const targetDate = new Date(date1);
+    startDate.setHours(0, 0, 0); // Thiết lập giờ, phút, giây thành 0
+    endDate.setHours(23, 59, 59); // Thiết lập giờ, phút, giây thành 23:59:59
 
+    // startDate.setDate(startDate.getDate() - 1); // Giảm startDate xuống 1 ngày
+    // endDate.setDate(endDate.getDate() - 1); // Giảm endDate xuống 1 ngày
+
+    console.log(startDate);
+    console.log(endDate);
+    console.log(targetDate);
+    // console.log(targetDate >= startDate && targetDate <= endDate);
+    console.log("##########################################");
+    return targetDate >= startDate && targetDate <= endDate;
+  }
+
+  function compareDateStrings(dateString1, dateString2) {
+    // Chuyển đổi chuỗi ngày thành đối tượng Date
+    const date1 = new Date(dateString1);
+    const date2 = new Date(dateString2);
+
+    // So sánh hai ngày và trả về true hoặc false
+    console.log(date1 > date2);
+    return date1 > date2;
+  }
+  // Handle Form date
+  const handleFromDateOnChange = (date) => {
+    if (date) {
+      fromDate = dayjs(date.toString());
+      const newData = metaData.filter((item) =>
+        isDateBetween(item.dateInit.toString(), fromDate, toDate)
+      );
+      console.log("Nhut dau nha");
+      console.log(newData);
+      setData(newData);
+      // setReload(true);
+      // setIsReady(true);
+    }
+  };
+  //
+  const handleToDateOnChange = (date) => {
+    if (date) {
+      toDate = dayjs(date.toString());
+      const newData = metaData.filter((item) =>
+        isDateBetween(item.dateInit.toString(), fromDate, toDate)
+      );
+      console.log("Nhut dau nha");
+      console.log(newData);
+      setData(newData);
+      // setReload(true);
+      // setIsReady(true);
+    }
+  };
   return isReady ? (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
@@ -243,19 +324,21 @@ const History = () => {
           >
             <Form.Item label="Từ ngày:">
               <DatePicker
-                defaultValue={dayjs("01/01/2000")}
+                defaultValue={fromDate}
                 format={dateFormat}
                 style={{ marginRight: 10 }}
+                onChange={handleFromDateOnChange}
               />
             </Form.Item>
             <Form.Item label="Đến ngày:">
               <DatePicker
-                defaultValue={dayjs()}
+                defaultValue={toDate}
                 format={dateFormat}
                 style={{ marginRight: 10 }}
+                onChange={handleToDateOnChange}
               />
             </Form.Item>
-            <Form.Item label="Trạng thái">
+            {/* <Form.Item label="Trạng thái">
               <Select
                 defaultValue="Tất cả"
                 style={{ width: 120 }}
@@ -266,7 +349,7 @@ const History = () => {
                   { value: "cancel", label: "Đã hủy" },
                 ]}
               />
-            </Form.Item>
+            </Form.Item> */}
           </div>
         </Header>
         <Content style={contentStyle}>
