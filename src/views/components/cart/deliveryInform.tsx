@@ -5,6 +5,8 @@ import {ArrowLeftOutlined} from "@ant-design/icons";
 import { useCart } from "react-use-cart";
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'
+import { buy } from "../../../controllers/modules/customer/buy";
+import { getProductData } from "../product/productData";
 interface DeliveryProps{
      setIsLoggedIn:(isLoggedIn:boolean)=>void;
 }
@@ -194,25 +196,69 @@ const DeliveryInform = () => {
           // }       
         };
      const handleSubmitDeliver=async(invoiceDetails)=>{
-          // const formValues=[fullname,phone,email,address]
-          // console.log("Form values:", formValues);
-          // setFormValues(formValues);
-          // const invoiceDetails = {
-          //      fullname,
-          //      phone,
-          //      email,
-          //      address,
-          //      items: items, // Assuming 'items' contains the list of purchased products
-          //      total: totalItemTotal,
-          //    };
-          const { fullname, phone, email, address} = invoiceDetails;
-          // Create the PDF content using the InvoicePDF component
-          generateAndDownloadPDF(invoiceDetails, items);        
-             form.resetFields();
-             emptyCart();
-             Modal.success({
-               content: 'Đơn hàng đã được gửi đến cho người bán!',
+          const getData = await getProductData("data");
+          async function getIdFromName(name, colorname, sizename) {
+               const data = getData.find(item => item.ten === name);
+               if (data) {
+                 const matchingMathang = data.mathang.find(e => e.mau.ten === colorname && e.kichco.ten === sizename);
+                 if (matchingMathang) {
+                   return {
+                     tenId: parseInt(data.ma),
+                     mauId: parseInt(matchingMathang.mau.ma),
+                     kichcoID: parseInt(matchingMathang.kichco.ma),
+                     soluong:parseInt(matchingMathang.soluong),
+                   };
+                 }
+               }
+             }
+             
+             const productPromises = items.map(async item => {
+               const sanpham = await getIdFromName(item.name,item.color,item.size);
+               const soluong = item.quantity;
+               // if(sanpham.soluong===0){
+               //      Modal.error({
+               //           content:"Sản phẩm "+item.name+ ", màu " + item.color + ", size: "+item.size+ " đã hết hoặc không tồn tại!"+"Quý khách vui lòng đặt lại!"
+               //      })
+               // }
+               // else if(sanpham.trangthai===2){
+               //      Modal.error({
+               //           content:"Sản phẩm "+item.name+ ", màu " + item.color + ", size: "+item.size+ " đã ngưng bán!"+"Quý khách vui lòng đặt hàng khác!"
+               //      })
+               // }
+               if(soluong > sanpham.soluong){
+                    Modal.error({
+                         content:"Sản phẩm "+item.name+ ", màu " + item.color+ ", size: "+item.size + " chỉ còn " + sanpham.soluong + ". Quý khách vui lòng sửa số lượng và đặt lại!"
+                    })
+               }
+
+               return {
+                    masanpham: sanpham.tenId,
+                    mamau: sanpham.mauId,
+                    makichco: sanpham.kichcoID,
+                    soluong,
+                  };
              });
+          
+             // Đợi tất cả các promise hoàn thành và nhận kết quả
+          const products = await Promise.all(productPromises);
+          const {fullname, phone, email, address} = invoiceDetails;
+          const regis = await buy(0,fullname,address,phone,email,products)
+          if (regis && regis.data && regis.data.taoHoaDon ){
+               if(regis.data.taoHoaDon.status === 201){
+               // Create the PDF content using the InvoicePDF component
+               generateAndDownloadPDF(invoiceDetails, items);        
+               form.resetFields();
+               emptyCart();
+               Modal.success({
+                    content: 'Đơn hàng đã được gửi đến cho người bán!',
+               });
+               }
+          }
+          else {
+               Modal.error({
+                    content:"Hệ thống lỗi ! Hãy thử lại vào lần sau"
+               })
+          }
      }  
 
           //const{isLoggedIn,showFormLogin}=this.state;
