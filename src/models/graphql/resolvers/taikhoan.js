@@ -118,7 +118,14 @@ module.exports = {
             await set_token(context.res, taikhoandangnhap)
             const rs = {
               status: 200,
-              message: "Đăng nhập thành công!"
+              message: "Đăng nhập thành công!",
+              data: {
+                tenkhachhang: (await KhachHang.findAll({
+                  where: {
+                    tentaikhoan
+                  }
+                }))[0].ten
+              }
             }
             return rs
           }
@@ -126,6 +133,7 @@ module.exports = {
         return {
           status: 400,
           message: "Tên tài khoản hoặc mật khẩu không chính xác!",
+          data: null
         }
       }
       catch (e) {
@@ -134,15 +142,25 @@ module.exports = {
     },
     async dangNhapVoiToken(root, args, context) {
       if (context.taikhoan) {
+        const tenkhachhang = (await KhachHang.findAll({
+          where: {
+            tentaikhoan: context.taikhoan.tentaikhoan
+          }
+        }))[0].ten
         return {
           status: 200,
-          message: "Xác thực thành công!"
+          message: "Xác thực thành công!",
+          data:
+          {
+            tenkhachhang
+          }
         }
       }
 
       return {
         status: 400,
-        message: "Xác thực không thành công!"
+        message: "Xác thực không thành công!",
+        data: null
       }
     },
     async dangNhapAdmin(root, args, context) {

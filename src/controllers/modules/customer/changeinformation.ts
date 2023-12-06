@@ -1,5 +1,17 @@
 import { request } from "../request"
 
+export async function getinformation(){
+    const query =  `
+    mutation getinformation {
+        thongtinkhachhang{
+            status
+            message
+            data
+        }
+    }
+    `
+    return request(query)
+}
 export async function changeinformation(id: number, name: String, birth: String, phone_number: String){
     // chuyển ngày sinh về String trước
     // dạng ngày sinh "yyyy-mm-dd"
