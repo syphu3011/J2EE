@@ -47,6 +47,10 @@ import {
   removeStaff,
 } from "../controllers/modules/admin/staff";
 import { buy } from "../controllers/modules/customer/buy";
+import {
+  getHistoryOrders,
+  getOrders,
+} from "../controllers/modules/admin/order";
 
 export default class Coding_ok extends React.Component<any, any> {
   constructor(props) {
@@ -147,7 +151,7 @@ export default class Coding_ok extends React.Component<any, any> {
       // testProvider(5)
       // testPrivileges(5)
 
-      getAllCate().then((rs) => {
+      getCustomer().then((rs) => {
         this.setState({
           test: JSON.stringify(rs),
         });
