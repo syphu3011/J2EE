@@ -17,6 +17,7 @@ import { statistics_revenue_days, statistics_revenue_month, top10product, top5cu
 import { logout } from '../controllers/modules/customer/logout';
 import { getAllCategories } from '../controllers/modules/customer/categories';
 
+
 export default class Coding_ok extends React.Component<any, any>   
 {   
     constructor(props) {
@@ -239,13 +240,12 @@ export default class Coding_ok extends React.Component<any, any>
             // })
             // editStaff(4, "Thử nghiệm nhân viên 2", "2002-12-30", "0329382999", "0302955392", 1)
             // removeStaff(4)
-            getAllCategories().then(rs => {
-                console.log(rs)
-                this.setState({
-                    test: JSON.stringify(rs)
-                })
-            })
-
+            // getAllCategories().then(rs => {
+            //     console.log(rs)
+            //     this.setState({
+            //         test: JSON.stringify(rs)
+            //     })
+            // })
         })
     }
     render() {  

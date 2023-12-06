@@ -68,7 +68,7 @@ switch (param) {
             <Route path="TypePro" element={<Typeproduct />} />
             <Route path="ProInStock" element={<Inventory />} />
             <Route path="Attribute" element={<Attribute />} />
-            <Route path="Message" element={<Message />} />
+            {/* <Route path="Message" element={<Message />} /> */}
             <Route path="Orders" element={<Order />} />
             <Route path="HistoryOr" element={<History />} />
             <Route path="ImportNew" element={<Import />} />
