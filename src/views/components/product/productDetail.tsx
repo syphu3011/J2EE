@@ -56,33 +56,34 @@ function ProductDetail() {
       let imageCount = 0
       useEffect(() => {
         async function process () {
-            if (isFirst) {
-                thisProduct = (await getProductData("data")).find(e => {return e.ma == Id })
-                setThisProduct(thisProduct)
-                const colors = thisProduct.mathang.map(prod => prod.mau.ten).reduce((unique, mau) => {
-                    if (!unique.includes(mau)) {
-                    unique.push(mau);
-                    }
-                    return unique;
-                }, []);
-                const sizes = thisProduct.mathang.map(prod => prod.kichco.ten).reduce((unique, kichco) => {
-                    if (!unique.includes(kichco)) {
-                    unique.push(kichco);
-                    }
-                    return unique;
-                }, []);
-                setListColor(colors)
-                setListSize(sizes)
-                setSelectedColor(thisProduct.mathang[0].mau.ten)
-                setSelectedSize(thisProduct.mathang[0].kichco.ten)
-                selectedMH = thisProduct.mathang[0]
-                setSelectedMH(thisProduct.mathang[0])
-                setAmount(selectedMH.soluong > 0 ? 1 : 0)
-                setIsFirst(false)
-            }
+            // if (isFirst) {
+            setIsFirst(true)
+            thisProduct = (await getProductData("data")).find(e => {return e.ma == Id })
+            setThisProduct(thisProduct)
+            const colors = thisProduct.mathang.map(prod => prod.mau.ten).reduce((unique, mau) => {
+                if (!unique.includes(mau)) {
+                unique.push(mau);
+                }
+                return unique;
+            }, []);
+            const sizes = thisProduct.mathang.map(prod => prod.kichco.ten).reduce((unique, kichco) => {
+                if (!unique.includes(kichco)) {
+                unique.push(kichco);
+                }
+                return unique;
+            }, []);
+            setListColor(colors)
+            setListSize(sizes)
+            setSelectedColor(thisProduct.mathang[0].mau.ten)
+            setSelectedSize(thisProduct.mathang[0].kichco.ten)
+            selectedMH = thisProduct.mathang[0]
+            setSelectedMH(thisProduct.mathang[0])
+            setAmount(selectedMH.soluong > 0 ? 1 : 0)
+            setIsFirst(false)
+            // }
         }
         process()
-      },[])
+      },[Id])
      return (
         isFirst ? <LoadingPage/>:
          <div className="product-detail-container">

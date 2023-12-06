@@ -5,8 +5,12 @@ import { encrypt } from '../../../../utils/crypto';
 import { request } from '../request';
 
 export async function login(username, password) {
-    const rq = `mutation dangNhap($username:String!,$password:String!){dangNhap(input:{tentaikhoan: $username, matkhau: $password}){status
-message
+    const rq = `mutation dangNhap($username:String!,$password:String!){dangNhap(input:{tentaikhoan: $username, matkhau: $password}){
+        status
+        message
+        data {
+            tenkhachhang
+        }
 }}` 
     const variables = {
         username: username,
@@ -16,6 +20,9 @@ message
 }
 export async function authentication() {
     let rq = `mutation{dangNhapVoiToken{status
-    message}}`
+    message
+    data {
+        tenkhachhang
+    }}}`
     return request(rq)
 }

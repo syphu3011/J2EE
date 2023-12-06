@@ -14,7 +14,7 @@ module.exports =  {
       const hangtrongkho_min = await sequelize.query(`
       select sum(soluong) soluong
       from HangTrongKho, PhieuNhap 
-      where masanpham = ${mathang.masanpham} AND mamau = ${mathang.mamau} AND makichco = ${mathang.makichco} AND matrangthai = 1 AND maphieunhap = PhieuNhap.ma 
+      where masanpham = ${mathang.masanpham} AND mamau = ${mathang.mamau} AND makichco = ${mathang.makichco} AND matrangthai = 1 AND maphieunhap = PhieuNhap.ma and soluong > 0
       GROUP BY PhieuNhap.ma, masanpham 
       ORDER BY PhieuNhap.ngaynhap  ASC LIMIT 1
       `)
@@ -33,7 +33,7 @@ module.exports =  {
       const hangtrongkho_min = await sequelize.query(`
       select min(giaban) giaban 
       from HangTrongKho, PhieuNhap 
-      where masanpham = ${mathang.masanpham} AND mamau = ${mathang.mamau} AND makichco = ${mathang.makichco} AND matrangthai = 1 AND maphieunhap = PhieuNhap.ma 
+      where masanpham = ${mathang.masanpham} AND mamau = ${mathang.mamau} AND makichco = ${mathang.makichco} AND matrangthai = 1 AND maphieunhap = PhieuNhap.ma and soluong > 0
       GROUP BY PhieuNhap.ma, masanpham 
       ORDER BY PhieuNhap.ngaynhap  ASC LIMIT 1
       `)

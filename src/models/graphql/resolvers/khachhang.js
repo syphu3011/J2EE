@@ -188,6 +188,30 @@ module.exports = {
           data: []
         }
       }
+    },
+    async thongtinkhachhang(root, args, context) {
+      try {
+        const khachhang = await KhachHang.findAll({
+          where: {
+            tentaikhoan: context.taikhoan.tentaikhoan
+          }
+        })
+        if (khachhang.length == 0) {
+          throw new Error('Khách hàng không tồn tại hoặc chưa đăng nhập!')
+        }
+        return {
+          status: 200,
+          message: "Lấy thông tin thành công!",
+          data: khachhang[0]
+        }
+      }
+      catch(e) {
+        return {
+          status: 400,
+          message: e.message,
+          data: []
+        }
+      }
     }
   },
   KhachHang: {

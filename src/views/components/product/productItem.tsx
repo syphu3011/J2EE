@@ -61,7 +61,7 @@ const ProductItem: React.FC<ProductItemProps> = (props) => {
         </div>
       </div>
       <div className="pagination-product">
-      <Pagination
+          <Pagination
         current={currentPage}
         pageSize={pageSize}
         total={filteredProductData.length}

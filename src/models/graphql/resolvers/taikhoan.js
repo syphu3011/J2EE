@@ -118,7 +118,14 @@ module.exports = {
             await set_token(context.res, taikhoandangnhap)
             const rs = {
               status: 200,
-              message: "Đăng nhập thành công!"
+              message: "Đăng nhập thành công!",
+              data: {
+                tenkhachhang: (await KhachHang.findAll({
+                  where: {
+                    tentaikhoan
+                  }
+                }))[0].ten
+              }
             }
             return rs
           }
@@ -126,6 +133,7 @@ module.exports = {
         return {
           status: 400,
           message: "Tên tài khoản hoặc mật khẩu không chính xác!",
+          data: null
         }
       }
       catch (e) {
@@ -134,15 +142,25 @@ module.exports = {
     },
     async dangNhapVoiToken(root, args, context) {
       if (context.taikhoan) {
+        const tenkhachhang = (await KhachHang.findAll({
+          where: {
+            tentaikhoan: context.taikhoan.tentaikhoan
+          }
+        }))[0].ten
         return {
           status: 200,
-          message: "Xác thực thành công!"
+          message: "Xác thực thành công!",
+          data:
+          {
+            tenkhachhang
+          }
         }
       }
 
       return {
         status: 400,
-        message: "Xác thực không thành công!"
+        message: "Xác thực không thành công!",
+        data: null
       }
     },
     async dangNhapAdmin(root, args, context) {
@@ -189,7 +207,7 @@ module.exports = {
                   maquyen: taikhoan.maquyen,
                   daxacthuc: "false",
                   otp: otphash,
-                  timestamp: Date.now()+""
+                  timestamp: Date.now() + ""
                 }
                 await set_token(context.res, taikhoandangnhap)
                 return {
@@ -312,7 +330,7 @@ module.exports = {
           }
         }
       }
-      catch(e) {
+      catch (e) {
         return {
           status: 400,
           message: "Có lỗi xảy ra!",
@@ -322,45 +340,55 @@ module.exports = {
         }
       }
     }
-  ,
-  async xacThucOTP (root, args, context) {
-    const taikhoan = context.taikhoan
-    const {otp} = args.input
-    const timestamp = Date.now()+""
-    if (taikhoan) { 
-      if (taikhoan.otp) {
-        if (timestamp - taikhoan.timestamp > 60000) {
-          return {
-            status: 401,
-            message: "OTP đã quá thời hạn!",
-            data: {
-              chucnang: ""
+    ,
+    async xacThucOTP(root, args, context) {
+      const taikhoan = context.taikhoan
+      const { otp } = args.input
+      const timestamp = Date.now() + ""
+      if (taikhoan) {
+        if (taikhoan.otp) {
+          if (timestamp - taikhoan.timestamp > 60000) {
+            return {
+              status: 401,
+              message: "OTP đã quá thời hạn!",
+              data: {
+                chucnang: ""
+              }
             }
           }
-        }
-        if (bcrypt.compareSync(otp, taikhoan.otp)) {
-          const taikhoandangnhap = {
-            tentaikhoan: taikhoan.tentaikhoan,
-            maquyen: taikhoan.maquyen,
-            daxacthuc: "true",
-            otp: null
+          if (bcrypt.compareSync(otp, taikhoan.otp)) {
+            const taikhoandangnhap = {
+              tentaikhoan: taikhoan.tentaikhoan,
+              maquyen: taikhoan.maquyen,
+              daxacthuc: "true",
+              otp: null
+            }
+            await set_token(context.res, taikhoandangnhap)
+            const quyen = await Quyen.findByPk(taikhoan.maquyen)
+            const chucnang = await quyen.getChucNang()
+            const chucnangreturn = chucnang.reduce((acc, cur) => cur.ten + "," + acc, "")
+            return {
+              status: 200,
+              message: "Đăng nhập thành công!",
+              data: {
+                chucnang: chucnangreturn
+              }
+            }
           }
-          await set_token(context.res, taikhoandangnhap)
-          const quyen = await Quyen.findByPk(taikhoan.maquyen)
-          const chucnang = await quyen.getChucNang()
-          const chucnangreturn = chucnang.reduce((acc, cur) => cur.ten + "," + acc, "")
-          return {
-            status: 200,
-            message: "Đăng nhập thành công!",
-            data: {
-              chucnang: chucnangreturn
+          else {
+            return {
+              status: 400,
+              message: "OTP không hợp lệ!",
+              data: {
+                chucnang: ""
+              }
             }
           }
         }
         else {
           return {
             status: 400,
-            message: "OTP không hợp lệ!",
+            message: "Bạn không cần xác thực OTP!",
             data: {
               chucnang: ""
             }
@@ -370,93 +398,83 @@ module.exports = {
       else {
         return {
           status: 400,
-          message: "Bạn không cần xác thực OTP!",
+          message: "Bạn phải đăng nhập trước!",
           data: {
             chucnang: ""
           }
         }
       }
-    }
-    else {
-      return {
-        status: 400,
-        message: "Bạn phải đăng nhập trước!",
-        data: {
-          chucnang: ""
+    },
+    async suaTaiKhoan(root, args, context) {
+      let transaction
+      try {
+        transaction = await sequelize.transaction()
+        const { ma, ten } = args.input
+        const taikhoan = await TaiKhoan.findByPk(ma)
+        await taikhoan.update({ ten })
+        await taikhoan.save()
+        await transaction.commit()
+        return {
+          status: STATUS_CODE.update_success,
+          message: "Sửa tài khoản thành công!",
+        }
+      }
+      catch (e) {
+        await transaction.rollback()
+        return {
+          status: STATUS_CODE.update_fail,
+          message: "Bị lỗi! Sửa tài khoản không thành công!",
+        }
+      }
+    },
+    async xoaTaiKhoan(root, args, context) {
+      let transaction
+      try {
+        transaction = await sequelize.transaction()
+        const { ma, ten } = args.input
+        const taikhoan = await TaiKhoan.findByPk(ma)
+        await taikhoan.setSanPham([])
+        await taikhoan.destroy()
+        await taikhoan.save()
+        await transaction.commit()
+        return {
+          status: STATUS_CODE.update_success,
+          message: "Xóa tài khoản thành công!",
+        }
+      }
+      catch (e) {
+        await transaction.rollback()
+        return {
+          status: STATUS_CODE.update_fail,
+          message: "Bị lỗi! Xóa tài khoản không thành công!",
+        }
+      }
+    },
+    dangxuat(root, args, context) {
+      try {
+        context.res.clearCookie("haizz")
+        context.res.clearCookie("getout")
+        context.res.clearCookie("token")
+        context.res.clearCookie("rToken")
+        context.res.clearCookie("chucnang")
+        return {
+          status: 200,
+          message: "Đăng xuất thành công!"
+        }
+      }
+      catch (e) {
+        return {
+          status: 400,
+          message: "Đăng xuất không thành công!"
         }
       }
     }
   },
-  async suaTaiKhoan(root, args, context) {
-    let transaction
-    try {
-      transaction = await sequelize.transaction()
-      const { ma, ten } = args.input
-      const taikhoan = await TaiKhoan.findByPk(ma)
-      await taikhoan.update({ ten })
-      await taikhoan.save()
-      await transaction.commit()
-      return {
-        status: STATUS_CODE.update_success,
-        message: "Sửa tài khoản thành công!",
-      }
-    }
-    catch (e) {
-      await transaction.rollback()
-      return {
-        status: STATUS_CODE.update_fail,
-        message: "Bị lỗi! Sửa tài khoản không thành công!",
-      }
-    }
-  },
-  async xoaTaiKhoan(root, args, context) {
-    let transaction
-    try {
-      transaction = await sequelize.transaction()
-      const { ma, ten } = args.input
-      const taikhoan = await TaiKhoan.findByPk(ma)
-      await taikhoan.setSanPham([])
-      await taikhoan.destroy()
-      await taikhoan.save()
-      await transaction.commit()
-      return {
-        status: STATUS_CODE.update_success,
-        message: "Xóa tài khoản thành công!",
-      }
-    }
-    catch (e) {
-      await transaction.rollback()
-      return {
-        status: STATUS_CODE.update_fail,
-        message: "Bị lỗi! Xóa tài khoản không thành công!",
-      }
-    }
-  },
-  dangxuat(root, args, context) {
-    try {
-      context.res.clearCookie("haizz")
-      context.res.clearCookie("getout")
-      context.res.clearCookie("token")
-      context.res.clearCookie("rToken")
-      context.res.clearCookie("chucnang")
-      return {
-        status: 200,
-        message: "Đăng xuất thành công!"
-      }
-    }
-    catch(e) {
-      return {
-        status: 400,
-        message: "Đăng xuất không thành công!"
-      }
-    }
-  }
-},
   Query: {
-},
-TaiKhoan: {
-  quyen(taikhoan) {
-    return taikhoan.getQuyen()
+  },
+  TaiKhoan: {
+    quyen(taikhoan) {
+      return taikhoan.getQuyen()
+    }
   }
-}
 }

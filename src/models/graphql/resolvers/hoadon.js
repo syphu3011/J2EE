@@ -1,4 +1,4 @@
-const { Op, literal } = require("sequelize")
+const { Op, literal, where } = require("sequelize")
 const {HoaDon, sequelize, HangTrongKho, LichSuHeThong, KhachHang, Mau, KichCo, ChiTietHoaDon, NhanVien} = require("../../database/models")
 const {STATUS_CODE, MAIL, CHUCNANG} = require("../const")
 const nodemailer = require('nodemailer');
@@ -9,8 +9,8 @@ module.exports = {
         let transaction
         try {
           transaction = await sequelize.transaction()
-          const {makhachhang, diachi, sanpham, email, sodienthoai} = args.input
-          const hoadon = await HoaDon.create({makhachhang, diachi, matrangthaihoadon: 1, email, sodienthoai})
+          const {makhachhang, diachi, sanpham, email, sodienthoai, tenkhachhang} = args.input
+          const hoadon = await HoaDon.create({makhachhang, diachi, matrangthaihoadon: 1, email, sodienthoai, tenkhachhang})
           let hangtrongkho_list = []
           for (const sp of sanpham) {
             const hangtrongkho = await HangTrongKho.findOne({
@@ -18,6 +18,9 @@ module.exports = {
                 masanpham: sp.masanpham,
                 mamau: sp.mamau,
                 makichco: sp.makichco,
+                soluong: {
+                  [Op.gt]: 0
+                }
               },
               order:[
                 ["maphieunhap", "ASC"]
@@ -25,6 +28,15 @@ module.exports = {
             })
             const mau = await Mau.findByPk(sp.mamau)
             const kichco = await KichCo.findByPk(sp.makichco)
+            //hết hàng hoặc ko có
+            if (!hangtrongkho) {
+              await transaction.rollback()
+              return {
+                status: 400,
+                message: "Hàng có mã "+sp.masanpham+ ", màu " + mau.ten + ", size: "+kichco.ten+ " đã hết hoặc không tồn tại!"+"Quý khách vui lòng đặt lại!" 
+              }
+            }
+            //ngưng bán
             if (hangtrongkho.matrangthai == 2) {
               await transaction.rollback()
               return {
@@ -32,6 +44,7 @@ module.exports = {
                 message: "Hàng có mã "+sp.masanpham+ ", màu " + mau.ten + ", size: "+kichco.ten+ " đã ngưng bán!"+"Quý khách vui lòng đặt lại!" 
               }
             }
+            //thiếu hàng
             if (hangtrongkho.soluong < sp.soluong) {
               await transaction.rollback()
               return {
@@ -148,6 +161,24 @@ module.exports = {
           }
           else {
             await hoadon.update({matrangthaihoadon: matrangthai, manhanvien: null})
+          }
+          if (matrangthai == 3) {
+            const chitiet_list = await ChiTietHoaDon.findAll({
+              where: {
+                mahoadon: ma
+              }
+            })
+            for (const chitiet of chitiet_list) {
+              await HangTrongKho.update(
+                {soluong: sequelize.literal("soluong + "+chitiet.soluong)}, 
+                {where: {
+                  masanpham: chitiet.masanpham,
+                  maphieunhap: chitiet.maphieunhap,
+                  mamau: chitiet.mamau,
+                  makichco: chitiet.makichco
+                }
+              })
+            }
           }
           if (return_rs && return_rs.status == 404) {
             await transaction.rollback()

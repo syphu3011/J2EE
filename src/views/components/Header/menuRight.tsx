@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import {Badge, Button, Drawer, Menu, MenuProps, Modal, Space} from "antd";
-import {SearchOutlined,ShoppingCartOutlined,UserOutlined,LoginOutlined,PlusCircleOutlined,EditOutlined,LogoutOutlined } from "@ant-design/icons";
+import {SearchOutlined,ShoppingCartOutlined,UserOutlined,LoginOutlined,PlusCircleOutlined,EditOutlined,LogoutOutlined,InboxOutlined } from "@ant-design/icons";
 import {SearchItem} from "../search/search";
 import Login from "../login/login";
 import SignUp from '../login/signup';
@@ -10,6 +10,7 @@ import PageCart from '../cart/pageCart';
 import { useCart } from 'react-use-cart';
 import Search from 'antd/es/input/Search';
 import { SearchResult } from '../search/searchList';
+import { logout } from '../../../controllers/modules/customer/logout';
 
 const MenuRight =(check:{isLogin: boolean})=>{
      const [results, setResults] = useState([]);
@@ -38,7 +39,7 @@ const MenuRight =(check:{isLogin: boolean})=>{
           setVisible(!visible);
         };
      const handleLoginClick =() => {
-          setActive(!active);
+          setActive(true);
           setActiveSignUp(false)
      };
      const handleLoginFormClose = () => {
@@ -58,9 +59,24 @@ const MenuRight =(check:{isLogin: boolean})=>{
      }
      React.useEffect(() => {
           setIsLoggedIn(check.isLogin)
+          
         }, [check.isLogin]);
-     const  handleLogoutClick=()=>{
-          setIsLoggedIn(false);
+     const  handleLogoutClick=async ()=>{
+          try {
+               const response = await logout();
+               window.location.reload();
+               if (response.data.dangxuat.status === 200) {
+                    window.location.replace("/");
+                    setIsLoggedIn(check.isLogin);
+               } else {
+                 console.error('Logout request failed:', response.data.dangxuat.message);
+               }
+             } catch (error) {
+               console.error('Error during logout:', error);
+             }
+     }
+     const handleOrderClick = (item)=>{
+          navigate(`/${item.key}`);
      }
      const username = "SyPhu"
      const childrenLogin = (): MenuProps['items'] => {
@@ -76,6 +92,12 @@ const MenuRight =(check:{isLogin: boolean})=>{
                               label: "Cập nhật thông tin",
                               onClick:  handleUpdateClick,
                               key: "cap-nhat-thong-tin",
+                              className: "groupIcons"
+                            },{
+                              icon: <InboxOutlined className="large-icon" />,
+                              label: "Lịch sử đơn hàng",
+                              onClick:  handleOrderClick,
+                              key: "lich-su-don-hang",
                               className: "groupIcons"
                             },
                             {

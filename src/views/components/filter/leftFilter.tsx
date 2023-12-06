@@ -2,6 +2,7 @@ import { Tree } from "antd";
 import { DataNode } from "antd/es/tree";
 import { useState } from "react";
 import ColorGroups from "./filtercolor";
+import { getProductsWithAllCategory } from "../../../controllers/modules/customer/products";
 
 const treeData: DataNode[]=[
      {
@@ -153,7 +154,7 @@ const treeData: DataNode[]=[
           ]
      },
 ]
-export default function FilterProduct({ onColorSelect }){
+export default function FilterProduct({ onColorSelect}){
      const [expandedKeys, setExpandedKeys] = useState<React.Key[]>(['types','shirt', 'trousers','size','phukien','price','dress','jackets']);//mo rong not dung trong cay
      const onExpand = (expandedKeysValue: React.Key[]) => {
           console.log('onExpand', expandedKeysValue);

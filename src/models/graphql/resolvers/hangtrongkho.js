@@ -108,6 +108,9 @@ module.exports = {
     kichthuoc: (hangtrongkho) => {
       return hangtrongkho.getKichCo()
     }, 
+    kichco: (hangtrongkho) => {
+      return hangtrongkho.getKichCo()
+    }, 
     ncc: async (hangtrongkho) => {
       const phieunhap = await hangtrongkho.getPhieuNhap()
       return phieunhap.getNhaCungCap()

@@ -1,4 +1,4 @@
-export declare function buy(id_customer: number, address: string, phone_number: string, email: string, products: {
+export declare function buy(id_customer: number, name_customer: string, address: string, phone_number: string, email: string, products: {
     masanpham: number;
     mamau: number;
     makichco: number;

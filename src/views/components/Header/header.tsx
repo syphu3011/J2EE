@@ -31,7 +31,7 @@ class Header extends React.Component<HeaderProps> {
      //    };
      handleScroll = () =>{
      const header = document.querySelector('.appHeader .menuHeader');
-     if (window.scrollY > 80) {
+     if (window.scrollY > 10) {
           header.classList.add('active');
         } else {
           header.classList.remove('active');
