@@ -2,12 +2,12 @@ const {gql} = require('apollo-server-express')
 
 module.exports = gql`
 type KhachHang {
-  ma: ID!
-  ten: String!
-  ngaysinh: String!
-  sodienthoai: String!
-  tentaikhoan: String!
-  ngaythamgia: String!
+  ma: ID
+  ten: String
+  ngaysinh: String
+  sodienthoai: String
+  tentaikhoan: String
+  ngaythamgia: String
   trangthai: TrangThaiKhachHang!
 }
 input KhachHangInput {
@@ -34,6 +34,7 @@ extend type Query {
   khachhang: KhachHangQueryResponse
   khachhangvoithuoctinh(input: KhachHangInput): KhachHangQueryResponse
   timkiemkhachhang(input: KhachHangInput): KhachHangQueryResponse
+  thongtinkhachhang: KhachHangQueryResponse
 }
 extend type Mutation {
   taoKhachHang(input: KhachHangInput): KhachHangResponse
