@@ -468,6 +468,36 @@ module.exports = {
           message: "Đăng xuất không thành công!"
         }
       }
+    },
+    doimatkhau(root, args, context) {
+      const {matkhaucu, matkhaumoi, matkhauxacnhan} = args
+      if (matkhaumoi != matkhauxacnhan) {
+        return {
+          status: 400,
+          message: "Mật khẩu xác nhận không đúng!"
+        }
+      }
+      else {
+        if (context.taikhoan) {
+          if (!bcrypt.compareSync(matkhaucu, context.taikhoan.matkhau)) {
+            return {
+              status: 400,
+              message: 'Mật khẩu hiện tại không đúng!'
+            }
+          }
+          context.taikhoan.update({matkhau: bcrypt.hashSync(matkhaumoi, bcrypt.genSaltSync(10))})
+          return {
+            status: 200,
+            message: "Mật khẩu đã được thay đổi thành công"
+          }
+        }
+        else {
+          return {
+            status: 400,
+            message: "Bạn cần đăng nhập để thực hiện chức năng này!"
+          }
+        }
+      }
     }
   },
   Query: {
