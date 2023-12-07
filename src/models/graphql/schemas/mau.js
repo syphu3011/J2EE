@@ -4,7 +4,6 @@ module.exports = gql`
 type Mau {
   ma: ID!
   ten: String!
-  sanpham: [SanPham]
 }
 input MauInput {
   ma: ID
@@ -21,8 +20,6 @@ type MauResponse {
 }
 extend type Query {
   mau: MauQueryResponse
-  mauvoithuoctinh(input: MauInput): MauQueryResponse
-  timkiemmau(input: MauInput): MauQueryResponse
 }
 extend type Mutation {
   taoMau(input: MauInput): MauResponse
