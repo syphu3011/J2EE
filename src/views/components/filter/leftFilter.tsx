@@ -195,6 +195,13 @@ export default function FilterProduct({
   };
   const onSelect = (selectedKeysValue, { checked, node }) => {
     // console.log("onSelect", selectedKeysValue, info);
+    // setSelectedKeys(selectedKeysValue);
+    if (node.children && checked) {
+      // Lọc ra các keys của các node con để không thêm vào danh sách checkedKeys
+      const childKeys = node.children.map(child => child.key);
+      selectedKeysValue = selectedKeysValue.filter(key => !childKeys.includes(key));
+    }
+
     setSelectedKeys(selectedKeysValue);
     onDataChange(node.key);
     // Kiểm tra xem tiêu đề của nút được chọn thuộc vào giá hay kích thước
@@ -216,13 +223,6 @@ export default function FilterProduct({
     //   setSelectedKeys([...selectedKeysValue, ...childKeys]);
     // }
     // Nếu là checkbox cha và đang được chọn
-    if (node.children && checked) {
-      // Lọc ra các keys của các node con để không thêm vào danh sách checkedKeys
-      const childKeys = node.children.map(child => child.key);
-      selectedKeysValue = selectedKeysValue.filter(key => !childKeys.includes(key));
-    }
-
-    setSelectedKeys(selectedKeysValue);
   };
   useEffect(() => {
     const _tempTree = [];
@@ -308,7 +308,8 @@ export default function FilterProduct({
         // onSelect={onSelect}
         selectable={false}
         onCheck={onSelect}
-        checkedKeys={selectedKeys}
+        // checkedKeys={selectedKeys}
+        checkStrictly={true}
       ></Tree>
       <div>
         <span>Màu sắc</span>
