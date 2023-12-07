@@ -27,7 +27,7 @@ import sio from './socket';
 // import logo from './bmw-logo.svg';
 // import { getData } from './controller';
 import { response } from 'express';
-function App({isReady}) {
+function App({isReady=true}) {
   const [isConnected, setIsConnected] = useState(sio.connected);
     function onConnect() {
       setIsConnected(true);

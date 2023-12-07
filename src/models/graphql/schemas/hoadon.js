@@ -10,6 +10,7 @@ type HoaDon {
   trangthaihoadon: TrangThaiHoaDon
   email: String
   sodienthoai: String
+  diachi: String
 }
 input ChiTietHoaDonInput {
   masanpham: Int

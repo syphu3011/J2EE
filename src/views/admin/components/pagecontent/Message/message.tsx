@@ -11,6 +11,7 @@ export default function message() {
       projectID={projectID}
       userName={"admin"}
       userSecret={"123123"}
+      
       renderChatFeed={(chatAppProps) => <ChatFeed {...chatAppProps} />}
     />
   );

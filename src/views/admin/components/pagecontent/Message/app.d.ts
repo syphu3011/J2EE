@@ -1,5 +1,5 @@
 import 'react-chat-widget/lib/styles.css';
 declare function App({ isReady }: {
-    isReady: any;
+    isReady?: boolean;
 }): import("react/jsx-runtime").JSX.Element;
 export default App;
