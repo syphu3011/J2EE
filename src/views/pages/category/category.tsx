@@ -15,7 +15,7 @@ interface ProductProps {
      productData: any[]; // Update the type of productData to accept any array
      // Other props...
 }
-export default function Category({ productData }) {
+export default function Category({ productData, isAccess = true }) {
      const [selectedColor, setSelectedColor] = useState(null);
      const [thisProduct, setProductData] = useState([]);
      const [filteredProductData, setFilteredProductData] = useState([]);
@@ -109,12 +109,15 @@ export default function Category({ productData }) {
           }
      };
      useEffect(() => {
-          setSelectedColor(null)
-          setSelectedTree(null)
-          setFilteredProductData(productData)
-          setCurrentOption(null)
-          setFilteredProductBySize(null)
-     },[productData])
+          if (isAccess) {
+               isAccess = false
+               setSelectedColor(null)
+               setSelectedTree(null)
+               setFilteredProductData(productData)
+               setCurrentOption(null)
+               setFilteredProductBySize(null)
+          }
+     },[productData, isAccess])
      return (
           <div className="pageProduct">
                <Row>
