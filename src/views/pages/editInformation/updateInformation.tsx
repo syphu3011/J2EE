@@ -4,9 +4,7 @@ import {PlusOutlined} from '@ant-design/icons';
 interface UserState {
      filelist: string;
      userProfiles: string[];
-    
-    
-   }
+}
 export default class UpdateInformation extends React.Component<{},UserState> {
      formRef = React.createRef<FormInstance>();
      constructor(props){
@@ -118,7 +116,7 @@ export default class UpdateInformation extends React.Component<{},UserState> {
           
           return(
                <div className="update-container">
-
+                    
                     <Row gutter={[24, 24]}>
                          <Col className="gutter-row"flex={3}>
                          <div className="form-update-information">
@@ -145,7 +143,7 @@ export default class UpdateInformation extends React.Component<{},UserState> {
                                              </div>
                                         </Upload>
                                    </Form.Item>
-                                   <Form.Item 
+                                   {/* <Form.Item 
                                    hasFeedback
                                    name="username"
                                    label="Tên đăng nhập"
@@ -154,7 +152,7 @@ export default class UpdateInformation extends React.Component<{},UserState> {
                                   // wrapperCol={{span:12}}
                                    >
                                         <Input type="text" placeholder='phuongvy'disabled size="large" />
-                                   </Form.Item>
+                                   </Form.Item> */}
                                    <Form.Item 
                                    hasFeedback 
                                    name="fullname"
@@ -171,7 +169,7 @@ export default class UpdateInformation extends React.Component<{},UserState> {
                                         ]
                                    }
                                    >
-                                        <Input   type="text" placeholder="" size="large"/>
+                                        <Input   type="text" placeholder="" size="large" value=""/>
                                    </Form.Item>
                                    <Form.Item 
                                    hasFeedback
