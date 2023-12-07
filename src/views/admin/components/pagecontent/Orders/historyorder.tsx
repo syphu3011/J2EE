@@ -144,9 +144,9 @@ const History = () => {
       });
       // console.log("originData " + originData.length);
       // setFromDate(dayjs().subtract(1, "day").format(dateFormat));
-      fromDate = dayjs().subtract(1, "day");
+      fromDate = dayjs().subtract(7, "day");
       // setToDate(dayjs().add(1, "day").format(dateFormat));
-      toDate = dayjs().add(1, "day");
+      toDate = dayjs();
       status = "Tất cả";
       // setData(originData);
       setMetaData(originData);
@@ -326,15 +326,7 @@ const History = () => {
     return targetDate >= startDate && targetDate <= endDate;
   }
 
-  function compareDateStrings(dateString1, dateString2) {
-    // Chuyển đổi chuỗi ngày thành đối tượng Date
-    const date1 = new Date(dateString1);
-    const date2 = new Date(dateString2);
 
-    // So sánh hai ngày và trả về true hoặc false
-    console.log(date1 > date2);
-    return date1 > date2;
-  }
   // Handle Form date
   const handleFromDateOnChange = (date) => {
     if (date) {
