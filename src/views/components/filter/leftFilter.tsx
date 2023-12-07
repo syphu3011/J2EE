@@ -1,7 +1,10 @@
 import { Tree } from "antd";
 import { DataNode } from "antd/es/tree";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ColorGroups from "./filtercolor";
+import { getProductsWithAllCategory } from "../../../controllers/modules/customer/products";
+import { getAllCategories } from "../../../controllers/modules/customer/categories";
+import DirectoryTree from "antd/es/tree/DirectoryTree";
 
 const treeData: DataNode[]=[
      {
@@ -10,90 +13,93 @@ const treeData: DataNode[]=[
           children:[
                {
                     title:'Áo',
-                    key :'shirt',
+                    key :'Áo',
                     children:[
                          {
                               title:'Áo thun',
-                              key:'T-shirt',
+                              key:'Áo thun',
                          },{
                               title:'Áo sơ mi',
-                              key:'dress-shirt',
+                              key:'Áo sơ mi',
                          },{
                               title:"Áo kiểu",
-                              key:"modern-shirt",
+                              key:"Áo kiểu",
+                         },{
+                              title:"Áo polo",
+                              key:"Áo polo",
                          }
                     ]
                },
                {
                     title:"Quần",
-                    key : 'trousers',
+                    key : 'Quần',
                     children:[
                          {
                               title:"Quần Jeans",
-                              key:"jeans-trouser",
+                              key:"Quần Jeans",
                          },
                          {
                               title:"Quần tây",
-                              key:"trouser-trouser",
+                              key:"Quần tây",
                          },
                          {
                               title:"Quần Jogger",
-                              key:"jogger-trouser",
+                              key:"Quần Jogger",
                          },
                          {
                               title:"Quần dài vải",
-                              key:"fabric-pants"
+                              key:"Quần dài vải"
                          }
                     ]
                },{
                     title:"Đầm và chân váy",
-                    key:"dress",
+                    key:"Đầm và chân váy",
                     children:[
                          {
-                              title:"Đầm và jumsuit",
-                              key:'dress-and-jumsuit',
+                              title:"Đầm và jumpsuit",
+                              key:'Đầm và jumpsuit',
                          }
                          ,{
                               title:"Chân váy",
-                              key:"dress-A",
+                              key:"Chân váy",
                          }
                     ]
                },{
                     title:"Áo khoác",
-                    key:"jackets",
+                    key:"Áo khoác",
                     children:[
                          {
                               title:"Áo hoodie",
-                              key:"hoodie-fashion",
+                              key:"Áo hoodie",
                          },{
                               title:"Áo Blazer",
-                              key:"blazer-fashion",
+                              key:"Áo Blazer",
                          },{
                               title:"Áo chăn bông",
-                              key:"winter-fashion",
+                              key:"Áo chăn bông",
                          },{
                               title:"Áo Parka",
-                              key:"parka-fashion",
+                              key:"Áo Parka",
                          }
                     ]
                },{
                     title:"Phụ kiện",
-                    key:"phukien",
+                    key:"Phụ kiện",
                     children:[
                          {
                               title:"Nón",
-                              key:"non"
+                              key:"Nón"
                          },{
                               title:"Nơ cài",
-                              key:"nocai",
+                              key:"Nơ cài",
                          },
                          {
                               title:"Vớ",
-                              key:"vo",
+                              key:"Vớ",
                          },
                          {
                               title:"Thắt lưng",
-                              key:"thatlung",
+                              key:"Thắt lưng",
                          }
                     ]
                },
@@ -102,42 +108,38 @@ const treeData: DataNode[]=[
      
      {
           title:"Kích cỡ",
-          key:"size",
+          key:"Kích cỡ",
           children:[
                {
                     title:"XS",
-                    key:'xs-size',
+                    key:'XS',
                },
                {
                     title:"S",
-                    key:'s-size',
+                    key:'S',
                },
                {
                     title:"M",
-                    key:"m-size",
+                    key:"M",
                },
                {
                     title:"L",
-                    key:"l-size",
+                    key:"L",
                },
                {
                     title:"XL",
-                    key:"xl-size",
+                    key:"XL",
                },
                {
                     title:"Free size",
-                    key:"free-size",
+                    key:"Free size",
                }
-               ,
-               {
-                    title:"Over size",
-                    key:"over-size",
-               }
+              
           ]
      },
      {
           title:"Giá",
-          key:"price",
+          key:"Giá",
           children:[
                {
                     title:"Dưới 1.000.000",
@@ -147,26 +149,49 @@ const treeData: DataNode[]=[
                     key:"from-one-milions-to-five-milions",
                },
                {
-                    title:" Trên 1.000.000",
+                    title:" Trên 5.000.000",
                     key:"Bigger-than-five-milions",
                }
           ]
      },
 ]
-export default function FilterProduct({ onColorSelect }){
-     const [expandedKeys, setExpandedKeys] = useState<React.Key[]>(['types','shirt', 'trousers','size','phukien','price','dress','jackets']);//mo rong not dung trong cay
+export default function FilterProduct({ onColorSelect,onDataChange}){
+     const [expandedKeys, setExpandedKeys] = useState<React.Key[]>(['types','Áo', 'Quần','Kích cỡ','Phụ kiện','Giá','Đầm và chân váy','Áo khoác']);//mo rong not dung trong cay
+     const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
+     const [productData,setProductData]=useState([])
+     const [filteredProductData, setFilteredProductData] = useState(null);
+
      const onExpand = (expandedKeysValue: React.Key[]) => {
           console.log('onExpand', expandedKeysValue);
           // if not set autoExpandParent to false, if children expanded, parent can not collapse.
           // or, you can remove all expanded children keys.
           setExpandedKeys(expandedKeysValue);
           //setAutoExpandParent(false);
-        };
+     };
+          const onSelect = (selectedKeysValue: React.Key[], info: any) => {
+               console.log('onSelect', selectedKeysValue, info);
+               setSelectedKeys(selectedKeysValue);
+               onDataChange(info.node.key);
+               // Kiểm tra xem tiêu đề của nút được chọn thuộc vào giá hay kích thước
+               if (info.node.key === 'Giá' || info.node.key === 'Kích cỡ'||info.node.key === 'types') {
+                    const childKeys = [];
+                    const traverseTree = (node) => {
+                     if (node.children) {
+                         node.children.forEach((child) => {
+                         childKeys.push(child.key);
+                         traverseTree(child);
+                     });
+                    }
+               };
+               traverseTree(info.node);
+               setSelectedKeys([...selectedKeysValue, ...childKeys]);
+   }
+             };
      return(
           <div className="filter">
-               <Tree expandedKeys={expandedKeys}
-       onExpand={onExpand} checkable treeData={treeData}> 
-               </Tree>
+               <DirectoryTree expandedKeys={expandedKeys} defaultExpandAll
+       onExpand={onExpand} treeData={treeData} onSelect={onSelect}> 
+               </DirectoryTree>
                <div>
                     <span>Màu sắc</span>
                     <ColorGroups onColorSelect={onColorSelect}/>

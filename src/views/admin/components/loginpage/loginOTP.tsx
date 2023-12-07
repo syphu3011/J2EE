@@ -1,11 +1,13 @@
 import React, { useEffect } from "react";
-import { Button, Form, Input, Space } from "antd";
+import { Button, Form, Input, Space, notification } from "antd";
 import { Layout } from "antd";
 import { useNavigate } from "react-router-dom";
-import bcrypt from "bcryptjs"
-import Cookies from 'js-cookie';
+import bcrypt from "bcryptjs";
+import Cookies from "js-cookie";
 import { getIsLogin, getIsOTP } from "../../../../../utils/constant";
 import { otp } from "../../../../controllers/modules/admin/login";
+import type { NotificationPlacement } from "antd/es/notification/interface";
+import message from "../pagecontent/message";
 const { Header, Content } = Layout;
 
 const headerStyle: React.CSSProperties = {
@@ -38,39 +40,49 @@ type FieldType = {
   OTP?: string;
 };
 export default function LoginOTP() {
+  const [api2, NotiOTP] = notification.useNotification();
+  const openNotification = (placement: NotificationPlacement, s: String) => {
+    api2.info({
+      message: `THÔNG BÁO`,
+      description: s,
+      placement,
+    });
+  };
   const navigate = useNavigate();
   const checkOTP = async (value) => {
-    const rsOTP = await otp(value.OTP)
-    if (rsOTP.data && rsOTP.data.xacThucOTP && rsOTP.data.xacThucOTP.status == "200") {
-      window.localStorage.setItem("chucnang", rsOTP.data.xacThucOTP.data.chucnang)
-      navigate("/Admin")
-    }
-    else {
-      //TODO: Làm cái thông báo ở đây
+    const rsOTP = await otp(value.OTP);
+    if (
+      rsOTP.data &&
+      rsOTP.data.xacThucOTP &&
+      rsOTP.data.xacThucOTP.status == "200"
+    ) {
+      openNotification("top", "Vui lòng đăng nhập");
+      navigate("/Admin");
+    } else {
+      //openNotification("top", "Đăng nhập không thành công");
       if (rsOTP.data && rsOTP.data.xacThucOTP) {
-        alert(rsOTP.data.xacThucOTP.message)
+        alert(rsOTP.data.xacThucOTP.message);
+        openNotification("top", "Đăng nhập không thành công");
         if (rsOTP.data.xacThucOTP.status === "401") {
-          navigate("/LoginAdmin")
+          navigate("/LoginAdmin");
         }
-      }
-      else {
-        alert("Có lỗi xảy ra!")
+      } else {
+        openNotification("top", "Có lỗi xảy ra");
       }
     }
-  }
+  };
   useEffect(() => {
     if (!getIsLogin() && !Cookies.get("checkOTP")) {
-      navigate("/LoginAdmin")
+      navigate("/LoginAdmin");
+    } else if (getIsOTP()) {
+      openNotification("top", "Đăng nhập thành công");
+      navigate("/Admin");
+    } else if (!Cookies.get("checkOTP")) {
     }
-    else if (getIsOTP()) {
-      navigate("/Admin")
-    }
-    else if (!Cookies.get("checkOTP")) {
-
-    }
-  }, [])
+  }, []);
   return (
     <>
+      {NotiOTP}
       <Space
         direction="vertical"
         style={{ width: "100%" }}

@@ -10,6 +10,7 @@ module.exports = gql`
     ngaythamgia: String!
     trangthai: TrangThaiKhachHang!
   }
+  
   input KhachHangInput {
     ma: ID
     ten: String!
@@ -17,24 +18,29 @@ module.exports = gql`
     sodienthoai: String!
     matrangthai: Int
   }
+  
   input ChuyenTrangThaiInput {
     ma: ID
     matrangthai: Int!
   }
+  
   type KhachHangQueryResponse {
     status: Int!
     message: String!
     data: [KhachHang!]!
   }
+  
   type KhachHangResponse {
     status: Int!
     message: String!
   }
+  
   extend type Query {
     khachhang: KhachHangQueryResponse
     khachhangvoithuoctinh(input: KhachHangInput): KhachHangQueryResponse
     timkiemkhachhang(input: KhachHangInput): KhachHangQueryResponse
   }
+  
   extend type Mutation {
     taoKhachHang(input: KhachHangInput): KhachHangResponse
     suaKhachHang(input: KhachHangInput): KhachHangResponse

@@ -39,24 +39,24 @@ function MenuLeft(){
                                    
                                    {
                                         label:"Áo",
-                                        key:"ao",
+                                        key:"Áo",
                                         className:"groupAo",
                                         children:[
                                              {
                                                   label:"Áo thun",
-                                                  key:"Aothun",
+                                                  key:"Áo thun",
                                                   className:"groupAo",
                                              },{
                                                   label:"Áo sơ mi",
-                                                  key:"Aosomi",
+                                                  key:"Áo sơ mi",
                                                   className:"groupAo",
                                              },{
                                                   label:"Áo kiểu",
-                                                  key:"Aokieu",
+                                                  key:"Áo kiểu",
                                                   className:"groupAo",
                                              },{
                                                   label:"Áo polo",
-                                                  key:"Aokieupolo",
+                                                  key:"Áo polo",
                                                   className:"groupAo",
                                              }
                                              
@@ -64,63 +64,63 @@ function MenuLeft(){
                                         ]
                                    },{
                                         label:"Quần",
-                                        key:"quan",
+                                        key:"Quần",
                                         className:"groupAo",
                                         children:[
                                              {
                                                   label:"Quần Jeans",
-                                                  key:"jeans",
+                                                  key:"Quần Jeans",
                                                   className:"groupAo",
                                              },{
                                                   label:"Quần tây",
-                                                  key:"tay",
+                                                  key:"Quần tây",
                                                   className:"groupAo",
                                              },{
                                                   label:"Quần Jogger",
-                                                  key:"jogger",
+                                                  key:"Quần Jogger",
                                                   className:"groupAo",
                                              },{
                                                   label:"Quần dài vải",
-                                                  key:"vai",
+                                                  key:"Quần dài vải",
                                                   className:"groupAo",
                                              }
                                         ]
                                    },{
                                         label:"Đầm và chân váy",
-                                        key:"dam",
+                                        key:"Đầm và chân váy",
                                         className:"groupAo",
                                         children:[
                                              {
                                                   label:"Đầm và jumpsuit",
-                                                  key:"jump&dress",
+                                                  key:"Đầm và jumpsuit",
                                                   className:"groupAo",
                                              },{
                                                   label:"Chân váy",
-                                                  key:"Chanvay",
+                                                  key:"Chân váy",
                                                   className:"groupAo",
                                              }
                                         ]
                                    },{
                                         label:"Áo khoác",
-                                        key:"khoac",
+                                        key:"Áo khoác",
                                         className:"groupAo",
                                         children:[
                                              {
                                                   label:"Áo hoodie",
-                                                  key:"hoodie",
+                                                  key:"Áo hoodie",
                                                   className:"groupAo",
                                              },
                                              {
                                                   label:"Áo Blazer",
-                                                  key:"blazer",
+                                                  key:"Áo Blazer",
                                                   className:"groupAo",
                                              },{
                                                   label:"Áo chăn bông",
-                                                  key:"bong",
+                                                  key:"Áo chăn bông",
                                                   className:"groupAo",
                                              },{
                                                   label:"Áo Parka",
-                                                  key:"parka",
+                                                  key:"Áo Parka",
                                                   className:"groupAo",
                                              }
                                         ]
@@ -130,31 +130,31 @@ function MenuLeft(){
                
                          },{
                               label:labelPhuKien,
-                              key :"phukien",
+                              key :"Phụ kiện",
                               style:{marginTop:'5px'},
                               children:[
                                    {
                                         label:"Nón",
-                                        key:"non",
+                                        key:"Nón",
                                         className:"groupAo",
                                    },{
                                         label:"Nơ cài",
-                                        key:"no",
+                                        key:"Nơ cài",
                                         className:"groupAo",
 
                                    },{
                                         label:"Vớ",
-                                        key:"vo",
+                                        key:"Vớ",
                                         className:"groupAo",
                                    },{
                                         label:"Thắt lưng",
-                                        key:"thatlung",
+                                        key:"Thắt lưng",
                                         className:"groupAo",
                                    }
                               ]
                          },{
                               label:"Giới thiệu",
-                              key:"Introduce",
+                              key:"",
                               style:{marginTop:'5px'},
                          }
                          ]}/>

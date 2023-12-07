@@ -68,16 +68,16 @@ export default class Main extends React.Component<any, any>
     render() {  
         
         return (
-            this.state.isReady ?(
             <div >
-                <Layout>
+                <Layout style={!this.state.isReady ? {display: 'none'} : {}}>
                     <Header isLogin={this.state.isAuth}/>
-                    <Outlet/>
-                   <ChatApp/>
+                    {this.state.isReady?<Outlet/>:<></>}
+                    <ChatApp isReady={this.state.isReady}/>
                     <Footer/>
                     
                 </Layout>
-          </div>): <LoadingPage />
+                {!this.state.isReady?<LoadingPage />:<></>}
+          </div>
         
    ) }  
 }  

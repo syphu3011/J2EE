@@ -137,6 +137,24 @@ module.exports = {
                 }
             }
         },
+        loaikhachhang: async (root, args,context) => {
+            try {
+                context.dont_need_encrypt = true
+                const rs = {
+                    status: STATUS_CODE.query_success,
+                    message: "Lấy danh sách loại thành công!",
+                    data: await Loai.findAll()
+                }
+                return rs;
+            }
+            catch (e) {
+                return {
+                    status: STATUS_CODE.query_fail,
+                    message: "Loại không tồn tại!",
+                    data: []
+                }
+            }
+        },
         async loaiLon(root, args, context) {
             try {
                 context.dont_need_encrypt = true
@@ -252,7 +270,7 @@ module.exports = {
             for (let i = 0; i < danhsachsanpham.length; i++) {
                 const sanpham = danhsachsanpham[i]
                 let mh = await sanpham.getHangTrongKho()
-                mh = mh.filter(e => e.matrangthai == 1)
+                mh = mh.filter(e => e.matrangthai == 1 && e.soluong > 0)
                 const soluong = mh.map((product) => product.soluong).reduce((acc, current) => acc + current, 0);
                 if (mh.length == 0 || soluong == 0) {
                     danhsachsanpham.splice(i, 1)

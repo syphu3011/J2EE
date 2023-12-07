@@ -8,6 +8,7 @@ type HangTrongKho {
   loai: [Loai]
   mau: Mau
   kichthuoc: KichCo
+  kichco: KichCo
   ncc: NhaCungCap
   gianhap: Int
   giaban: Int

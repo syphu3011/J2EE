@@ -284,8 +284,9 @@ module.exports = {
             return hangtrongkho_min[0][0] ? hangtrongkho_min[0][0].giaban : 0
         },
         async mathang(sanpham) {
-            const mathang_list = await sanpham.getMatHang()
-            return mathang_list
+            const mathang_list = await sanpham.getHangTrongKho()
+            
+            return mathang_list.filter(mathang => mathang.matrangthai == 1 && mathang.soluong > 0)
         },
         async loai(sanpham) {
             try {

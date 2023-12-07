@@ -1,9 +1,18 @@
-import { Col, DatePicker, Layout, Row, Select, SelectProps, Space } from "antd";
+import {
+  Col,
+  DatePicker,
+  Form,
+  Layout,
+  Row,
+  Select,
+  SelectProps,
+  Space,
+} from "antd";
 //import "../../../style/product.css";
 import { Bar, Line, Pie } from "react-chartjs-2";
-import { CategoryScale, Chart,LinearScale,  BarElement} from "chart.js";
+import { CategoryScale, Chart, LinearScale, BarElement } from "chart.js";
 
-Chart.register([CategoryScale,LinearScale, BarElement]);
+Chart.register([CategoryScale, LinearScale, BarElement]);
 
 const { Header, Content } = Layout;
 import React, { useState } from "react";
@@ -21,67 +30,133 @@ const contentStyle: React.CSSProperties = {
   lineHeight: "120px",
   color: "#fff",
   backgroundColor: "#ffffff",
+  display: "flex",
+  justifyContent: "center",
 };
-const dateFormat = "DD/MM/YYYY";
-const UserData = [
+interface ItemMonth {
+  key: string;
+  id_month: string;
+  amount_order_month: number;
+  income_month: number;
+  expenses_month: number;
+  profits_month: number;
+}
+const UserData: ItemMonth[] = [
   {
-    id: 1,
-    year: 2016,
-    userGain: 80000,
-    userLost: 823,
+    key: "1",
+    id_month: "Tháng " + 1,
+    amount_order_month: 2,
+    income_month: 30000000,
+    expenses_month: 400000,
+    profits_month: 15000000 - 400000,
   },
   {
-    id: 2,
-    year: 2017,
-    userGain: 45677,
-    userLost: 345,
+    key: "2",
+    id_month: "Tháng 2",
+    amount_order_month: 2,
+    income_month: 30000000,
+    expenses_month: 400000,
+    profits_month: 60000000,
   },
   {
-    id: 3,
-    year: 2018,
-    userGain: 78888,
-    userLost: 555,
+    key: "3",
+    id_month: "Tháng 3",
+    amount_order_month: 2,
+    income_month: 30000000,
+    expenses_month: 400000,
+    profits_month: 55000000,
   },
   {
-    id: 4,
-    year: 2019,
-    userGain: 90000,
-    userLost: 4555,
+    key: "4",
+    id_month: "Tháng 4",
+    amount_order_month: 2,
+    income_month: 30000000,
+    expenses_month: 400000,
+    profits_month: 77000000,
   },
   {
-    id: 5,
-    year: 2020,
-    userGain: 4300,
-    userLost: 234,
+    key: "5",
+    id_month: "Tháng 5",
+    amount_order_month: 2,
+    income_month: 30000000,
+    expenses_month: 400000,
+    profits_month: 97000000,
   },
 ];
-
+const dateFormat = "DD/MM/YYYY";
+const options: SelectProps["options"] = [];
+const options2: SelectProps["options"] = [];
+options2.push({
+  value: "Days",
+  label: "Thứ",
+});
+options2.push({
+  value: "Months",
+  label: "Tháng",
+});
+options.push({
+  value: "DT",
+  label: "Doanh thu",
+});
+options.push({
+  value: "C",
+  label: `Chi`,
+});
+options.push({
+  value: "T",
+  label: "Thu",
+});
 const StatChart = () => {
   const [chartData, setUserData] = useState({
-    labels: UserData.map((data) => data.year),
+    labels: UserData.map((data) => data.id_month),
     datasets: [
       {
-        label: "Users Gained",
-        data: UserData.map((data) => data.userGain),
+        label: "Doanh thu",
+        data: UserData.map((data) => data.profits_month),
         backgroundColor: "rgba(75,192,192,1)",
         borderColor: "black",
         borderWidth: 1,
       },
     ],
   });
-  
+
   return (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
-        <Header style={headerStyle}></Header>
+        <Header style={headerStyle}>
+          <Form.Item
+            label="Lọc theo:"
+            labelAlign="left"
+            labelCol={{ span: "10%" }}
+          >
+            <Select
+              allowClear
+              style={{ width: "20%" }}
+              placeholder="Chọn mục muốn thống kê"
+              // onChange={}
+              options={options2}
+              defaultValue="Months"
+            />
+            <Select
+              id="Select-date"
+              allowClear
+              style={{ width: "20%" }}
+              // onChange={}
+              options={options}
+              defaultValue="DT"
+            />
+          </Form.Item>
+        </Header>
         <Content style={contentStyle}>
-          <Bar data={chartData} />
+          <div style={{ minWidth: "50%", maxWidth: "80%" }}>
+            <Bar data={chartData} />
+          </div>
           {/* <div style={{ width: 700 }}>
-              <Line data={chartData} />
-            </div>
-            <div style={{ width: 700 }}>
-              <Pie data={chartData} />
-            </div> */}
+            <Line data={chartData} />
+          </div>
+          <div style={{ width: 700 }}>
+            <Pie data={chartData} />
+          </div> */}
         </Content>
       </Layout>
     </Space>

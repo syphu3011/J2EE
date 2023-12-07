@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { Button, Checkbox, Form, Input, Space} from "antd";
-import {authentication, login as loginAdmin} from '../../../../controllers/modules/admin/login'
+import { Button, Checkbox, Form, Input, Space, notification } from "antd";
+import {
+  authentication,
+  login as loginAdmin,
+} from "../../../../controllers/modules/admin/login";
 import { Layout } from "antd";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import LoadingPage from "../../../loadingPage";
 import { postKeyToServer } from "../../../../controllers/modules/key";
-import { getIsLogin, setIsLogin, setIsOTP } from "../../../../../utils/constant";
+import {
+  getIsLogin,
+  setIsLogin,
+  setIsOTP,
+} from "../../../../../utils/constant";
 import { authenticationAdmin } from "../../../../../utils/util";
 const { Header, Content } = Layout;
+import type { NotificationPlacement } from "antd/es/notification/interface";
 
 const headerStyle: React.CSSProperties = {
   textAlign: "center",
@@ -28,14 +36,9 @@ const contentStyle: React.CSSProperties = {
   backgroundColor: "#ffffff",
 };
 
-const onFinish = (values: any) => {
-  console.log("Success:", values);
-};
-
 const onFinishFailed = (errorInfo: any) => {
   console.log("Failed:", errorInfo);
 };
-
 
 type FieldType = {
   username?: string;
@@ -43,43 +46,57 @@ type FieldType = {
   remember?: string;
 };
 export default function Login() {
+  const [api, contextHolder] = notification.useNotification();
+  const Notification = (placement: NotificationPlacement) => {
+    api.info({
+      message: `Lỗi!`,
+      description: "Tên tài khoản hoặc mật khẩu không chính xác!",
+      placement,
+    });
+  };
   const navigate = useNavigate();
-  const [isNotLoggedIn, setIsNotLoggedIn] = useState(false)
-  const [isReady, setIsReady] = useState(false)
+  const [isNotLoggedIn, setIsNotLoggedIn] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   const login = async (value) => {
-    const rsLogin = await loginAdmin(value.username, value.password)
-    if (rsLogin && rsLogin.data && rsLogin.data.dangNhapAdmin && rsLogin.data.dangNhapAdmin.status == 200) {
-      setIsLogin(true)
-      const dateExpires = new Date()
-      dateExpires.setTime(dateExpires.getTime() + 60000)
-      Cookies.set("checkOTP", "true", {expires: dateExpires})
-      navigate("/AccessOTP")
+    const rsLogin = await loginAdmin(value.username, value.password);
+    if (
+      rsLogin &&
+      rsLogin.data &&
+      rsLogin.data.dangNhapAdmin &&
+      rsLogin.data.dangNhapAdmin.status == 200
+    ) {
+      setIsLogin(true);
+      const dateExpires = new Date();
+      dateExpires.setTime(dateExpires.getTime() + 60000);
+      Cookies.set("checkOTP", "true", { expires: dateExpires });
+      navigate("/AccessOTP");
+    } else {
+      Notification("top");
     }
-    else {
-      //TODO: làm thông báo lỗi
-      alert("Tên tài khoản hoặc mật khẩu không chính xác!")
-    }
-  }
+  };
   useEffect(() => {
     if (!isReady) {
       if (!getIsLogin())
         authenticationAdmin((rs) => {
-          setIsReady (true)
-          if (rs.data && rs.data.dangNhapAdminVoiToken && rs.data.dangNhapAdminVoiToken.status == '200') {
+          setIsReady(true);
+          if (
+            rs.data &&
+            rs.data.dangNhapAdminVoiToken &&
+            rs.data.dangNhapAdminVoiToken.status == "200"
+          ) {
             // Cookies.set("chucnang", rs.data.dangNhapAdminVoiToken.data.chucnang)
-            setIsLogin(true)
-            setIsOTP(true)
-            navigate("/Admin")
+            setIsLogin(true);
+            setIsOTP(true);
+            navigate("/Admin");
+          } else {
+            setIsNotLoggedIn(true);
           }
-          else {
-            setIsNotLoggedIn(true)
-          }
-      })
+        });
     }
-  })
-  return (
-    isReady ? 
+  });
+  return isReady ? (
     <>
+      {contextHolder}
       <Space
         direction="vertical"
         style={{ width: "100%" }}
@@ -145,6 +162,8 @@ export default function Login() {
           </div>
         </Content>
       </Layout>
-    </>:<LoadingPage/>
+    </>
+  ) : (
+    <LoadingPage />
   );
 }
