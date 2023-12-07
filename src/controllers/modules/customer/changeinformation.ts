@@ -2,11 +2,16 @@ import { request } from "../request"
 
 export async function getinformation(){
     const query =  `
-    mutation getinformation {
+    query getinformation {
         thongtinkhachhang{
             status
             message
-            data
+            data {
+                ma
+                ten
+                ngaysinh
+                tentaikhoan
+            }
         }
     }
     `
