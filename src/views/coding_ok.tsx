@@ -59,6 +59,7 @@ import {
 } from "../controllers/modules/admin/statistic";
 import { logout } from "../controllers/modules/customer/logout";
 import { getAllCategories } from "../controllers/modules/customer/categories";
+import { getinformation } from "../controllers/modules/customer/changeinformation";
 
 export default class Coding_ok extends React.Component<any, any> {
   constructor(props) {
@@ -298,11 +299,16 @@ export default class Coding_ok extends React.Component<any, any> {
 
     postKeyToServer().then((rsk) => {
       // removeImport();
-      getOrders().then((rs) => {
-        self.setState({
+    //   getHistoryOrders().then((rs) => {
+    //     self.setState({
+    //       test: JSON.stringify(rs),
+    //     });
+    //   });
+    getinformation().then(rs => {
+            self.setState({
           test: JSON.stringify(rs),
         });
-      });
+    }) 
     });
   }
 

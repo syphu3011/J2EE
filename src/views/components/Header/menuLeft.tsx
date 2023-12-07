@@ -4,11 +4,19 @@ import {CaretDownOutlined} from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import Test from "../test";
 import Thaotest from "../thaotest";
+import { useState } from "react";
 function MenuLeft(){
      //render(){
      const navigate = useNavigate();
+     const [savePath, setSavePath] = useState(decodeURIComponent(window.location.hash.replace("#/","")))
      const onMenuClick = (item)=>{
-          navigate(`/${item.key}`);
+          if (savePath != item.key) {
+               setSavePath(item.key)
+               navigate(`/${item.key}`);
+          }
+          else {
+               navigate(`/${item.key}`,{state: {isSame: true}});
+          }
      }
      const labelAo=(
           <span>

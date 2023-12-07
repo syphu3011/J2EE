@@ -290,12 +290,7 @@ const Order = () => {
             <Form.Item label="Đến ngày:">
               <DatePicker defaultValue={dayjs()} format={dateFormat} />
             </Form.Item>
-            <Button
-              type="primary"
-              style={{ width: "15%", marginLeft: "20%", background: "green" }}
-            >
-              Xuất excel
-            </Button>
+
           </div>
         </Header>
         <Content style={contentStyle}>
