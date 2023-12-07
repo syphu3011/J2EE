@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 import { getIsLogin, getIsOTP } from "../../../../../utils/constant";
 import { otp } from "../../../../controllers/modules/admin/login";
 import type { NotificationPlacement } from "antd/es/notification/interface";
-import message from "../pagecontent/message";
+
 const { Header, Content } = Layout;
 
 const headerStyle: React.CSSProperties = {

@@ -76,6 +76,7 @@ export async function getOrders() {
                 email
                 sodienthoai
                 diachi
+                tongtien
             }
         } 
     }`;
