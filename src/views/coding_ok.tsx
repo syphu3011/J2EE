@@ -246,6 +246,7 @@ export default class Coding_ok extends React.Component<any, any>
             //         test: JSON.stringify(rs)
             //     })
             // })
+            getOrders()
         })
     }
     render() {  

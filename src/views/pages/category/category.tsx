@@ -69,7 +69,7 @@ export default function Category({ productData }) {
      };
      const fetchProductByPrice = async (tree) => {
           try {
-            let filteredProductDataPrice = useState(null);
+            let filteredProductDataPrice
             const productData = await getProductData("data");
                console.log(productData);
             if (tree.includes('less-than-one-milions')) {
@@ -95,9 +95,7 @@ export default function Category({ productData }) {
           setSelectedTree(tree); // Cập nhật màu đã chọn
           setSelectedColor(null); // Hủy chọn màu
           if (['less-than-one-milions', 'from-one-milions-to-five-milions', 'Bigger-than-five-milions'].includes(tree)) {
-               const productData = await getProductData("data");
                setFilteredProductBySize(null)
-               console.log(productData);
                await fetchProductByPrice(tree);
 
                setCurrentOption('tree'); // Đặt trạng thái hiện tại là 'tree'
