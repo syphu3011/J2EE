@@ -174,60 +174,6 @@ module.exports = {
         },
         async thongkedoanhthutheongay(root, args, context) {
             const { tu, den, kieuthongke } = args.input
-            try {
-                let kieu
-                switch (kieuthongke) {
-                    case 1:
-                        kieu = 'thu'
-                        break;
-                    case 2:
-                        kieu = 'chi'
-                        break;
-                    case 3:
-                        kieu = 'loinhuan'
-                        break;
-                    default:
-                        break;
-                }
-                const rs = await sequelize.query(`
-                SELECT bangthoigian.thoigian,
-                    COALESCE(sum(chitiethoadon.gia * chitiethoadon.soluong), 0) thu,
-                    COALESCE(sum(chitietphieunhap.gianhap * chitietphieunhap.soluong), 0) chi,
-                    (COALESCE(sum(chitietphieunhap.gianhap * chitietphieunhap.soluong), 0) - COALESCE(sum(chitiethoadon.gia * chitiethoadon.soluong), 0)) loinhuan
-                FROM
-                (SELECT thoigian
-                FROM
-                    (SELECT DATE(ngaylap) AS thoigian
-                    FROM hoadon
-                    WHERE ngaylap IS NOT NULL
-                        AND hoadon.matrangthaihoadon = 2
-                    GROUP BY thoigian
-                    UNION SELECT DATE(ngaynhap) AS thoigian
-                    FROM phieunhap) AS bangthoigian) bangthoigian
-                LEFT JOIN hoadon ON bangthoigian.thoigian = DATE(hoadon.ngaylap)
-                LEFT JOIN chitiethoadon ON hoadon.ma = chitiethoadon.mahoadon
-                LEFT JOIN phieunhap ON bangthoigian.thoigian = DATE(phieunhap.ngaynhap)
-                LEFT JOIN chitietphieunhap ON phieunhap.ma = chitietphieunhap.maphieunhap
-                WHERE bangthoigian.thoigian > '${tu}'
-                AND bangthoigian.thoigian < '${den}'
-                GROUP BY thoigian
-                ORDER BY thoigian desc`)
-                return {
-                    status: 200,
-                    message: "Lấy dữ liệu thống kê thành công!",
-                    data: rs[0]
-                }
-            }
-            catch (e) {
-                return {
-                    status: 400,
-                    message: "Lấy dữ liệu thống kê không thành công!",
-                    data: []
-                }
-            }
-        },
-        async thongkedoanhthutheongay(root, args, context) {
-            const { tu, den, kieuthongke } = args.input
             // kieu thong ke == 1: thoigian
             // kieu thong ke == 2: thu
             // kieu thong ke == 3: chi
