@@ -67,7 +67,7 @@ export async function getOrders() {
                 }
                 khachhang {
                     ma
-                    ten
+                    ten 
                 }
                 trangthaihoadon {
                     ma
