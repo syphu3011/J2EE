@@ -13,9 +13,10 @@ module.exports = gql`
 
   input KhachHangInput {
     ma: ID
-    ten: String!
-    ngaysinh: String!
-    sodienthoai: String!
+    ten: String
+    tentaikhoan: String
+    ngaysinh: String
+    sodienthoai: String
     matrangthai: Int
   }
 
