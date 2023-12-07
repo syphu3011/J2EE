@@ -16,13 +16,22 @@ import {
   MessageOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Avatar, Badge, Breadcrumb, Layout, Menu, theme } from "antd";
+import {
+  Avatar,
+  Badge,
+  Breadcrumb,
+  Layout,
+  Menu,
+  notification,
+  theme,
+} from "antd";
 import { Outlet, useNavigate } from "react-router-dom";
 import Search from "antd/es/input/Search";
 import { getIsLogin } from "../../../../utils/constant";
 import { postKeyToServer } from "../../../controllers/modules/key";
 import { authentication } from "../../../controllers/modules/admin/login";
 import { authenticationAdmin } from "../../../../utils/util";
+import type { NotificationPlacement } from "antd/es/notification/interface";
 
 const { Header, Content, Sider } = Layout;
 const items1: MenuItem[] = [
@@ -84,6 +93,14 @@ const items: MenuItem[] = [
 ];
 
 export default function LayoutPage() {
+  const [api3, NotiLayout] = notification.useNotification();
+  const NotificationLayout = (placement: NotificationPlacement, s: String) => {
+    api3.info({
+      message: `THÔNG BÁO`,
+      description: s,
+      placement,
+    });
+  };
   const [Label, setLabel] = useState(`Đăng nhập`);
   const navigate = useNavigate();
   const log_out = () => {
@@ -101,79 +118,82 @@ export default function LayoutPage() {
     if (!getIsLogin()) {
       authenticationAdmin((rs) => {
         if (rs.data.dangNhapAdminVoiToken.status !== 200) {
-          alert(JSON.stringify(rs.data.dangNhapAdminVoiToken));
+          NotificationLayout("top", "Vui lòng đăng nhập");
           navigate("/LoginAdmin");
         }
       });
     }
   }, []);
   return (
-    <Layout style={{ minHeight: "100vh" }}>
-      <Header
-        style={{
-          display: "flex",
-          alignItems: "center",
-        }}
-        className="header"
-      >
-        <div
+    <>
+      {NotiLayout}
+      <Layout style={{ minHeight: "100vh" }}>
+        <Header
           style={{
-            width: "100%",
             display: "flex",
             alignItems: "center",
-            justifyContent: "flex-end",
           }}
+          className="header"
         >
-          {/* <Badge dot>
-            <Avatar icon={<MailOutlined />} />
-          </Badge> */}
-          <Search
-            placeholder="input search text"
-            style={{ width: "50%", marginRight: "20%" }}
-          />
-          <div />
-          <Menu
-            style={{ width: "10%" }}
-            theme="dark"
-            mode="horizontal"
-            items={items1}
-            onClick={log_out}
-          />
-        </div>
-      </Header>
-      <Layout>
-        <Sider
-          width={250}
-          collapsible
-          collapsed={collapsed}
-          onCollapse={(value) => setCollapsed(value)}
-        >
-          <Menu
-            theme="dark"
-            defaultSelectedKeys={[""]}
-            mode="inline"
-            items={items}
-            onClick={onMenuClick}
-          />
-        </Sider>
-        <Layout style={{ padding: "0 24px 24px" }}>
-          <Breadcrumb style={{ margin: "16px 0" }}>
-            <Breadcrumb.Item>{Label}</Breadcrumb.Item>
-          </Breadcrumb>
-          <Content
+          <div
             style={{
-              padding: 24,
-              margin: 0,
-              minHeight: 280,
-              background: colorBgContainer,
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-end",
             }}
           >
-            <>
-              <Outlet />
-            </>
-          </Content>
+            {/* <Badge dot>
+            <Avatar icon={<MailOutlined />} />
+          </Badge> */}
+            <Search
+              placeholder="input search text"
+              style={{ width: "50%", marginRight: "20%" }}
+            />
+            <div />
+            <Menu
+              style={{ width: "10%" }}
+              theme="dark"
+              mode="horizontal"
+              items={items1}
+              onClick={log_out}
+            />
+          </div>
+        </Header>
+        <Layout>
+          <Sider
+            width={250}
+            collapsible
+            collapsed={collapsed}
+            onCollapse={(value) => setCollapsed(value)}
+          >
+            <Menu
+              theme="dark"
+              defaultSelectedKeys={[""]}
+              mode="inline"
+              items={items}
+              onClick={onMenuClick}
+            />
+          </Sider>
+          <Layout style={{ padding: "0 24px 24px" }}>
+            <Breadcrumb style={{ margin: "16px 0" }}>
+              <Breadcrumb.Item>{Label}</Breadcrumb.Item>
+            </Breadcrumb>
+            <Content
+              style={{
+                padding: 24,
+                margin: 0,
+                minHeight: 280,
+                background: colorBgContainer,
+              }}
+            >
+              <>
+                <Outlet />
+              </>
+            </Content>
+          </Layout>
         </Layout>
       </Layout>
-    </Layout>
+    </>
   );
 }
