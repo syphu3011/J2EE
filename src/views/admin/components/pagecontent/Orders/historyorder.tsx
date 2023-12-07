@@ -1,4 +1,5 @@
 import {
+  Button,
   DatePicker,
   Layout,
   Select,
@@ -47,6 +48,9 @@ interface Item {
   id_order: string;
   id_cus: string;
   name_cus: string;
+  phone:string
+  email:string
+  address:string
   dateInit: string;
   staffconfirm: string;
   total_money: number;
@@ -133,6 +137,9 @@ const History = () => {
           staffconfirm: element.nhanvien.ten,
           total_money: element.tongtien,
           status: element.trangthaihoadon ? element.trangthaihoadon.ten : "",
+          phone: element.sodienthoai,
+          email: element.email,
+          address: element.diachi
         });
       });
       // console.log("originData " + originData.length);
@@ -183,6 +190,21 @@ const History = () => {
     {
       title: "Tên khách hàng",
       dataIndex: "name_cus",
+      width: "auto",
+    },
+    {
+      title: "Số điện thoại",
+      dataIndex: "phone",
+      width: "auto",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      width: "auto",
+    },
+    {
+      title: "Địa chỉ",
+      dataIndex: "address",
       width: "auto",
     },
     {
@@ -405,6 +427,12 @@ const History = () => {
                 />
               </Form.Item>
             }
+            <Button
+              type="primary"
+              style={{ width: "15%", marginLeft: "20%", background: "green" }}
+            >
+              Xuất excel
+            </Button>
           </div>
         </Header>
         <Content style={contentStyle}>

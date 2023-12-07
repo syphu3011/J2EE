@@ -1,9 +1,8 @@
 import {
-  Col,
   DatePicker,
+  Flex,
   Form,
   Layout,
-  Row,
   Select,
   SelectProps,
   Space,
@@ -16,13 +15,16 @@ Chart.register([CategoryScale, LinearScale, BarElement]);
 
 const { Header, Content } = Layout;
 import React, { useState } from "react";
+import dayjs from "dayjs";
 
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 60,
   paddingInline: 10,
-  lineHeight: "100px",
+  lineHeight: "60px",
   backgroundColor: "#ffffff",
+  display: "flex",
+  flexDirection: "row",
 };
 const contentStyle: React.CSSProperties = {
   textAlign: "center",
@@ -128,6 +130,7 @@ const StatChart = () => {
             label="Lọc theo:"
             labelAlign="left"
             labelCol={{ span: "10%" }}
+            style={{ width: "70%" }}
           >
             <Select
               allowClear
@@ -146,6 +149,32 @@ const StatChart = () => {
               defaultValue="DT"
             />
           </Form.Item>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "flex-end",
+            }}
+          >
+            <Form.Item
+              label="Từ ngày"
+              labelAlign="left"
+              labelCol={{ span: "5%" }}
+            >
+              <DatePicker
+                defaultValue={dayjs("01/01/2000", dateFormat)}
+                format={dateFormat}
+                style={{ marginRight: "2%" }}
+              />
+            </Form.Item>
+            <Form.Item
+              label="Đến ngày"
+              labelAlign="left"
+              labelCol={{ span: "5%" }}
+            >
+              <DatePicker defaultValue={dayjs()} format={dateFormat} />
+            </Form.Item>
+          </div>
         </Header>
         <Content style={contentStyle}>
           <div style={{ minWidth: "50%", maxWidth: "80%" }}>
