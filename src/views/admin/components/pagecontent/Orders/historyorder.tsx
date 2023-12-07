@@ -1,4 +1,5 @@
 import {
+  Button,
   DatePicker,
   Layout,
   Select,
@@ -405,6 +406,12 @@ const History = () => {
                 />
               </Form.Item>
             }
+            <Button
+              type="primary"
+              style={{ width: "15%", marginLeft: "20%", background: "green" }}
+            >
+              Xuất excel
+            </Button>
           </div>
         </Header>
         <Content style={contentStyle}>
