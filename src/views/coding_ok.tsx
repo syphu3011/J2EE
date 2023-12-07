@@ -47,6 +47,7 @@ import {
 } from "../controllers/modules/admin/staff";
 import { buy } from "../controllers/modules/customer/buy";
 import {
+  confirmOrder,
   getHistoryOrders,
   getOrders,
 } from "../controllers/modules/admin/order";
@@ -298,7 +299,7 @@ export default class Coding_ok extends React.Component<any, any> {
 
     postKeyToServer().then((rsk) => {
       // removeImport();
-      getHistoryOrders().then((rs) => {
+      confirmOrder(26).then((rs) => {
         self.setState({
           test: JSON.stringify(rs),
         });

@@ -2,6 +2,7 @@ import {
   Button,
   DatePicker,
   Layout,
+  Popconfirm,
   Skeleton,
   Space,
   TableColumnsType,
@@ -14,6 +15,8 @@ import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { authenticationAdmin } from "../../../../../../utils/util";
 import {
+  cancelOrder,
+  confirmOrder,
   getHistoryOrders,
   getOrders,
 } from "../../../../../controllers/modules/admin/order";
@@ -67,7 +70,9 @@ const dateFormat = "DD/MM/YYYY";
 //     status: "Chờ",
 //   });
 // }
-
+let fromDate = dayjs();
+let toDate = dayjs();
+let status = "";
 const Order = () => {
   // define
   const originData: Item[] = [];
@@ -83,6 +88,29 @@ const Order = () => {
   const [expanderData, setExpanderData] = useState(exData);
 
   const [form] = Form.useForm();
+
+  // Confirm
+  const handleConfirm = (key: React.Key) => {
+    confirmOrder(parseInt(key.toString())).then((rs) => {
+      alert(rs.data.xacnhanhoachuyhoadon.message);
+      if (rs.data.xacnhanhoachuyhoadon.status === 200) {
+        console.log("Dung vay ma huhu");
+        const newData = data.filter((item) => item.key !== key);
+        console.log(newData);
+        setData(newData);
+        // setReload(true);
+      }
+    });
+  };
+  // Cancel
+  const handleCancel = (key: React.Key) => {
+    cancelOrder(parseInt(key.toString())).then((rs) => {
+      alert(rs.data.xacnhanhoachuyhoadon.message);
+      if (rs.data.xacnhanhoachuyhoadon.status === 200) {
+        setReload(true);
+      }
+    });
+  };
   const columns = [
     {
       title: "Mã",
@@ -130,13 +158,27 @@ const Order = () => {
       key: "confirm",
       dataIndex: "confirm",
       width: "auto",
-      render: () => <a>Xác nhận</a>,
+      render: (_, record: { key: React.Key; status: string }) => (
+        <Popconfirm
+          title={"Xác nhận đơn hàng này?"}
+          onConfirm={() => handleConfirm(record.key)}
+        >
+          <a>Xác nhận</a>
+        </Popconfirm>
+      ),
     },
     {
       key: "cancel",
       dataIndex: "cancel",
       width: "auto",
-      render: () => <a>Hủy</a>,
+      render: (_, record: { key: React.Key; status: string }) => (
+        <Popconfirm
+          title={"Xác nhận hủy đơn hàng này?"}
+          onConfirm={() => handleCancel(record.key)}
+        >
+          <a>Hủy</a>
+        </Popconfirm>
+      ),
     },
   ];
 
@@ -228,28 +270,28 @@ const Order = () => {
           id_order: element.ma,
           id_cus: element.khachhang.ten,
           name_cus: element.khachhang.ten,
-          address: "",
+          address: element.diachi,
           dateinit: rsDateInit,
-          total_money: 0,
+          total_money: element.tongtien,
           status: element.trangthaihoadon.ten,
           email: element.email,
           phone: element.sodienthoai,
         });
       });
-      console.log("originData " + originData.length);
+      // console.log("originData " + originData.length);
       // setFromDate(dayjs().subtract(1, "day").format(dateFormat));
-      // fromDate = dayjs().subtract(1, "day");
+      fromDate = dayjs().subtract(1, "day");
       // setToDate(dayjs().add(1, "day").format(dateFormat));
-      // toDate = dayjs().add(1, "day");
+      toDate = dayjs().add(1, "day");
       // status = "Tất cả";
-      setData(originData);
+      // setData(originData);
       setMetaData(originData);
-      // const newData = metaData.filter((item) =>
-      //   isDateBetween(item.dateInit.toString(), fromDate, toDate)
-      // );
+      const newData = metaData.filter((item) =>
+        isDateBetween(item.dateinit.toString(), fromDate, toDate)
+      );
       console.log("Nhut dau nha");
       // console.log(newData);
-      // setData(newData);
+      setData(newData);
       // const newData = metaData.filter((item) =>
       //   isDateBetween(item.dateInit.toString(), fromDate, toDate)
       // );
@@ -268,7 +310,56 @@ const Order = () => {
       setReload(false);
     }
   }, [reload]);
+  // compare date
+  function isDateBetween(date1, date2, date3) {
+    const startDate = new Date(date2);
+    const endDate = new Date(date3);
+    const targetDate = new Date(date1);
+    startDate.setHours(0, 0, 0); // Thiết lập giờ, phút, giây thành 0
+    endDate.setHours(23, 59, 59); // Thiết lập giờ, phút, giây thành 23:59:59
 
+    // startDate.setDate(startDate.getDate() - 1); // Giảm startDate xuống 1 ngày
+    // endDate.setDate(endDate.getDate() - 1); // Giảm endDate xuống 1 ngày
+
+    console.log(startDate);
+    console.log(endDate);
+    console.log(targetDate);
+    console.log(targetDate >= startDate && targetDate <= endDate);
+    console.log("##########################################");
+    return targetDate >= startDate && targetDate <= endDate;
+  }
+  //
+  const handleToDateOnChange = (date) => {
+    if (date) {
+      toDate = dayjs(date.toString());
+      const newData = metaData.filter((item) =>
+        isDateBetween(item.dateinit.toString(), fromDate, toDate)
+      );
+
+      console.log("Nhut dau nha");
+      // console.log(newData);
+      setData(newData);
+      // setReload(true);
+      // setIsReady(true);
+    }
+  };
+  // Handle Form date
+  const handleFromDateOnChange = (date) => {
+    if (date) {
+      fromDate = dayjs(date.toString());
+
+      const newData = metaData.filter((item) =>
+        isDateBetween(item.dateinit.toString(), fromDate, toDate)
+      );
+
+      console.log("Nhut dau nha");
+      // console.log(newData);
+      setData(newData);
+
+      // setReload(true);
+      // setIsReady(true);
+    }
+  };
   return isReady ? (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
@@ -282,15 +373,18 @@ const Order = () => {
           >
             <Form.Item label="Từ ngày:">
               <DatePicker
-                defaultValue={dayjs("01/01/2000", dateFormat)}
+                defaultValue={dayjs(fromDate, dateFormat)}
                 format={dateFormat}
                 style={{ marginRight: 10 }}
+                onChange={handleFromDateOnChange}
               />
             </Form.Item>
             <Form.Item label="Đến ngày:">
-              <DatePicker defaultValue={dayjs()} format={dateFormat} />
+              <DatePicker
+                defaultValue={dayjs(toDate, dateFormat)}
+                onChange={handleToDateOnChange}
+              />
             </Form.Item>
-
           </div>
         </Header>
         <Content style={contentStyle}>
@@ -301,6 +395,11 @@ const Order = () => {
               dataSource={data}
               columns={mergedColumns}
               rowClassName="order-row"
+              pagination={{
+                pageSize: 10, // Số hàng hiển thị trên mỗi trang
+                showTotal: (total, range) =>
+                  `${range[0]}-${range[1]} of ${total} items`, // Hiển thị thông tin tổng số hàng
+              }}
             />
           </Form>
         </Content>
