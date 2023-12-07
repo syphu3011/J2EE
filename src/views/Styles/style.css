@@ -1118,3 +1118,12 @@ box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0
      align-items: center;
      justify-content: center;
 }
+.history-container-order{
+     width:100%;
+     height:calc(100vh - 75px);
+    background: white;
+    padding: 1rem;
+}
+.history-container-order h1{
+     color:#e70c4e;
+}

@@ -8,8 +8,13 @@ interface UserProp {
     userProfiles: UserProfile;
 }
 type UserProfile = {
+    ma: number;
     ten: string;
-    ngaySinh: number;
+    ngaysinh: any;
+    sodienthoai: any;
+    tentaikhoan: any;
+    diachi: string;
+    ngaythamgia: any;
 };
 export default class UpdateInformation extends React.Component<UserProp, UserState> {
     formRef: React.RefObject<FormInstance<any>>;
@@ -19,17 +24,17 @@ export default class UpdateInformation extends React.Component<UserProp, UserSta
     handleFileUpload: (filelist: any) => void;
     validateEmail: (rule: any, value: any, callback: any) => void;
     validatePhoneNumber: (rule: any, value: any, callback: any) => void;
-    handleSubmitUpdateInform: ({ username, fullname, gender, birthdate, phoneNumber, Email, address, createDate }: {
-        username: any;
+    handleSubmitUpdateInform: ({ fullname, birthdate, phoneNumber, address }: {
         fullname: any;
-        gender: any;
         birthdate: any;
         phoneNumber: any;
-        Email: any;
         address: any;
-        createDate: any;
-    }) => void;
-    handleSubmitPassword: (values: any) => void;
+    }) => Promise<void>;
+    handleSubmitPassword: ({ oldPass, newPass, comfirmNewPass }: {
+        oldPass: any;
+        newPass: any;
+        comfirmNewPass: any;
+    }) => Promise<void>;
     render(): import("react/jsx-runtime").JSX.Element;
 }
 export {};

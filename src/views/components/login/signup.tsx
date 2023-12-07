@@ -166,7 +166,7 @@ export default class SignUp extends React.Component<SignUpProps, SignUpState> {
                          </Col>
                     </Row>
                     <Row gutter={{xs:25,sm:30}}>
-                         <Col className="gutter-row" xs={{span:24}} md={{span:12}}>
+                         {/* <Col className="gutter-row" xs={{span:24}} md={{span:12}}>
                               <Form.Item 
                               hasFeedback
                               name="username"
@@ -182,7 +182,7 @@ export default class SignUp extends React.Component<SignUpProps, SignUpState> {
                               >
                                    <Input placeholder='Username' size="large"/> 
                               </Form.Item>
-                         </Col>
+                         </Col> */}
                          <Col className="gutter-row" xs={{span:24}} md={{span:12}}>
                               <Form.Item
                               hasFeedback

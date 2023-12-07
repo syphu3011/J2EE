@@ -118,14 +118,14 @@ const MenuRight =(check:{isLogin: boolean})=>{
                               onClick:  handleUpdateClick,
                               key: "cap-nhat-thong-tin",
                               className: "groupIcons"
-                         //    },{
-                         //      icon: <InboxOutlined className="large-icon" />,
-                         //      label: "Lịch sử đơn hàng",
-                         //      onClick:  handleOrderClick,
-                         //      key: "lich-su-don-hang",
-                         //      className: "groupIcons"
-                         //    },
-                         },{
+                            },{
+                              icon: <InboxOutlined className="large-icon" />,
+                              label: "Lịch sử đơn hàng",
+                              onClick:  handleOrderClick,
+                              key: "lich-su-don-hang",
+                              className: "groupIcons"
+                            },
+                         {
                               icon: <LogoutOutlined className="large-icon" />,
                               label: "Đăng xuất",
                               key: "logout",
