@@ -96,11 +96,11 @@ const StatNumber = () => {
               <Form.Item
                 label="Lọc theo:"
                 labelAlign="left"
-                labelCol={{ span: "10%" }}
+                labelCol={{ span: "2%" }}
               >
                 <Select
                   allowClear
-                  style={{ width: "40%" }}
+                  style={{ width: "60%" }}
                   placeholder="Chọn mục muốn thống kê"
                   onChange={ChangeStat}
                   options={options}
@@ -109,7 +109,7 @@ const StatNumber = () => {
                 <Select
                   id="Select-date"
                   allowClear
-                  style={{ width: "40%", display: `${display}` }}
+                  style={{ width: "30%", display: `${display}` }}
                   onChange={ChangeStatDate}
                   options={options2}
                   defaultValue="Days"
@@ -122,24 +122,24 @@ const StatNumber = () => {
                 style={{
                   display: "flex",
                   flexDirection: "row",
-                  justifyContent: "center",
+                  justifyContent: "flex-end",
                 }}
               >
                 <Form.Item
                   label="Từ ngày"
                   labelAlign="left"
-                  labelCol={{ span: 7 }}
+                  labelCol={{ span: "5%" }}
                 >
                   <DatePicker
                     defaultValue={dayjs("01/01/2000", dateFormat)}
                     format={dateFormat}
-                    style={{ marginRight: 10 }}
+                    style={{ marginRight: "2%" }}
                   />
                 </Form.Item>
                 <Form.Item
                   label="Đến ngày"
                   labelAlign="left"
-                  labelCol={{ span: 7 }}
+                  labelCol={{ span: "5%" }}
                 >
                   <DatePicker defaultValue={dayjs()} format={dateFormat} />
                 </Form.Item>

@@ -52,11 +52,17 @@ switch (param) {
               </CartProvider>
             }
           >
-            <Route path='/' element={<Home/>}></Route>
-            <Route path="/:categoryId" element={<CategoryMediate/>}></Route>
-            <Route path="/cap-nhat-thong-tin" element={<UpdateInformation/>}></Route>
-            <Route path="/products/:Id" element={<ProductDetail/>}></Route>
-            <Route path="/gio-hang/xac-nhan-thong-tin-giao-hang" element={<DeliveryInform />}></Route>
+            <Route path="/" element={<Home />}></Route>
+            <Route path="/:categoryId" element={<CategoryMediate />}></Route>
+            <Route
+              path="/cap-nhat-thong-tin"
+              element={<UpdateInformation />}
+            ></Route>
+            <Route path="/products/:Id" element={<ProductDetail />}></Route>
+            <Route
+              path="/gio-hang/xac-nhan-thong-tin-giao-hang"
+              element={<DeliveryInform />}
+            ></Route>
           </Route>
           <Route path="/LoginAdmin" element={<Login />}></Route>
           <Route path="/AccessOTP" element={<LoginOTP />}></Route>
@@ -80,6 +86,7 @@ switch (param) {
             <Route path="Number" element={<StatNumber />} />
             <Route path="Chart" element={<StatChart />} />
             <Route path="Status" element={<Status />} />
+            <Route path="Home" element={<HomeAdmin />} />
           </Route>
         </Routes>
       </HashRouter>

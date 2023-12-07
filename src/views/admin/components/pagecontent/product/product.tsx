@@ -163,10 +163,10 @@ const Product = () => {
   };
   const isEditing = (record: Item) => record.key === editingKey;
 
-  const edit = (record: Partial<Item> & { key: React.Key }) => {
-    form.setFieldsValue({ name: "", numberphone: "", birthday: "", ...record });
-    setEditingKey(record.key);
-  };
+  // const edit = (record: Partial<Item> & { key: React.Key }) => {
+  //   form.setFieldsValue({ name: "", numberphone: "", birthday: "", ...record });
+  //   setEditingKey(record.key);
+  // };
 
   const cancel = () => {
     setEditingKey("");
