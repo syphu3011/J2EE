@@ -115,7 +115,7 @@ const Order = () => {
       dataIndex: "total_money",
     },
   ];
-  const expandedRowRender = () => {
+  const expandedRowRender = (record) => {
     type TableColumnsType<id_pro_imp> = {
       title: string;
       dataIndex: keyof id_pro_imp;
@@ -128,33 +128,49 @@ const Order = () => {
       { title: "Màu", dataIndex: "color_imp" },
       { title: "Giá nhập", dataIndex: "price_imp" },
       { title: "Số lượng", dataIndex: "amount_imp" },
-      {
-        title: "Hình ảnh",
-        dataIndex: "image_imp",
-        render: (text, record) => (
-          <img
-            src={record.image_imp}
-            alt={record.id_pro_imp}
-            style={{ maxWidth: 30, maxHeight: 30 }}
-          />
-        ),
-      },
+      // {
+      //   title: "Hình ảnh",
+      //   dataIndex: "image_imp",
+      //   render: (text, record) => (
+      //     <img
+      //       src={record.image_imp}
+      //       alt={record.id_pro_imp}
+      //       style={{ maxWidth: 30, maxHeight: 30 }}
+      //     />
+      //   ),
+      // },
     ];
 
-    const data = [];
-    for (let i = 0; i < 3; ++i) {
+    // const data = [];
+    const expanderItem = expanderData.find((item) => item.key === record.key);
+    // console.log(expanderItem);
+    const data: ExpandedDataType[] = [];
+
+    expanderItem.mathang.forEach((element, index) => {
       data.push({
-        key: i.toString(),
-        id_pro_imp: i.toString(),
-        name_pro_imp: "Áo",
-        size_imp: "XL",
-        color_imp: "Đen",
-        price_imp: 230000,
-        amount_imp: 40,
-        image_imp:
-          "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+        key: index,
+        id_pro_imp: element.sanpham.ma,
+        name_pro_imp: element.sanpham.ten,
+        size_imp: element.kichco.ten,
+        color_imp: element.mau.ten,
+        price_imp: element.gianhap,
+        amount_imp: element.soluong,
+        image_imp: "",
       });
-    }
+    });
+    // for (let i = 0; i < 3; ++i) {
+    //   data.push({
+    //     key: i.toString(),
+    //     id_pro_imp: i.toString(),
+    //     name_pro_imp: "Áo",
+    //     size_imp: "XL",
+    //     color_imp: "Đen",
+    //     price_imp: 230000,
+    //     amount_imp: 40,
+    //     image_imp:
+    //       "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+    //   });
+    // }
     return (
       <Table
         style={{ marginLeft: "8%" }}
@@ -188,10 +204,15 @@ const Order = () => {
       //
       //
       fetchData.forEach((element, index) => {
-        exData.push({ key: element.ma, sanpham: element.sanpham });
+        exData.push({ key: element.ma, mathang: element.mathang });
+        let totalGia = 0;
+        console.log(element.sanpham);
+        element.mathang.forEach((e) => {
+          totalGia = e.soluong * e.gianhap;
+        });
         // console.log(expanderData);
         //  Convert Timestamp to Date
-        const dateInit = new Date(parseInt(element.ngaylap));
+        const dateInit = new Date(parseInt(element.ngaynhap));
         // Format to date time
         const rsDateInit = `${dateInit.getFullYear()}-${(
           dateInit.getMonth() + 1
@@ -216,10 +237,10 @@ const Order = () => {
           key: element.ma,
           id_import: element.ma,
           imp_partner: element.nhacungcap.ten,
-          name_staff_imp: "",
-          date_imp: "",
-          total_money: 0,
-          dateinit: undefined,
+          name_staff_imp: element.nhanvien.ten,
+          date_imp: rsDateInit,
+          total_money: totalGia,
+          dateinit: rsDateInit,
         });
       });
       // console.log("originData " + originData.length);
@@ -254,6 +275,39 @@ const Order = () => {
       setReload(false);
     }
   }, [reload]);
+
+  const handleToDateOnChange = (date) => {
+    if (date) {
+      toDate = dayjs(date.toString());
+      const newData = metaData.filter((item) =>
+        isDateBetween(item.dateinit.toString(), fromDate, toDate)
+      );
+
+      console.log("Nhut dau nha");
+      // console.log(newData);
+      setData(newData);
+      // setReload(true);
+      // setIsReady(true);
+    }
+  };
+  // Handle Form date
+  const handleFromDateOnChange = (date) => {
+    if (date) {
+      fromDate = dayjs(date.toString());
+
+      const newData = metaData.filter((item) =>
+        isDateBetween(item.dateinit.toString(), fromDate, toDate)
+      );
+
+      console.log("Nhut dau nha");
+      // console.log(newData);
+      setData(newData);
+
+      // setReload(true);
+      // setIsReady(true);
+    }
+  };
+
   return isReady ? (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
@@ -267,13 +321,17 @@ const Order = () => {
           >
             <Form.Item label="Từ ngày:">
               <DatePicker
-                defaultValue={dayjs("01/01/2000", dateFormat)}
+                defaultValue={fromDate}
                 format={dateFormat}
                 style={{ marginRight: 10 }}
+                onChange={handleFromDateOnChange}
               />
             </Form.Item>
             <Form.Item label="Đến ngày:">
-              <DatePicker defaultValue={dayjs()} format={dateFormat} />
+              <DatePicker
+                defaultValue={toDate}
+                onChange={handleToDateOnChange}
+              />
             </Form.Item>
           </div>
         </Header>
