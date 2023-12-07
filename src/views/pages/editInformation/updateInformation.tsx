@@ -1,21 +1,35 @@
 import React from 'react';
 import { Row,Col,Form,Input, Radio, Upload, FormInstance, Modal } from 'antd';
 import {PlusOutlined} from '@ant-design/icons';
+import { format} from 'date-fns';
 interface UserState {
      filelist: string;
-     userProfiles: string[];
+     userProfiles: any[];
 }
-export default class UpdateInformation extends React.Component<{},UserState> {
+interface UserProp{
+     userProfiles: UserProfile;
+}
+type UserProfile = {
+     ten: string;
+     ngaySinh : number;
+   };
+export default class UpdateInformation extends React.Component<UserProp,UserState> {
      formRef = React.createRef<FormInstance>();
      constructor(props){
           super(props);
           this.state={
                filelist:'',
-               userProfiles:[],
-
+               userProfiles:props.userProfiles,
 
           }
      }
+     componentDidUpdate(prevProps:UserProp) {
+          if (prevProps.userProfiles !== this.props.userProfiles) {
+            this.setState({
+             // userProfiles: this.props.userProfiles
+            });
+          }
+        }
      /*handleChange = (e) => {
           const { name, value } = e.target;
           this.setState((prevState) => ({
@@ -103,12 +117,12 @@ export default class UpdateInformation extends React.Component<{},UserState> {
           }
           
      };
-     
+      
      render(){
          /* const onChange=(date,dateString)=>{
                console.log(date, dateString);
           }*/
-          
+          const { userProfiles } = this.props;
           const validatePassword = (password) => {
                const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?#&]{6,}$/;
                return passwordRegex.test(password);
@@ -121,7 +135,6 @@ export default class UpdateInformation extends React.Component<{},UserState> {
                          <Col className="gutter-row"flex={3}>
                          <div className="form-update-information">
                               <h3>CẬP NHẬT THÔNG TIN CÁ NHÂN</h3>
-                              
                               <Form  name="wrap" ref={this.formRef}
                                    labelCol={{ flex: '180px' }}
                                    labelAlign="left"
@@ -130,7 +143,7 @@ export default class UpdateInformation extends React.Component<{},UserState> {
                                    colon={false}
                                    style={{width:600}} onFinish={this.handleSubmitUpdateInform}
                                   >
-                                   <Form.Item 
+                                   {/* <Form.Item 
                                    label="Tải ảnh"
                                    labelAlign='left'
                                     valuePropName="fileList" getValueFromEvent={(e)=>Array.isArray(e)?e:e&&e.filelist}>
@@ -142,7 +155,7 @@ export default class UpdateInformation extends React.Component<{},UserState> {
                                                   <div style={{ marginTop: 8 }}>Upload</div>
                                              </div>
                                         </Upload>
-                                   </Form.Item>
+                                   </Form.Item> */}
                                    {/* <Form.Item 
                                    hasFeedback
                                    name="username"
@@ -169,9 +182,9 @@ export default class UpdateInformation extends React.Component<{},UserState> {
                                         ]
                                    }
                                    >
-                                        <Input   type="text" placeholder="" size="large" value=""/>
+                                        <Input   type="text" placeholder="" size="large" defaultValue={userProfiles.ten}/>
                                    </Form.Item>
-                                   <Form.Item 
+                                   {/* <Form.Item 
                                    hasFeedback
                                    name="gender"
                                    label="Giới tính"
@@ -191,7 +204,7 @@ export default class UpdateInformation extends React.Component<{},UserState> {
                                              <Radio value="male"> Nam</Radio>
                                              <Radio value="female"> Nữ </Radio>
                                         </Radio.Group>
-                                   </Form.Item>
+                                   </Form.Item> */}
                                    <Form.Item
                                         hasFeedback
                                         name="birthdate"
@@ -207,7 +220,7 @@ export default class UpdateInformation extends React.Component<{},UserState> {
 
                                         ]}
                                    >
-                                        <Input  type="date" placeholder="" size="large"/>
+                                        <Input type="" placeholder="" size="large" defaultValue={new Intl.DateTimeFormat('en-US').format(userProfiles.ngaySinh)}/>
 
                                    </Form.Item>
                                    <Form.Item

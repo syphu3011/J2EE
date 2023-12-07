@@ -2,11 +2,19 @@ import React from 'react';
 import { FormInstance } from 'antd';
 interface UserState {
     filelist: string;
-    userProfiles: string[];
+    userProfiles: any[];
 }
-export default class UpdateInformation extends React.Component<{}, UserState> {
+interface UserProp {
+    userProfiles: UserProfile;
+}
+type UserProfile = {
+    ten: string;
+    ngaySinh: number;
+};
+export default class UpdateInformation extends React.Component<UserProp, UserState> {
     formRef: React.RefObject<FormInstance<any>>;
     constructor(props: any);
+    componentDidUpdate(prevProps: UserProp): void;
     handlePreview: (file: any) => void;
     handleFileUpload: (filelist: any) => void;
     validateEmail: (rule: any, value: any, callback: any) => void;
