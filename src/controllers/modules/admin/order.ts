@@ -75,6 +75,7 @@ export async function getOrders() {
                 }
                 email
                 sodienthoai
+                diachi
             }
         } 
     }`
@@ -124,6 +125,7 @@ export async function getHistoryOrders() {
                 }
                 email
                 sodienthoai
+                diachi
             }
         } 
     }`

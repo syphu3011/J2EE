@@ -171,7 +171,7 @@ export default function FilterProduct({ onColorSelect,onDataChange}){
           const onSelect = (selectedKeysValue: React.Key[], info: any) => {
                console.log('onSelect', selectedKeysValue, info);
                setSelectedKeys(selectedKeysValue);
-               onDataChange(info.node.title);
+               onDataChange(info.node.key);
                // Kiểm tra xem tiêu đề của nút được chọn thuộc vào giá hay kích thước
                if (info.node.key === 'Giá' || info.node.key === 'Kích cỡ'||info.node.key === 'types') {
                     const childKeys = [];
