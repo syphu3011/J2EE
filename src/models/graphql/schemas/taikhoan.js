@@ -79,5 +79,6 @@ extend type Mutation {
   dangNhapAdmin(input: TaiKhoanInput):DangNhapAdminResponse
   suaTaiKhoan(input: TaiKhoanInput): TaiKhoanResponse
   xoaTaiKhoan(ma: Int!): TaiKhoanResponse
+  doimatkhau(matkhaucu: String!, matkhaumoi: String!, matkhauxacnhan: String!): TaiKhoanResponse
 }
 `

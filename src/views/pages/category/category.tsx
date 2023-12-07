@@ -25,6 +25,7 @@ export default function Category({ productData, allCategories, productDataCate, 
      const [isAccessState, setIsAccessState] = useState(isAccess);
      const [filteredData, setFilteredProductBySize] = useState(null);
      const [filteredPrice, setFilteredProductByPrice] = useState(null);
+     const [commonFiltered, setCommonFiltered] = useState(null);
 
      // Hàm callback để xử lý khi màu được chọn
      const handleFilterByColor = (color) => {
@@ -128,6 +129,7 @@ export default function Category({ productData, allCategories, productDataCate, 
                     setSelectedColor(null)
                     setSelectedTree(null)
                     setFilteredProductData(productData)
+                    setCommonFiltered(productData)
                     setCurrentOption(null)
                     setFilteredProductBySize(null)
                     isAccess = false

@@ -1,4 +1,4 @@
-export default function FilterProduct({ onColorSelect, onDataChange, dataCate, allCate }: {
+export default function FilterProduct({ onColorSelect, onDataChange, dataCate, allCate, }: {
     onColorSelect: any;
     onDataChange: any;
     dataCate: any;
