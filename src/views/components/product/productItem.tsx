@@ -7,7 +7,7 @@ import AddToCartButton from "../cart/addToCartButton";
 
 interface ProductItemProps {
   productData: any[];
-  selectedColor: any[];
+  selectedColor?: any[];
 }
 
 const ProductItem: React.FC<ProductItemProps> = (props) => {
@@ -18,15 +18,15 @@ const ProductItem: React.FC<ProductItemProps> = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       // Gọi hàm bất đồng bộ getProductData để lấy dữ liệu sản phẩm từ "data"
-      const allProductData = await getProductData("data");
-      const filteredProductData = allProductData.filter(
-        (product) => product.mathang[0].mau.ten === props.selectedColor
-      );
-      setFilteredProductData(filteredProductData);
+      // const allProductData = await getProductData("data");
+      // const filteredProductData = allProductData.filter(
+      //   (product) => product.mathang[0].mau.ten === props.selectedColor
+      // );
+      setFilteredProductData(props.productData);
     };
 
     fetchData();
-  }, [props.selectedColor]);
+  }, [props.productData]);
 
   // Xử lý sự kiện khi người dùng chuyển trang
   const handlePageChange = (page: number) => {

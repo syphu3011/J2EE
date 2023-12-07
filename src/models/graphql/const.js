@@ -37,7 +37,7 @@ const CHUCNANG = Object.freeze({
 }
 )
 const MAIL = Object.freeze({
-    USERNAME: "vmtpshop@gmail.com",
-    PASSWORD: "mgca fhab qtst weev"
+    USERNAME: "vmtpmail@gmail.com",
+    PASSWORD: "tpat ogcg wvmd eiew"
 })
 module.exports = {STATUS_CODE,PRIVATE_CODE_AT, PRIVATE_CODE_RT, LIFE_AT, LIFE_RT, CHUCNANG, MAIL}

@@ -193,28 +193,36 @@ export default function FilterProduct({
     setExpandedKeys(expandedKeysValue);
     //setAutoExpandParent(false);
   };
-  const onSelect = (selectedKeysValue: React.Key[], info: any) => {
-    console.log("onSelect", selectedKeysValue, info);
+  const onSelect = (selectedKeysValue, { checked, node }) => {
+    // console.log("onSelect", selectedKeysValue, info);
     setSelectedKeys(selectedKeysValue);
-    onDataChange(info.node.key);
+    onDataChange(node.key);
     // Kiểm tra xem tiêu đề của nút được chọn thuộc vào giá hay kích thước
-    if (
-      info.node.key === "Giá" ||
-      info.node.key === "Kích cỡ" ||
-      info.node.key === "types"
-    ) {
-      const childKeys = [];
-      const traverseTree = (node) => {
-        if (node.children) {
-          node.children.forEach((child) => {
-            childKeys.push(child.key);
-            traverseTree(child);
-          });
-        }
-      };
-      traverseTree(info.node);
-      setSelectedKeys([...selectedKeysValue, ...childKeys]);
+    // if (
+    //   node.key === "Giá" ||
+    //   node.key === "Kích cỡ" ||
+    //   node.key === "types"
+    // ) {
+    //   const childKeys = [];
+    //   const traverseTree = (node) => {
+    //     if (node.children) {
+    //       node.children.forEach((child) => {
+    //         childKeys.push(child.key);
+    //         traverseTree(child);
+    //       });
+    //     }
+    //   };
+    //   traverseTree(node);
+    //   setSelectedKeys([...selectedKeysValue, ...childKeys]);
+    // }
+    // Nếu là checkbox cha và đang được chọn
+    if (node.children && checked) {
+      // Lọc ra các keys của các node con để không thêm vào danh sách checkedKeys
+      const childKeys = node.children.map(child => child.key);
+      selectedKeysValue = selectedKeysValue.filter(key => !childKeys.includes(key));
     }
+
+    setSelectedKeys(selectedKeysValue);
   };
   useEffect(() => {
     const _tempTree = [];
@@ -297,8 +305,10 @@ export default function FilterProduct({
         defaultExpandAll={false}
         onExpand={onExpand}
         treeData={treeDataa}
-        onSelect={onSelect}
+        // onSelect={onSelect}
+        selectable={false}
         onCheck={onSelect}
+        checkedKeys={selectedKeys}
       ></Tree>
       <div>
         <span>Màu sắc</span>
