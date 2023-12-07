@@ -165,7 +165,12 @@ const treeData: DataNode[] = [
     ],
   },
 ];
-export default function FilterProduct({ onColorSelect, onDataChange, dataCate }) {
+export default function FilterProduct({
+  onColorSelect,
+  onDataChange,
+  dataCate,
+  allCate,
+}) {
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([
     "types",
     "Áo",
@@ -179,6 +184,7 @@ export default function FilterProduct({ onColorSelect, onDataChange, dataCate })
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
   const [productData, setProductData] = useState([]);
   const [filteredProductData, setFilteredProductData] = useState(null);
+  const [treeDataa, setTreeData] = useState(null);
 
   const onExpand = (expandedKeysValue: React.Key[]) => {
     console.log("onExpand", expandedKeysValue);
@@ -187,41 +193,126 @@ export default function FilterProduct({ onColorSelect, onDataChange, dataCate })
     setExpandedKeys(expandedKeysValue);
     //setAutoExpandParent(false);
   };
-  const onSelect = (selectedKeysValue: React.Key[], info: any) => {
-    console.log("onSelect", selectedKeysValue, info);
+  const onSelect = (selectedKeysValue, { checked, node }) => {
+    // console.log("onSelect", selectedKeysValue, info);
     setSelectedKeys(selectedKeysValue);
-    onDataChange(info.node.key);
+    onDataChange(node.key);
     // Kiểm tra xem tiêu đề của nút được chọn thuộc vào giá hay kích thước
-    if (
-      info.node.key === "Giá" ||
-      info.node.key === "Kích cỡ" ||
-      info.node.key === "types"
-    ) {
-      const childKeys = [];
-      const traverseTree = (node) => {
-        if (node.children) {
-          node.children.forEach((child) => {
-            childKeys.push(child.key);
-            traverseTree(child);
-          });
-        }
-      };
-      traverseTree(info.node);
-      setSelectedKeys([...selectedKeysValue, ...childKeys]);
+    // if (
+    //   node.key === "Giá" ||
+    //   node.key === "Kích cỡ" ||
+    //   node.key === "types"
+    // ) {
+    //   const childKeys = [];
+    //   const traverseTree = (node) => {
+    //     if (node.children) {
+    //       node.children.forEach((child) => {
+    //         childKeys.push(child.key);
+    //         traverseTree(child);
+    //       });
+    //     }
+    //   };
+    //   traverseTree(node);
+    //   setSelectedKeys([...selectedKeysValue, ...childKeys]);
+    // }
+    // Nếu là checkbox cha và đang được chọn
+    if (node.children && checked) {
+      // Lọc ra các keys của các node con để không thêm vào danh sách checkedKeys
+      const childKeys = node.children.map(child => child.key);
+      selectedKeysValue = selectedKeysValue.filter(key => !childKeys.includes(key));
     }
+
+    setSelectedKeys(selectedKeysValue);
   };
+  useEffect(() => {
+    const _tempTree = [];
+    let _tempCate = allCate.sort((a, b) => b.capbac - a.capbac);
+    for (const cate of _tempCate) {
+      const _data = {
+        key: cate.ten,
+        title: cate.ten,
+        level: cate.capbac,
+        parent_id: cate.loaicha ? cate.loaicha.ma : null,
+        children: _tempTree.filter((e) => e.parent_id == cate.ma),
+      };
+      _tempTree.push(_data);
+    }
+    setTreeData([{
+      title: "Loại",
+      key: "types",
+      disableCheckbox: true,
+      children: 
+        _tempTree.filter((e) => e.level == 1)
+      },
+      {
+        title: "Kích cỡ",
+        key: "Kích cỡ",
+        disableCheckbox: true,
+        children: [
+          {
+            title: "XS",
+            key: "XS",
+          },
+          {
+            title: "S",
+            key: "S",
+          },
+          {
+            title: "M",
+            key: "M",
+          },
+          {
+            title: "L",
+            key: "L",
+          },
+          {
+            title: "XL",
+            key: "XL",
+          },
+          {
+            title: "Free size",
+            key: "Free size",
+          },
+        ],
+      },
+      {
+        title: "Giá",
+        key: "Giá",
+        disableCheckbox: true,
+        children: [
+          {
+            title: "Dưới 1.000.000",
+            key: "less-than-one-milions",
+          },
+          {
+            title: "Từ 1.000.000 đến 5.000.000",
+            key: "from-one-milions-to-five-milions",
+          },
+          {
+            title: " Trên 5.000.000",
+            key: "Bigger-than-five-milions",
+          },
+        ],
+      }
+    ]
+    );
+  }, [dataCate, allCate]);
   return (
     <div className="filter">
-      <DirectoryTree
+      <Tree
         expandedKeys={expandedKeys}
-        defaultExpandAll
+        checkable
+        defaultExpandAll={false}
         onExpand={onExpand}
-        treeData={treeData}
-        onSelect={onSelect}
-      ></DirectoryTree>
+        treeData={treeDataa}
+        // onSelect={onSelect}
+        selectable={false}
+        onCheck={onSelect}
+        checkedKeys={selectedKeys}
+      ></Tree>
       <div>
         <span>Màu sắc</span>
-        <ColorGroups onColorSelect={onColorSelect} productDataProp={dataCate}/>
+        <ColorGroups onColorSelect={onColorSelect} productDataProp={dataCate} />
       </div>
     </div>
   );

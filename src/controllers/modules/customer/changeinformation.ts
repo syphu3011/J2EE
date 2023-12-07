@@ -10,6 +10,7 @@ export async function getinformation(){
                 ma
                 ten
                 ngaysinh
+                sodienthoai
                 tentaikhoan
             }
         }
@@ -30,6 +31,20 @@ export async function changeinformation(id: number, name: String, birth: String,
     `
     const variables = {
         id, name, birth, phone_number
+    }
+    return request(query, variables)
+}
+export async function changePassword(oldPassword: String, newPassword: String, confirmPassword: String) {
+    const query =  `
+    mutation changepassword ($oldPassword: String!,$newPassword: String!, $confirmPassword: String!) {
+        doimatkhau(matkhaucu: $oldPassword, matkhaumoi: $newPassword, matkhauxacnhan: $confirmPassword) {
+            status
+            message
+        }
+    }
+    `
+    const variables = {
+        oldPassword, newPassword, confirmPassword
     }
     return request(query, variables)
 }
