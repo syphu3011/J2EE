@@ -1,5 +1,11 @@
-
-import { DatePicker, Layout, Skeleton, Space, TableColumnsType } from "antd";
+import {
+  Button,
+  DatePicker,
+  Layout,
+  Skeleton,
+  Space,
+  TableColumnsType,
+} from "antd";
 import "../../../style/product.css";
 const { Header, Content } = Layout;
 import React, { useEffect, useState } from "react";
@@ -226,8 +232,8 @@ const Order = () => {
           dateinit: rsDateInit,
           total_money: 0,
           status: element.trangthaihoadon.ten,
-          email: "",
-          phone: "",
+          email: element.email,
+          phone: element.sodienthoai,
         });
       });
       console.log("originData " + originData.length);
