@@ -141,26 +141,34 @@ module.exports = {
       }
     },
     async dangNhapVoiToken(root, args, context) {
-      if (context.taikhoan) {
-        const tenkhachhang = (await KhachHang.findAll({
-          where: {
-            tentaikhoan: context.taikhoan.tentaikhoan
-          }
-        }))[0].ten
-        return {
-          status: 200,
-          message: "Xác thực thành công!",
-          data:
-          {
-            tenkhachhang
+      try {
+        if (context.taikhoan) {
+          const tenkhachhang = (await KhachHang.findAll({
+            where: {
+              tentaikhoan: context.taikhoan.tentaikhoan
+            }
+          }))[0].ten
+          return {
+            status: 200,
+            message: "Xác thực thành công!",
+            data:
+            {
+              tenkhachhang
+            }
           }
         }
+        return {
+          status: 400,
+          message: "Xác thực không thành công!",
+          data: null
+        }
       }
-
-      return {
-        status: 400,
-        message: "Xác thực không thành công!",
-        data: null
+      catch {
+        return {
+          status: 400,
+          message: "Xác thực không thành công!",
+          data: null
+        }
       }
     },
     async dangNhapAdmin(root, args, context) {
@@ -470,7 +478,7 @@ module.exports = {
       }
     },
     doimatkhau(root, args, context) {
-      const {matkhaucu, matkhaumoi, matkhauxacnhan} = args
+      const { matkhaucu, matkhaumoi, matkhauxacnhan } = args
       if (matkhaumoi != matkhauxacnhan) {
         return {
           status: 400,
@@ -485,7 +493,7 @@ module.exports = {
               message: 'Mật khẩu hiện tại không đúng!'
             }
           }
-          context.taikhoan.update({matkhau: bcrypt.hashSync(matkhaumoi, bcrypt.genSaltSync(10))})
+          context.taikhoan.update({ matkhau: bcrypt.hashSync(matkhaumoi, bcrypt.genSaltSync(10)) })
           return {
             status: 200,
             message: "Mật khẩu đã được thay đổi thành công"

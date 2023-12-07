@@ -41,6 +41,7 @@ const CategoryMediate = ({isAccess = true}) => {
                 gia: product.gia,
                 mau:product.mathang[0].mau.ten,
                 kichco: product.mathang[0].kichco.ten,
+                mathang: product.mathang
               }));
       
               setFilteredProductData(productList);
