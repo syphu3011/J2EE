@@ -144,9 +144,9 @@ const History = () => {
       });
       // console.log("originData " + originData.length);
       // setFromDate(dayjs().subtract(1, "day").format(dateFormat));
-      fromDate = dayjs().subtract(1, "day");
+      fromDate = dayjs().subtract(7, "day");
       // setToDate(dayjs().add(1, "day").format(dateFormat));
-      toDate = dayjs().add(1, "day");
+      toDate = dayjs();
       status = "Tất cả";
       // setData(originData);
       setMetaData(originData);
