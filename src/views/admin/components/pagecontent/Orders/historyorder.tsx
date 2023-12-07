@@ -202,8 +202,38 @@ const History = () => {
       dataIndex: "status",
     },
   ];
+  function compare(str, str0) {
+    console.log(str);
+    console.log(str0);
+    console.log(str.length);
+    console.log(str0.length);
+    console.log(str.toLowerCase().trim() == str0.toLowerCase().trim());
+    return str.trim().toLowerCase() == str0.trim().toLowerCase();
+  }
   const handleChange = (value: string) => {
-    console.log(`selected ${value}`);
+    // console.log(`selected ${value}`);
+    status = value;
+    console.log(status);
+    let newData;
+    // console.log(status.toLowerCase() === "Tất cả".toLowerCase());
+    if (!status.localeCompare("Tất cả")) {
+      console.log("Hu Hu");
+
+      newData = metaData.filter((item) =>
+        isDateBetween(item.dateInit.toString(), fromDate, toDate)
+      );
+    } else {
+      console.log("Sap khoc roi");
+      newData = metaData.filter(
+        (item) =>
+          isDateBetween(item.dateInit.toString(), fromDate, toDate) &&
+          compare(item.status, status)
+      );
+    }
+
+    console.log("Nhut dau qua nha");
+    // console.log(newData);
+    setData(newData);
   };
   // Expander
   const expandedRowRender = (record) => {
@@ -269,7 +299,7 @@ const History = () => {
     console.log(startDate);
     console.log(endDate);
     console.log(targetDate);
-    // console.log(targetDate >= startDate && targetDate <= endDate);
+    console.log(targetDate >= startDate && targetDate <= endDate);
     console.log("##########################################");
     return targetDate >= startDate && targetDate <= endDate;
   }
@@ -286,13 +316,25 @@ const History = () => {
   // Handle Form date
   const handleFromDateOnChange = (date) => {
     if (date) {
+      let newData;
       fromDate = dayjs(date.toString());
-      const newData = metaData.filter((item) =>
-        isDateBetween(item.dateInit.toString(), fromDate, toDate)
-      );
+
+      if (!status.localeCompare("Tất cả")) {
+        newData = metaData.filter((item) =>
+          isDateBetween(item.dateInit.toString(), fromDate, toDate)
+        );
+      } else {
+        newData = metaData.filter(
+          (item) =>
+            isDateBetween(item.dateInit.toString(), fromDate, toDate) &&
+            item.status === status
+        );
+      }
+
       console.log("Nhut dau nha");
-      console.log(newData);
+      // console.log(newData);
       setData(newData);
+
       // setReload(true);
       // setIsReady(true);
     }
@@ -300,12 +342,23 @@ const History = () => {
   //
   const handleToDateOnChange = (date) => {
     if (date) {
+      let newData;
       toDate = dayjs(date.toString());
-      const newData = metaData.filter((item) =>
-        isDateBetween(item.dateInit.toString(), fromDate, toDate)
-      );
+
+      if (!status.localeCompare("Tất cả")) {
+        newData = metaData.filter((item) =>
+          isDateBetween(item.dateInit.toString(), fromDate, toDate)
+        );
+      } else {
+        newData = metaData.filter(
+          (item) =>
+            isDateBetween(item.dateInit.toString(), fromDate, toDate) &&
+            item.status === status
+        );
+      }
+
       console.log("Nhut dau nha");
-      console.log(newData);
+      // console.log(newData);
       setData(newData);
       // setReload(true);
       // setIsReady(true);
@@ -338,18 +391,20 @@ const History = () => {
                 onChange={handleToDateOnChange}
               />
             </Form.Item>
-            {/* <Form.Item label="Trạng thái">
-              <Select
-                defaultValue="Tất cả"
-                style={{ width: 120 }}
-                onChange={handleChange}
-                options={[
-                  { value: "all", label: "Tất cả" },
-                  { value: "confirm", label: "Xác nhận" },
-                  { value: "cancel", label: "Đã hủy" },
-                ]}
-              />
-            </Form.Item> */}
+            {
+              <Form.Item label="Trạng thái">
+                <Select
+                  defaultValue="Tất cả"
+                  style={{ width: 120 }}
+                  onChange={handleChange}
+                  options={[
+                    { value: "Tất cả", label: "Tất cả" },
+                    { value: "Đã xác nhận", label: "Đã xác nhận" },
+                    { value: "Đã hủy", label: "Đã hủy" },
+                  ]}
+                />
+              </Form.Item>
+            }
           </div>
         </Header>
         <Content style={contentStyle}>

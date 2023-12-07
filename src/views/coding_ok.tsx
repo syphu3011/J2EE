@@ -151,7 +151,7 @@ export default class Coding_ok extends React.Component<any, any> {
       // testProvider(5)
       // testPrivileges(5)
 
-      getHistoryOrders().then((rs) => {
+      getOrders().then((rs) => {
         this.setState({
           test: JSON.stringify(rs),
         });
