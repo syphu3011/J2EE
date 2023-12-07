@@ -3,6 +3,7 @@ import { useState } from "react";
 
 interface ItemCus {
   key: string;
+  rank_staff: number;
   id_staff_stat: string;
   name_staff_stat: string;
   amount_order_staff: number;
@@ -12,6 +13,7 @@ const CusData: ItemCus[] = [];
 for (let i = 0; i < 7; i++) {
   CusData.push({
     key: i.toString(),
+    rank_staff: i,
     id_staff_stat: `${i}`,
     name_staff_stat: `Vy ${i}`,
     amount_order_staff: 1 + i,
@@ -19,6 +21,11 @@ for (let i = 0; i < 7; i++) {
   });
 }
 const columnsCus = [
+  {
+    title: "Hạng",
+    dataIndex: "rank_staff",
+    width: "auto",
+  },
   {
     title: "Mã nhân viên",
     dataIndex: "id_staff_stat",
@@ -34,13 +41,13 @@ const columnsCus = [
     title: "Số đơn hàng",
     dataIndex: "amount_order_staff",
     width: "auto",
-    sorter: (a, b) => a.amount_order_staff - b.amount_order_staff,
+    // sorter: (a, b) => a.amount_order_staff - b.amount_order_staff,
   },
   {
     title: "Tổng tiền",
     dataIndex: "profits_staff",
     width: "auto",
-    sorter: (a, b) => a.profits_staff - b.profits_staff,
+    // sorter: (a, b) => a.profits_staff - b.profits_staff,
   },
 ];
 
@@ -62,12 +69,13 @@ const TableStaff = () => {
         return (
           <Table.Summary fixed>
             <Table.Summary.Row>
-              <Table.Summary.Cell index={0}>Tổng</Table.Summary.Cell>
-              <Table.Summary.Cell index={1}></Table.Summary.Cell>
-              <Table.Summary.Cell index={2}>
+              <Table.Summary.Cell index={0}></Table.Summary.Cell>
+              <Table.Summary.Cell index={1}>Tổng</Table.Summary.Cell>
+              <Table.Summary.Cell index={2}></Table.Summary.Cell>
+              <Table.Summary.Cell index={3}>
                 {total_amount_order_staff}
               </Table.Summary.Cell>
-              <Table.Summary.Cell index={3}>
+              <Table.Summary.Cell index={4}>
                 {total_profits_staff}
               </Table.Summary.Cell>
             </Table.Summary.Row>
