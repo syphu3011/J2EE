@@ -16,12 +16,12 @@ import { getProductData } from "./productData1";
 import { convertB64ToImage } from "../../../../utils/util";
 interface ProductProps {
   // category?:string;
-  productData: [];
+  productData: any[];
 }
 interface ProductState {
   minValue: number;
   maxValue: number;
-  productData: [any];
+  productData: any[];
 }
 export default class Product extends React.PureComponent<
   ProductProps,
@@ -36,6 +36,15 @@ export default class Product extends React.PureComponent<
       productData: props.productData,
     };
     // this.productResponse = getProducts(-1, "", -1, -1)
+  }
+  componentDidUpdate(prevProps: ProductProps) {
+    if (prevProps.productData !== this.props.productData) {
+      this.setState({
+        productData: this.props.productData,
+        minValue: 0,
+        maxValue: 8,
+      });
+    }
   }
 
   handleChange = (value) => {
@@ -59,7 +68,7 @@ export default class Product extends React.PureComponent<
     );*/
     return (
       <div className="product-container">
-        <div className="title-product">
+        {/* <div className="title-product">
           <h2>
             {this.state.productData ? this.state.productData[0].loai.ten : ""}
           </h2>
@@ -79,7 +88,7 @@ export default class Product extends React.PureComponent<
               ]}
             ></Select>
           </div>
-        </div>
+        </div> */}
         <div className="content-product">
           <div className="product-content-container">
             {this.state.productData &&
@@ -100,12 +109,12 @@ export default class Product extends React.PureComponent<
                         ></Image>{" "}
                         <br />
                         <h4>{product.ten}</h4>
-                        <p>{product.gia.toLocaleString()} VND</p>
+                        <p>{parseFloat(product.gia).toLocaleString()} VND</p>
                       </Link>
                       <AddToCartButton
                         item={product}
-                        selectedColor={product.mathang[0].mau.ten}
-                        selectedSize={product.mathang[0].mau.kichco}
+                        selectedColor={product.mau}
+                        selectedSize={product.kichco}
                         amount={1}
                       />
                     </Card>

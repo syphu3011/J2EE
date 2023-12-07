@@ -1,4 +1,4 @@
-import { DatePicker, Layout, Space, TableColumnsType } from "antd";
+import { Button, DatePicker, Layout, Space, TableColumnsType } from "antd";
 import "../../../style/product.css";
 const { Header, Content } = Layout;
 import React, { useState } from "react";
@@ -157,6 +157,9 @@ const Order = () => {
               <DatePicker defaultValue={dayjs()} format={dateFormat} />
             </Form.Item>
           </div>
+          <Button type="primary" style={{ width: "70%", marginLeft: 30 }}>
+            Xuất excel
+          </Button>
         </Header>
         <Content style={contentStyle}>
           <Form form={form} component={false}>
