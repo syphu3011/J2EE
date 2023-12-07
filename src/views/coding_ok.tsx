@@ -299,7 +299,7 @@ export default class Coding_ok extends React.Component<any, any> {
 
     postKeyToServer().then((rsk) => {
       // removeImport();
-      confirmOrder(26).then((rs) => {
+      importProductHistory().then((rs) => {
         self.setState({
           test: JSON.stringify(rs),
         });
