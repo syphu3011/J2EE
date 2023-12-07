@@ -13,7 +13,6 @@ import Product from "./views/admin/components/pagecontent/product/product";
 import Typeproduct from "./views/admin/components/pagecontent/product/typeproduct";
 import Inventory from "./views/admin/components/pagecontent/product/inventory";
 import Attribute from "./views/admin/components/pagecontent/product/attribute";
-import Message from "./views/admin/components/pagecontent/Message/message";
 import Order from "./views/admin/components/pagecontent/Orders/order";
 import History from "./views/admin/components/pagecontent/Orders/historyorder";
 import Import from "./views/admin/components/pagecontent/import/importcoupon";

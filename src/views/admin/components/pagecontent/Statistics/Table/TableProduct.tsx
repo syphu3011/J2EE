@@ -3,6 +3,7 @@ import { useState } from "react";
 
 interface ItemPro {
   key: string;
+  rank_pro: number;
   id_pro_stat: string;
   name_pro_stat: string;
   provider_pro_stat: string;
@@ -15,6 +16,7 @@ const ProData: ItemPro[] = [];
 for (let i = 0; i < 7; i++) {
   ProData.push({
     key: i.toString(),
+    rank_pro: i,
     id_pro_stat: `${i}`,
     name_pro_stat: `Áo thun ${i}`,
     provider_pro_stat: "000000",
@@ -26,6 +28,7 @@ for (let i = 0; i < 7; i++) {
 }
 ProData.push({
   key: "7",
+  rank_pro: 7,
   id_pro_stat: `7`,
   name_pro_stat: `Áo thun 7`,
   provider_pro_stat: "000000",
@@ -35,6 +38,11 @@ ProData.push({
   profits_pro: 17000000 - 3500000,
 });
 const columnsPro = [
+  {
+    title: "Hạng",
+    dataIndex: "rank_pro",
+    width: "auto",
+  },
   {
     title: "Mã sản phẩm",
     dataIndex: "id_pro_stat",
@@ -54,25 +62,25 @@ const columnsPro = [
     title: "Số lượng bán",
     dataIndex: "amount_sell_pro",
     width: "auto",
-    sorter: (a, b) => a.amount_sell_pro - b.amount_sell_pro,
+    // sorter: (a, b) => a.amount_sell_pro - b.amount_sell_pro,
   },
   {
     title: "Thu",
     dataIndex: "income_pro",
     width: "auto",
-    sorter: (a, b) => a.income_pro - b.income_pro,
+    // sorter: (a, b) => a.income_pro - b.income_pro,
   },
   {
     title: "Chi",
     dataIndex: "expenses_pro",
     width: "auto",
-    sorter: (a, b) => a.expenses_pro - b.expenses_pro,
+    // sorter: (a, b) => a.expenses_pro - b.expenses_pro,
   },
   {
     title: "Lợi nhuận",
     dataIndex: "profits_pro",
     width: "auto",
-    sorter: (a, b) => a.profits_pro - b.profits_pro,
+    // sorter: (a, b) => a.profits_pro - b.profits_pro,
   },
 ];
 
@@ -100,19 +108,20 @@ const TableProduct = () => {
         return (
           <Table.Summary fixed>
             <Table.Summary.Row>
-              <Table.Summary.Cell index={0}>Tổng</Table.Summary.Cell>
-              <Table.Summary.Cell index={1}></Table.Summary.Cell>
+              <Table.Summary.Cell index={0}></Table.Summary.Cell>
+              <Table.Summary.Cell index={1}>Tổng</Table.Summary.Cell>
               <Table.Summary.Cell index={2}></Table.Summary.Cell>
-              <Table.Summary.Cell index={3}>
+              <Table.Summary.Cell index={3}></Table.Summary.Cell>
+              <Table.Summary.Cell index={4}>
                 {total_amount_sell_pro}
               </Table.Summary.Cell>
-              <Table.Summary.Cell index={4}>
+              <Table.Summary.Cell index={5}>
                 {total_income_pro}
               </Table.Summary.Cell>
-              <Table.Summary.Cell index={5}>
+              <Table.Summary.Cell index={6}>
                 {total_expenses_pro}
               </Table.Summary.Cell>
-              <Table.Summary.Cell index={6}>{total_profits}</Table.Summary.Cell>
+              <Table.Summary.Cell index={7}>{total_profits}</Table.Summary.Cell>
             </Table.Summary.Row>
           </Table.Summary>
         );

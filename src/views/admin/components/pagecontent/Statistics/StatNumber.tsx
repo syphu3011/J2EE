@@ -35,10 +35,7 @@ options2.push({
   value: "Months",
   label: "Tháng",
 });
-options.push({
-  value: "LSP",
-  label: "Loại sản phẩm",
-});
+
 options.push({
   value: "KH",
   label: `Khách hàng`,
@@ -54,6 +51,10 @@ options.push({
 options.push({
   value: "TG",
   label: "Thời gian",
+});
+options.push({
+  value: "LSP",
+  label: "Loại sản phẩm",
 });
 
 const StatNumber = () => {
