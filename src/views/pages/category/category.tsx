@@ -1,5 +1,5 @@
 import { Col, Row, Image, Modal } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import FilterProduct from '../../components/filter/leftFilter';
 import Product from '../../components/product/productList';
 import banner1 from "../../components/Image/bannerHeader/Banner6.png";
@@ -95,10 +95,9 @@ export default function Category({ productData }) {
           setSelectedTree(tree); // Cập nhật màu đã chọn
           setSelectedColor(null); // Hủy chọn màu
           if (['less-than-one-milions', 'from-one-milions-to-five-milions', 'Bigger-than-five-milions'].includes(tree)) {
-               setFilteredProductBySize(null)
                await fetchProductByPrice(tree);
-
                setCurrentOption('tree'); // Đặt trạng thái hiện tại là 'tree'
+               setFilteredProductBySize(null)
           } else if (['S', 'XL', 'Free size', 'M', 'L'].includes(tree)) {
                fetchProductBySize(tree);
                setCurrentOption('tree'); // Đặt trạng thái hiện tại là 'tree'
@@ -109,6 +108,13 @@ export default function Category({ productData }) {
                setFilteredProductBySize(null); // Reset giá trị filteredProductBySize
           }
      };
+     useEffect(() => {
+          setSelectedColor(null)
+          setSelectedTree(null)
+          setFilteredProductData(productData)
+          setCurrentOption(null)
+          setFilteredProductBySize(null)
+     },[productData])
      return (
           <div className="pageProduct">
                <Row>
