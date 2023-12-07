@@ -1,4 +1,5 @@
-const { Op, sequelize, HoaDon, HangTrongKho, Mau, KichCo, ChiTietHoaDon, NhanVien, STATUS_CODE, MAIL, CHUCNANG } = require("../../database/models");
+const { Op, sequelize, HoaDon, HangTrongKho, Mau, KichCo, ChiTietHoaDon, NhanVien } = require("../../database/models");
+const {STATUS_CODE, MAIL, CHUCNANG } = require('../const')
 const nodemailer = require("nodemailer");
 
 const { checkAndResolveAdmin } = require("./checkToken");
