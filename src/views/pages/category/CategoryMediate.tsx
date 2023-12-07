@@ -5,7 +5,7 @@ import LoadingPage from "../../loadingPage";
 import { getAllCategories } from "../../../controllers/modules/customer/categories";
 import { useLocation, useParams } from "react-router-dom";
 
-const CategoryMediate = () => {
+const CategoryMediate = ({isAccess = true}) => {
     const location = useLocation();
     const { categoryId } = useParams(); 
     // const productData = location.state.productData
@@ -13,6 +13,8 @@ const CategoryMediate = () => {
     
     const [productData,setProductData] = useState(null)
     const [filteredProductData,setFilteredProductData] = useState(null)
+    const [allCategories, setAllCategories] = useState(null)
+    const [productDataCate, setProductDataCate] = useState(null)
 
     // useEffect(() => {
     //     getProductData("data").then(rs => {
@@ -23,9 +25,11 @@ const CategoryMediate = () => {
     // },[])
     useEffect(() => {
         const fetchData = async () => {
-            const response = await getAllCategories();
-            const productData = response.data.loaikhachhang.data;
+            const [allCate, allProdCate] = await Promise.all([getAllCategories(), getProductData('data')]);
+            const productData = allCate.data.loaikhachhang.data;
             setProductData(productData);
+            setAllCategories(allCate)
+            setProductDataCate(allProdCate)
             const selectedProduct = productData.find((product) => product.ten == categoryId);
       
             if (selectedProduct) {
@@ -42,8 +46,11 @@ const CategoryMediate = () => {
               setFilteredProductData(productList);
         };
         }
-        fetchData()
-      }, [categoryId]);
-    return filteredProductData ? <Category productData={filteredProductData}/> : <LoadingPage/>
+        // if (isAccess) {
+            fetchData()
+            isAccess = false
+        // }
+      }, [categoryId, isAccess, location.state]);
+    return filteredProductData ? <Category productData={filteredProductData} allCategories={allCategories} productDataCate={productDataCate}/> : <LoadingPage/>
 }
 export default CategoryMediate;
