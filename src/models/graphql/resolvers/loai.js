@@ -270,7 +270,7 @@ module.exports = {
             for (let i = 0; i < danhsachsanpham.length; i++) {
                 const sanpham = danhsachsanpham[i]
                 let mh = await sanpham.getHangTrongKho()
-                mh = mh.filter(e => e.matrangthai == 1)
+                mh = mh.filter(e => e.matrangthai == 1 && e.soluong > 0)
                 const soluong = mh.map((product) => product.soluong).reduce((acc, current) => acc + current, 0);
                 if (mh.length == 0 || soluong == 0) {
                     danhsachsanpham.splice(i, 1)

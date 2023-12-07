@@ -37,59 +37,59 @@ app.use(function (req, res, next) {
   next()
 })
 app.use(cors({ origin: process.env.ORIGIN, credentials: true }));
-app.use((req, res, next) => {
-  if (req.url != '/api') {
-    // Parsing the URL
-    const request = url.parse(req.url, true);
+// app.use((req, res, next) => {
+  // if (req.url != '/api') {
+  //   // Parsing the URL
+  //   const request = url.parse(req.url, true);
 
-    // Extracting the path of file
-    const action = request.pathname;
+  //   // Extracting the path of file
+  //   const action = request.pathname;
 
-    // Path Refinements
-    const filePath = path.join('./',
-      action).split("%20").join(" ");
+  //   // Path Refinements
+  //   const filePath = path.join('./',
+  //     action).split("%20").join(" ");
 
-    // Checking if the path exists
-    fs.exists(filePath, function (exists) {
+  //   // Checking if the path exists
+  //   fs.exists(filePath, function (exists) {
 
-      if (!exists) {
-        // res.writeHead(404, {
-        //     "Content-Type": "text/plain"
-        // });
-        // res.end("404 Not Found");
-        next()
-        return
-      }
+  //     if (!exists) {
+  //       // res.writeHead(404, {
+  //       //     "Content-Type": "text/plain"
+  //       // });
+  //       // res.end("404 Not Found");
+  //       next()
+  //       return
+  //     }
 
-      // Extracting file extension
-      const ext = path.extname(action);
+  //     // Extracting file extension
+  //     const ext = path.extname(action);
 
-      // Setting default Content-Type
-      var contentType = "text/plain";
+  //     // Setting default Content-Type
+  //     var contentType = "text/plain";
 
-      // Checking if the extension of
-      // image is '.png'
-      if (ext === ".png") {
-        contentType = "image/png";
-      }
+  //     // Checking if the extension of
+  //     // image is '.png'
+  //     if (ext === ".png") {
+  //       contentType = "image/png";
+  //     }
 
-      // Setting the headers
-      res.writeHead(200, {
-        "Content-Type": contentType
-      });
+  //     // Setting the headers
+  //     res.writeHead(200, {
+  //       "Content-Type": contentType
+  //     });
 
-      // Reading the file
-      fs.readFile(filePath,
-        function (err, content) {
-          // Serving the image
-          res.end(content);
-        });
-    });
-  }
-  else {
-    next()
-  }
-});
+  //     // Reading the file
+  //     fs.readFile(filePath,
+  //       function (err, content) {
+  //         // Serving the image
+  //         res.end(content);
+  //       });
+  //   });
+  // }
+  // else {
+  //   next()
+  // }
+// });
 app.post('/api', async (req, res, next) => {
   try {
     req.headers.ip = req.ip
@@ -121,7 +121,7 @@ app.post('/api', async (req, res, next) => {
         catch (e) {
           console.log(e)
         }
-      }
+      } 
       else {
         if (req.headers.what_this == 'false') {
           res.status(404).send({ message: "Không hợp lệ!" })

@@ -54,9 +54,13 @@ type DangNhapAdminResponse {
   message: String!
   data: ChucNangAdminResponse
 }
-type DangNhapTokenResponse {
+type DangNhapTokenKhachHang {
+  tenkhachhang: String
+}
+type DangNhapTokenKhachHangResponse {
   status: Int!
   message: String!
+  data: DangNhapTokenKhachHang
 }
 
 extend type Query {
@@ -67,8 +71,8 @@ extend type Query {
 extend type Mutation {
   quenMatKhauKhachHang(input: ForgotPasswordInput): TaiKhoanResponse
   dangKyKhachHang(input: TaiKhoanKhachHangInput): TaiKhoanResponse
-  dangNhap(input: TaiKhoanInput):DangNhapResponse
-  dangNhapVoiToken: DangNhapTokenResponse
+  dangNhap(input: TaiKhoanInput):DangNhapTokenKhachHangResponse
+  dangNhapVoiToken: DangNhapTokenKhachHangResponse
   dangNhapAdminVoiToken:DangNhapAdminResponse
   dangxuat: DangNhapResponse
   xacThucOTP(input: OTPInput):DangNhapAdminResponse

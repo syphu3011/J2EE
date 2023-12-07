@@ -2,27 +2,24 @@ import React, { useEffect, useState } from "react";
 import getStringFromSwitch from "./Breadcrumb";
 import { GiClothes } from "react-icons/gi";
 import { IoReceiptSharp } from "react-icons/io5";
-import { TbPackageImport, TbStatusChange } from "react-icons/tb";
+import { TbPackageImport } from "react-icons/tb";
+import { RiShieldKeyholeLine } from "react-icons/ri";
 import { HiUserGroup } from "react-icons/hi";
 import {
   PiHandshakeBold,
   PiChartBarFill,
   PiUserSquareDuotone,
 } from "react-icons/pi";
-import {
-  TeamOutlined,
-  HomeOutlined,
-  MailOutlined,
-  MessageOutlined,
-} from "@ant-design/icons";
+import { TeamOutlined, HomeOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Avatar, Badge, Breadcrumb, Layout, Menu, theme } from "antd";
+import { Breadcrumb, Layout, Menu, theme } from "antd";
 import { Outlet, useNavigate } from "react-router-dom";
 import Search from "antd/es/input/Search";
 import { getIsLogin } from "../../../../utils/constant";
 import { postKeyToServer } from "../../../controllers/modules/key";
 import { authentication } from "../../../controllers/modules/admin/login";
 import { authenticationAdmin } from "../../../../utils/util";
+import App from "./pagecontent/Message/app";
 
 const { Header, Content, Sider } = Layout;
 const items1: MenuItem[] = [
@@ -79,12 +76,11 @@ const items: MenuItem[] = [
     getItem("Số liệu", "Number"),
     getItem("Biểu đồ", "Chart"),
   ]),
-  getItem("Tin nhắn hỗ trợ", "Message", <MessageOutlined />),
-  getItem("Quyền", "Status", <TbStatusChange />),
+  getItem("Quyền", "Status", <RiShieldKeyholeLine />),
 ];
 
 export default function LayoutPage() {
-  const [Label, setLabel] = useState(`Đăng nhập`);
+  const [Label, setLabel] = useState(`Trang chủ`);
   const navigate = useNavigate();
   const log_out = () => {
     navigate("/");
@@ -171,6 +167,7 @@ export default function LayoutPage() {
             <>
               <Outlet />
             </>
+            <App />
           </Content>
         </Layout>
       </Layout>

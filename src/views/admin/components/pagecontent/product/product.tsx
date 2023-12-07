@@ -49,7 +49,7 @@ import { useNavigate } from "react-router-dom";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 180,
-  width: '100%',
+  width: "100%",
   paddingInline: 20,
   marginBottom: 10,
   lineHeight: "180px",
@@ -58,7 +58,7 @@ const headerStyle: React.CSSProperties = {
 const contentStyle: React.CSSProperties = {
   textAlign: "center",
   minHeight: 120,
-  width: '100%',
+  width: "100%",
   lineHeight: "120px",
   color: "#fff",
   backgroundColor: "#ffffff",
@@ -163,10 +163,10 @@ const Product = () => {
   };
   const isEditing = (record: Item) => record.key === editingKey;
 
-  const edit = (record: Partial<Item> & { key: React.Key }) => {
-    form.setFieldsValue({ name: "", numberphone: "", birthday: "", ...record });
-    setEditingKey(record.key);
-  };
+  // const edit = (record: Partial<Item> & { key: React.Key }) => {
+  //   form.setFieldsValue({ name: "", numberphone: "", birthday: "", ...record });
+  //   setEditingKey(record.key);
+  // };
 
   const cancel = () => {
     setEditingKey("");
@@ -237,36 +237,35 @@ const Product = () => {
   const productAction = () => {
     isEdit
       ? editProduct(
-        idEdit,
-        nameEdit,
-        descriptEdit,
-        cateEdit,
-        unitEdit,
-        b64Edit,
-        nameImageEdit
-      ).then((rs) => {
-        //TODO: Thêm thông báo ở đây
-        alert(rs.data.suaSanPham.message);
-        if (rs.data.suaSanPham.status === 201) {
-          clearField();
-          setIsEdit(false);
-          setReload(true);
-        }
-      })
+          idEdit,
+          nameEdit,
+          descriptEdit,
+          cateEdit,
+          unitEdit,
+          b64Edit,
+          nameImageEdit
+        ).then((rs) => {
+          alert(rs.data.suaSanPham.message);
+          if (rs.data.suaSanPham.status === 201) {
+            clearField();
+            setIsEdit(false);
+            setReload(true);
+          }
+        })
       : addProduct(
-        nameAdd,
-        descriptAdd,
-        cateAdd,
-        unitAdd,
-        b64Add,
-        nameImageAdd
-      ).then((rs) => {
-        alert(rs.data.taoSanPham.message);
-        if (rs.data.taoSanPham.status === 201) {
-          clearField();
-          setReload(true);
-        }
-      });
+          nameAdd,
+          descriptAdd,
+          cateAdd,
+          unitAdd,
+          b64Add,
+          nameImageAdd
+        ).then((rs) => {
+          alert(rs.data.taoSanPham.message);
+          if (rs.data.taoSanPham.status === 201) {
+            clearField();
+            setReload(true);
+          }
+        });
   };
   const clearField = () => {
     handleChangeCate([]);
@@ -418,7 +417,7 @@ const Product = () => {
           loai: prod.loai,
           mota: prod.mota,
           anhminhhoa: convertB64ToImage(prod.anhminhhoa),
-          donvi: prod.donvi,
+          donvi: prod.donvi.ten,
           tenanhminhhoa: prod.tenanhminhhoa,
         });
       }
@@ -458,7 +457,8 @@ const Product = () => {
                 label="Tên"
                 labelAlign="left"
                 labelCol={{ span: 5 }}
-                style={{ width: "100%", minHeight: 30, minWidth: "100%" }}>
+                style={{ width: "100%", minHeight: 30, minWidth: "100%" }}
+              >
                 <Input
                   value={isEdit ? nameEdit : nameAdd}
                   onChange={handleChangeName}
@@ -540,7 +540,7 @@ const Product = () => {
               >
                 <Button
                   type="primary"
-                  style={{ width: "70%", marginBottom: '5%' }}
+                  style={{ width: "70%", marginBottom: "5%" }}
                   onClick={productAction}
                 >
                   {isEdit ? "Sửa" : "Thêm"}
@@ -548,7 +548,11 @@ const Product = () => {
                 {isEdit ? (
                   <Button
                     type="primary"
-                    style={{ width: "70%" , marginBottom: '5%', marginTop: '5%'  }}
+                    style={{
+                      width: "70%",
+                      marginBottom: "5%",
+                      marginTop: "5%",
+                    }}
                     onClick={() => {
                       setIsEdit(false);
                     }}
@@ -558,7 +562,10 @@ const Product = () => {
                 ) : (
                   <></>
                 )}
-                <Button type="primary" style={{ width: "70%", marginTop: '5%' }}>
+                <Button
+                  type="primary"
+                  style={{ width: "70%", marginTop: "5%" }}
+                >
                   Làm mới
                 </Button>
               </div>
