@@ -31,7 +31,10 @@ export default function Category({ productData, allCategories, productDataCate, 
           setIsAccessState(true)
           setSelectedColor(color); // Cập nhật màu đã chọn
           const fetchProductByColor = (color) => {
-               const thisProduct = productDataCate.filter((item) => { return item.mathang.some((product) => product.mau.ten === color); }); // Thay thế 'color' bằng thông tin để lấy sản phẩm theo màu từ API
+               const thisProduct = productDataCate.filter(
+                    (item) => { 
+                         return item.mathang.some((product) => product.mau.ten === color); 
+                    }); // Thay thế 'color' bằng thông tin để lấy sản phẩm theo màu từ API
                setProductData(thisProduct);
           };
 
@@ -67,7 +70,7 @@ export default function Category({ productData, allCategories, productDataCate, 
           try {
                setIsAccessState(true)
                const filteredProductDatasize = productDataCate.filter(
-                    (item) => item.mathang[0].kichco.ten.includes(tree)
+                    (item) => item.mathang.some(mh => mh.kichco.ten.includes(tree))
                );
                setIsAccessState(false)
                setFilteredProductData(filteredProductDatasize);
@@ -138,7 +141,7 @@ export default function Category({ productData, allCategories, productDataCate, 
                <Row>
                     <Col flex="1">
                          <div>
-                              <FilterProduct onColorSelect={handleFilterByColor} onDataChange={handleFilterTree} />
+                              <FilterProduct onColorSelect={handleFilterByColor} onDataChange={handleFilterTree} dataCate={productDataCate}/>
                          </div>
 
                     </Col>
