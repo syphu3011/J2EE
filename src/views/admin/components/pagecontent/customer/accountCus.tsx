@@ -145,7 +145,7 @@ const AccountCus = () => {
   const handleBlock = (key: React.Key) => {
     blockCustomer(parseInt(key.toString())).then((rs) => {
       //TODO: Thêm thông báo ở đây
-      console.log(rs);
+      // console.log(rs);
       alert(rs.data.chuyenTrangThaiKhachHang.message);
       if (rs.data.chuyenTrangThaiKhachHang.status === 201) {
         // clearField();

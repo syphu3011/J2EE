@@ -10,6 +10,7 @@ export async function getinformation(){
                 ma
                 ten
                 ngaysinh
+                sodienthoai
                 tentaikhoan
             }
         }

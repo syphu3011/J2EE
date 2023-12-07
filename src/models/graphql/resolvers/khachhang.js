@@ -62,6 +62,12 @@ module.exports = {
       let transaction
       try {
         transaction = await sequelize.transaction()
+        if (!context.taikhoan) {
+          return {
+            status: STATUS_CODE.update_fail,
+            message: "Bạn cần phải đăng nhập!",
+          }
+        }
         const { ma, ten, ngaysinh, sodienthoai} = args.input
         const khachhang = await KhachHang.findByPk(ma)
         await khachhang.update({ ten, ngaysinh, sodienthoai})

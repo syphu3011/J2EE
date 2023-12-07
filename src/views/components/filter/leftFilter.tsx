@@ -165,7 +165,7 @@ const treeData: DataNode[] = [
     ],
   },
 ];
-export default function FilterProduct({ onColorSelect, onDataChange, dataCate }) {
+export default function FilterProduct({ onColorSelect, onDataChange, dataCate, allCate }) {
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([
     "types",
     "Áo",
@@ -179,6 +179,7 @@ export default function FilterProduct({ onColorSelect, onDataChange, dataCate })
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
   const [productData, setProductData] = useState([]);
   const [filteredProductData, setFilteredProductData] = useState(null);
+  const [treeDataa, setTreeData] = useState(null);
 
   const onExpand = (expandedKeysValue: React.Key[]) => {
     console.log("onExpand", expandedKeysValue);
@@ -210,13 +211,21 @@ export default function FilterProduct({ onColorSelect, onDataChange, dataCate })
       setSelectedKeys([...selectedKeysValue, ...childKeys]);
     }
   };
+  useEffect(() => {
+    const _tempTree = []
+    let _tempCate = allCate.sor;
+    ["1","2"].sort()
+    for (const cate of _tempCate) {
+    }
+    setTreeData(_tempTree)
+  },[dataCate, allCate])
   return (
     <div className="filter">
       <DirectoryTree
         expandedKeys={expandedKeys}
         defaultExpandAll
         onExpand={onExpand}
-        treeData={treeData}
+        treeData={treeDataa}
         onSelect={onSelect}
       ></DirectoryTree>
       <div>

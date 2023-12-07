@@ -141,7 +141,7 @@ export default function Category({ productData, allCategories, productDataCate, 
                <Row>
                     <Col flex="1">
                          <div>
-                              <FilterProduct onColorSelect={handleFilterByColor} onDataChange={handleFilterTree} dataCate={productDataCate}/>
+                              <FilterProduct onColorSelect={handleFilterByColor} onDataChange={handleFilterTree} dataCate={productDataCate} allCate={allCategories.data.loaikhachhang.data}/>
                          </div>
 
                     </Col>
