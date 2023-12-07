@@ -4,7 +4,6 @@ module.exports = gql`
 type KichCo {
   ma: ID!
   ten: String!
-  sanpham: [SanPham]
 }
 input KichCoInput {
   ma: ID
@@ -21,8 +20,6 @@ type KichCoResponse {
 }
 extend type Query {
   kichco: KichCoQueryResponse
-  kichcovoithuoctinh(input: KichCoInput): KichCoQueryResponse
-  timkiemkichco(input: KichCoInput): KichCoQueryResponse
 }
 extend type Mutation {
   taoKichCo(input: KichCoInput): KichCoResponse

@@ -1,6 +1,6 @@
-import { request } from '../request';
+import { request } from "../request";
 export async function confirmOrder(id: number) {
-    const query = `
+  const query = `
     mutation confirmOrder ($id: ID!) {
         xacnhanhoachuyhoadon(input:{
             ma: $id
@@ -9,14 +9,14 @@ export async function confirmOrder(id: number) {
             status
             message
         } 
-    }`
-    const variables = {
-        id
-    }
-    return request(query, variables)
+    }`;
+  const variables = {
+    id,
+  };
+  return request(query, variables);
 }
 export async function cancelOrder(id: number) {
-    const query = `
+  const query = `
     mutation cancelOrder ($id: ID!) {
         xacnhanhoachuyhoadon(input:{
             ma: $id
@@ -25,14 +25,14 @@ export async function cancelOrder(id: number) {
             status
             message
         } 
-    }`
-    const variables = {
-        id
-    }
-    return request(query, variables)
+    }`;
+  const variables = {
+    id,
+  };
+  return request(query, variables);
 }
 export async function getOrders() {
-    const query = `
+  const query = `
     query getOrders {
         hoadonchuaxuly {
             status
@@ -67,7 +67,7 @@ export async function getOrders() {
                 }
                 khachhang {
                     ma
-                    ten
+                    ten 
                 }
                 trangthaihoadon {
                     ma
@@ -78,11 +78,11 @@ export async function getOrders() {
                 diachi
             }
         } 
-    }`
-    return request(query)
+    }`;
+  return request(query);
 }
 export async function getHistoryOrders() {
-    const query = `
+  const query = `
     query getHistoryOrders {
         hoadondaxuly {
             status
@@ -126,8 +126,9 @@ export async function getHistoryOrders() {
                 email
                 sodienthoai
                 diachi
+                tongtien
             }
         } 
-    }`
-    return request(query)
+    }`;
+  return request(query);
 }
