@@ -21,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import { getHistoryOrders } from "../../../../../controllers/modules/admin/order";
 import { elements } from "chart.js";
 import Item from "antd/es/list/Item";
+import { Excel } from "antd-table-saveas-excel";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 60,
@@ -48,9 +49,9 @@ interface Item {
   id_order: string;
   id_cus: string;
   name_cus: string;
-  phone:string
-  email:string
-  address:string
+  phone: string;
+  email: string;
+  address: string;
   dateInit: string;
   staffconfirm: string;
   total_money: number;
@@ -139,7 +140,7 @@ const History = () => {
           status: element.trangthaihoadon ? element.trangthaihoadon.ten : "",
           phone: element.sodienthoai,
           email: element.email,
-          address: element.diachi
+          address: element.diachi,
         });
       });
       // console.log("originData " + originData.length);
@@ -180,32 +181,26 @@ const History = () => {
     {
       title: "Mã",
       dataIndex: "id_order",
-      width: "auto",
     },
     {
       title: "Mã khách hàng",
       dataIndex: "id_cus",
-      width: "auto",
     },
     {
       title: "Tên khách hàng",
       dataIndex: "name_cus",
-      width: "auto",
     },
     {
       title: "Số điện thoại",
       dataIndex: "phone",
-      width: "auto",
     },
     {
       title: "Email",
       dataIndex: "email",
-      width: "auto",
     },
     {
       title: "Địa chỉ",
       dataIndex: "address",
-      width: "auto",
     },
     {
       title: "Ngày xác nhận",
@@ -326,7 +321,6 @@ const History = () => {
     return targetDate >= startDate && targetDate <= endDate;
   }
 
-
   // Handle Form date
   const handleFromDateOnChange = (date) => {
     if (date) {
@@ -378,6 +372,16 @@ const History = () => {
       // setIsReady(true);
     }
   };
+  const handleClick = () => {
+    const excel = new Excel();
+    excel
+      .addSheet("LichSuDonHang")
+      .addColumns(mergedColumns)
+      .addDataSource(data, {
+        str2Percent: true,
+      })
+      .saveAs("LichSuDonHang.xlsx");
+  };
   return isReady ? (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
@@ -422,6 +426,7 @@ const History = () => {
             <Button
               type="primary"
               style={{ width: "15%", marginLeft: "20%", background: "green" }}
+              onClick={handleClick}
             >
               Xuất excel
             </Button>

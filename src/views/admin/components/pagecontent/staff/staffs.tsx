@@ -1,8 +1,24 @@
-import { Button, Col, DatePicker, Layout, Row, Space } from "antd";
+import {
+  Button,
+  Col,
+  DatePicker,
+  DatePickerProps,
+  Layout,
+  Row,
+  Skeleton,
+  Space,
+} from "antd";
 import "../../../style/product.css";
 const { Header, Content } = Layout;
-import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
+import {
+  addStaff,
+  getStaff,
+} from "../../../../../controllers/modules/admin/staff";
+import dayjs from "dayjs";
+import { authenticationAdmin } from "../../../../../../utils/util";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 120,
@@ -23,21 +39,34 @@ interface Item {
   id_staff: string;
   name_staff: string;
   CCCD: number;
+  numberphone_staff: number;
   birthday_staff: string;
   status: string;
 }
-
-const originData: Item[] = [];
-for (let i = 0; i < 20; i++) {
-  originData.push({
-    key: i.toString(),
-    id_staff: `${i}`,
-    name_staff: `Nguyễn Văn ${i}`,
-    CCCD: 233321312321,
-    birthday_staff: "18/02/2002",
-    status: "Còn làm",
-  });
+interface AddItem {
+  ten: string;
+  ngaysinh: string;
+  socccd: string;
+  sodienthoai: string;
 }
+const addData: AddItem = {
+  ten: "string",
+  ngaysinh: "string",
+  socccd: "string",
+  sodienthoai: "string",
+};
+const originData: Item[] = [];
+// for (let i = 0; i < 20; i++) {
+//   originData.push({
+//     key: i.toString(),
+//     id_staff: `${i}`,
+//     name_staff: `Nguyễn Văn ${i}`,
+//     CCCD: 233321312321,
+//     num
+//     birthday_staff: "18/02/2002",
+//     status: "Còn làm",
+//   });
+// }
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
@@ -83,6 +112,10 @@ const EditableCell: React.FC<EditableCellProps> = ({
 };
 
 const Staff = () => {
+  const [reload, setReload] = useState(true);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const [isReady, setIsReady] = useState(false);
+  const navigate = useNavigate();
   const [form] = Form.useForm();
   const [data, setData] = useState(originData);
   const [editingKey, setEditingKey] = useState("");
@@ -97,7 +130,7 @@ const Staff = () => {
   const cancel = () => {
     setEditingKey("");
   };
-  const dateFormat = "DD/MM/YYYY";
+  const dateFormat = "YYYY-MM-DD";
 
   const save = async (key: React.Key) => {
     try {
@@ -136,6 +169,12 @@ const Staff = () => {
       title: "Tên nhân viên",
       dataIndex: "name_staff",
       width: "15%",
+      editable: true,
+    },
+    {
+      title: "Số điện thoại",
+      dataIndex: "numberphone_staff",
+      width: "auto",
       editable: true,
     },
     {
@@ -209,8 +248,61 @@ const Staff = () => {
       }),
     };
   });
+  useEffect(() => {
+    async function fetchMetaData(rs?) {
+      if (rs && rs.data.dangNhapAdminVoiToken.status != 200) {
+        navigate("/LoginAdmin");
+        return;
+      }
+      const rsFetchData = await getStaff();
 
-  return (
+      var fetchData = rsFetchData.data.nhanvien.data;
+      //
+      //
+      fetchData.forEach((element, index) => {
+        originData.push({
+          key: element.ma,
+          id_staff: element.ma,
+          name_staff: element.ten,
+          CCCD: element.socccd,
+          numberphone_staff: element.sodienthoai,
+          birthday_staff: dayjs(new Date(parseInt(element.ngaysinh)))
+            .format("YYYY-MM-DD")
+            .toString(),
+          status: element.trangthai.ten,
+        });
+      });
+
+      setIsReady(true);
+    }
+    // console.log(data)
+
+    if (reload) {
+      isFirstLoad ? authenticationAdmin(fetchMetaData) : fetchMetaData();
+      setIsFirstLoad(false);
+      setReload(false);
+    }
+  }, [reload]);
+  const onclick = () => {
+    console.log(addData);
+    addStaff(
+      addData.ten,
+      addData.ngaysinh,
+      addData.sodienthoai,
+      addData.socccd
+    ).then((rs) => {
+      console.log(rs);
+      alert(rs.data.themNhanVien.message);
+      if (rs.data.themNhanVien.status === 200) {
+        setReload(true);
+      }
+    });
+  };
+  const onChange: DatePickerProps["onChange"] = (date, dateString) => {
+    console.log(dateString);
+    addData.ngaysinh = dateString;
+  };
+  return isReady ? (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
         <Header style={headerStyle}>
@@ -221,14 +313,21 @@ const Staff = () => {
                 labelAlign="left"
                 labelCol={{ span: 5 }}
               >
-                <Input style={{ width: "60%" }} />
+                <Input
+                  style={{ width: "60%" }}
+                  onChange={(e) => (addData.ten = e.target.value)}
+                />
               </Form.Item>
               <Form.Item
                 label="Ngày sinh"
                 labelAlign="left"
                 labelCol={{ span: 5 }}
               >
-                <DatePicker format={dateFormat} style={{ width: "60%" }} />
+                <DatePicker
+                  format={dateFormat}
+                  style={{ width: "60%" }}
+                  onChange={onChange}
+                />
               </Form.Item>
             </Col>
             <Col className="gutter-row" span={10}>
@@ -238,14 +337,20 @@ const Staff = () => {
                   labelAlign="left"
                   labelCol={{ span: 6 }}
                 >
-                  <Input style={{ width: "60%" }} />
+                  <Input
+                    style={{ width: "60%" }}
+                    onChange={(e) => (addData.sodienthoai = e.target.value)}
+                  />
                 </Form.Item>
                 <Form.Item
                   label="CMND/CCCD:"
                   labelAlign="left"
                   labelCol={{ span: 6 }}
                 >
-                  <Input style={{ width: "60%" }} />
+                  <Input
+                    style={{ width: "60%" }}
+                    onChange={(e) => (addData.socccd = e.target.value)}
+                  />
                 </Form.Item>
               </div>
             </Col>
@@ -260,6 +365,7 @@ const Staff = () => {
                 <Button
                   type="primary"
                   style={{ width: "70%", marginBottom: 30 }}
+                  onClick={onclick}
                 >
                   Thêm
                 </Button>
@@ -290,6 +396,44 @@ const Staff = () => {
         </Content>
       </Layout>
     </Space>
+  ) : (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        height: "100%",
+        paddingTop: "20px",
+        paddingBottom: "20px",
+      }}
+    >
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+    </div>
   );
 };
 export default Staff;

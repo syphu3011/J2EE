@@ -1,4 +1,3 @@
-
 import * as React from "react";
 import {
   getProducts,
@@ -22,7 +21,7 @@ import {
   getProductInStock,
 } from "../controllers/modules/admin/productInStock";
 import {
-    getProviderProductColorSize,
+  getProviderProductColorSize,
   importProduct,
   importProductHistory,
   removeImportProduct,
@@ -302,33 +301,28 @@ export default class Coding_ok extends React.Component<any, any> {
 
     postKeyToServer().then((rsk) => {
       // removeImport();
-    //   importProductHistory().then((rs) => {
-    //     self.setState({
-    //       test: JSON.stringify(rs),
-    //     });
-    //   });
-        // getHistoryOrders().then(rs => {
-        //     self.setState({
-        //         test: JSON.stringify(rs),
-        //     });
-        // })
-        // getProviderProductColorSize().then(rs => {
-        //     self.setState({
-        //         test: JSON.stringify(rs.data.sanpham.data) 
-        //         + '\n' +
-        //         JSON.stringify(rs.data.nhacungcap.data) 
-        //         + '\n' + 
-        //         JSON.stringify(rs.data.mau.data) 
-        //         + '\n' + 
-        //         JSON.stringify(rs.data.kichco.data) 
-        //     });
-        // })
-        // getStaff()
-        getHistoryOrders().then((rs) => {
-            self.setState({
-                test: JSON.stringify(rs),
-            });
-        })
+      //   importProductHistory().then((rs) => {
+      //     self.setState({
+      //       test: JSON.stringify(rs),
+      //     });
+      //   });
+      // getHistoryOrders().then(rs => {
+      //     self.setState({
+      //         test: JSON.stringify(rs),
+      //     });
+      // })
+      getProviderProductColorSize().then((rs) => {
+        self.setState({
+          test: JSON.stringify(rs),
+          // JSON.stringify(rs.data.sanpham.data)
+          // + '\n' +
+          // JSON.stringify(rs.data.nhacungcap.data)
+          // + '\n' +
+          // JSON.stringify(rs.data.mau.data)
+          // + '\n' +
+          // JSON.stringify(rs.data.kichco.data)
+        });
+      });
     });
   }
 

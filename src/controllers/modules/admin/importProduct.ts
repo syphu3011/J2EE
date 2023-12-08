@@ -93,7 +93,7 @@ export function getProviderProductColorSize() {
             message
             data{
                 ma
-                ten
+                ten 
             }
         }
         nhacungcap {
