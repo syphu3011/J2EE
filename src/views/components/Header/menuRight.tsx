@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import {Badge, Button, Drawer, Menu, MenuProps, Modal, Space} from "antd";
 import {SearchOutlined,ShoppingCartOutlined,UserOutlined,LoginOutlined,PlusCircleOutlined,EditOutlined,LogoutOutlined,InboxOutlined } from "@ant-design/icons";
@@ -11,12 +11,14 @@ import { useCart } from 'react-use-cart';
 import Search from 'antd/es/input/Search';
 import { SearchResult } from '../search/searchList';
 import { logout } from '../../../controllers/modules/customer/logout';
+import { getinformation } from '../../../controllers/modules/customer/changeinformation';
 
 const MenuRight =(check:{isLogin: boolean})=>{
      const [results, setResults] = useState([]);
      const {emptyCart}=useCart()
      const [open, setOpen] = useState(false);
      const [isLoggedIn,setIsLoggedIn] = React.useState(check.isLogin);
+     const [username,setUsername] =  React.useState(null)
      const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
     // const [children, setChildren] = React.useState([]);
      const [visible, setVisible] = React.useState(false);    
@@ -78,8 +80,31 @@ const MenuRight =(check:{isLogin: boolean})=>{
      const handleOrderClick = (item)=>{
           navigate(`/${item.key}`);
      }
-     const username = "SyPhu"
+     //const username = "SyPhu"
+     
      const childrenLogin = (): MenuProps['items'] => {
+          useEffect(() => {
+               if (isLoggedIn) {
+                    const updateUsername = async () => {
+                         // Lấy thông tin username từ loggedInUser
+                         try {
+                              const response = await getinformation();
+                              console.log(response);
+                              if (response.data.thongtinkhachhang.status === 200) {
+                                  const  username= response.data.thongtinkhachhang.data
+                                  const user = username.ten
+                                  setUsername(user);
+                              } else {
+                                console.error('Get Infomation request failed:', response.data.thongtinkhachhang.message);
+                              }
+                            } catch (error) {
+                              console.error('Error during logout:', error);
+                            }
+                         // Cập nhật giá trị của biến username
+                       };
+                       updateUsername();
+               }
+             }, [isLoggedIn]);
           return isLoggedIn
           ? [
                {
@@ -100,7 +125,7 @@ const MenuRight =(check:{isLogin: boolean})=>{
                               key: "lich-su-don-hang",
                               className: "groupIcons"
                             },
-                            {
+                         {
                               icon: <LogoutOutlined className="large-icon" />,
                               label: "Đăng xuất",
                               key: "logout",

@@ -64,6 +64,6 @@ export const authenticationCustomer = (callback?) => {
     })
 }
 export const dateToYYYY_MM_DD = (date) => {
-    const format = 'YYYY-MM-DD'
+    const format = 'YYYY-DD-MM'
     return dayjs(date).format(format)
 }

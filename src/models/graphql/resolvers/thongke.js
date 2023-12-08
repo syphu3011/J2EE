@@ -28,12 +28,12 @@ module.exports = {
                             FROM (
                                 SELECT khachhang.ma, khachhang.ten, sum(chitiethoadon.soluong * chitiethoadon.gia) tongtien
                                 from khachhang, hoadon, chitiethoadon 
-                                where khachhang.ma = hoadon.makhachhang and hoadon.ma = chitiethoadon.mahoadon and hoadon.matrangthaihoadon = 2 and khachhang.matrangthai = 1 and hoadon.ngaylap > '${tu}' and hoadon.ngaylap < '${den}'
+                                where khachhang.ma = hoadon.makhachhang and hoadon.ma = chitiethoadon.mahoadon and hoadon.matrangthaihoadon = 2 and khachhang.matrangthai = 1 and hoadon.ngaylap > Date('${tu}') and hoadon.ngaylap < Date('${den}')
                                 GROUP by khachhang.ma
                             ) tongtien, (
                                 SELECT khachhang.ma, COUNT(hoadon.ma) soluonghoadon
                                 FROM khachhang, hoadon
-                                WHERE khachhang.ma = hoadon.makhachhang and hoadon.matrangthaihoadon = 2 and hoadon.ngaylap > '${tu}' and hoadon.ngaylap < '${den}'
+                                WHERE khachhang.ma = hoadon.makhachhang and hoadon.matrangthaihoadon = 2 and hoadon.ngaylap > Date('${tu}') and hoadon.ngaylap < Date('${den}')
                                 GROUP BY khachhang.ma
                             ) soluonghoadon
                             WHERE tongtien.ma = soluonghoadon.ma 
@@ -81,12 +81,12 @@ module.exports = {
                         FROM (
                             SELECT nhanvien.ma, nhanvien.ten, sum(chitiethoadon.soluong * chitiethoadon.gia) tongtien
                             from nhanvien, hoadon, chitiethoadon 
-                            where nhanvien.ma = hoadon.manhanvien and hoadon.ma = chitiethoadon.mahoadon and (hoadon.matrangthaihoadon = 2 or hoadon.matrangthaihoadon = 3) and nhanvien.matrangthai = 1 and hoadon.ngaylap > '${tu}' and hoadon.ngaylap < '${den}' and nhanvien.ma > 0
+                            where nhanvien.ma = hoadon.manhanvien and hoadon.ma = chitiethoadon.mahoadon and (hoadon.matrangthaihoadon = 2 or hoadon.matrangthaihoadon = 3) and nhanvien.matrangthai = 1 and hoadon.ngaylap > Date('${tu}') and hoadon.ngaylap < Date('${den}') and nhanvien.ma > 0
                             GROUP by nhanvien.ma
                         ) tongtien, (
                             SELECT nhanvien.ma, COUNT(hoadon.ma) soluongxacnhan
                             FROM nhanvien, hoadon
-                            WHERE nhanvien.ma = hoadon.manhanvien and (hoadon.matrangthaihoadon = 2 or hoadon.matrangthaihoadon = 3) and hoadon.ngaylap > '${tu}' and hoadon.ngaylap < '${den}' and nhanvien.ma > 0 and nhanvien.matrangthai = 1
+                            WHERE nhanvien.ma = hoadon.manhanvien and (hoadon.matrangthaihoadon = 2 or hoadon.matrangthaihoadon = 3) and hoadon.ngaylap > Date('${tu}') and hoadon.ngaylap < Date('${den}') and nhanvien.ma > 0 and nhanvien.matrangthai = 1
                             GROUP BY nhanvien.ma
                         ) soluonghoadon
                         WHERE tongtien.ma = soluonghoadon.ma 
@@ -150,8 +150,8 @@ module.exports = {
                     WHERE sanpham.ma = chitietphieunhap.masanpham
                         AND sanpham.matrangthai = 1
                         AND chitietphieunhap.maphieunhap = phieunhap.ma
-                        AND phieunhap.ngaynhap > '${tu}'
-                        AND phieunhap.ngaynhap < '${den}'
+                        AND phieunhap.ngaynhap > DATE('${tu}')
+                        AND phieunhap.ngaynhap < DATE('${den}')
                     GROUP BY sanpham.ma) nhap
                 LEFT JOIN
                     (SELECT sanpham.ma,
@@ -164,8 +164,8 @@ module.exports = {
                         AND chitiethoadon.mahoadon = hoadon.ma
                         AND hoadon.matrangthaihoadon = 2
                         AND sanpham.matrangthai = 1
-                        AND hoadon.ngaylap > '${tu}'
-                        AND hoadon.ngaylap < '${den}'
+                        AND hoadon.ngaylap > DATE('${tu}')
+                        AND hoadon.ngaylap < DATE('${den}')
                     GROUP BY sanpham.ma) ban ON nhap.ma = ban.ma) xephang
                 WHERE xephang.hang <= 10`)
                     return {
@@ -225,13 +225,13 @@ module.exports = {
                         FROM hoadon
                         WHERE ngaylap IS NOT NULL
                         AND hoadon.matrangthaihoadon = 2
-                        AND hoadon.ngaylap > '${tu}'
-                        AND hoadon.ngaylap < '${den}'
+                        AND hoadon.ngaylap > DATE('${tu}')
+                        AND hoadon.ngaylap < DATE('${den}')
                         GROUP BY thoigian
                         UNION SELECT DATE(ngaynhap) AS thoigian
                         FROM phieunhap
-                        WHERE phieunhap.ngaynhap > '${tu}'
-                        AND phieunhap.ngaynhap < '${den}'
+                        WHERE phieunhap.ngaynhap > DATE('${tu}')
+                        AND phieunhap.ngaynhap < DATE('${den}')
                         GROUP BY thoigian) AS bangthoigian) bangthoigian
                 LEFT JOIN hoadon ON bangthoigian.thoigian = DATE(hoadon.ngaylap)
                 LEFT JOIN chitiethoadon ON hoadon.ma = chitiethoadon.mahoadon
@@ -246,13 +246,13 @@ module.exports = {
                         FROM hoadon
                         WHERE ngaylap IS NOT NULL
                         AND hoadon.matrangthaihoadon = 2
-                        AND hoadon.ngaylap > '${tu}'
-                        AND hoadon.ngaylap < '${den}'
+                        AND hoadon.ngaylap > DATE('${tu}')
+                        AND hoadon.ngaylap < DATE('${den}')
                         GROUP BY thoigian
                         UNION SELECT DATE(ngaynhap) AS thoigian
                         FROM phieunhap
-                        WHERE phieunhap.ngaynhap > '${tu}'
-                        AND phieunhap.ngaynhap < '${den}'
+                        WHERE phieunhap.ngaynhap > DATE('${tu}')
+                        AND phieunhap.ngaynhap < DATE('${den}')
                         GROUP BY thoigian) AS bangthoigian) bangthoigian
                 LEFT JOIN phieunhap ON bangthoigian.thoigian = DATE(phieunhap.ngaynhap)
                 LEFT JOIN chitietphieunhap ON phieunhap.ma = chitietphieunhap.maphieunhap
@@ -315,13 +315,13 @@ module.exports = {
                         FROM hoadon
                         WHERE ngaylap IS NOT NULL
                         AND hoadon.matrangthaihoadon = 2
-                        AND hoadon.ngaylap > '${tu}'
-                        AND hoadon.ngaylap < '${den}'
+                        AND hoadon.ngaylap > Date('${tu}')
+                        AND hoadon.ngaylap < Date('${den}')
                         GROUP BY thoigian
                         UNION SELECT CONCAT(MONTH(ngaynhap), '-', YEAR(ngaynhap)) AS thoigian
                         FROM phieunhap
-                        WHERE phieunhap.ngaynhap > '${tu}'
-                        AND phieunhap.ngaynhap < '${den}'
+                        WHERE phieunhap.ngaynhap > Date('${tu}')
+                        AND phieunhap.ngaynhap < Date('${den}')
                         GROUP BY thoigian) AS bangthoigian) bangthoigian
                 LEFT JOIN hoadon ON bangthoigian.thoigian = CONCAT(MONTH(hoadon.ngaylap), '-', YEAR(hoadon.ngaylap))
                 LEFT JOIN chitiethoadon ON hoadon.ma = chitiethoadon.mahoadon
@@ -336,13 +336,13 @@ module.exports = {
                         FROM hoadon
                         WHERE ngaylap IS NOT NULL
                         AND hoadon.matrangthaihoadon = 2
-                        AND hoadon.ngaylap > '${tu}'
-                        AND hoadon.ngaylap < '${den}'
+                        AND hoadon.ngaylap > Date('${tu}')
+                        AND hoadon.ngaylap < Date('${den}')
                         GROUP BY thoigian
                         UNION SELECT CONCAT(MONTH(ngaynhap), '-', YEAR(ngaynhap)) AS thoigian
                         FROM phieunhap
-                        WHERE phieunhap.ngaynhap > '${tu}'
-                        AND phieunhap.ngaynhap < '${den}'
+                        WHERE phieunhap.ngaynhap > Date('${tu}')
+                        AND phieunhap.ngaynhap < Date('${den}')
                         GROUP BY thoigian) AS bangthoigian) bangthoigian
                 LEFT JOIN phieunhap ON bangthoigian.thoigian = CONCAT(MONTH(phieunhap.ngaynhap), '-', YEAR(phieunhap.ngaynhap))
                 LEFT JOIN chitietphieunhap ON phieunhap.ma = chitietphieunhap.maphieunhap
