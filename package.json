@@ -15,6 +15,7 @@
     "aes-encryption": "^1.0.4",
     "antd": "^5.9.3",
     "antd-img-crop": "^4.13.0",
+    "antd-table-saveas-excel": "^2.2.1",
     "aos": "^3.0.0-beta.6",
     "apollo-datasource": "^0.7.0",
     "apollo-server-express": "^2.13.0",
@@ -27,6 +28,7 @@
     "babel-preset-stage-2": "^6.24.1",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
+    "better-xlsx": "^0.7.6",
     "body-parser": "^1.20.2",
     "browser": "^0.2.6",
     "buffer": "^6.0.3",
@@ -39,6 +41,7 @@
     "dayjs": "^1.11.10",
     "dotenv": "^8.6.0",
     "express": "^4.17.1",
+    "file-saver": "^2.0.5",
     "fs": "^0.0.1-security",
     "graphql": "^15.0.0",
     "graphql-resolvers": "^0.4.2",
@@ -62,6 +65,7 @@
     "react-chat-engine": "^1.11.28",
     "react-chat-widget": "^3.1.4",
     "react-dom": "^17.0.2",
+    "react-export-table-to-excel": "^1.0.6",
     "react-icons": "^4.11.0",
     "react-loading": "^2.0.3",
     "react-pdf": "^7.5.1",
@@ -82,7 +86,8 @@
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4",
     "webpack-dev-middleware": "^6.1.1",
-    "webpack-dev-server": "^4.15.1"
+    "webpack-dev-server": "^4.15.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@babel/core": "^7.23.0",

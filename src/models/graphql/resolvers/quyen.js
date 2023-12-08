@@ -36,7 +36,7 @@ module.exports = {
           }
         }
       }
-      return await checkAndResolveAdmin(context.taikhoan, callback, "đã thêm quyền", CHUCNANG.THEMQUYEN)
+      return await checkAndResolveAdmin(context.taikhoan, callback, "đã thêm quyền", CHUCNANG.SUANHANVIEN)
     },
     async suaQuyen(root, args, context) {
       const { ma, ten, chucnang } = args.input
@@ -85,7 +85,7 @@ module.exports = {
           }
         }
       }
-      return await checkAndResolveAdmin(context.taikhoan, callback, "đã sửa quyền có id là " + ma, CHUCNANG.SUAQUYEN)
+      return await checkAndResolveAdmin(context.taikhoan, callback, "đã sửa quyền có id là " + ma, CHUCNANG.SUANHANVIEN)
     },
     async xoaQuyen(root, args, context) {
       const { ma, ten } = args
@@ -127,14 +127,20 @@ module.exports = {
           }
         }
       }
-      return await checkAndResolveAdmin(context.taikhoan, callback, "đã xóa quyền có id là " + ma, CHUCNANG.XOAQUYEN)
+      return await checkAndResolveAdmin(context.taikhoan, callback, "đã xóa quyền có id là " + ma, CHUCNANG.SUANHANVIEN)
     }
   },
   Query: {
-    async quyen() {
+    async quyen(root, args, context) {
       async function callback(e) {
         try {
-          const sanpham = await Quyen.findAll();
+          const sanpham = await Quyen.findAll({
+            where: {
+              ma: {
+                [Op.not]: 1
+              }
+            }
+          });
           return {
             status: STATUS_CODE.query_success,
             message: "Lấy danh sách quyền thành công!",
@@ -149,7 +155,7 @@ module.exports = {
           }
         }
       }
-      return await checkAndResolveAdmin(context.taikhoan, callback, "đã xóa quyền có id là " + ma, CHUCNANG.THEMQUYEN)
+      return await checkAndResolveAdmin(context.taikhoan, callback, "đã xóa quyền có id là " + ma, CHUCNANG.SUANHANVIEN)
     }
   },
   Quyen: {

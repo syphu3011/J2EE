@@ -26,7 +26,7 @@ module.exports = {
                             message: "Bị lỗi! Thêm màu không thành công!"
                         }
                     }
-                }, "đã thêm màu có mã là " + args.input.ma + "!", CHUCNANG.THEMLOAI)
+                }, "đã thêm màu có mã là " + args.input.ma + "!", CHUCNANG.SUASANPHAM)
             }
             catch (e) {
                 return {
@@ -58,7 +58,7 @@ module.exports = {
                             message: "Bị lỗi! Sửa màu không thành công!"
                         }
                     }
-                }, "đã sửa màu có mã là " + args.input.ma + "!", CHUCNANG.SUALOAI)
+                }, "đã sửa màu có mã là " + args.input.ma + "!", CHUCNANG.SUASANPHAM)
             }
             catch (e) {
                 return {

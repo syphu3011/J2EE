@@ -21,9 +21,15 @@ import TableDate from "./Table/TableDate";
 import TableMonth from "./Table/TableMonth";
 import { useNavigate } from "react-router-dom";
 import { Item } from "react-use-cart";
-import { authenticationAdmin } from "../../../../../../utils/util";
+import {
+  authenticationAdmin,
+  dateToYYYY_MM_DD,
+} from "../../../../../../utils/util";
 import { getOrders } from "../../../../../controllers/modules/admin/order";
-import { statistics_revenue_month } from "../../../../../controllers/modules/admin/statistic";
+import {
+  statistics_revenue_days,
+  statistics_revenue_month,
+} from "../../../../../controllers/modules/admin/statistic";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 60,
@@ -64,7 +70,7 @@ options.push({
 });
 options.push({
   value: "TG",
-  label: "Thời gian",
+  label: "Doanh thu",
 });
 options.push({
   value: "LSP",
@@ -88,14 +94,46 @@ const StatNumber = () => {
   const [form] = Form.useForm();
   const [table, setTable] = useState(TableProduct);
   const [display, setDisplay] = useState("none");
-  const ChangeStatDate = (value: string) => {
+  const [from, setFrom] = useState("2000-01-01");
+  const [to, setTo] = useState(dateToYYYY_MM_DD(Date.now()));
+  const [dataRevenue, setDataRevenue] = useState(null);
+  const [stat, setStat] = useState(null);
+  const [statRev, setStatRev] = useState(null);
+  const GetDataRevenue = async (type, monthOrDay) => {
+    const rsRevenue = monthOrDay == 1 ? await statistics_revenue_month(from, to, type) : await statistics_revenue_days(from, to, type);
+      const dataRs =
+        monthOrDay == 1 ? 
+        (rsRevenue.data && rsRevenue.data.thongkedoanhthutheothang && rsRevenue.data.thongkedoanhthutheothang.data)
+        :
+        (rsRevenue.data && rsRevenue.data.thongkedoanhthutheongay && rsRevenue.data.thongkedoanhthutheongay.data)
+      const tempData = [];
+      for (const data of dataRs) {
+        const row = {
+          key: data.thoigian,
+          id_date: data.thoigian,
+          amount_order_date: 0,
+          income_date: data.thu,
+          expenses_date: data.chi,
+          profits_date: data.loinhuan,
+        };
+        tempData.push(row);
+      }
+      return tempData
+  }
+  const ChangeStatDate = async (value: string) => {
+    setStatRev(value)
     if (value == "Days") {
-      setTable(TableDate);
+      const data = await GetDataRevenue(1,2)
+      setDataRevenue(data);
+      setTable(TableDate({ data: data }));
     } else {
-      setTable(TableMonth);
+      const data = await GetDataRevenue(1,1)
+      setDataRevenue(data);
+      setTable(TableDate({ data: data }));
     }
   };
-  const ChangeStat = (value: string) => {
+  const ChangeStat = async (value: string) => {
+    setStat(value)
     console.log(`selected ${value}`);
     if (value == "SP") {
       setTable(TableProduct);
@@ -107,7 +145,7 @@ const StatNumber = () => {
       setTable(TableStaff);
       setDisplay("none");
     } else if (value == "TG") {
-      setTable(TableDate);
+      ChangeStatDate(statRev ? statRev : 'Days')
       setDisplay("inline-block");
     } else {
       setTable(TableType);
@@ -158,7 +196,7 @@ const StatNumber = () => {
         // console.log(element.tongtien);
         originData.push({
           id: "",
-          price: 0
+          price: 0,
         });
       });
       console.log("originData " + originData.length);
@@ -240,6 +278,11 @@ const StatNumber = () => {
                     defaultValue={dayjs("01/01/2000", dateFormat)}
                     format={dateFormat}
                     style={{ marginRight: "2%" }}
+                    onChange={(value) => {
+                      const date = dateToYYYY_MM_DD(value)
+                      setFrom(date)
+                      ChangeStat(stat)
+                    }}
                   />
                 </Form.Item>
                 <Form.Item
@@ -247,7 +290,12 @@ const StatNumber = () => {
                   labelAlign="left"
                   labelCol={{ span: "5%" }}
                 >
-                  <DatePicker defaultValue={dayjs()} format={dateFormat} />
+                  <DatePicker defaultValue={dayjs()} format={dateFormat} 
+                  onChange={(value) => {
+                    const date = dateToYYYY_MM_DD(value)
+                    setTo(date)
+                    ChangeStat(stat)
+                  }}/>
                 </Form.Item>
               </div>
             </Col>
