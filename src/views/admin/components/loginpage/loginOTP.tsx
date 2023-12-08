@@ -56,6 +56,8 @@ export default function LoginOTP() {
       rsOTP.data.xacThucOTP &&
       rsOTP.data.xacThucOTP.status == "200"
     ) {
+      Cookies.set('username_admin', rsOTP.data.xacThucOTP.data.tentaikhoan)
+      Cookies.set('chucnang', rsOTP.data.xacThucOTP.data.chucnang)
       openNotification("top", "Vui lòng đăng nhập");
       navigate("/Admin");
     } else {

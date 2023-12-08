@@ -1,75 +1,81 @@
 const { HoaDon, sequelize, HangTrongKho, LichSuHeThong, KhachHang, Mau, KichCo, ChiTietHoaDon, NhanVien } = require("../../database/models")
+const { CHUCNANG } = require("../const")
+const { checkAndResolveAdmin } = require("./checkToken")
 module.exports = {
     Query: {
         async thongketop5khachhang(root, args, context) {
-            const { tu, den, kieuthongke } = args.input
-            // kieu thong ke == 1: soluonghoadon
-            // kieu thong ke == 2: tongtien
-            try {
-                // await HoaDon.
-                let kieu
-                switch (kieuthongke) {
-                    case 1:
-                        kieu = 'soluonghoadon'
-                        break;
-                    case 2:
-                        kieu = 'tongtien'
-                        break;
-                    default:
-                        break;
+            async function callback(e) {
+                const { tu, den, kieuthongke } = args.input
+                // kieu thong ke == 1: soluonghoadon
+                // kieu thong ke == 2: tongtien
+                try {
+                    // await HoaDon.
+                    let kieu
+                    switch (kieuthongke) {
+                        case 1:
+                            kieu = 'soluonghoadon'
+                            break;
+                        case 2:
+                            kieu = 'tongtien'
+                            break;
+                        default:
+                            break;
+                    }
+                    const rs = await sequelize.query(
+                        `select xephang.ma, xephang.ten, xephang.tongtien, xephang.soluonghoadon, customer_rank as hang
+                        from (
+                            SELECT tongtien.ma, tongtien.ten, tongtien.tongtien, soluonghoadon.soluonghoadon,DENSE_RANK() OVER (ORDER BY ${kieu} DESC) AS customer_rank
+                            FROM (
+                                SELECT khachhang.ma, khachhang.ten, sum(chitiethoadon.soluong * chitiethoadon.gia) tongtien
+                                from khachhang, hoadon, chitiethoadon 
+                                where khachhang.ma = hoadon.makhachhang and hoadon.ma = chitiethoadon.mahoadon and hoadon.matrangthaihoadon = 2 and khachhang.matrangthai = 1 and hoadon.ngaylap > '${tu}' and hoadon.ngaylap < '${den}'
+                                GROUP by khachhang.ma
+                            ) tongtien, (
+                                SELECT khachhang.ma, COUNT(hoadon.ma) soluonghoadon
+                                FROM khachhang, hoadon
+                                WHERE khachhang.ma = hoadon.makhachhang and hoadon.matrangthaihoadon = 2 and hoadon.ngaylap > '${tu}' and hoadon.ngaylap < '${den}'
+                                GROUP BY khachhang.ma
+                            ) soluonghoadon
+                            WHERE tongtien.ma = soluonghoadon.ma 
+                        ) xephang
+                        where xephang.customer_rank <= 5
+                        ORDER BY hang ASC`)
+                    return {
+                        status: 200,
+                        message: "Lấy dữ liệu thống kê thành công!",
+                        data: rs[0]
+                    }
                 }
-                const rs = await sequelize.query(
-                    `select xephang.ma, xephang.ten, xephang.tongtien, xephang.soluonghoadon, customer_rank as hang
-                    from (
-                        SELECT tongtien.ma, tongtien.ten, tongtien.tongtien, soluonghoadon.soluonghoadon,DENSE_RANK() OVER (ORDER BY ${kieu} DESC) AS customer_rank
-                        FROM (
-                            SELECT khachhang.ma, khachhang.ten, sum(chitiethoadon.soluong * chitiethoadon.gia) tongtien
-                            from khachhang, hoadon, chitiethoadon 
-                            where khachhang.ma = hoadon.makhachhang and hoadon.ma = chitiethoadon.mahoadon and hoadon.matrangthaihoadon = 2 and khachhang.matrangthai = 1 and hoadon.ngaylap > '${tu}' and hoadon.ngaylap < '${den}'
-                            GROUP by khachhang.ma
-                        ) tongtien, (
-                            SELECT khachhang.ma, COUNT(hoadon.ma) soluonghoadon
-                            FROM khachhang, hoadon
-                            WHERE khachhang.ma = hoadon.makhachhang and hoadon.matrangthaihoadon = 2 and hoadon.ngaylap > '${tu}' and hoadon.ngaylap < '${den}'
-                            GROUP BY khachhang.ma
-                        ) soluonghoadon
-                        WHERE tongtien.ma = soluonghoadon.ma 
-                    ) xephang
-                    where xephang.customer_rank <= 5
-                    ORDER BY hang ASC`)
-                return {
-                    status: 200,
-                    message: "Lấy dữ liệu thống kê thành công!",
-                    data: rs[0]
+                catch (e) {
+                    return {
+                        status: 400,
+                        message: "Lấy dữ liệu thống kê không thành công!",
+                        data: []
+                    }
                 }
             }
-            catch (e) {
-                return {
-                    status: 400,
-                    message: "Lấy dữ liệu thống kê không thành công!",
-                    data: []
-                }
-            }
+            return await checkAndResolveAdmin(context.taikhoan, callback, '', CHUCNANG.THONGKE)
         },
         async thongketop5nhanvien(root, args, context) {
-            const { tu, den, kieuthongke } = args.input
-            // kieu thong ke == 1: soluonghoadon
-            // kieu thong ke == 2: tongtien
-            try {
-                // await HoaDon.
-                let kieu
-                switch (kieuthongke) {
-                    case 1:
-                        kieu = 'soluongxacnhan'
-                        break;
-                    case 2:
-                        kieu = 'tongtien'
-                        break;
-                    default:
-                        break;
-                }
-                const rs = await sequelize.query(
-                    `select xephang.ma, xephang.ten, xephang.tongtien, xephang.soluongxacnhan, staff_rank as hang
+            async function callback(e) {
+                const { tu, den, kieuthongke } = args.input
+                // kieu thong ke == 1: soluonghoadon
+                // kieu thong ke == 2: tongtien
+                try {
+                    // await HoaDon.
+                    let kieu
+                    switch (kieuthongke) {
+                        case 1:
+                            kieu = 'soluongxacnhan'
+                            break;
+                        case 2:
+                            kieu = 'tongtien'
+                            break;
+                        default:
+                            break;
+                    }
+                    const rs = await sequelize.query(
+                        `select xephang.ma, xephang.ten, xephang.tongtien, xephang.soluongxacnhan, staff_rank as hang
                     from (
                         SELECT tongtien.ma, tongtien.ten, tongtien.tongtien, soluonghoadon.soluongxacnhan,DENSE_RANK() OVER (ORDER BY ${kieu} DESC) AS staff_rank
                         FROM (
@@ -87,41 +93,45 @@ module.exports = {
                     ) xephang
                     where xephang.staff_rank <= 5
                     ORDER BY hang ASC`)
-                return {
-                    status: 200,
-                    message: "Lấy dữ liệu thống kê thành công!",
-                    data: rs[0]
+                    return {
+                        status: 200,
+                        message: "Lấy dữ liệu thống kê thành công!",
+                        data: rs[0]
+                    }
+
+                }
+                catch (e) {
+                    return {
+                        status: 400,
+                        message: "Lấy dữ liệu thống kê không thành công!",
+                        data: []
+                    }
                 }
             }
-            catch (e) {
-                return {
-                    status: 400,
-                    message: "Lấy dữ liệu thống kê không thành công!",
-                    data: []
-                }
-            }
+            return await checkAndResolveAdmin(context.taikhoan, callback, '', CHUCNANG.THONGKE)
         },
         async thongketop10sanpham(root, args, context) {
-            const { tu, den, kieuthongke } = args.input
-            // kieu thong ke == 1: tienban
-            // kieu thong ke == 2: loinhuan
-            try {
-                // await HoaDon.
-                let kieu
-                switch (kieuthongke) {
-                    case 1:
-                        kieu = 'tienban'
-                        break;
-                    case 2:
-                        kieu = 'tiennhap'
-                        break;
-                    case 3:
-                        kieu = 'loinhuan'
-                        break;
-                    default:
-                        break;
-                }
-                const rs = await sequelize.query(`
+            async function callback(e) {
+                const { tu, den, kieuthongke } = args.input
+                // kieu thong ke == 1: tienban
+                // kieu thong ke == 2: loinhuan
+                try {
+                    // await HoaDon.
+                    let kieu
+                    switch (kieuthongke) {
+                        case 1:
+                            kieu = 'tienban'
+                            break;
+                        case 2:
+                            kieu = 'tiennhap'
+                            break;
+                        case 3:
+                            kieu = 'loinhuan'
+                            break;
+                        default:
+                            break;
+                    }
+                    const rs = await sequelize.query(`
                 SELECT *
                 FROM
                 (SELECT nhap.ma,
@@ -158,46 +168,49 @@ module.exports = {
                         AND hoadon.ngaylap < '${den}'
                     GROUP BY sanpham.ma) ban ON nhap.ma = ban.ma) xephang
                 WHERE xephang.hang <= 10`)
-                return {
-                    status: 200,
-                    message: "Lấy dữ liệu thống kê thành công!",
-                    data: rs[0]
+                    return {
+                        status: 200,
+                        message: "Lấy dữ liệu thống kê thành công!",
+                        data: rs[0]
+                    }
+                }
+                catch (e) {
+                    return {
+                        status: 400,
+                        message: "Lấy dữ liệu thống kê không thành công!",
+                        data: []
+                    }
                 }
             }
-            catch (e) {
-                return {
-                    status: 400,
-                    message: "Lấy dữ liệu thống kê không thành công!",
-                    data: []
-                }
-            }
+            return await checkAndResolveAdmin(context.taikhoan, callback, '', CHUCNANG.THONGKE)
         },
         async thongkedoanhthutheongay(root, args, context) {
-            const { tu, den, kieuthongke } = args.input
-            // kieu thong ke == 1: thoigian
-            // kieu thong ke == 2: thu
-            // kieu thong ke == 3: chi
-            // kieu thong ke == 4: loinhuan
-            try {
-                // await HoaDon.
-                let kieu
-                switch (kieuthongke) {
-                    case 1:
-                        kieu = 'thu.thoigian'
-                        break;
-                    case 2:
-                        kieu = 'thu'
-                        break;
-                    case 3:
-                        kieu = 'chi'
-                        break;
-                    case 4:
-                        kieu = 'loinhuan'
-                        break;
-                    default:
-                        break;
-                }
-                const rs = await sequelize.query(`
+            async function callback(e) {
+                const { tu, den, kieuthongke } = args.input
+                // kieu thong ke == 1: thoigian
+                // kieu thong ke == 2: thu
+                // kieu thong ke == 3: chi
+                // kieu thong ke == 4: loinhuan
+                try {
+                    // await HoaDon.
+                    let kieu
+                    switch (kieuthongke) {
+                        case 1:
+                            kieu = 'thu.thoigian'
+                            break;
+                        case 2:
+                            kieu = 'thu'
+                            break;
+                        case 3:
+                            kieu = 'chi'
+                            break;
+                        case 4:
+                            kieu = 'loinhuan'
+                            break;
+                        default:
+                            break;
+                    }
+                    const rs = await sequelize.query(`
                 SELECT thu.thoigian,
                     thu,
                     chi,
@@ -245,46 +258,49 @@ module.exports = {
                 LEFT JOIN chitietphieunhap ON phieunhap.ma = chitietphieunhap.maphieunhap
                 GROUP BY thoigian) chi ON thu.thoigian = chi.thoigian
                 ORDER BY ${kieu} desc`)
-                return {
-                    status: 200,
-                    message: "Lấy dữ liệu thống kê thành công!",
-                    data: rs[0]
+                    return {
+                        status: 200,
+                        message: "Lấy dữ liệu thống kê thành công!",
+                        data: rs[0]
+                    }
+                }
+                catch (e) {
+                    return {
+                        status: 400,
+                        message: "Lấy dữ liệu thống kê không thành công!",
+                        data: []
+                    }
                 }
             }
-            catch (e) {
-                return {
-                    status: 400,
-                    message: "Lấy dữ liệu thống kê không thành công!",
-                    data: []
-                }
-            }
+            return await checkAndResolveAdmin(context.taikhoan, callback, '', CHUCNANG.THONGKE)
         },
         async thongkedoanhthutheothang(root, args, context) {
-            const { tu, den, kieuthongke } = args.input
-            // kieu thong ke == 1: thoigian
-            // kieu thong ke == 2: thu
-            // kieu thong ke == 3: chi
-            // kieu thong ke == 4: loinhuan
-            try {
-                // await HoaDon.
-                let kieu
-                switch (kieuthongke) {
-                    case 1:
-                        kieu = 'thu.thoigian'
-                        break;
-                    case 2:
-                        kieu = 'thu'
-                        break;
-                    case 3:
-                        kieu = 'chi'
-                        break;
-                    case 4:
-                        kieu = 'loinhuan'
-                        break;
-                    default:
-                        break;
-                }
-                const rs = await sequelize.query(`
+            async function callback(e) {
+                const { tu, den, kieuthongke } = args.input
+                // kieu thong ke == 1: thoigian
+                // kieu thong ke == 2: thu
+                // kieu thong ke == 3: chi
+                // kieu thong ke == 4: loinhuan
+                try {
+                    // await HoaDon.
+                    let kieu
+                    switch (kieuthongke) {
+                        case 1:
+                            kieu = 'thu.thoigian'
+                            break;
+                        case 2:
+                            kieu = 'thu'
+                            break;
+                        case 3:
+                            kieu = 'chi'
+                            break;
+                        case 4:
+                            kieu = 'loinhuan'
+                            break;
+                        default:
+                            break;
+                    }
+                    const rs = await sequelize.query(`
                 SELECT thu.thoigian,
                     thu,
                     chi,
@@ -333,19 +349,21 @@ module.exports = {
                 GROUP BY thoigian) chi ON thu.thoigian = chi.thoigian
                 ORDER BY ${kieu} DESC
                 `)
-                return {
-                    status: 200,
-                    message: "Lấy dữ liệu thống kê thành công!",
-                    data: rs[0]
+                    return {
+                        status: 200,
+                        message: "Lấy dữ liệu thống kê thành công!",
+                        data: rs[0]
+                    }
+                }
+                catch (e) {
+                    return {
+                        status: 400,
+                        message: "Lấy dữ liệu thống kê không thành công!",
+                        data: []
+                    }
                 }
             }
-            catch (e) {
-                return {
-                    status: 400,
-                    message: "Lấy dữ liệu thống kê không thành công!",
-                    data: []
-                }
-            }
+            return await checkAndResolveAdmin(context.taikhoan, callback, '', CHUCNANG.THONGKE)
         },
     }
 }

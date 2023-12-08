@@ -18,6 +18,7 @@ export async function otp(otp) {
     const rq = `mutation otp($otp:String!){xacThucOTP(input:{otp: $otp}){status
 message
 data {
+    tentaikhoan
     chucnang
 }
 }}` 
@@ -30,6 +31,7 @@ export async function authentication() {
     let rq = `mutation{dangNhapAdminVoiToken{status
         message
         data {
+            tentaikhoan
             chucnang
         }
     }}`

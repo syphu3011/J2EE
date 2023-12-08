@@ -215,7 +215,7 @@ module.exports = {
                     };
                 }
             }
-            return await checkAndResolveAdmin(context.taikhoan, callback, CHUCNANG.THEMNHANVIEN)
+            return await checkAndResolveAdmin(context.taikhoan, callback)
         },
         async nhanvienvoithuoctinh(root, args, context) {
             try {

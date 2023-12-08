@@ -1,5 +1,7 @@
 import { Table } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { statistics_revenue_days } from "../../../../../../controllers/modules/admin/statistic";
+import { dateToYYYY_MM_DD } from "../../../../../../../utils/util";
 interface ItemDate {
   key: string;
   id_date: string;
@@ -48,6 +50,31 @@ const columnsDay = [
 ];
 
 const TableDate = () => {
+  // const [from, setFrom] = useState('2000-01-01')
+  // const [to, setTo] = useState(dateToYYYY_MM_DD(Date.now))
+  const [data, setData] = useState(DaysData)
+  // useEffect(() => {
+    // async function load() {
+    //   const rs = await statistics_revenue_days(from, to, 1)
+    //   const rsData = rs.data && rs.data.thongkedoanhthutheongay && rs.data.thongkedoanhthutheongay.data
+    //   if (rsData) {
+    //     const tempData = []
+    //     for(const data of rsData) {
+    //       const row = {
+    //         key: data.thoigian,
+    //         id_date: data.thoigian,
+    //         amount_order_date: 0,
+    //         income_date: data.thu,
+    //         expenses_date: data.chi,
+    //         profits_date: data.loinhuan,
+    //       }
+    //       tempData.push(row)
+    //     }
+    //     setData(tempData)
+    //   }
+    // }
+    // load()
+  // },[from, to]) 
   return (
     <Table
       bordered
@@ -60,7 +87,7 @@ const TableDate = () => {
         let total_income_type = 0;
         let total_expenses_type = 0;
         pageData.forEach(
-          ({ profits_date, amount_order_date, income_date, expenses_date }) => {
+          ({ profits_date, income_date, expenses_date }) => {
             total_profits += profits_date;
             total_income_type += income_date;
             total_expenses_type += expenses_date;
