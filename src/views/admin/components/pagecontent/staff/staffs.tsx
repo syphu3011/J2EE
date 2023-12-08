@@ -16,6 +16,7 @@ import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
 import {
   addStaff,
   getStaff,
+  removeStaff,
 } from "../../../../../controllers/modules/admin/staff";
 import dayjs from "dayjs";
 import { authenticationAdmin } from "../../../../../../utils/util";
@@ -157,7 +158,15 @@ const Staff = () => {
     }
   };
   const handleDelete = (key: React.Key) => {
+    removeStaff(parseInt(key.toString())).then((rs) => {
+      console.log(rs);
+      alert(rs.data.xoaNhanVien.message);
+      if (rs.data.xoaNhanVien.status === 201) {
+        setReload(true);
+      }
+    });
     const newData = data.filter((item) => item.key !== key);
+
     setData(newData);
   };
   const columns = [
