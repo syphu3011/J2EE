@@ -15,6 +15,7 @@ import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import Item from "antd/es/list/Item";
 import { getHistoryOrders } from "../../../controllers/modules/customer/historyorders";
+import { getinformation } from "../../../controllers/modules/customer/changeinformation";
 const headerStyle: React.CSSProperties = {
      color: "#000000",
      minHeight: 60,
@@ -70,7 +71,7 @@ const dateFormat = "YYYY-MM-DD";
 let fromDate = dayjs();
 let toDate = dayjs();
 let status = "";
-const HistoryOrder = () => {
+const HistoryOrder = ({isLoggedIn=true}) => {
      // Define
      const originData: Item[] = [];
      const exData = [];
@@ -84,136 +85,77 @@ const HistoryOrder = () => {
      const [isFirstLoad, setIsFirstLoad] = useState(true);
      const [expanderData, setExpanderData] = useState(exData);
      const [isdata, setOrder] = useState(null)
-     //
+     
 
-     // useEffect(() => {
-     //      async function fetchMetaData() {
-     //           const rsFetchData = await getHistoryOrders();
-     //           if (rsFetchData.data.lichsudonhang.status === 200) {
-     //                const fetchData = rsFetchData.data.lichsudonhang.data;
-     //                setData(fetchData);
-     //                fetchData.forEach((element, index) => {
-     //                     exData.push({ key: element.ma, sanpham: element.sanpham });
-     //                     // console.log(expanderData);
-     //                     //  Convert Timestamp to Date
-     //                     const dateInit = new Date(parseInt(element.ngaylap));
-     //                     // Format to date time
-     //                     const rsDateInit = `${dateInit.getFullYear()}-${(
-     //                          dateInit.getMonth() + 1
-     //                     )
-     //                          .toString()
-     //                          .padStart(2, "0")}-${dateInit
-     //                               .getDate()
-     //                               .toString()
-     //                               .padStart(2, "0")} ${dateInit
-     //                                    .getHours()
-     //                                    .toString()
-     //                                    .padStart(2, "0")}:${dateInit
-     //                                         .getMinutes()
-     //                                         .toString()
-     //                                         .padStart(2, "0")}:${dateInit
-     //                                              .getSeconds()
-     //                                              .toString()
-     //                                              .padStart(2, "0")}`;
-     //                     // console.log(convertB64ToImage(element.anhminhhoa));
-     //                     // console.log(element.tongtien);
-     //                     originData.push({
-     //                          key: element.ma,
-     //                          id_order: element.ma,
-     //                          id_cus: element.khachhang.ma,
-     //                          name_cus: element.khachhang.ten,
-     //                          dateInit: rsDateInit,
-     //                          staffconfirm: element.nhanvien.ten,
-     //                          total_money: element.tongtien,
-     //                          status: element.trangthaihoadon ? element.trangthaihoadon.ten : "",
-     //                          phone: element.sodienthoai,
-     //                          email: element.email,
-     //                          address: element.diachi
-     //                     });
-     //                });
-     //                // console.log("originData " + originData.length);
-     //                // setFromDate(dayjs().subtract(1, "day").format(dateFormat));
-     //                fromDate = dayjs().subtract(1, "day");
-     //                // setToDate(dayjs().add(1, "day").format(dateFormat));
-     //                toDate = dayjs().add(1, "day");
-     //                status = "Tất cả";
-     //                // setData(originData);
-     //                setMetaData(originData);
-     //                const newData = metaData.filter((item) =>
-     //                     isDateBetween(item.dateInit.toString(), fromDate, toDate)
-     //                );
-     //                console.log("Nhut dau nha");
-     //                console.log(newData);
-     //                setData(newData);
-     //                // const newData = metaData.filter((item) =>
-     //                //   isDateBetween(item.dateInit.toString(), fromDate, toDate)
-     //                // );
-
-     //                // setData(newData);
-
-     //                // console.log("Data " + data.length);
-     //                //setIsReady(true);
-     //                setExpanderData(exData);
-     //           }
-     //      }
-     //           // console.log(data)
-
-     //           //   if (reload) {
-     //           //     isFirstLoad ? authenticationAdmin(fetchMetaData) : fetchMetaData();
-     //           //     setIsFirstLoad(false);
-     //           //     setReload(false);
-     //           //   }
-     //           fetchMetaData()
-     //      }, [reload]);
      useEffect(() => {
           async function fetchMetaData() {
-               const rsFetchData = await getHistoryOrders();
-               if (rsFetchData.data.lichsudonhang.status === 200) {
-                    const fetchData = rsFetchData.data.lichsudonhang.data;
-                    fetchData.forEach((element, index) => {
-                         exData.push({ key: element.ma, sanpham: element.sanpham });
-                         // console.log(expanderData);
-                         //  Convert Timestamp to Date
-                         const dateInit = new Date(parseInt(element.ngaylap));
-                         // Format to date time
-                         const rsDateInit = `${dateInit.getFullYear()}-${(
-                              dateInit.getMonth() + 1
-                         )
-                              .toString()
-                              .padStart(2, "0")}-${dateInit
-                                   .getDate()
-                                   .toString()
-                                   .padStart(2, "0")} ${dateInit
-                                        .getHours()
-                                        .toString()
-                                        .padStart(2, "0")}:${dateInit
-                                             .getMinutes()
-                                             .toString()
-                                             .padStart(2, "0")}:${dateInit
-                                                  .getSeconds()
-                                                  .toString()
-                                                  .padStart(2, "0")}`;
-                         // console.log(convertB64ToImage(element.anhminhhoa));
-                         // console.log(element.tongtien);
-                         originData.push({
-                              key: element.ma,
-                              id_order: element.ma,
-                              id_cus: element.khachhang.ma,
-                              name_cus: element.khachhang.ten,
-                              dateInit: rsDateInit,
-                              staffconfirm: element.nhanvien.ten,
-                              total_money: element.tongtien,
-                              status: element.trangthaihoadon ? element.trangthaihoadon.ten : "",
-                              phone: element.sodienthoai,
-                              email: element.email,
-                              address: element.diachi
-                         });
-                    });
-               }
+            const rsKH = await getinformation();
+            const taikhoan = rsKH.data.thongtinkhachhang.data;
+            console.log(taikhoan)
+            const maKh = taikhoan.ma;
+              console.log(maKh);
+              const rsFetchData = await getHistoryOrders();
+              console.log(rsFetchData);
+              if (rsFetchData.data.lichsudonhang.status === 200) {
+                const fetchData = rsFetchData.data.lichsudonhang.data;
+                const filteredData = fetchData.filter(
+                  (element) => element.khachhang.ma === maKh
+                );
+                //console.log(fetchData.khachhang.ma);
+              // console.log(filteredData)
+                setData(filteredData);
+                filteredData.forEach((element, index) => {
+                  exData.push({ key: element.ma, sanpham: element.sanpham });
+                  // Convert Timestamp to Date
+                  const dateInit = new Date(parseInt(element.ngaylap));
+                  // Format to date time
+                  const rsDateInit = `${dateInit.getFullYear()}-${(
+                    dateInit.getMonth() + 1
+                  )
+                    .toString()
+                    .padStart(2, "0")}-${dateInit
+                    .getDate()
+                    .toString()
+                    .padStart(2, "0")} ${dateInit
+                    .getHours()
+                    .toString()
+                    .padStart(2, "0")}:${dateInit
+                    .getMinutes()
+                    .toString()
+                    .padStart(2, "0")}:${dateInit
+                    .getSeconds()
+                    .toString()
+                    .padStart(2, "0")}`;
+        
+                  originData.push({
+                    key: element.ma,
+                    id_order: element.ma,
+                    id_cus: element.khachhang.ma,
+                    name_cus: element.khachhang.ten,
+                    dateInit: rsDateInit,
+                    staffconfirm: element.nhanvien.ten,
+                    total_money: element.tongtien,
+                    status: element.trangthaihoadon
+                      ? element.trangthaihoadon.ten
+                      : "",
+                    phone: element.sodienthoai,
+                    email: element.email,
+                    address: element.diachi,
+                  });
+                });
+              }
+        
+              fromDate = dayjs().subtract(1, "day");
+              toDate = dayjs().add(1, "day");
+              status = "Tất cả";
+        
+              setMetaData(originData);
+              setExpanderData(exData);
+            
           }
+        
           fetchMetaData();
-
-     })
+        }, [isLoggedIn]);
      const [form] = Form.useForm();
      //   const [data] = useState(originData);
      const columns = [
@@ -264,14 +206,6 @@ const HistoryOrder = () => {
                dataIndex: "status",
           },
      ];
-     function compare(str, str0) {
-          console.log(str);
-          console.log(str0);
-          console.log(str.length);
-          console.log(str0.length);
-          console.log(str.toLowerCase().trim() == str0.toLowerCase().trim());
-          return str.trim().toLowerCase() == str0.trim().toLowerCase();
-     }
      // Expander
      const expandedRowRender = (record) => {
           const columns: TableColumnsType<ExpandedDataType> = [
