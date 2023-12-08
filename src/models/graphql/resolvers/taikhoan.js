@@ -1,5 +1,5 @@
 const { Op, literal } = require("sequelize")
-const { KhachHang, NhanVien, TaiKhoan, sequelize, Quyen } = require("../../database/models")
+const { KhachHang, NhanVien, TaiKhoan, sequelize, Quyen, ChucNang } = require("../../database/models")
 const bcrypt = require("bcrypt");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -141,26 +141,34 @@ module.exports = {
       }
     },
     async dangNhapVoiToken(root, args, context) {
-      if (context.taikhoan) {
-        const tenkhachhang = (await KhachHang.findAll({
-          where: {
-            tentaikhoan: context.taikhoan.tentaikhoan
-          }
-        }))[0].ten
-        return {
-          status: 200,
-          message: "Xác thực thành công!",
-          data:
-          {
-            tenkhachhang
+      try {
+        if (context.taikhoan) {
+          const tenkhachhang = (await KhachHang.findAll({
+            where: {
+              tentaikhoan: context.taikhoan.tentaikhoan
+            }
+          }))[0].ten
+          return {
+            status: 200,
+            message: "Xác thực thành công!",
+            data:
+            {
+              tenkhachhang
+            }
           }
         }
+        return {
+          status: 400,
+          message: "Xác thực không thành công!",
+          data: null
+        }
       }
-
-      return {
-        status: 400,
-        message: "Xác thực không thành công!",
-        data: null
+      catch {
+        return {
+          status: 400,
+          message: "Xác thực không thành công!",
+          data: null
+        }
       }
     },
     async dangNhapAdmin(root, args, context) {
@@ -174,6 +182,7 @@ module.exports = {
               returnContent = {
                 status: 400,
                 message: "Bạn không có quyền vào trang quản trị!",
+                data: null
               }
               return returnContent
             }
@@ -209,6 +218,7 @@ module.exports = {
                   otp: otphash,
                   timestamp: Date.now() + ""
                 }
+                
                 await set_token(context.res, taikhoandangnhap)
                 return {
                   status: 200,
@@ -223,8 +233,7 @@ module.exports = {
                   status: 400,
                   message: "Đăng nhập không thành công",
                   data: {
-                    chucnang: "",
-                    otp: ""
+                    chucnang: ""
                   }
                 }
               }
@@ -236,8 +245,7 @@ module.exports = {
             status: 400,
             message: "Tên tài khoản hoặc mật khẩu không chính xác!",
             data: {
-              chucnang: "",
-              otp: ""
+              chucnang: ""
             }
           }
         }
@@ -246,8 +254,7 @@ module.exports = {
           status: 400,
           message: "Có lỗi xảy ra!",
           data: {
-            chucnang: "",
-            otp: ""
+            chucnang: ""
           }
         }
       }
@@ -260,6 +267,7 @@ module.exports = {
             status: 400,
             message: "Bạn chưa đăng nhập!",
             data: {
+              tentaikhoan: "",
               chucnang: ""
             }
           }
@@ -269,6 +277,7 @@ module.exports = {
             status: 400,
             message: "Bạn chưa xác thực OTP",
             data: {
+              tentaikhoan: "",
               chucnang: ""
             }
           }
@@ -280,6 +289,7 @@ module.exports = {
               status: 400,
               message: "Bạn không có quyền vào trang quản trị!",
               data: {
+                tentaikhoan: "",
                 chucnang: ""
               }
             }
@@ -295,6 +305,7 @@ module.exports = {
               status: 400,
               message: "Tài khoản đã bị khóa",
               data: {
+                tentaikhoan: "",
                 chucnang: ""
               }
             }
@@ -315,6 +326,7 @@ module.exports = {
               status: 200,
               message: "Đăng nhập thành công!",
               data: {
+                tentaikhoan: taikhoan.tentaikhoan,
                 chucnang: chucnangreturn
               }
             }
@@ -325,6 +337,7 @@ module.exports = {
             status: 400,
             message: "Phiên đăng nhập đã hết!",
             data: {
+              tentaikhoan: "",
               chucnang: ""
             }
           }
@@ -371,6 +384,7 @@ module.exports = {
               status: 200,
               message: "Đăng nhập thành công!",
               data: {
+                tentaikhoan: taikhoan.tentaikhoan,
                 chucnang: chucnangreturn
               }
             }
@@ -457,6 +471,7 @@ module.exports = {
         context.res.clearCookie("token")
         context.res.clearCookie("rToken")
         context.res.clearCookie("chucnang")
+        context.res.clearCookie("username_admin")
         return {
           status: 200,
           message: "Đăng xuất thành công!"
@@ -470,7 +485,7 @@ module.exports = {
       }
     },
     doimatkhau(root, args, context) {
-      const {matkhaucu, matkhaumoi, matkhauxacnhan} = args
+      const { matkhaucu, matkhaumoi, matkhauxacnhan } = args
       if (matkhaumoi != matkhauxacnhan) {
         return {
           status: 400,
@@ -485,7 +500,7 @@ module.exports = {
               message: 'Mật khẩu hiện tại không đúng!'
             }
           }
-          context.taikhoan.update({matkhau: bcrypt.hashSync(matkhaumoi, bcrypt.genSaltSync(10))})
+          context.taikhoan.update({ matkhau: bcrypt.hashSync(matkhaumoi, bcrypt.genSaltSync(10)) })
           return {
             status: 200,
             message: "Mật khẩu đã được thay đổi thành công"

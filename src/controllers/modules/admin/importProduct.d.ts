@@ -20,3 +20,8 @@ export declare function removeImportProduct(id: number): Promise<import("axios")
     message: string;
     data: any;
 }>;
+export declare function getProviderProductColorSize(): Promise<import("axios").AxiosResponse<any, any> | {
+    status: number;
+    message: string;
+    data: any;
+}>;

@@ -13,31 +13,30 @@ const PRIVATE_CODE_RT = "dkfxsse3r"
 const LIFE_AT = 10
 const LIFE_RT = 3600 * 72
 const CHUCNANG = Object.freeze({
-    THEMSANPHAM: "themSanPham",
-    XOASANPHAM: "xoaSanPham",
-    SUASANPHAM: "suaSanPham",
-    THEMLOAI: "themLoai",
-    SUALOAI: "suaLoai",
-    XOALOAI: "xoaLoai",
-    SUAKHACHHANG: "suaKhachHang",
-    XOAKHACHHANG: "xoaKhachHang",
-    XEMKHO: "xemKho",
-    SUAKHO: "suaKho",
-    NHAPHANG: "nhapHang",
-    THEMNHACUNGCAP: "themNhaCungCap",
-    XOANHACUNGCAP: "xoaNhaCungCap",
-    SUANHACUNGCAP: "suaNhaCungCap",
-    THEMQUYEN: "themQuyen",
-    XOAQUYEN: "xoaQuyen",
-    SUAQUYEN: "suaQuyen", 
-    THEMNHANVIEN: "themNhanVien",
-    XOANHANVIEN: "xoaNhanVien",
-    SUANHANVIEN: 'suaNhanVien',
-    DONHANG: 'donHang'
+    THEMSANPHAM: "Thêm sản phẩm",
+    XOASANPHAM: "Xóa sản phẩm",
+    SUASANPHAM: "Sửa sản phẩm",
+    THEMLOAI: "Thêm loại",
+    SUALOAI: "Sửa loại",
+    XOALOAI: "Xóa loại",
+    SUAKHACHHANG: "Sửa khách hàng",
+    XOAKHACHHANG: "Xóa khách hàng",
+    XEMKHO: "Xem kho",
+    SUAKHO: "Sửa kho",
+    NHAPHANG: "Nhập hàng",
+    THEMNHACUNGCAP: "Thêm nhà cung cấp",
+    XOANHACUNGCAP: "Xóa nhà cung cấp",
+    SUANHACUNGCAP: "Sửa nhà cung cấp", 
+    THEMNHANVIEN: "Thêm nhân viên",
+    XOANHANVIEN: "Xóa nhân viên",
+    SUANHANVIEN: 'Sửa nhân viên',
+    DONHANG: 'Quản lý đơn hàng',
+    XULYHOADON: 'Xử lý hóa đơn',
+    THONGKE: 'Thống kê'
 }
 )
 const MAIL = Object.freeze({
-    USERNAME: "vmtpshop@gmail.com",
-    PASSWORD: "mgca fhab qtst weev"
+    USERNAME: "vmtpmail@gmail.com",
+    PASSWORD: "tpat ogcg wvmd eiew"
 })
 module.exports = {STATUS_CODE,PRIVATE_CODE_AT, PRIVATE_CODE_RT, LIFE_AT, LIFE_RT, CHUCNANG, MAIL}

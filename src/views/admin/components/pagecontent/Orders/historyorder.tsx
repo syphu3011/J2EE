@@ -21,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import { getHistoryOrders } from "../../../../../controllers/modules/admin/order";
 import { elements } from "chart.js";
 import Item from "antd/es/list/Item";
+import { Excel } from "antd-table-saveas-excel";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 60,
@@ -48,9 +49,9 @@ interface Item {
   id_order: string;
   id_cus: string;
   name_cus: string;
-  phone:string
-  email:string
-  address:string
+  phone: string;
+  email: string;
+  address: string;
   dateInit: string;
   staffconfirm: string;
   total_money: number;
@@ -139,14 +140,14 @@ const History = () => {
           status: element.trangthaihoadon ? element.trangthaihoadon.ten : "",
           phone: element.sodienthoai,
           email: element.email,
-          address: element.diachi
+          address: element.diachi,
         });
       });
       // console.log("originData " + originData.length);
       // setFromDate(dayjs().subtract(1, "day").format(dateFormat));
-      fromDate = dayjs().subtract(1, "day");
+      fromDate = dayjs().subtract(7, "day");
       // setToDate(dayjs().add(1, "day").format(dateFormat));
-      toDate = dayjs().add(1, "day");
+      toDate = dayjs();
       status = "Tất cả";
       // setData(originData);
       setMetaData(originData);
@@ -180,32 +181,26 @@ const History = () => {
     {
       title: "Mã",
       dataIndex: "id_order",
-      width: "auto",
     },
     {
       title: "Mã khách hàng",
       dataIndex: "id_cus",
-      width: "auto",
     },
     {
       title: "Tên khách hàng",
       dataIndex: "name_cus",
-      width: "auto",
     },
     {
       title: "Số điện thoại",
       dataIndex: "phone",
-      width: "auto",
     },
     {
       title: "Email",
       dataIndex: "email",
-      width: "auto",
     },
     {
       title: "Địa chỉ",
       dataIndex: "address",
-      width: "auto",
     },
     {
       title: "Ngày xác nhận",
@@ -326,15 +321,6 @@ const History = () => {
     return targetDate >= startDate && targetDate <= endDate;
   }
 
-  function compareDateStrings(dateString1, dateString2) {
-    // Chuyển đổi chuỗi ngày thành đối tượng Date
-    const date1 = new Date(dateString1);
-    const date2 = new Date(dateString2);
-
-    // So sánh hai ngày và trả về true hoặc false
-    console.log(date1 > date2);
-    return date1 > date2;
-  }
   // Handle Form date
   const handleFromDateOnChange = (date) => {
     if (date) {
@@ -386,6 +372,16 @@ const History = () => {
       // setIsReady(true);
     }
   };
+  const handleClick = () => {
+    const excel = new Excel();
+    excel
+      .addSheet("LichSuDonHang")
+      .addColumns(mergedColumns)
+      .addDataSource(data, {
+        str2Percent: true,
+      })
+      .saveAs("LichSuDonHang.xlsx");
+  };
   return isReady ? (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
@@ -430,6 +426,7 @@ const History = () => {
             <Button
               type="primary"
               style={{ width: "15%", marginLeft: "20%", background: "green" }}
+              onClick={handleClick}
             >
               Xuất excel
             </Button>

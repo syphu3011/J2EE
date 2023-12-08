@@ -1,6 +1,6 @@
-const { sequelize, HoaDon, HangTrongKho, Mau, KichCo, ChiTietHoaDon, NhanVien } = require("../../database/models");
+const { sequelize, HoaDon, HangTrongKho, Mau, KichCo, ChiTietHoaDon, NhanVien, KhachHang } = require("../../database/models");
 const { Op } = require("sequelize");
-const {STATUS_CODE, MAIL, CHUCNANG } = require('../const')
+const { STATUS_CODE, MAIL, CHUCNANG } = require('../const')
 
 const nodemailer = require("nodemailer");
 
@@ -14,7 +14,7 @@ module.exports = {
         transaction = await sequelize.transaction();
         const { makhachhang, diachi, sanpham, email, sodienthoai, tenkhachhang } = args.input;
         const hoadon = await HoaDon.create({ makhachhang, diachi, matrangthaihoadon: 1, email, sodienthoai, tenkhachhang });
-        
+
         for (const sp of sanpham) {
           const hangtrongkho = await HangTrongKho.findOne({
             where: {
@@ -25,15 +25,15 @@ module.exports = {
             },
             order: [["maphieunhap", "ASC"]]
           });
-          
+
           const mau = await Mau.findByPk(sp.mamau);
           const kichco = await KichCo.findByPk(sp.makichco);
-          
+
           if (!hangtrongkho || hangtrongkho.matrangthai == 2 || hangtrongkho.soluong < sp.soluong) {
             await transaction.rollback();
             return { status: 400, message: "Thêm hóa đơn không thành công!" };
           }
-          
+
           await ChiTietHoaDon.create({
             mahoadon: hoadon.ma,
             maphieunhap: hangtrongkho.maphieunhap,
@@ -56,103 +56,145 @@ module.exports = {
     },
 
     async xacnhanhoachuyhoadon(root, args, context) {
-      let transaction;
-      try {
-        transaction = await sequelize.transaction();
-        let nhanvien;
-        if (context.taikhoan) {
-          nhanvien = await NhanVien.findOne({ where: { tentaikhoan: context.taikhoan.tentaikhoan } });
-        }
+      const { ma, matrangthai } = args.input;
+      async function callback(e) {
+        let transaction;
+        try {
+          transaction = await sequelize.transaction();
+          let nhanvien;
+          if (context.taikhoan) {
+            nhanvien = await NhanVien.findOne({ where: { tentaikhoan: context.taikhoan.tentaikhoan } });
+          }
 
-        const { ma, matrangthai } = args.input;
-        const hoadon = await HoaDon.findByPk(ma);
+          const hoadon = await HoaDon.findByPk(ma);
 
-        if (hoadon.matrangthaihoadon == 2 || hoadon.matrangthaihoadon == 3) {
-          return { status: 400, message: "Đơn hàng đã được xử lý! Không thể thay đổi!" };
-        }
+          if (hoadon.matrangthaihoadon == 2 || hoadon.matrangthaihoadon == 3) {
+            return { status: 400, message: "Đơn hàng đã được xử lý! Không thể thay đổi!" };
+          }
 
-        let return_rs;
-        let return_rs_200 = { status: 200, message: "Đơn hàng đã được xử lý thành công!" };
-        let return_rs_400 = { status: 400, message: "Đơn hàng xử lý không thành công!" };
+          let return_rs;
+          let return_rs_200 = { status: 200, message: "Đơn hàng đã được xử lý thành công!" };
+          let return_rs_400 = { status: 400, message: "Đơn hàng xử lý không thành công!" };
 
-        if (matrangthai == 2 || nhanvien) {
-          return_rs = await checkAndResolveAdmin(
-            context.taikhoan,
-            async (e) => {
-              await hoadon.update({ matrangthaihoadon: matrangthai, manhanvien: nhanvien.ma });
-              return return_rs_200;
-            },
-            "đã xử lý đơn hàng có mã " + ma,
-            CHUCNANG.DONHANG
-          );
-        } else {
-          await hoadon.update({ matrangthaihoadon: matrangthai, manhanvien: null });
-        }
+          if (matrangthai == 2 || nhanvien) {
+            return_rs = await checkAndResolveAdmin(
+              context.taikhoan,
+              async (e) => {
+                await hoadon.update({ matrangthaihoadon: matrangthai, manhanvien: nhanvien.ma });
+                return return_rs_200;
+              },
+              "đã xử lý đơn hàng có mã " + ma,
+              CHUCNANG.DONHANG
+            );
+          } else {
+            await hoadon.update({ matrangthaihoadon: matrangthai, manhanvien: null });
+          }
 
-        if (return_rs && return_rs.status == 404) {
+          if (return_rs && return_rs.status == 404) {
+            await transaction.rollback();
+            return return_rs_400;
+          }
+
+          //mail
+          var transporter = nodemailer.createTransport({
+            service: "Gmail",
+            auth: { user: MAIL.USERNAME, pass: MAIL.PASSWORD },
+          });
+
+          var mainOptions = {
+            from: MAIL.USERNAME,
+            to: hoadon.email,
+            subject: matrangthai == 2 ? "Đơn hàng được xác nhận!" : "Đơn hàng bị hủy!",
+            text: "Đơn hàng có mã " + hoadon.ma + (matrangthai == 2 ? " đã được cửa hàng xác nhận!" : " đã bị hủy!"),
+          };
+
+          transporter.sendMail(mainOptions);
+          await transaction.commit();
+
+          return return_rs_200;
+        } catch (e) {
           await transaction.rollback();
-          return return_rs_400;
+          return { status: 400, message: "Đơn hàng xử lý không thành công!" };
         }
 
-        //mail
-        var transporter = nodemailer.createTransport({
-          service: "Gmail",
-          auth: { user: MAIL.USERNAME, pass: MAIL.PASSWORD },
-        });
-
-        var mainOptions = {
-          from: MAIL.USERNAME,
-          to: hoadon.email,
-          subject: matrangthai == 2 ? "Đơn hàng được xác nhận!" : "Đơn hàng bị hủy!",
-          text: "Đơn hàng có mã " + hoadon.ma + (matrangthai == 2 ? " đã được cửa hàng xác nhận!" : " đã bị hủy!"),
-        };
-
-        transporter.sendMail(mainOptions);
-        await transaction.commit();
-
-        return return_rs_200;
-      } catch (e) {
-        await transaction.rollback();
-        return { status: 400, message: "Đơn hàng xử lý không thành công!" };
-      }
+      } return await checkAndResolveAdmin(context.taikhoan, callback, "đã xử lý hóa đơn mã: "+ma, CHUCNANG.XULYHOADON)
     },
   },
 
   Query: {
-    hoadon: async () => {
-      try {
-        const rs = { status: STATUS_CODE.query_success, message: "Lấy danh sách hóa đơn thành công!", data: await HoaDon.findAll() };
-        return rs;
-      } catch (e) {
-        return { status: STATUS_CODE.query_fail, message: "Lấy danh sách hóa đơn không thành công!", data: null };
+    hoadon: async (root, args, context) => {
+      async function callback(e) {
+        try {
+          const rs = { status: STATUS_CODE.query_success, message: "Lấy danh sách hóa đơn thành công!", data: await HoaDon.findAll() };
+          return rs;
+        } catch (e) {
+          return { status: STATUS_CODE.query_fail, message: "Lấy danh sách hóa đơn không thành công!", data: null };
+        }
       }
+      return await checkAndResolveAdmin(context.taikhoan, callback, "", CHUCNANG.XULYHOADON)
     },
 
     hoadondaxuly: async (root, args, context) => {
-      try {
-        const rs = {
-          status: STATUS_CODE.query_success,
-          message: "Lấy danh sách hóa đơn thành công!",
-          data: await HoaDon.findAll({ where: { matrangthaihoadon: { [Op.not]: 1 } } }),
-        };
-        return rs;
-      } catch (e) {
-        return { status: STATUS_CODE.query_fail, message: "Lấy danh sách hóa đơn không thành công!", data: null };
+      async function callback(e) {
+        try {
+          const rs = {
+            status: STATUS_CODE.query_success,
+            message: "Lấy danh sách hóa đơn thành công!",
+            data: await HoaDon.findAll({ where: { matrangthaihoadon: { [Op.not]: 1 } } }),
+          };
+          return rs;
+        } catch (e) {
+          return { status: STATUS_CODE.query_fail, message: "Lấy danh sách hóa đơn không thành công!", data: null };
+        }
       }
+      return await checkAndResolveAdmin(context.taikhoan, callback, "", CHUCNANG.XULYHOADON)
     },
 
     hoadonchuaxuly: async (root, args, context) => {
-      try {
-        const rs = {
-          status: STATUS_CODE.query_success,
-          message: "Lấy danh sách hóa đơn thành công!",
-          data: await HoaDon.findAll({ where: { matrangthaihoadon: 1 } }),
-        };
-        return rs;
-      } catch (e) {
-        return { status: STATUS_CODE.query_fail, message: "Lấy danh sách hóa đơn không thành công!", data: null };
+      async function callback(e) {
+        try {
+          const rs = {
+            status: STATUS_CODE.query_success,
+            message: "Lấy danh sách hóa đơn thành công!",
+            data: await HoaDon.findAll({ where: { matrangthaihoadon: 1 } }),
+          };
+          return rs;
+        } catch (e) {
+          return { status: STATUS_CODE.query_fail, message: "Lấy danh sách hóa đơn không thành công!", data: null };
+        }
       }
+      return await checkAndResolveAdmin(context.taikhoan, callback, "", CHUCNANG.XULYHOADON)
     },
+    async lichsudonhang(root, args, context) {
+      try {
+        const khachhang = await KhachHang.findOne({
+          where: {
+            tentaikhoan: context.taikhoan.tentaikhoan
+          }
+        })
+        const makhachhang = khachhang.ma
+        const hoadon = await HoaDon.findAll({
+          where: {
+            makhachhang
+          },
+          order: [
+            ['ngaylap', 'DESC']
+          ]
+        })
+        return {
+          status: 200,
+          message: "Lấy lịch sử đơn hàng thành công",
+          data: hoadon
+        }
+      }
+      catch (e) {
+        return {
+          status: 400,
+          message: "Lấy lịch sử đơn hàng không thành công",
+          data: []
+        }
+      }
+    }
   },
 
   HoaDon: {
@@ -184,7 +226,7 @@ module.exports = {
 
         if (result && result.length > 0) {
           const tongTien = result[0].tongtien;
-          return tongTien;
+          return tongTien ? tongTien : 0;
         } else {
           return 0;
         }

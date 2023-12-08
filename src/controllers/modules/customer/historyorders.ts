@@ -44,6 +44,8 @@ export async function getHistoryOrders() {
                 }
                 email
                 sodienthoai
+                diachi
+                tongtien
             }
         } 
     }`

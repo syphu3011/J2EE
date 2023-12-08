@@ -20,13 +20,11 @@ import { postKeyToServer } from "../../../controllers/modules/key";
 import { authentication } from "../../../controllers/modules/admin/login";
 import { authenticationAdmin } from "../../../../utils/util";
 import App from "./pagecontent/Message/app";
+import Cookies from "js-cookie";
+import { logout } from "../../../controllers/modules/admin/logout";
 
 const { Header, Content, Sider } = Layout;
-const items1: MenuItem[] = [
-  getItem("Admin", "user", <PiUserSquareDuotone />, [
-    getItem("Đăng xuất", "log_out"),
-  ]),
-];
+
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -80,9 +78,16 @@ const items: MenuItem[] = [
 ];
 
 export default function LayoutPage() {
+  const [username, setUsername] = useState("")
+  const items1: MenuItem[] = [
+  getItem(username, "user", <PiUserSquareDuotone />, [
+    getItem("Đăng xuất", "log_out"),
+  ]),
+];
   const [Label, setLabel] = useState(`Trang chủ`);
   const navigate = useNavigate();
-  const log_out = () => {
+  const log_out = async () => {
+    await logout()
     navigate("/");
   };
   const onMenuClick = (items) => {
@@ -100,7 +105,13 @@ export default function LayoutPage() {
           alert(JSON.stringify(rs.data.dangNhapAdminVoiToken));
           navigate("/LoginAdmin");
         }
+        else {
+          setUsername(rs.data.dangNhapAdminVoiToken.data.tentaikhoan)
+        }
       });
+    }
+    else {
+      setUsername(Cookies.get('username_admin'))
     }
   }, []);
   return (

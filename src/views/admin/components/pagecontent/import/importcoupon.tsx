@@ -38,22 +38,22 @@ interface Item {
 
 const originData: Item[] = [];
 const options: SelectProps["options"] = [];
-const handleChange = (value: string[]) => {
-  console.log(`selected ${value}`);
-};
-for (let i = 0; i < 11; i++) {
-  originData.push({
-    key: i.toString(),
-    id_pro_imp: `${i}`,
-    name_imp: `Áo quần ${i}`,
-    color_imp: "000000",
-    size_imp: "L",
-    provider: `Đây là quần áo`,
-    amount_imp: 15,
-    price_imp: 3200000,
-    total_imp: 3200000 * 15,
-  });
-}
+// const handleChange = (value: string[]) => {
+//   console.log(`selected ${value}`);
+// };
+// for (let i = 0; i < 11; i++) {
+//   originData.push({
+//     key: i.toString(),
+//     id_pro_imp: `${i}`,
+//     name_imp: `Áo quần ${i}`,
+//     color_imp: "000000",
+//     size_imp: "L",
+//     provider: `Đây là quần áo`,
+//     amount_imp: 15,
+//     price_imp: 3200000,
+//     total_imp: 3200000 * 15,
+//   });
+// }
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;

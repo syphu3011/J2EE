@@ -13,6 +13,7 @@ async function set_token(res, taikhoan) {
     res.cookie("rToken", data.rToken, {secure: true, httpOnly: true, maxAge: LIFE_RT * 1000, sameSite: "none"})
     res.cookie("haizz", data.key.key, {secure: true, httpOnly: true, maxAge: LIFE_RT * 1000, sameSite: "none"})
     res.cookie("getout", data.key.iv, {secure: true, httpOnly: true, maxAge: LIFE_RT * 1000, sameSite: "none"})
+    keyUser.old_private_client = null
     return data
 }
 

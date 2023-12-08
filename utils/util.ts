@@ -2,6 +2,7 @@ import { RcFile } from "antd/es/upload";
 import { postKeyToServer } from "../src/controllers/modules/key";
 import { authentication } from "../src/controllers/modules/admin/login";
 import { authentication as authenticationC } from "../src/controllers/modules/customer/login";
+import dayjs from "dayjs";
 
 export function utf8ToB64(str) {
     return window.btoa(str);
@@ -61,4 +62,8 @@ export const authenticationCustomer = (callback?) => {
             callback(rs)
         })
     })
+}
+export const dateToYYYY_MM_DD = (date) => {
+    const format = 'YYYY-MM-DD'
+    return dayjs(date).format(format)
 }

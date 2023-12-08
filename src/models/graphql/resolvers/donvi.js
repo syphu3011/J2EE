@@ -1,73 +1,81 @@
 const { Op, literal } = require("sequelize")
 const {DonVi, sequelize} = require("../../database/models")
-const {STATUS_CODE} = require("../const")
+const {STATUS_CODE, CHUCNANG} = require("../const")
 const { checkAndResolveAdmin } = require("./checkToken")
 module.exports = {
     Mutation: {
       async taoDonVi(root, args, context) {
-        let transaction
-        try {
-          transaction = await sequelize.transaction()
-          const {ma, ten} = args.input
-          const donvi = await DonVi.create({ma, ten})
-          await transaction.commit()
-          return {
-            status: STATUS_CODE.create_success,
-            message: "Thêm đơn vị thành công!",
-          }
-        } 
-        catch(e) {
-          await transaction.rollback()
-          return {
-            status: STATUS_CODE.create_fail,
-            message: "Bị lỗi! Thêm đơn vị không thành công!",
+        const {ten} = args.input
+        async function callback(e) {
+          let transaction
+          try {
+            transaction = await sequelize.transaction()
+            const donvi = await DonVi.create({ ten})
+            await transaction.commit()
+            return {
+              status: STATUS_CODE.create_success,
+              message: "Thêm đơn vị thành công!",
+            }
+          } 
+          catch(e) {
+            await transaction.rollback()
+            return {
+              status: STATUS_CODE.create_fail,
+              message: "Bị lỗi! Thêm đơn vị không thành công!",
+            }
           }
         }
+        return checkAndResolveAdmin(context.taikhoan, callback, 'đã thêm đơn vị có tên: '+ten+'!',CHUCNANG.SUASANPHAM);
       },
       async suaDonVi(root, args, context) {
-        let transaction
-        try {
-          transaction = await sequelize.transaction()
+        async function callback(e) {
+          let transaction
           const {ma, ten} = args.input
-          const donvi = await DonVi.findByPk(ma)
-          await donvi.update({ten})
-          await donvi.save()
-          await transaction.commit()
-          return {
-            status: STATUS_CODE.update_success,
-            message: "Sửa đơn vị thành công!",
-          }
-        } 
-        catch(e) {
-          await transaction.rollback()
-          return {
-            status: STATUS_CODE.update_fail,
-            message: "Bị lỗi! Sửa đơn vị không thành công!",
+          try {
+            transaction = await sequelize.transaction()
+            const donvi = await DonVi.findByPk(ma)
+            await donvi.update({ten})
+            await donvi.save()
+            await transaction.commit()
+            return {
+              status: STATUS_CODE.update_success,
+              message: "Sửa đơn vị thành công!",
+            }
+          } 
+          catch(e) {
+            await transaction.rollback()
+            return {
+              status: STATUS_CODE.update_fail,
+              message: "Bị lỗi! Sửa đơn vị không thành công!",
+            }
           }
         }
+        return checkAndResolveAdmin(context.taikhoan, callback, 'đã sửa đơn vị có mã: '+ma+' thành '+ten+'!',CHUCNANG.SUASANPHAM);
       },
       async xoaDonVi(root, args, context) {
-        let transaction
-        try {
-          transaction = await sequelize.transaction()
-          const {ma, ten} = args.input
-          const donvi = await DonVi.findByPk(ma)
-          await donvi.setSanPham([])
-          await donvi.destroy()
-          await donvi.save()
-          await transaction.commit()
-          return {
-            status: STATUS_CODE.update_success,
-            message: "Xóa đơn vị thành công!",
-          }
-        } 
-        catch(e) {
-          await transaction.rollback()
-          return {
-            status: STATUS_CODE.update_fail,
-            message: "Bị lỗi! Xóa đơn vị không thành công!",
+        async function callback(e) {
+          let transaction
+          try {
+            transaction = await sequelize.transaction()
+            const {ma, ten} = args.input
+            const donvi = await DonVi.findByPk(ma)
+            await donvi.destroy()
+            await donvi.save()
+            await transaction.commit()
+            return {
+              status: STATUS_CODE.update_success,
+              message: "Xóa đơn vị thành công!",
+            }
+          } 
+          catch(e) {
+            await transaction.rollback()
+            return {
+              status: STATUS_CODE.update_fail,
+              message: "Bị lỗi! Xóa đơn vị không thành công!",
+            }
           }
         }
+        return checkAndResolveAdmin(context.taikhoan, callback, 'đã xóa đơn vị có mã: '+ma+'!',CHUCNANG.SUASANPHAM);
       }
     },
     Query: {

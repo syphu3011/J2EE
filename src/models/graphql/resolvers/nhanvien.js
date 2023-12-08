@@ -198,7 +198,7 @@ module.exports = {
         }
     },
     Query: {
-        nhanvien: async () => {
+        nhanvien: async (root, args, context) => {
             async function callback(e) {
                 try {
                     const nhanvien = await NhanVien.findAll();
@@ -215,7 +215,7 @@ module.exports = {
                     };
                 }
             }
-            return await checkAndResolveAdmin(context.taikhoan, callback, CHUCNANG.THEMNHANVIEN)
+            return await checkAndResolveAdmin(context.taikhoan, callback)
         },
         async nhanvienvoithuoctinh(root, args, context) {
             try {

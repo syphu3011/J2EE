@@ -4,7 +4,6 @@ module.exports = gql`
 type DonVi {
   ma: ID!
   ten: String!
-  sanpham: [SanPham]
 }
 input DonViInput {
   ma: ID

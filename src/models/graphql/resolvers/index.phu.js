@@ -16,6 +16,8 @@ const NhanVienResolvers = require('./nhanvien');
 const HoaDonResolvers = require('./hoadon');
 const ChiTietHoaDonResolvers = require('./chitiethoadon');
 const ThongKeResolvers = require('./thongke');
+const MauResolvers = require('./mau');
+const KichCoResolvers = require('./kichco');
 module.exports = [SanPhamResolvers, 
     LoaiResolvers, 
     NhaCungCapResolvers, 
@@ -33,4 +35,6 @@ module.exports = [SanPhamResolvers,
     NhanVienResolvers, 
     HoaDonResolvers, 
     ChiTietHoaDonResolvers, 
-    ThongKeResolvers]
+    ThongKeResolvers, 
+    MauResolvers,
+    KichCoResolvers]
