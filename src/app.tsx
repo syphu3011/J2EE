@@ -33,6 +33,7 @@ import DeliveryInform from "./views/components/cart/deliveryInform";
 import CategoryMediate from "./views/pages/category/CategoryMediate";
 import UpdateInformation from "./views/pages/editInformation/updateInformation";
 import Home from "./views/pages/home/home";
+import UpdateInformationMedia from "./views/pages/editInformation/updateInformationMedia";
 const param = window.location.search;
 let component_render;
 switch (param) {
@@ -55,7 +56,7 @@ switch (param) {
             <Route path="/:categoryId" element={<CategoryMediate />}></Route>
             <Route
               path="/cap-nhat-thong-tin"
-              element={<UpdateInformation />}
+              element={<UpdateInformationMedia />}
             ></Route>
             <Route path="/products/:Id" element={<ProductDetail />}></Route>
             <Route
