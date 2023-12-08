@@ -134,7 +134,7 @@ module.exports = {
                     const rs = await sequelize.query(`
                 SELECT *
                 FROM
-                (SELECT nhap.ma,
+                (SELECT nhap.ma, nhap.ten,
                         IFNULL(ban.soluongban, 0) soluongban,
                         nhap.tiennhap,
                         IFNULL(ban.tienban, 0) tienban,
@@ -142,7 +142,7 @@ module.exports = {
                         DENSE_RANK() OVER (
                                             ORDER BY ${kieu} DESC) AS hang
                 FROM
-                    (SELECT sanpham.ma,
+                    (SELECT sanpham.ma,sanpham.ten,
                             sum(chitietphieunhap.gianhap * chitietphieunhap.soluong) tiennhap
                     FROM sanpham,
                         chitietphieunhap,

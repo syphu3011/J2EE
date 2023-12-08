@@ -1,27 +1,27 @@
 import { Table } from "antd";
 import { useEffect, useState } from "react";
 import { statistics_revenue_days } from "../../../../../../controllers/modules/admin/statistic";
-import { dateToYYYY_MM_DD } from "../../../../../../../utils/util";
+import { dateToYYYY_MM_DD, formatCurrency } from "../../../../../../../utils/util";
 interface ItemDate {
   key: string;
   id_date: string;
   amount_order_date: number;
-  income_date: number;
-  expenses_date: number;
-  profits_date: number;
+  income_date: string;
+  expenses_date: string;
+  profits_date: string;
 }
-const DaysData: ItemDate[] = [];
+// const DaysData: ItemDate[] = [];
 
-for (let i = 2; i < 8; i++) {
-  DaysData.push({
-    key: i.toString(),
-    id_date: "Thứ " + `${i}`,
-    amount_order_date: 1 + i,
-    income_date: 30000000,
-    expenses_date: 400000,
-    profits_date: 30000000 - 400000,
-  });
-}
+// for (let i = 2; i < 8; i++) {
+//   DaysData.push({
+//     key: i.toString(),
+//     id_date: "Thứ " + `${i}`,
+//     amount_order_date: 1 + i,
+//     income_date: 30000000,
+//     expenses_date: 400000,
+//     profits_date: 30000000 - 400000,
+//   });
+// }
 
 const columnsDay = [
   {
@@ -87,9 +87,9 @@ const TableDate = ({data}) => {
         let total_expenses_type = 0;
         pageData.forEach(
           ({ profits_date, income_date, expenses_date }) => {
-            total_profits += profits_date;
-            total_income_type += income_date;
-            total_expenses_type += expenses_date;
+            total_profits += parseInt(profits_date.replace(/[^\d]/g, ''))
+            total_income_type += parseInt(income_date.replace(/[^\d]/g, ''))
+            total_expenses_type += parseInt(expenses_date.replace(/[^\d]/g, ''))
           }
         );
         return (
@@ -97,12 +97,12 @@ const TableDate = ({data}) => {
             <Table.Summary.Row>
               <Table.Summary.Cell index={0}>Tổng</Table.Summary.Cell>
               <Table.Summary.Cell index={1}>
-                {total_income_type}
+                {formatCurrency(total_income_type)}
               </Table.Summary.Cell>
               <Table.Summary.Cell index={2}>
-                {total_expenses_type}
+                {formatCurrency(total_expenses_type)}
               </Table.Summary.Cell>
-              <Table.Summary.Cell index={3}>{total_profits}</Table.Summary.Cell>
+              <Table.Summary.Cell index={3}>{formatCurrency(total_profits)}</Table.Summary.Cell>
             </Table.Summary.Row>
           </Table.Summary>
         );

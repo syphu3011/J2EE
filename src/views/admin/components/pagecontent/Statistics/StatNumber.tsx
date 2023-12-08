@@ -24,12 +24,15 @@ import { Item } from "react-use-cart";
 import {
   authenticationAdmin,
   dateToYYYY_MM_DD,
+  formatCurrency,
 } from "../../../../../../utils/util";
 import { getOrders } from "../../../../../controllers/modules/admin/order";
 import {
   statistics_revenue_days,
   statistics_revenue_month,
   top10product,
+  top5customer,
+  top5staff,
 } from "../../../../../controllers/modules/admin/statistic";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
@@ -93,7 +96,7 @@ const StatNumber = () => {
   const [expanderData, setExpanderData] = useState(exData);
 
   const [form] = Form.useForm();
-  const [table, setTable] = useState(TableProduct);
+  const [table, setTable] = useState(TableProduct({data:null}));
   const [display, setDisplay] = useState("none");
   const [from, setFrom] = useState("2000-01-01");
   const [to, setTo] = useState(dateToYYYY_MM_DD(Date.now()));
@@ -113,9 +116,9 @@ const StatNumber = () => {
           key: data.thoigian,
           id_date: data.thoigian,
           amount_order_date: 0,
-          income_date: data.thu,
-          expenses_date: data.chi,
-          profits_date: data.loinhuan,
+          income_date: formatCurrency(data.thu),
+          expenses_date: formatCurrency(data.chi),
+          profits_date: formatCurrency(data.loinhuan),
         };
         tempData.push(row);
       }
@@ -123,19 +126,52 @@ const StatNumber = () => {
   }
   const GetDataProduct = async (type, _from = from, _to = to) => {
     const rsProduct = await top10product(_from, _to, type)
-      const dataRs = rsProduct.data && rsProduct.data.thongkedoanhthutheothang && rsProduct.data.thongkedoanhthutheothang.data
+      const dataRs = rsProduct.data && rsProduct.data.thongketop10sanpham && rsProduct.data.thongketop10sanpham.data
       const tempData = [];
       for (const data of dataRs) {
         const row = {
           key: data.ma,
           rank_pro: data.hang,
-          id_prod_stat: data.ma,
+          id_pro_stat: data.ma,
           name_pro_stat: data.ten,
-          provider_pro_stat: "",
-          amount_sell_pro: data.soluongban,
-          income_pro: data.tienban,
-          expenses_pro: data.tiennhap,
-          profits_pro: data.loinhuan
+          amount_sell_pro: data.soluongban.toLocaleString('vi-VN'),
+          income_pro: formatCurrency(data.tienban),
+          expenses_pro: formatCurrency(data.tiennhap),
+          profits_pro: formatCurrency(data.loinhuan)
+        };
+        tempData.push(row);
+      }
+      return tempData
+  }
+  const GetDataCustomer = async (type, _from = from, _to = to) => {
+    const rsCustomer = await top5customer(_from, _to, type)
+      const dataRs = rsCustomer.data && rsCustomer.data.thongketop5khachhang && rsCustomer.data.thongketop5khachhang.data
+      const tempData = [];
+      for (const data of dataRs) {
+        const row = {
+          key: data.ma,
+          rank_cus: data.hang,
+          id_cus_stat: data.ma,
+          name_cus_stat: data.ten,
+          amount_order_cus: data.soluonghoadon.toLocaleString('vi-VN'),
+          profits_cus: formatCurrency(data.tongtien)
+        };
+        tempData.push(row);
+      }
+      return tempData
+  }
+  const GetDataStaff = async (type, _from = from, _to = to) => {
+    const rsStaff = await top5staff(_from, _to, type)
+      const dataRs = rsStaff.data && rsStaff.data.thongketop5nhanvien && rsStaff.data.thongketop5nhanvien.data
+      const tempData = [];
+      for (const data of dataRs) {
+        const row = {
+          key: data.ma,
+          rank_staff: data.hang,
+          id_staff_stat: data.ma,
+          name_staff_stat: data.ten,
+          amount_order_staff: data.soluonghoadon.toLocaleString('vi-VN'),
+          profits_staff: formatCurrency(data.tongtien)
         };
         tempData.push(row);
       }
@@ -157,13 +193,16 @@ const StatNumber = () => {
     setStat(value)
     console.log(`selected ${value}`);
     if (value == "SP") {
-      setTable(TableProduct);
+      const rsProd = await GetDataProduct(3, _from, _to)
+      setTable(TableProduct({data:rsProd}));
       setDisplay("none");
     } else if (value == "KH") {
-      setTable(TableCustomer);
+      const rsCus = await GetDataCustomer(2, _from, _to)
+      setTable(TableCustomer({data:rsCus}));
       setDisplay("none");
     } else if (value == "NV") {
-      setTable(TableStaff);
+      const rsStaff = await GetDataStaff(1, _from, _to)
+      setTable(TableStaff({data: rsStaff}));
       setDisplay("none");
     } else if (value == "TG") {
       ChangeStatDate(statRev ? statRev : 'Days', null, _from, _to)
@@ -257,6 +296,7 @@ const StatNumber = () => {
 
     if (reload) {
       isFirstLoad ? authenticationAdmin(fetchMetaData) : fetchMetaData();
+      ChangeStat("SP", null, from, to)
       setIsFirstLoad(false);
       setReload(false);
     }

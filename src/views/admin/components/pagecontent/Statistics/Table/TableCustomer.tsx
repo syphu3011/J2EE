@@ -1,13 +1,14 @@
 import { Table, TableProps } from "antd";
 import { useState } from "react";
+import { formatCurrency } from "../../../../../../../utils/util";
 
 interface ItemCus {
   key: string;
   rank_cus: number;
   id_cus_stat: string;
   name_cus_stat: string;
-  amount_order_cus: number;
-  profits_cus: number;
+  amount_order_cus: string;
+  profits_cus: string;
 }
 const CusData: ItemCus[] = [];
 for (let i = 0; i < 7; i++) {
@@ -16,8 +17,8 @@ for (let i = 0; i < 7; i++) {
     rank_cus: i,
     id_cus_stat: `${i}`,
     name_cus_stat: `Minh ${i}`,
-    amount_order_cus: 1 + i,
-    profits_cus: 1500000,
+    amount_order_cus: 1 + i + "",
+    profits_cus: '1500000',
   });
 }
 const columnsCus = [
@@ -57,12 +58,11 @@ const onChange: TableProps<ItemCus>["onChange"] = (
 ) => {
   console.log("params", pagination, filters, sorter, extra);
 };
-
-const TableCustomer = () => {
+const TableCustomer = ({data}) => {
   return (
     <Table
       bordered
-      dataSource={CusData}
+      dataSource={data}
       columns={columnsCus}
       pagination={false}
       onChange={onChange}
@@ -71,8 +71,8 @@ const TableCustomer = () => {
         let total_profits_cus = 0;
         let total_amount_order_cus = 0;
         pageData.forEach(({ profits_cus, amount_order_cus }) => {
-          total_profits_cus += profits_cus;
-          total_amount_order_cus += amount_order_cus;
+          total_profits_cus += parseInt(profits_cus.replace(/[^\d]/g, ''));
+          total_amount_order_cus += parseInt(amount_order_cus.replace(/[^\d]/g, ''));
         });
         return (
           <Table.Summary fixed>
@@ -81,10 +81,10 @@ const TableCustomer = () => {
               <Table.Summary.Cell index={1}>Tổng</Table.Summary.Cell>
               <Table.Summary.Cell index={2}></Table.Summary.Cell>
               <Table.Summary.Cell index={3}>
-                {total_amount_order_cus}
+                {total_amount_order_cus.toLocaleString('vi-VN')}
               </Table.Summary.Cell>
               <Table.Summary.Cell index={4}>
-                {total_profits_cus}
+                {formatCurrency(total_profits_cus+"")}
               </Table.Summary.Cell>
             </Table.Summary.Row>
           </Table.Summary>
