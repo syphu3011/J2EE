@@ -3,6 +3,8 @@ import { getProductData } from "../../components/product/productData";
 import LoadingPage from "../../loadingPage";
 import { getinformation } from "../../../controllers/modules/customer/changeinformation";
 import UpdateInformation from "./updateInformation";
+import HistoryOrder from "../../components/cart/historyOrder";
+import DeliveryInform from "../../components/cart/deliveryInform";
 
 const UpdateInformationMedia = ({isLoggedIn=true}) => {
      const [information,setInformation] =  useState(null);
@@ -27,6 +29,6 @@ const UpdateInformationMedia = ({isLoggedIn=true}) => {
                        updateUsername();
                }
              }, [isLoggedIn]);
-    return information!=null ? <UpdateInformation userProfiles={information}/> : <LoadingPage/>
+    return information!=null ? <UpdateInformation userProfiles={information}/>: <LoadingPage/>
 }
 export default UpdateInformationMedia ;

@@ -15,7 +15,6 @@ import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import Item from "antd/es/list/Item";
 import { getHistoryOrders } from "../../../controllers/modules/customer/historyorders";
-import { getinformation } from "../../../controllers/modules/customer/changeinformation";
 const headerStyle: React.CSSProperties = {
      color: "#000000",
      minHeight: 60,
@@ -30,14 +29,6 @@ const contentStyle: React.CSSProperties = {
      color: "#fff",
      backgroundColor: "#ffffff",
 };
-interface ExpandedDataType {
-     key: React.Key;
-     name_pro_order: string;
-     size_order: string;
-     color_order: string;
-     price_order: number;
-     amount_order: number;
-}
 interface Item {
      key: string;
      id_order: string;
@@ -51,113 +42,56 @@ interface Item {
      total_money: number;
      status: string;
 }
-// const dateFormat = "DD/MM/YYYY";
-const dateFormat = "YYYY-MM-DD";
-
-// const originData: Item[] = [];
-// for (let i = 0; i < 20; i++) {
-//     originData.push({
-//         key: i.toString(),
-//         id_order: `${i}`,
-//         id_cus: `kh ${i}`,
-//         name_cus: `Nguyễn văn ${i}`,
-//         dateInit: '23/10/2023',
-//         staffconfirm: 'NV0001',
-//         total_money: 56300000,
-//         status: 'Chờ'
-//     });
-// }
-// const metaOriginData: Item[] = [];
-let fromDate = dayjs();
-let toDate = dayjs();
-let status = "";
-const HistoryOrder = ({isLoggedIn=true}) => {
+const HistoryOrder = () => {
      // Define
-     const originData: Item[] = [];
-     const exData = [];
-     const [metaData, setMetaData] = useState(originData);
+    // const originData: Item[] = [];
+     const exData = [];;
 
      const [isReady, setIsReady] = useState(true);
-     const [editingKey, setEditingKey] = useState("");
-     const navigate = useNavigate();
-     const [data, setData] = useState(originData);
-     const [reload, setReload] = useState(true);
-     const [isFirstLoad, setIsFirstLoad] = useState(true);
-     const [expanderData, setExpanderData] = useState(exData);
-     const [isdata, setOrder] = useState(null)
-     
+     const [data, setData] = useState(null);
+     //
 
-     useEffect(() => {
-          async function fetchMetaData() {
-            const rsKH = await getinformation();
-            const taikhoan = rsKH.data.thongtinkhachhang.data;
-            console.log(taikhoan)
-            const maKh = taikhoan.ma;
-              console.log(maKh);
-              const rsFetchData = await getHistoryOrders();
-              console.log(rsFetchData);
-              if (rsFetchData.data.lichsudonhang.status === 200) {
-                const fetchData = rsFetchData.data.lichsudonhang.data;
-                const filteredData = fetchData.filter(
-                  (element) => element.khachhang.ma === maKh
-                );
-                //console.log(fetchData.khachhang.ma);
-              // console.log(filteredData)
-                setData(filteredData);
-                filteredData.forEach((element, index) => {
-                  exData.push({ key: element.ma, sanpham: element.sanpham });
-                  // Convert Timestamp to Date
-                  const dateInit = new Date(parseInt(element.ngaylap));
-                  // Format to date time
-                  const rsDateInit = `${dateInit.getFullYear()}-${(
-                    dateInit.getMonth() + 1
-                  )
-                    .toString()
-                    .padStart(2, "0")}-${dateInit
-                    .getDate()
-                    .toString()
-                    .padStart(2, "0")} ${dateInit
-                    .getHours()
-                    .toString()
-                    .padStart(2, "0")}:${dateInit
-                    .getMinutes()
-                    .toString()
-                    .padStart(2, "0")}:${dateInit
-                    .getSeconds()
-                    .toString()
-                    .padStart(2, "0")}`;
+     async function fetchMetaData() {
+          const rsFetchData = await getHistoryOrders();
+          if (rsFetchData.data.lichsudonhang.status === 200) {
+            const fetchData = rsFetchData.data.lichsudonhang.data;
+             //  Convert Timestamp to Date
+            return fetchData.map((order) => ({
+               key:order.ma,
+              id_order: order.ma,
+              id_cus:order.khachhang.ma,
+              name_cus:order.khachhang.ten,
+              phone:order.sodienthoai,
+              email:order.email,
+              address:order.diachi,
+              dateInit: dayjs(parseInt(order.ngaylap)).format('YYYY-MM-DD HH:mm:ss'),
+              staffconfirm:order.nhanvien?.ma ?? "Chưa nhân viên xác nhận",
+              total_money:order.tongtien,
+              status:order.trangthaihoadon.ten,
+              products: order.sanpham.map((element)=>({
+                    name_pro_order: element.sanpham.ten,
+                    size_order: element.kichco.ten,
+                    color_order: element.mau.ten,
+                    price_order: element.gia,
+                    amount_order: element.soluong,
+              }))
+
+            }));
+          }
+          return []; // Return an empty array if fetching data fails or no data is available
+        }
         
-                  originData.push({
-                    key: element.ma,
-                    id_order: element.ma,
-                    id_cus: element.khachhang.ma,
-                    name_cus: element.khachhang.ten,
-                    dateInit: rsDateInit,
-                    staffconfirm: element.nhanvien.ten,
-                    total_money: element.tongtien,
-                    status: element.trangthaihoadon
-                      ? element.trangthaihoadon.ten
-                      : "",
-                    phone: element.sodienthoai,
-                    email: element.email,
-                    address: element.diachi,
-                  });
-                });
-              }
-        
-              fromDate = dayjs().subtract(1, "day");
-              toDate = dayjs().add(1, "day");
-              status = "Tất cả";
-        
-              setMetaData(originData);
-              setExpanderData(exData);
-            
+        useEffect(() => {
+          async function fetchData() {
+            const fetchedData = await fetchMetaData();
+            setData(fetchedData);
           }
         
-          fetchMetaData();
-        }, [isLoggedIn]);
+          fetchData();
+        }, []);
+        
      const [form] = Form.useForm();
-     //   const [data] = useState(originData);
+      //const [data] = useState(originData);
      const columns = [
           {
                title: "Mã",
@@ -206,41 +140,28 @@ const HistoryOrder = ({isLoggedIn=true}) => {
                dataIndex: "status",
           },
      ];
-     // Expander
+     const rowExpandable = (record) => {
+          // Trả về true nếu bản ghi có sản phẩm
+          return record.id_order === record.key;
+        };
      const expandedRowRender = (record) => {
-          const columns: TableColumnsType<ExpandedDataType> = [
-               { title: "Tên sản phẩm", dataIndex: "name_pro_order" },
-               { title: "Kích thước", dataIndex: "size_order" },
-               { title: "Màu", dataIndex: "color_order" },
-               { title: "Giá", dataIndex: "price_order" },
-               { title: "Số lượng", dataIndex: "amount_order" },
+          const columns = [
+            { title: 'Tên sản phẩm', dataIndex: 'name_pro_order', key: 'name_pro_order' },
+            { title: 'Kích cỡ', dataIndex: 'size_order', key: 'size_order' },
+            { title: 'Màu sắc', dataIndex: 'color_order', key: 'color_order' },
+            { title: 'Giá', dataIndex: 'price_order', key: 'price_order' },
+            { title: 'Số lượng', dataIndex: 'amount_order', key: 'amount_order' },
           ];
-          const expanderItem = expanderData.find((item) => item.key === record.key);
-          // console.log(expanderItem);
-          const data: ExpandedDataType[] = [];
+          rowExpandable(record)
+          return (
+            <Table
+              columns={columns}
+              dataSource={record.products}
+              pagination={false}
+            />
+          );
+        };
 
-          expanderItem.sanpham.forEach((element, index) => {
-               data.push({
-                    key: element.ma,
-                    name_pro_order: element.sanpham.ten,
-                    size_order: element.kichco.ten,
-                    color_order: element.mau.ten,
-                    price_order: element.gia,
-                    amount_order: element.soluong,
-               });
-          });
-          // for (let i = 0; i < expanderData.length; ++i) {
-          //   data.push({
-          //     key: i.toString(),
-          //     name_pro_order: expanderData[i].ten,
-          //     size_order: "XL",
-          //     color_order: "Đen",
-          //     price_order: 230000,
-          //     amount_order: 4,
-          //   });
-          // }
-          return <Table columns={columns} dataSource={data} pagination={false} />;
-     };
      const mergedColumns = columns.map((col) => {
           return {
                ...col,
@@ -294,30 +215,7 @@ const HistoryOrder = ({isLoggedIn=true}) => {
                     paddingBottom: "20px",
                }}
           >
-               <Skeleton.Input active={true} size={"large"} block={true} />
-               <br />
-               <Skeleton.Input active={true} size={"large"} block={true} />
-               <br />
-               <Skeleton.Input active={true} size={"large"} block={true} />
-               <br />
-               <Skeleton.Input active={true} size={"large"} block={true} />
-               <br />
-               <Skeleton.Input active={true} size={"large"} block={true} />
-               <br />
-               <Skeleton.Input active={true} size={"large"} block={true} />
-               <br />
-               <Skeleton.Input active={true} size={"large"} block={true} />
-               <br />
-               <Skeleton.Input active={true} size={"large"} block={true} />
-               <br />
-               <Skeleton.Input active={true} size={"large"} block={true} />
-               <br />
-               <Skeleton.Input active={true} size={"large"} block={true} />
-               <br />
-               <Skeleton.Input active={true} size={"large"} block={true} />
-               <br />
-               <Skeleton.Input active={true} size={"large"} block={true} />
-               <br />
+               
           </div>
      );
 };

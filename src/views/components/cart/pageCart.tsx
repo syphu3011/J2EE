@@ -54,7 +54,7 @@ const PageCart=()=>{
                               dataIndex:"name",
                              // render:(text) => <div>{text.split("\n").map((line) => <p>{line}</p>)}</div>, // Split lines and render in separate paragraphs
                               render: (_, record) => (
-                              <div>
+                              <div style={{fontSize:'12px',textTransform:'lowercase'}}>
                                 <p>-{record.name}</p>
                                 <p>-{record.color}</p>
                                 <p>-{record.size}</p>
