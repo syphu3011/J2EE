@@ -198,7 +198,7 @@ module.exports = {
         }
     },
     Query: {
-        nhanvien: async () => {
+        nhanvien: async (root, args, context) => {
             async function callback(e) {
                 try {
                     const nhanvien = await NhanVien.findAll();
