@@ -243,7 +243,7 @@ const DeliveryInform = () => {
           const { fullname, phone, email, address } = invoiceDetails;
           const regis = await buy(0, fullname, address, phone, email, products)
           if (regis && regis.data && regis.data.taoHoaDon) {
-               if (regis.data.taoHoaDon.status === 200) {
+               if (regis.data.taoHoaDon.status === 201) {
                     // Create the PDF content using the InvoicePDF component
                     generateAndDownloadPDF(invoiceDetails, items);
                     form.resetFields();
