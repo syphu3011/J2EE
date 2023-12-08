@@ -19,9 +19,11 @@ import dayjs from "dayjs";
 import { authenticationAdmin } from "../../../../../../utils/util";
 import {
   getProviderProductColorSize,
+  importProduct,
   importProductHistory,
 } from "../../../../../controllers/modules/admin/importProduct";
 import { useNavigate } from "react-router-dom";
+import { elements } from "chart.js";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 100,
@@ -49,6 +51,7 @@ interface Item {
   color_imp: string;
   size_imp: string;
   provider: string;
+  provider_id: string;
   amount_imp: number;
   price_imp: number;
   total_imp: number;
@@ -119,7 +122,18 @@ const EditableCell: React.FC<EditableCellProps> = ({
     </td>
   );
 };
+let productItem: StructOption = { label: "", value: "" };
+let providerItem: StructOption = { label: "", value: "" };
+let colorItem: StructOption = { label: "", value: "" };
+let sizeItem: StructOption = { label: "", value: "" };
+let amountProduct = "";
+let amountPrice = "";
+let priceProduct = "";
+
 const Import = () => {
+  const [totalBorrow, setTotalBorrow] = useState(0);
+
+  // let totalBorrow = 0;
   // const options: SelectProps["options"] = [];
   const dataStruct: StructOption[] = [];
   const [productData, setProductData] = useState(dataStruct);
@@ -127,9 +141,6 @@ const Import = () => {
   const [colorData, setColorData] = useState(dataStruct);
   const [providerData, setProviderData] = useState(dataStruct);
 
-  let productItem: StructOption = { label: "", value: "" };
-  let providerItem: StructOption = { label: "", value: "" };
-  let colorItem: StructOption = { label: "", value: "" };
   // const colorItem: StructOption[] = [];
 
   // define
@@ -187,7 +198,9 @@ const Import = () => {
   };
   const handleDelete = (key: React.Key) => {
     const newData = data.filter((item) => item.key !== key);
+    let tmp = totalBorrow - data.find((item) => item.key !== key).total_imp;
     setData(newData);
+    setTotalBorrow(tmp);
   };
   const columns = [
     {
@@ -244,36 +257,9 @@ const Import = () => {
       width: "auto",
     },
     {
-      dataIndex: "edit_imp",
-      width: "8%",
-      render: (_: any, record: Item) => {
-        const editable = isEditing(record);
-        return editable ? (
-          <span>
-            <Typography.Link
-              onClick={() => save(record.key)}
-              style={{ marginRight: 8 }}
-            >
-              Lưu
-            </Typography.Link>
-            <Popconfirm title="Bạn muốn hủy??" onConfirm={cancel}>
-              <a>Hủy</a>
-            </Popconfirm>
-          </span>
-        ) : (
-          <Typography.Link
-            disabled={editingKey !== ""}
-            onClick={() => edit(record)}
-          >
-            Sửa
-          </Typography.Link>
-        );
-      },
-    },
-    {
       dataIndex: "delete_import",
       width: "8%",
-      render: (_, record: { key: React.Key }) =>
+      render: (_: any, record: { key: React.Key }) =>
         data.length >= 1 ? (
           <Popconfirm
             title="Bạn thật sự muốn xóa?"
@@ -305,10 +291,13 @@ const Import = () => {
       }),
     };
   });
+
   const handleChange = () => {};
 
   useEffect(() => {
-    async function fetchMetaData(rs?) {
+    async function fetchMetaData(rs?: {
+      data: { dangNhapAdminVoiToken: { status: number } };
+    }) {
       if (rs && rs.data.dangNhapAdminVoiToken.status != 200) {
         navigate("/LoginAdmin");
         return;
@@ -323,25 +312,25 @@ const Import = () => {
       const tempMau: StructOption[] = [];
       const tempKichco: StructOption[] = [];
       const tempNhacungcap: StructOption[] = [];
-      fetchData.sanpham.data.forEach((element) => {
+      fetchData.sanpham.data.forEach((element: { ma: any; ten: any }) => {
         tempSanpham.push({
           value: element.ma,
           label: element.ten,
         });
       });
-      fetchData.nhacungcap.data.forEach((element) => {
+      fetchData.nhacungcap.data.forEach((element: { ma: any; ten: any }) => {
         tempNhacungcap.push({
           value: element.ma,
           label: element.ten,
         });
       });
-      fetchData.mau.data.forEach((element) => {
+      fetchData.mau.data.forEach((element: { ma: any; ten: any }) => {
         tempMau.push({
           value: element.ma,
           label: element.ten,
         });
       });
-      fetchData.kichco.data.forEach((element) => {
+      fetchData.kichco.data.forEach((element: { ma: any; ten: any }) => {
         tempKichco.push({
           value: element.ma,
           label: element.ten,
@@ -367,41 +356,119 @@ const Import = () => {
       setEditingKey("");
     }
   }, [reload]);
-  const handleChangeProvider = (value, label) => {
+  const [selectedProvider, setSelectedProvider] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(null);
+  const [price, setPrice] = useState("");
+  const [count, setCount] = useState("");
+  const handleChangeProvider = (value: string, label: { label: string }) => {
     console.log(value, label);
     providerItem.label = label.label;
     providerItem.value = value;
     console.log(providerItem);
   };
-  const handleChangeProduct = (value, label) => {
+  const handleChangeProduct = (value: string, label: { label: string }) => {
     console.log(value, label);
     productItem.label = label.label;
     productItem.value = value;
     console.log(productItem);
   };
-  const handleChangeColor = (value, label) => {
+  const handleChangeSize = (value: string, label: { label: string }) => {
+    console.log(value, label);
+    sizeItem.label = label.label;
+    sizeItem.value = value;
+    console.log(sizeItem);
+  };
+  const handleChangeColor = (value: string, label: { label: string }) => {
     console.log(value, label);
     colorItem.label = label.label;
     colorItem.value = value;
     console.log(colorItem);
   };
+
+  const handleChangeCount = (value) => {
+    // setCount(value)
+    console.log(value.target.value);
+    amountProduct = value.target.value;
+  };
+  const handleChangePrice = (value) => {
+    // setPrice(value)
+    console.log(value.target.value);
+
+    priceProduct = value.target.value;
+  };
   const importNewProduct = () => {
-    const newData = [...data];
-    newData.push({
-      dateinit: dayjs(),
-      key: (newData.length + 1).toString(),
-      id_pro_imp: productItem.value,
-      name_imp: productItem.label,
-      color_imp: colorItem.label,
-      size_imp: "",
-      provider: providerItem.label,
-      amount_imp: 0,
-      price_imp: 0,
-      total_imp: 0,
-    });
-    setData(newData);
+    console.log(
+      productItem.label,
+      " ",
+      providerItem.label,
+      " ",
+      sizeItem.label,
+      " ",
+      colorItem.label,
+      " ",
+      priceProduct,
+      " ",
+      amountProduct
+    );
+    if (
+      productItem.label == "" ||
+      providerItem.label == "" ||
+      sizeItem.label == "" ||
+      colorItem.label == "" ||
+      priceProduct == "" ||
+      amountProduct == ""
+    ) {
+      alert("Hãy chọn các giá trị hợp lệ!");
+    } else {
+      const newData = [...data];
+      let key = (newData.length + 1).toString();
+      newData.push({
+        dateinit: dayjs(),
+        key: key,
+        id_pro_imp: productItem.value,
+        name_imp: productItem.label,
+        color_imp: colorItem.label,
+        size_imp: sizeItem.label,
+        provider: providerItem.label,
+        amount_imp: parseInt(amountProduct),
+        price_imp: parseInt(priceProduct),
+        total_imp: parseInt(amountProduct) * parseInt(priceProduct),
+        provider_id: providerItem.value,
+      });
+
+      let tmp = totalBorrow + parseInt(amountProduct) * parseInt(priceProduct);
+      setTotalBorrow(tmp);
+      // setData(newData);
+      // setReload(true);
+      // Reset values after importing
+      // setSelectedProvider(null);
+      // setSelectedProduct(null);
+      // setSelectedColor(null);
+      // setSelectedSize(null);
+      // setPrice("");
+      // setCount("");
+
+      setData(newData);
+      // setReload(true);
+    }
     // setEditingKey("");
     // console.log(editingKey);
+  };
+  const handleClickImportProduct = () => {
+    data.forEach((element) => {
+      // importProduct(element.provider_id,).then((rs) => {
+      //   alert(rs.data.xacnhanhoachuyhoadon.message);
+      //   if (rs.data.xacnhanhoachuyhoadon.status === 200) {
+      //     console.log("Dung vay ma huhu");
+      //     const newData = data.filter((item) => item.key !== key);
+      //     console.log(newData);
+      //     setData(newData);
+      //     // setReload(true);
+      //   }
+      // });
+    });
   };
   return isReady ? (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
@@ -418,6 +485,7 @@ const Import = () => {
                 <Select
                   placeholder="Please select"
                   onChange={handleChangeProvider}
+                  showSearch
                   options={providerData}
                 />
               </Form.Item>
@@ -431,6 +499,7 @@ const Import = () => {
                   placeholder="Please select"
                   onChange={handleChangeProduct}
                   options={productData}
+                  showSearch
                 />
               </Form.Item>
             </Col>
@@ -444,10 +513,11 @@ const Import = () => {
                 >
                   <Select
                     // mode="multiple"
-                    allowClear
+
                     style={{ width: "80%" }}
                     placeholder="Please select"
                     onChange={handleChangeColor}
+                    showSearch
                     options={colorData}
                   />
                 </Form.Item>
@@ -459,10 +529,10 @@ const Import = () => {
                 >
                   <Select
                     // mode="multiple"
-                    allowClear
                     style={{ width: "80%" }}
                     placeholder="Please select"
-                    onChange={handleChange}
+                    onChange={handleChangeSize}
+                    showSearch
                     options={sizeData}
                   />
                 </Form.Item>
@@ -475,7 +545,11 @@ const Import = () => {
                 labelCol={{ span: 5 }}
                 style={{ height: 30, minWidth: "90%" }}
               >
-                <Input style={{ width: "80%" }} />
+                <Input
+                  type="number"
+                  style={{ width: "80%" }}
+                  onChange={handleChangePrice}
+                />
               </Form.Item>
               <Form.Item
                 label="Số lượng:"
@@ -483,7 +557,11 @@ const Import = () => {
                 labelCol={{ span: 5 }}
                 style={{ height: 30, minWidth: "90%" }}
               >
-                <Input style={{ width: "80%" }} />
+                <Input
+                  type="number"
+                  style={{ width: "80%" }}
+                  onChange={handleChangeCount}
+                />
               </Form.Item>
             </Col>
             <Col className="gutter-row" span={3}>
@@ -522,10 +600,9 @@ const Import = () => {
               pagination={false}
               scroll={{ x: 800, y: 500 }}
               summary={(pageData) => {
-                let totalBorrow = 0;
-                pageData.forEach(({ total_imp }) => {
-                  totalBorrow += total_imp;
-                });
+                // pageData.forEach(({ total_imp }) => {
+                //   totalBorrow += total_imp;
+                // });
                 return (
                   <Table.Summary fixed>
                     <Table.Summary.Row>

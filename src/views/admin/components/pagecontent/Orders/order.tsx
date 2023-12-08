@@ -298,7 +298,7 @@ const Order = () => {
 
       // setData(newData);
 
-      console.log("Data " + data[0].name_cus);
+      // console.log("Data " + data[0].name_cus);
       setIsReady(true);
       setExpanderData(exData);
     }
