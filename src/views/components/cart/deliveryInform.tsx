@@ -7,9 +7,11 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'
 import { buy } from "../../../controllers/modules/customer/buy";
 import { getProductData } from "../product/productData";
-interface DeliveryProps {
-     setIsLoggedIn: (isLoggedIn: boolean) => void;
-}
+import { getinformation } from "../../../controllers/modules/customer/changeinformation";
+// interface DeliveryProps {
+//      setIsLoggedIn: (isLoggedIn: boolean) => void;
+//      userProfile:any[];
+// }
 const users = [
      {
           id: 1,
@@ -42,9 +44,9 @@ const DeliveryInform = () => {
      const { items, emptyCart } = useCart();
      const [minValue, setMin] = useState(0);
      const [maxValue, setMax] = useState(5);
+     const [user,setUser] = useState(null);
      const [form] = Form.useForm();
      const [formValues, setFormValues] = React.useState(null);
-
      const handleLoginForm = () => {
           setActive(!showFormLogin);
      }
@@ -241,7 +243,10 @@ const DeliveryInform = () => {
           // Đợi tất cả các promise hoàn thành và nhận kết quả
           const products = await Promise.all(productPromises);
           const { fullname, phone, email, address } = invoiceDetails;
-          const regis = await buy(0, fullname, address, phone, email, products)
+          const response = await getinformation();
+          setUser(response);
+          const maValue = !isLoggedIn ? parseInt(response.data.thongtinkhachhang.data.ma) : 0;
+          const regis = await buy(maValue, fullname, address, phone, email, products)
           if (regis && regis.data && regis.data.taoHoaDon) {
                if (regis.data.taoHoaDon.status === 201) {
                     // Create the PDF content using the InvoicePDF component
