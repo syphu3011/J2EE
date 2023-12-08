@@ -15,6 +15,7 @@ import React, { useEffect, useState } from "react";
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
 import {
   addStaff,
+  editStaff,
   getStaff,
   removeStaff,
 } from "../../../../../controllers/modules/admin/staff";
@@ -57,17 +58,6 @@ const addData: AddItem = {
   sodienthoai: "string",
 };
 
-// for (let i = 0; i < 20; i++) {
-//   originData.push({
-//     key: i.toString(),
-//     id_staff: `${i}`,
-//     name_staff: `Nguyễn Văn ${i}`,
-//     CCCD: 233321312321,
-//     num
-//     birthday_staff: "18/02/2002",
-//     status: "Còn làm",
-//   });
-// }
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
@@ -125,7 +115,12 @@ const Staff = () => {
   const isEditing = (record: Item) => record.key === editingKey;
 
   const edit = (record: Partial<Item> & { key: React.Key }) => {
-    form.setFieldsValue({ name: "", numberphone: "", birthday: "", ...record });
+    form.setFieldsValue({
+      name_staff: "",
+      numberphone_staff: "",
+      birthday_staff: "",
+      ...record,
+    });
     setEditingKey(record.key);
   };
 
@@ -148,6 +143,29 @@ const Staff = () => {
         });
         setData(newData);
         setEditingKey("");
+        console.log(
+          parseInt(newData[index].id_staff),
+          newData[index].name_staff.toString(),
+          newData[index].birthday_staff.split(" ")[0].toString(),
+          newData[index].numberphone_staff.toString(),
+          newData[index].CCCD.toString(),
+          1
+        );
+        editStaff(
+          parseInt(newData[index].id_staff),
+          newData[index].name_staff.toString(),
+          newData[index].birthday_staff.split(" ")[0].toString(),
+          newData[index].numberphone_staff.toString(),
+          newData[index].CCCD.toString(),
+          1
+        ).then((rs) => {
+          //TODO: Thêm thông báo ở đây
+          console.log(rs);
+          alert(rs.data.suaNhanVien.message);
+          if (rs.data.suaNhanVien.status === 201) {
+            setReload(true);
+          }
+        });
       } else {
         newData.push(row);
         setData(newData);
