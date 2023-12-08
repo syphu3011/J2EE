@@ -75,25 +75,29 @@ export default function Login() {
     }
   };
   useEffect(() => {
-    if (!isReady) {
-      if (!getIsLogin())
-        authenticationAdmin((rs) => {
-          setIsReady(true);
-          if (
-            rs.data &&
-            rs.data.dangNhapAdminVoiToken &&
-            rs.data.dangNhapAdminVoiToken.status == "200"
-          ) {
-            // Cookies.set("chucnang", rs.data.dangNhapAdminVoiToken.data.chucnang)
-            setIsLogin(true);
-            setIsOTP(true);
-            navigate("/Admin");
-          } else {
-            setIsNotLoggedIn(true);
-          }
-        });
+    const handleLoad = () => {
+      if (!isReady) {
+        if (!getIsLogin())
+          authenticationAdmin((rs) => {
+            setIsReady(true);
+            if (
+              rs.data &&
+              rs.data.dangNhapAdminVoiToken &&
+              rs.data.dangNhapAdminVoiToken.status == "200"
+            ) {
+              Cookies.set("username_admin", rs.data.dangNhapAdminVoiToken.data.tentaikhoan)
+              Cookies.set("chucnang", rs.data.dangNhapAdminVoiToken.data.chucnang)
+              setIsLogin(true);
+              setIsOTP(true);
+              navigate("/Admin");
+            } else {
+              setIsNotLoggedIn(true);
+            }
+          });
+      }
     }
-  });
+    handleLoad()
+  }, []);
   return isReady ? (
     <>
       {contextHolder}
@@ -163,7 +167,8 @@ export default function Login() {
         </Content>
       </Layout>
     </>
-  ) : (
+  ) 
+  : (
     <LoadingPage />
   );
 }
