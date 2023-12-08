@@ -1,19 +1,21 @@
 import {
   Button,
   Col,
-  DatePicker,
   Layout,
   Row,
   Select,
   SelectProps,
+  Skeleton,
   Space,
-  Upload,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import "../../../style/product.css";
+import { getStaff } from "../../../../../controllers/modules/admin/staff";
 const { Header, Content } = Layout;
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
+import { useNavigate } from "react-router-dom";
+import { authenticationAdmin } from "../../../../../../utils/util";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 120,
@@ -34,24 +36,10 @@ interface Item {
   id_staff: string;
   name_staff: string;
   UserStaff: string;
-  PasswordStaff: string;
   permission: string;
   status: string;
 }
-
-const originData: Item[] = [];
 const options: SelectProps["options"] = [];
-for (let i = 0; i < 20; i++) {
-  originData.push({
-    key: i.toString(),
-    id_staff: `${i}`,
-    name_staff: `Nguyễn Văn ${i}`,
-    UserStaff: `admin$${i}`,
-    PasswordStaff: "123123",
-    permission: " quyền?",
-    status: "Còn làm",
-  });
-}
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
@@ -96,8 +84,13 @@ const EditableCell: React.FC<EditableCellProps> = ({
   );
 };
 const AccStaff = () => {
+  const AccStaffData: Item[] = [];
+  const [reload, setReload] = useState(true);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const [isReady, setIsReady] = useState(false);
+  const navigate = useNavigate();
   const [form] = Form.useForm();
-  const [data, setData] = useState(originData);
+  const [data, setData] = useState(AccStaffData);
   const [editingKey, setEditingKey] = useState("");
 
   const isEditing = (record: Item) => record.key === editingKey;
@@ -153,11 +146,6 @@ const AccStaff = () => {
     {
       title: "Tài khoản",
       dataIndex: "UserStaff",
-      editable: true,
-    },
-    {
-      title: "Mật khẩu",
-      dataIndex: "PasswordStaff",
       editable: true,
     },
     {
@@ -233,7 +221,37 @@ const AccStaff = () => {
       }),
     };
   });
-  return (
+  useEffect(() => {
+    async function fetchMetaData(rs?) {
+      if (rs && rs.data.dangNhapAdminVoiToken.status != 200) {
+        navigate("/LoginAdmin");
+        return;
+      }
+      const rsFetchData = await getStaff();
+
+      var fetchData = rsFetchData.data.nhanvien.data;
+      fetchData.forEach((element, index) => {
+        AccStaffData.push({
+          key: element.ma,
+          id_staff: element.ma,
+          name_staff: element.ten,
+          UserStaff: element.tentaikhoan,
+          permission: element.quyen,
+          status: element.trangthai.ten,
+        });
+      });
+
+      setIsReady(true);
+    }
+
+    if (reload) {
+      isFirstLoad ? authenticationAdmin(fetchMetaData) : fetchMetaData();
+      setIsFirstLoad(false);
+      setReload(false);
+    }
+  }, [reload]);
+
+  return isReady ? (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
         <Header style={headerStyle}>
@@ -327,6 +345,44 @@ const AccStaff = () => {
         </Content>
       </Layout>
     </Space>
+  ) : (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        height: "100%",
+        paddingTop: "20px",
+        paddingBottom: "20px",
+      }}
+    >
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+    </div>
   );
 };
 export default AccStaff;

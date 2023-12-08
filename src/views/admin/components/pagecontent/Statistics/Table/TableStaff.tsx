@@ -1,13 +1,14 @@
 import { Table } from "antd";
 import { useState } from "react";
+import { formatCurrency } from "../../../../../../../utils/util";
 
 interface ItemCus {
   key: string;
   rank_staff: number;
   id_staff_stat: string;
   name_staff_stat: string;
-  amount_order_staff: number;
-  profits_staff: number;
+  amount_order_staff: string;
+  profits_staff: string;
 }
 const CusData: ItemCus[] = [];
 for (let i = 0; i < 7; i++) {
@@ -16,8 +17,8 @@ for (let i = 0; i < 7; i++) {
     rank_staff: i,
     id_staff_stat: `${i}`,
     name_staff_stat: `Vy ${i}`,
-    amount_order_staff: 1 + i,
-    profits_staff: 1500000,
+    amount_order_staff: 1 + i+"",
+    profits_staff: 1500000+"",
   });
 }
 const columnsCus = [
@@ -51,11 +52,11 @@ const columnsCus = [
   },
 ];
 
-const TableStaff = () => {
+const TableStaff = ({data}) => {
   return (
     <Table
       bordered
-      dataSource={CusData}
+      dataSource={data}
       columns={columnsCus}
       pagination={false}
       scroll={{ x: 800, y: 600 }}
@@ -63,8 +64,8 @@ const TableStaff = () => {
         let total_profits_staff = 0;
         let total_amount_order_staff = 0;
         pageData.forEach(({ profits_staff, amount_order_staff }) => {
-          total_profits_staff += profits_staff;
-          total_amount_order_staff += amount_order_staff;
+          total_profits_staff += parseInt(profits_staff.replace(/[^\d]/g, ''));
+          total_amount_order_staff += parseInt(amount_order_staff.replace(/[^\d]/g, ''));
         });
         return (
           <Table.Summary fixed>
@@ -73,10 +74,10 @@ const TableStaff = () => {
               <Table.Summary.Cell index={1}>Tổng</Table.Summary.Cell>
               <Table.Summary.Cell index={2}></Table.Summary.Cell>
               <Table.Summary.Cell index={3}>
-                {total_amount_order_staff}
+                {total_amount_order_staff.toLocaleString('vi-VN')}
               </Table.Summary.Cell>
               <Table.Summary.Cell index={4}>
-                {total_profits_staff}
+                {formatCurrency(total_profits_staff+"")}
               </Table.Summary.Cell>
             </Table.Summary.Row>
           </Table.Summary>

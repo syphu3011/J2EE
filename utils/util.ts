@@ -67,3 +67,6 @@ export const dateToYYYY_MM_DD = (date) => {
     const format = 'YYYY-MM-DD'
     return dayjs(date).format(format)
 }
+export const formatCurrency = (string) => {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(parseInt(string));
+}

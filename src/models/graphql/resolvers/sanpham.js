@@ -28,7 +28,7 @@ module.exports = {
                         const rs_addimage = addImage(anhminhhoa, b64anhminhhoa)
                         const count = rs_addimage.repeat
                         // tạo sản phẩm
-                        const rs = await SanPham.create({ ten, anhminhhoa: rs_addimage.name_image + (count == 0 ? "" : "_" + count)+"."+rs_addimage.ext, madonvi, mota })
+                        const rs = await SanPham.create({ ten, anhminhhoa: rs_addimage.name_image + (count == 0 ? "" : "_" + count)+"."+rs_addimage.ext, madonvi, mota, matrangthai: 1 })
                         await rs.addLoai(loais)
                         await rs.addNhaCungCap(nhacungcaps)
                         await transaction.commit()

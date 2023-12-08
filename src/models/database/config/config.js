@@ -9,6 +9,7 @@ module.exports = {
     dialect: 'mysql',
     use_env_variable: 'DATABASE_URL',
     timezone: '+07:00',
+    logging: false
     // dialectOptions: {
     //   socketPath: '/var/run/mysqld/mysqld.sock'
     // }

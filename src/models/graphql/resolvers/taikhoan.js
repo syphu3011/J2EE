@@ -137,7 +137,7 @@ module.exports = {
         }
       }
       catch (e) {
-        console.log(e);
+        // console.log(e);
       }
     },
     async dangNhapVoiToken(root, args, context) {

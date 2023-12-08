@@ -15,7 +15,9 @@ import React, { useEffect, useState } from "react";
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
 import {
   addStaff,
+  editStaff,
   getStaff,
+  removeStaff,
 } from "../../../../../controllers/modules/admin/staff";
 import dayjs from "dayjs";
 import { authenticationAdmin } from "../../../../../../utils/util";
@@ -55,18 +57,7 @@ const addData: AddItem = {
   socccd: "string",
   sodienthoai: "string",
 };
-const originData: Item[] = [];
-// for (let i = 0; i < 20; i++) {
-//   originData.push({
-//     key: i.toString(),
-//     id_staff: `${i}`,
-//     name_staff: `Nguyễn Văn ${i}`,
-//     CCCD: 233321312321,
-//     num
-//     birthday_staff: "18/02/2002",
-//     status: "Còn làm",
-//   });
-// }
+
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
@@ -112,18 +103,24 @@ const EditableCell: React.FC<EditableCellProps> = ({
 };
 
 const Staff = () => {
+  const StaffData: Item[] = [];
   const [reload, setReload] = useState(true);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [isReady, setIsReady] = useState(false);
   const navigate = useNavigate();
   const [form] = Form.useForm();
-  const [data, setData] = useState(originData);
+  const [data, setData] = useState(StaffData);
   const [editingKey, setEditingKey] = useState("");
 
   const isEditing = (record: Item) => record.key === editingKey;
 
   const edit = (record: Partial<Item> & { key: React.Key }) => {
-    form.setFieldsValue({ name: "", numberphone: "", birthday: "", ...record });
+    form.setFieldsValue({
+      name_staff: "",
+      numberphone_staff: "",
+      birthday_staff: "",
+      ...record,
+    });
     setEditingKey(record.key);
   };
 
@@ -146,6 +143,29 @@ const Staff = () => {
         });
         setData(newData);
         setEditingKey("");
+        console.log(
+          parseInt(newData[index].id_staff),
+          newData[index].name_staff.toString(),
+          newData[index].birthday_staff.split(" ")[0].toString(),
+          newData[index].numberphone_staff.toString(),
+          newData[index].CCCD.toString(),
+          1
+        );
+        editStaff(
+          parseInt(newData[index].id_staff),
+          newData[index].name_staff.toString(),
+          newData[index].birthday_staff.split(" ")[0].toString(),
+          newData[index].numberphone_staff.toString(),
+          newData[index].CCCD.toString(),
+          1
+        ).then((rs) => {
+          //TODO: Thêm thông báo ở đây
+          console.log(rs);
+          alert(rs.data.suaNhanVien.message);
+          if (rs.data.suaNhanVien.status === 201) {
+            setReload(true);
+          }
+        });
       } else {
         newData.push(row);
         setData(newData);
@@ -156,7 +176,15 @@ const Staff = () => {
     }
   };
   const handleDelete = (key: React.Key) => {
+    removeStaff(parseInt(key.toString())).then((rs) => {
+      console.log(rs);
+      alert(rs.data.xoaNhanVien.message);
+      if (rs.data.xoaNhanVien.status === 201) {
+        setReload(true);
+      }
+    });
     const newData = data.filter((item) => item.key !== key);
+
     setData(newData);
   };
   const columns = [
@@ -257,10 +285,8 @@ const Staff = () => {
       const rsFetchData = await getStaff();
 
       var fetchData = rsFetchData.data.nhanvien.data;
-      //
-      //
       fetchData.forEach((element, index) => {
-        originData.push({
+        StaffData.push({
           key: element.ma,
           id_staff: element.ma,
           name_staff: element.ten,
