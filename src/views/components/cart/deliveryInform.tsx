@@ -19,9 +19,11 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { buy } from "../../../controllers/modules/customer/buy";
 import { getProductData } from "../product/productData";
-interface DeliveryProps {
-  setIsLoggedIn: (isLoggedIn: boolean) => void;
-}
+import { getinformation } from "../../../controllers/modules/customer/changeinformation";
+// interface DeliveryProps {
+//      setIsLoggedIn: (isLoggedIn: boolean) => void;
+//      userProfile:any[];
+// }
 const users = [
   {
     id: 1,
@@ -54,6 +56,7 @@ const DeliveryInform = () => {
   const { items, emptyCart } = useCart();
   const [minValue, setMin] = useState(0);
   const [maxValue, setMax] = useState(5);
+  const [user,setUser] = useState(null);
   const [form] = Form.useForm();
   const [formValues, setFormValues] = React.useState(null);
 
@@ -278,25 +281,29 @@ const DeliveryInform = () => {
       };
     });
 
-    // Đợi tất cả các promise hoàn thành và nhận kết quả
-    const products = await Promise.all(productPromises);
-    const { fullname, phone, email, address } = invoiceDetails;
-    const regis = await buy(0, fullname, address, phone, email, products);
-    if (regis && regis.data && regis.data.taoHoaDon) {
-      if (regis.data.taoHoaDon.status === 201) {
-        // Create the PDF content using the InvoicePDF component
-        generateAndDownloadPDF(invoiceDetails, items);
-        form.resetFields();
-        emptyCart();
-        Modal.success({
-          content: "Đơn hàng đã được gửi đến cho người bán!",
-        });
-      }
-    } else {
-      Modal.error({
-        content: "Hệ thống lỗi ! Hãy thử lại vào lần sau",
-      });
-    }
+   // Đợi tất cả các promise hoàn thành và nhận kết quả
+   const products = await Promise.all(productPromises);
+   const { fullname, phone, email, address } = invoiceDetails;
+   const response = await getinformation();
+   setUser(response);
+   const maValue = !isLoggedIn ? parseInt(response.data.thongtinkhachhang.data.ma) : 0;
+   const regis = await buy(maValue, fullname, address, phone, email, products)
+   if (regis && regis.data && regis.data.taoHoaDon) {
+        if (regis.data.taoHoaDon.status === 201) {
+             // Create the PDF content using the InvoicePDF component
+             generateAndDownloadPDF(invoiceDetails, items);
+             form.resetFields();
+             emptyCart();
+             Modal.success({
+                  content: 'Đơn hàng đã được gửi đến cho người bán!',
+             });
+        }
+   }
+   else {
+        Modal.error({
+             content: "Hệ thống lỗi ! Hãy thử lại vào lần sau"
+        })
+   }
   };
 
   //const{isLoggedIn,showFormLogin}=this.state;
@@ -307,10 +314,10 @@ const DeliveryInform = () => {
           <Col flex="3" style={{ borderRight: "1px solid #7a7979" }}>
             <div className="checkout-contain">
               <h1>Thông tin giao hàng</h1>
-              <p>
+              {/* <p>
                 Bạn đã có tài khoản ?
                 <h3 onClick={handleLoginForm}> Đăng nhập</h3>
-              </p>
+              </p> */}
               <div className="box-delivery">
                 <Form
                   form={form}
