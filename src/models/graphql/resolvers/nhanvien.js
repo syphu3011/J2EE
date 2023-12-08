@@ -22,7 +22,6 @@ module.exports = {
                         ngaysinh,
                         sodienthoai,
                         socccd,
-                        maquyen,
                         matrangthai,
                     } = args.input;
                     const rs = await NhanVien.create({
@@ -30,7 +29,6 @@ module.exports = {
                         ngaysinh,
                         sodienthoai,
                         socccd,
-                        maquyen,
                         matrangthai,
                     });
                     await transaction.commit();
@@ -268,7 +266,7 @@ module.exports = {
         trangthai: (nhanvien) => {
             return nhanvien.getTrangThaiNhanVien()
         },
-        quyen: async (nhanvien) => {
+        quyen: async(nhanvien) => {
             return (await nhanvien.getTaiKhoan()).getQuyen()
         }
     }

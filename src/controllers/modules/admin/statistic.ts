@@ -66,6 +66,7 @@ export function top10product(from: String, to: String, type: number) {
             data {
                 hang
                 ma
+                ten
                 soluongban
                 tiennhap
                 tienban
