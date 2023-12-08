@@ -119,7 +119,7 @@ app.post('/api', async (req, res, next) => {
           req.cookies.rToken = data.rToken
         }
         catch (e) {
-          console.log(e)
+          // console.log(e)
         }
       } 
       else {
@@ -152,12 +152,12 @@ app.post('/api', async (req, res, next) => {
       }
     }
     catch (e) {
-      console.log(e)
+      // console.log(e)
     }
     next()
   }
   catch (e) {
-    console.log(e)
+    // console.log(e)
   }
 })
 app.get('/key', async (req, res) => {

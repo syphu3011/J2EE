@@ -1,2 +1,4 @@
-declare const TableStaff: () => import("react/jsx-runtime").JSX.Element;
+declare const TableStaff: ({ data }: {
+    data: any;
+}) => import("react/jsx-runtime").JSX.Element;
 export default TableStaff;

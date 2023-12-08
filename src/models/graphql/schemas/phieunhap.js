@@ -21,7 +21,7 @@ input NhapMatHangInput {
 input PhieuNhapInput {
   ma: ID
   ngaynhap: String
-  manhanvien: Int!
+  manhanvien: Int
   manhacungcap: Int!
   ghichu: String
   mathang: [NhapMatHangInput]!  

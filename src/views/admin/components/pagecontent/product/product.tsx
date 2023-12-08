@@ -318,6 +318,11 @@ const Product = () => {
       dataIndex: "donvi",
       width: "auto",
       editable: true,
+      render: (unit: DonVi) => (
+        <>
+            <Tag key={unit.ma}>{unit.ten.toUpperCase()}</Tag>
+        </>
+      ),
     },
     {
       title: "Loại sản phẩm",
@@ -417,7 +422,7 @@ const Product = () => {
           loai: prod.loai,
           mota: prod.mota,
           anhminhhoa: convertB64ToImage(prod.anhminhhoa),
-          donvi: prod.donvi.ten,
+          donvi: prod.donvi,
           tenanhminhhoa: prod.tenanhminhhoa,
         });
       }

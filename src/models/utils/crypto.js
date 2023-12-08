@@ -74,7 +74,7 @@ async function decryptrsa(data, key = null) {
         return decrypted_rsa
     }
     catch(e) {
-        console.log(e)
+        // console.log(e)
         return ""
     }
 }
