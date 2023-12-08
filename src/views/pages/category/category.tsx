@@ -44,12 +44,12 @@ export default function Category({ productData, allCategories, productDataCate, 
           // };
 
           // fetchProductByColor(color);
-          const index = priceChoose.indexOf(color)
+          const index = colorChoose.indexOf(color)
           if (index == -1) {
-               priceChoose.push(color)
+               colorChoose.push(color)
           }
           else {
-               priceChoose.splice(index,1)
+               colorChoose.splice(index,1)
           }
           handleFilterAll()
           setSelectedTree(null); // Hủy chọn tree

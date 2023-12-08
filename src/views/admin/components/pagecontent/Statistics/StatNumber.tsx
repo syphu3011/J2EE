@@ -97,10 +97,12 @@ const StatNumber = () => {
   const [from, setFrom] = useState("2000-01-01");
   const [to, setTo] = useState(dateToYYYY_MM_DD(Date.now()));
   const [dataRevenue, setDataRevenue] = useState(null);
-  const SetDataRevenue = async (type, monthOrDay) => {
-    const rsRevenue = monthOrDay ? await statistics_revenue_month(from, to, type) : await statistics_revenue_days(from, to, type);
+  const [stat, setStat] = useState(null);
+  const [statRev, setStatRev] = useState(null);
+  const GetDataRevenue = async (type, monthOrDay) => {
+    const rsRevenue = monthOrDay == 1 ? await statistics_revenue_month(from, to, type) : await statistics_revenue_days(from, to, type);
       const dataRs =
-        monthOrDay ? 
+        monthOrDay == 1 ? 
         (rsRevenue.data && rsRevenue.data.thongkedoanhthutheothang && rsRevenue.data.thongkedoanhthutheothang.data)
         :
         (rsRevenue.data && rsRevenue.data.thongkedoanhthutheongay && rsRevenue.data.thongkedoanhthutheongay.data)
@@ -116,18 +118,22 @@ const StatNumber = () => {
         };
         tempData.push(row);
       }
-      setDataRevenue(tempData);
+      return tempData
   }
   const ChangeStatDate = async (value: string) => {
+    setStatRev(value)
     if (value == "Days") {
-      await SetDataRevenue(1,2)
-      setTable(TableDate({ data: dataRevenue }));
+      const data = await GetDataRevenue(1,2)
+      setDataRevenue(data);
+      setTable(TableDate({ data: data }));
     } else {
-      await SetDataRevenue(1,1)
-      setTable(TableMonth);
+      const data = await GetDataRevenue(1,1)
+      setDataRevenue(data);
+      setTable(TableDate({ data: data }));
     }
   };
   const ChangeStat = async (value: string) => {
+    setStat(value)
     console.log(`selected ${value}`);
     if (value == "SP") {
       setTable(TableProduct);
@@ -139,8 +145,7 @@ const StatNumber = () => {
       setTable(TableStaff);
       setDisplay("none");
     } else if (value == "TG") {
-      await SetDataRevenue(1,2)
-      setTable(TableDate({ data: dataRevenue }));
+      ChangeStatDate(statRev ? statRev : 'Days')
       setDisplay("inline-block");
     } else {
       setTable(TableType);
@@ -273,6 +278,11 @@ const StatNumber = () => {
                     defaultValue={dayjs("01/01/2000", dateFormat)}
                     format={dateFormat}
                     style={{ marginRight: "2%" }}
+                    onChange={(value) => {
+                      const date = dateToYYYY_MM_DD(value)
+                      setFrom(date)
+                      ChangeStat(stat)
+                    }}
                   />
                 </Form.Item>
                 <Form.Item
@@ -280,7 +290,12 @@ const StatNumber = () => {
                   labelAlign="left"
                   labelCol={{ span: "5%" }}
                 >
-                  <DatePicker defaultValue={dayjs()} format={dateFormat} />
+                  <DatePicker defaultValue={dayjs()} format={dateFormat} 
+                  onChange={(value) => {
+                    const date = dateToYYYY_MM_DD(value)
+                    setTo(date)
+                    ChangeStat(stat)
+                  }}/>
                 </Form.Item>
               </div>
             </Col>
