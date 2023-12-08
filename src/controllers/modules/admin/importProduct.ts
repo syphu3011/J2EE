@@ -85,3 +85,42 @@ export function removeImportProduct(id: number) {
     const variables = {id}
     return request(query, variables)
 }
+export function getProviderProductColorSize() {
+    const query = `
+    query getProviderProductColorSize {
+        sanpham {
+            status
+            message
+            data{
+                ma
+                ten
+            }
+        }
+        nhacungcap {
+            status
+            message
+            data{
+                ma
+                ten
+            }
+        }
+        mau {
+            status
+            message
+            data{
+                ma
+                ten
+            }
+        }
+        kichco{
+            status
+            message
+            data{
+                ma
+                ten
+            }
+        }
+    }
+    `
+    return request(query)
+}

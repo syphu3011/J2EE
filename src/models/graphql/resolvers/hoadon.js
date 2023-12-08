@@ -1,6 +1,6 @@
-const { sequelize, HoaDon, HangTrongKho, Mau, KichCo, ChiTietHoaDon, NhanVien } = require("../../database/models");
+const { sequelize, HoaDon, HangTrongKho, Mau, KichCo, ChiTietHoaDon, NhanVien, KhachHang } = require("../../database/models");
 const { Op } = require("sequelize");
-const {STATUS_CODE, MAIL, CHUCNANG } = require('../const')
+const { STATUS_CODE, MAIL, CHUCNANG } = require('../const')
 
 const nodemailer = require("nodemailer");
 
@@ -14,7 +14,7 @@ module.exports = {
         transaction = await sequelize.transaction();
         const { makhachhang, diachi, sanpham, email, sodienthoai, tenkhachhang } = args.input;
         const hoadon = await HoaDon.create({ makhachhang, diachi, matrangthaihoadon: 1, email, sodienthoai, tenkhachhang });
-        
+
         for (const sp of sanpham) {
           const hangtrongkho = await HangTrongKho.findOne({
             where: {
@@ -25,15 +25,15 @@ module.exports = {
             },
             order: [["maphieunhap", "ASC"]]
           });
-          
+
           const mau = await Mau.findByPk(sp.mamau);
           const kichco = await KichCo.findByPk(sp.makichco);
-          
+
           if (!hangtrongkho || hangtrongkho.matrangthai == 2 || hangtrongkho.soluong < sp.soluong) {
             await transaction.rollback();
             return { status: 400, message: "Thêm hóa đơn không thành công!" };
           }
-          
+
           await ChiTietHoaDon.create({
             mahoadon: hoadon.ma,
             maphieunhap: hangtrongkho.maphieunhap,
@@ -153,6 +153,36 @@ module.exports = {
         return { status: STATUS_CODE.query_fail, message: "Lấy danh sách hóa đơn không thành công!", data: null };
       }
     },
+    async lichsudonhang(root, args, context) {
+      try {
+        const khachhang = await KhachHang.findOne({
+          where: {
+            tentaikhoan: context.taikhoan.tentaikhoan
+          }
+        })
+        const makhachhang = khachhang.ma
+        const hoadon = await HoaDon.findAll({
+          where: {
+            makhachhang
+          },
+          order: [
+            ['ngaylap', 'DESC']
+          ]
+        })
+        return {
+          status: 200,
+          message: "Lấy lịch sử đơn hàng thành công",
+          data: hoadon
+        }
+      }
+      catch (e) {
+        return {
+          status: 400,
+          message: "Lấy lịch sử đơn hàng không thành công",
+          data: []
+        }
+      }
+    }
   },
 
   HoaDon: {
@@ -184,7 +214,7 @@ module.exports = {
 
         if (result && result.length > 0) {
           const tongTien = result[0].tongtien;
-          return tongTien;
+          return tongTien ? tongTien : 0;
         } else {
           return 0;
         }

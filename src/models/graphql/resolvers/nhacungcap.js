@@ -89,13 +89,17 @@ module.exports = {
     }
   },
   Query: {
-    nhacungcap: async () => {
+    nhacungcap: async (root, args, context) => {
       async function callback(e) {
         try {
           const rs = {
             status: STATUS_CODE.query_success,
             message: "Lấy nhà cung cấp thành công!",
-            data: await NhaCungCap.findAll()
+            data: await NhaCungCap.findAll({
+              where: {
+                matrangthaincc: 1
+              }
+            })
           }
           return rs
         }
