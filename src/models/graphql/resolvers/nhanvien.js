@@ -267,6 +267,9 @@ module.exports = {
     NhanVien: {
         trangthai: (nhanvien) => {
             return nhanvien.getTrangThaiNhanVien()
+        },
+        quyen: async (nhanvien) => {
+            return (await nhanvien.getTaiKhoan()).getQuyen()
         }
     }
 };

@@ -1,10 +1,27 @@
-import { Button, Col, Layout, Row, Select, SelectProps, Space } from "antd";
+import {
+  Button,
+  Col,
+  Layout,
+  Row,
+  Select,
+  SelectProps,
+  Skeleton,
+  Space,
+  Tag,
+} from "antd";
 import "../../../style/product.css";
 const { Header, Content } = Layout;
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
 import "../../../style/product.css";
 import { Footer } from "antd/es/layout/layout";
+import dayjs from "dayjs";
+import { authenticationAdmin } from "../../../../../../utils/util";
+import {
+  getProviderProductColorSize,
+  importProductHistory,
+} from "../../../../../controllers/modules/admin/importProduct";
+import { useNavigate } from "react-router-dom";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 100,
@@ -20,11 +37,12 @@ const contentStyle: React.CSSProperties = {
   backgroundColor: "#ffffff",
 };
 const footerStyle: React.CSSProperties = {
-  textAlign: 'center',
-  color: '#fff',
-  backgroundColor: '#ffffff',
+  textAlign: "center",
+  color: "#fff",
+  backgroundColor: "#ffffff",
 };
 interface Item {
+  dateinit: any;
   key: string;
   id_pro_imp: string;
   name_imp: string;
@@ -36,8 +54,12 @@ interface Item {
   total_imp: number;
 }
 
-const originData: Item[] = [];
-const options: SelectProps["options"] = [];
+interface StructOption {
+  value: string;
+  label: string;
+}
+// const originData: Item[] = [];
+// const options: SelectProps["options"] = [];
 // const handleChange = (value: string[]) => {
 //   console.log(`selected ${value}`);
 // };
@@ -98,9 +120,33 @@ const EditableCell: React.FC<EditableCellProps> = ({
   );
 };
 const Import = () => {
-  const [form] = Form.useForm();
-  const [data, setData] = useState(originData);
+  // const options: SelectProps["options"] = [];
+  const dataStruct: StructOption[] = [];
+  const [productData, setProductData] = useState(dataStruct);
+  const [sizeData, setSizeData] = useState(dataStruct);
+  const [colorData, setColorData] = useState(dataStruct);
+  const [providerData, setProviderData] = useState(dataStruct);
+
+  let productItem: StructOption = { label: "", value: "" };
+  let providerItem: StructOption = { label: "", value: "" };
+  let colorItem: StructOption = { label: "", value: "" };
+  // const colorItem: StructOption[] = [];
+
+  // define
+  const originData: Item[] = [];
+  // const exData = [];
+  // const [metaData, setMetaData] = useState(originData);
+
+  const [isReady, setIsReady] = useState(false);
   const [editingKey, setEditingKey] = useState("");
+  const navigate = useNavigate();
+  const [data, setData] = useState(originData);
+  const [reload, setReload] = useState(true);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  // const [expanderData, setExpanderData] = useState(exData);
+
+  const [form] = Form.useForm();
+
   const isEditing = (record: Item) => record.key === editingKey;
   const edit = (record: Partial<Item> & { key: React.Key }) => {
     form.setFieldsValue({
@@ -159,6 +205,15 @@ const Import = () => {
       title: "Màu",
       dataIndex: "color_imp",
       width: "auto",
+      render: (color_imp: string) => (
+        <Tag
+          color={color_imp}
+          key={color_imp}
+          style={{ border: "1px solid black" }}
+        >
+          {color_imp.toUpperCase()}
+        </Tag>
+      ),
     },
     {
       title: "Kích thước",
@@ -229,12 +284,12 @@ const Import = () => {
         ) : null,
     },
   ];
-  for (let i = 10; i < 36; i++) {
-    options.push({
-      value: `ao` + i,
-      label: `ao` + i,
-    });
-  }
+  // for (let i = 10; i < 36; i++) {
+  //   options.push({
+  //     value: `ao` + i,
+  //     label: `ao` + i,
+  //   });
+  // }
   const mergedColumns = columns.map((col) => {
     if (!col.editable) {
       return col;
@@ -250,8 +305,105 @@ const Import = () => {
       }),
     };
   });
+  const handleChange = () => {};
 
-  return (
+  useEffect(() => {
+    async function fetchMetaData(rs?) {
+      if (rs && rs.data.dangNhapAdminVoiToken.status != 200) {
+        navigate("/LoginAdmin");
+        return;
+      }
+
+      const rsFetchData = await getProviderProductColorSize();
+
+      var fetchData = rsFetchData.data;
+      //
+      //
+      const tempSanpham: StructOption[] = [];
+      const tempMau: StructOption[] = [];
+      const tempKichco: StructOption[] = [];
+      const tempNhacungcap: StructOption[] = [];
+      fetchData.sanpham.data.forEach((element) => {
+        tempSanpham.push({
+          value: element.ma,
+          label: element.ten,
+        });
+      });
+      fetchData.nhacungcap.data.forEach((element) => {
+        tempNhacungcap.push({
+          value: element.ma,
+          label: element.ten,
+        });
+      });
+      fetchData.mau.data.forEach((element) => {
+        tempMau.push({
+          value: element.ma,
+          label: element.ten,
+        });
+      });
+      fetchData.kichco.data.forEach((element) => {
+        tempKichco.push({
+          value: element.ma,
+          label: element.ten,
+        });
+      });
+
+      setProductData(tempSanpham);
+      setColorData(tempMau);
+      setProviderData(tempNhacungcap);
+      setSizeData(tempKichco);
+
+      setIsReady(true);
+      setData(data);
+      setEditingKey("");
+
+      // setExpanderData(exData);
+    }
+
+    if (reload) {
+      isFirstLoad ? authenticationAdmin(fetchMetaData) : fetchMetaData();
+      setIsFirstLoad(false);
+      setReload(false);
+      setEditingKey("");
+    }
+  }, [reload]);
+  const handleChangeProvider = (value, label) => {
+    console.log(value, label);
+    providerItem.label = label.label;
+    providerItem.value = value;
+    console.log(providerItem);
+  };
+  const handleChangeProduct = (value, label) => {
+    console.log(value, label);
+    productItem.label = label.label;
+    productItem.value = value;
+    console.log(productItem);
+  };
+  const handleChangeColor = (value, label) => {
+    console.log(value, label);
+    colorItem.label = label.label;
+    colorItem.value = value;
+    console.log(colorItem);
+  };
+  const importNewProduct = () => {
+    const newData = [...data];
+    newData.push({
+      dateinit: dayjs(),
+      key: (newData.length + 1).toString(),
+      id_pro_imp: productItem.value,
+      name_imp: productItem.label,
+      color_imp: colorItem.label,
+      size_imp: "",
+      provider: providerItem.label,
+      amount_imp: 0,
+      price_imp: 0,
+      total_imp: 0,
+    });
+    setData(newData);
+    // setEditingKey("");
+    // console.log(editingKey);
+  };
+  return isReady ? (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
         <Header style={headerStyle}>
@@ -265,8 +417,8 @@ const Import = () => {
               >
                 <Select
                   placeholder="Please select"
-                  onChange={handleChange}
-                  options={options}
+                  onChange={handleChangeProvider}
+                  options={providerData}
                 />
               </Form.Item>
               <Form.Item
@@ -277,8 +429,8 @@ const Import = () => {
               >
                 <Select
                   placeholder="Please select"
-                  onChange={handleChange}
-                  options={options}
+                  onChange={handleChangeProduct}
+                  options={productData}
                 />
               </Form.Item>
             </Col>
@@ -291,12 +443,12 @@ const Import = () => {
                   style={{ width: "100%", height: 30, minWidth: "100%" }}
                 >
                   <Select
-                    mode="multiple"
+                    // mode="multiple"
                     allowClear
                     style={{ width: "80%" }}
                     placeholder="Please select"
-                    onChange={handleChange}
-                    options={options}
+                    onChange={handleChangeColor}
+                    options={colorData}
                   />
                 </Form.Item>
                 <Form.Item
@@ -306,12 +458,12 @@ const Import = () => {
                   style={{ width: "100%", height: 30, minWidth: "100%" }}
                 >
                   <Select
-                    mode="multiple"
+                    // mode="multiple"
                     allowClear
                     style={{ width: "80%" }}
                     placeholder="Please select"
                     onChange={handleChange}
-                    options={options}
+                    options={sizeData}
                   />
                 </Form.Item>
               </div>
@@ -347,6 +499,7 @@ const Import = () => {
                 <Button
                   type="primary"
                   style={{ width: "70%", marginBottom: 30 }}
+                  onClick={importNewProduct}
                 >
                   Thêm
                 </Button>
@@ -395,13 +548,51 @@ const Import = () => {
             />
           </Form>
         </Content>
-        <Footer style={footerStyle}><Button type="primary" style={{ width: "40%" }}>
-                  Xác nhận nhập hàng
-                </Button>
+        <Footer style={footerStyle}>
+          <Button type="primary" style={{ width: "40%" }}>
+            Xác nhận nhập hàng
+          </Button>
         </Footer>
-                
       </Layout>
     </Space>
+  ) : (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        height: "100%",
+        paddingTop: "20px",
+        paddingBottom: "20px",
+      }}
+    >
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+    </div>
   );
 };
 export default Import;
