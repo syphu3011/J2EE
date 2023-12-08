@@ -1,2 +1,4 @@
-declare const TableCustomer: () => import("react/jsx-runtime").JSX.Element;
+declare const TableCustomer: ({ data }: {
+    data: any;
+}) => import("react/jsx-runtime").JSX.Element;
 export default TableCustomer;

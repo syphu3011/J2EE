@@ -12,8 +12,8 @@ module.exports = {
             transaction = await sequelize.transaction()
             const {
             manhacungcap,
-            mathang,
-            manhanvien, ghichu} = args.input
+            mathang, ghichu} = args.input
+            const manhanvien = nhanvien_data.ma
             const phieunhap = await PhieuNhap.create({manhacungcap, manhanvien, ghichu})
             const ncc = await NhaCungCap.findByPk(manhacungcap)
             if (!ncc) {

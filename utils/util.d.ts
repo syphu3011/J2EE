@@ -14,3 +14,4 @@ export declare const getBase64AndName: (img: RcFile, callback: (url: string, nam
 export declare const authenticationAdmin: (callback?: any) => void;
 export declare const authenticationCustomer: (callback?: any) => void;
 export declare const dateToYYYY_MM_DD: (date: any) => string;
+export declare const formatCurrency: (string: any) => string;

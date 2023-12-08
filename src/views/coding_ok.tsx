@@ -311,7 +311,7 @@ export default class Coding_ok extends React.Component<any, any> {
       //         test: JSON.stringify(rs),
       //     });
       // })
-      getProviderProductColorSize().then((rs) => {
+      getOrders().then((rs) => {
         self.setState({
           test: JSON.stringify(rs),
           // JSON.stringify(rs.data.sanpham.data)
