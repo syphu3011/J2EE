@@ -55,7 +55,7 @@ const addData: AddItem = {
   socccd: "string",
   sodienthoai: "string",
 };
-const originData: Item[] = [];
+
 // for (let i = 0; i < 20; i++) {
 //   originData.push({
 //     key: i.toString(),
@@ -112,12 +112,13 @@ const EditableCell: React.FC<EditableCellProps> = ({
 };
 
 const Staff = () => {
+  const StaffData: Item[] = [];
   const [reload, setReload] = useState(true);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [isReady, setIsReady] = useState(false);
   const navigate = useNavigate();
   const [form] = Form.useForm();
-  const [data, setData] = useState(originData);
+  const [data, setData] = useState(StaffData);
   const [editingKey, setEditingKey] = useState("");
 
   const isEditing = (record: Item) => record.key === editingKey;
@@ -257,10 +258,8 @@ const Staff = () => {
       const rsFetchData = await getStaff();
 
       var fetchData = rsFetchData.data.nhanvien.data;
-      //
-      //
       fetchData.forEach((element, index) => {
-        originData.push({
+        StaffData.push({
           key: element.ma,
           id_staff: element.ma,
           name_staff: element.ten,

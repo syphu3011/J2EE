@@ -1,8 +1,11 @@
-import { Button, Col, DatePicker, Layout, Row, Space } from "antd";
+import { Button, Col, DatePicker, Layout, Row, Skeleton, Space } from "antd";
 import "../../../style/product.css";
 const { Header, Content } = Layout;
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
+import { authenticationAdmin } from "../../../../../../utils/util";
+import { useNavigate } from "react-router-dom";
+import { getProvider } from "../../../../../controllers/modules/admin/provider";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 120,
@@ -27,16 +30,15 @@ interface Item {
   status_partner: string;
 }
 
-const originData: Item[] = [];
 for (let i = 0; i < 20; i++) {
-  originData.push({
-    key: i.toString(),
-    id_partner: `${i}`,
-    name_partner: `Nguyễn Văn ${i}`,
-    number_partner: 233321312321,
-    address_partner: "18/02/2002",
-    status_partner: "Còn làm",
-  });
+  // originData.push({
+  //   key: i.toString(),
+  //   id_partner: `${i}`,
+  //   name_partner: `Nguyễn Văn ${i}`,
+  //   number_partner: 233321312321,
+  //   address_partner: "18/02/2002",
+  //   status_partner: "Còn làm",
+  // });
 }
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
@@ -59,7 +61,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
   ...restProps
 }) => {
   const inputNode = inputType === "number" ? <InputNumber /> : <Input />;
-
   return (
     <td {...restProps}>
       {editing ? (
@@ -82,6 +83,11 @@ const EditableCell: React.FC<EditableCellProps> = ({
   );
 };
 const partner = () => {
+  const originData: Item[] = [];
+  const [reload, setReload] = useState(true);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const [isReady, setIsReady] = useState(false);
+  const navigate = useNavigate();
   const [form] = Form.useForm();
   const [data, setData] = useState(originData);
   const [editingKey, setEditingKey] = useState("");
@@ -208,8 +214,37 @@ const partner = () => {
       }),
     };
   });
+  useEffect(() => {
+    async function fetchPartnerData(rs?) {
+      if (rs && rs.data.dangNhapAdminVoiToken.status != 200) {
+        navigate("/LoginAdmin");
+        return;
+      }
+      const rsFetchData = await getProvider();
 
-  return (
+      var fetchData = rsFetchData.data.nhacungcap.data;
+      fetchData.forEach((element, index) => {
+        originData.push({
+          key: element.ma,
+          id_partner: element.ma,
+          name_partner: element.ten,
+          number_partner: element.dienthoai,
+          address_partner: element.diachi,
+          status_partner: element.trangthai.ten,
+        });
+      });
+
+      setIsReady(true);
+    }
+    // console.log(data)
+
+    if (reload) {
+      isFirstLoad ? authenticationAdmin(fetchPartnerData) : fetchPartnerData();
+      setIsFirstLoad(false);
+      setReload(false);
+    }
+  }, [reload]);
+  return isReady ? (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
         <Header style={headerStyle}>
@@ -289,6 +324,44 @@ const partner = () => {
         </Content>
       </Layout>
     </Space>
+  ) : (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        height: "100%",
+        paddingTop: "20px",
+        paddingBottom: "20px",
+      }}
+    >
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+    </div>
   );
 };
 export default partner;
