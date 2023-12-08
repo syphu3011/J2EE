@@ -99,8 +99,8 @@ const StatNumber = () => {
   const [dataRevenue, setDataRevenue] = useState(null);
   const [stat, setStat] = useState(null);
   const [statRev, setStatRev] = useState(null);
-  const GetDataRevenue = async (type, monthOrDay) => {
-    const rsRevenue = monthOrDay == 1 ? await statistics_revenue_month(from, to, type) : await statistics_revenue_days(from, to, type);
+  const GetDataRevenue = async (type, monthOrDay, _from = from, _to = to) => {
+    const rsRevenue = monthOrDay == 1 ? await statistics_revenue_month(_from, _to, type) : await statistics_revenue_days(_from, _to, type);
       const dataRs =
         monthOrDay == 1 ? 
         (rsRevenue.data && rsRevenue.data.thongkedoanhthutheothang && rsRevenue.data.thongkedoanhthutheothang.data)
@@ -120,19 +120,19 @@ const StatNumber = () => {
       }
       return tempData
   }
-  const ChangeStatDate = async (value: string) => {
+  const ChangeStatDate = async (value: string, option, _from = from, _to = to) => {
     setStatRev(value)
     if (value == "Days") {
-      const data = await GetDataRevenue(1,2)
+      const data = await GetDataRevenue(1,2, _from, _to)
       setDataRevenue(data);
       setTable(TableDate({ data: data }));
     } else {
-      const data = await GetDataRevenue(1,1)
+      const data = await GetDataRevenue(1,1, _from, _to)
       setDataRevenue(data);
       setTable(TableDate({ data: data }));
     }
   };
-  const ChangeStat = async (value: string) => {
+  const ChangeStat = async (value: string, option, _from = from, _to = to) => {
     setStat(value)
     console.log(`selected ${value}`);
     if (value == "SP") {
@@ -145,7 +145,7 @@ const StatNumber = () => {
       setTable(TableStaff);
       setDisplay("none");
     } else if (value == "TG") {
-      ChangeStatDate(statRev ? statRev : 'Days')
+      ChangeStatDate(statRev ? statRev : 'Days', null, _from, _to)
       setDisplay("inline-block");
     } else {
       setTable(TableType);
@@ -153,7 +153,16 @@ const StatNumber = () => {
     }
   };
   const dateFormat = "DD/MM/YYYY";
-
+  const ChangeFrom = (value, string) => {
+    const date = dateToYYYY_MM_DD(string)
+    setFrom(date)
+    ChangeStat(stat,null, date, to)
+  }
+  const ChangeTo = (value, string) => {
+    const date = dateToYYYY_MM_DD(string)
+    setTo(date)
+    ChangeStat(stat, null, from, date)
+  }
   useEffect(() => {
     async function fetchMetaData(rs?) {
       if (rs && rs.data.dangNhapAdminVoiToken.status != 200) {
@@ -278,11 +287,7 @@ const StatNumber = () => {
                     defaultValue={dayjs("01/01/2000", dateFormat)}
                     format={dateFormat}
                     style={{ marginRight: "2%" }}
-                    onChange={(value) => {
-                      const date = dateToYYYY_MM_DD(value)
-                      setFrom(date)
-                      ChangeStat(stat)
-                    }}
+                    onChange={ChangeFrom}
                   />
                 </Form.Item>
                 <Form.Item
@@ -291,11 +296,7 @@ const StatNumber = () => {
                   labelCol={{ span: "5%" }}
                 >
                   <DatePicker defaultValue={dayjs()} format={dateFormat} 
-                  onChange={(value) => {
-                    const date = dateToYYYY_MM_DD(value)
-                    setTo(date)
-                    ChangeStat(stat)
-                  }}/>
+                  onChange={ChangeTo}/>
                 </Form.Item>
               </div>
             </Col>
