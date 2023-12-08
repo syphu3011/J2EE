@@ -29,6 +29,7 @@ import { getOrders } from "../../../../../controllers/modules/admin/order";
 import {
   statistics_revenue_days,
   statistics_revenue_month,
+  top10product,
 } from "../../../../../controllers/modules/admin/statistic";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
@@ -120,6 +121,26 @@ const StatNumber = () => {
       }
       return tempData
   }
+  const GetDataProduct = async (type, _from = from, _to = to) => {
+    const rsProduct = await top10product(_from, _to, type)
+      const dataRs = rsProduct.data && rsProduct.data.thongkedoanhthutheothang && rsProduct.data.thongkedoanhthutheothang.data
+      const tempData = [];
+      for (const data of dataRs) {
+        const row = {
+          key: data.ma,
+          rank_pro: data.hang,
+          id_prod_stat: data.ma,
+          name_pro_stat: data.ten,
+          provider_pro_stat: "",
+          amount_sell_pro: data.soluongban,
+          income_pro: data.tienban,
+          expenses_pro: data.tiennhap,
+          profits_pro: data.loinhuan
+        };
+        tempData.push(row);
+      }
+      return tempData
+  }
   const ChangeStatDate = async (value: string, option, _from = from, _to = to) => {
     setStatRev(value)
     if (value == "Days") {
@@ -154,12 +175,12 @@ const StatNumber = () => {
   };
   const dateFormat = "DD/MM/YYYY";
   const ChangeFrom = (value, string) => {
-    const date = dateToYYYY_MM_DD(string)
+    const date = dateToYYYY_MM_DD(value)
     setFrom(date)
     ChangeStat(stat,null, date, to)
   }
   const ChangeTo = (value, string) => {
-    const date = dateToYYYY_MM_DD(string)
+    const date = dateToYYYY_MM_DD(value)
     setTo(date)
     ChangeStat(stat, null, from, date)
   }

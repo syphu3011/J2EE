@@ -323,7 +323,12 @@ export default class Coding_ok extends React.Component<any, any> {
         //         JSON.stringify(rs.data.kichco.data) 
         //     });
         // })
-        getStaff()
+        // getStaff()
+        getHistoryOrders().then((rs) => {
+            self.setState({
+                test: JSON.stringify(rs),
+            });
+        })
     });
   }
 
