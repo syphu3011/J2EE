@@ -196,13 +196,13 @@ export default function FilterProduct({
   const onSelect = (selectedKeysValue, { checked, node }) => {
     // console.log("onSelect", selectedKeysValue, info);
     // setSelectedKeys(selectedKeysValue);
-    if (node.children && checked) {
-      // Lọc ra các keys của các node con để không thêm vào danh sách checkedKeys
-      const childKeys = node.children.map(child => child.key);
-      selectedKeysValue = selectedKeysValue.filter(key => !childKeys.includes(key));
-    }
+    // if (node.children && checked) {
+    //   // Lọc ra các keys của các node con để không thêm vào danh sách checkedKeys
+    //   const childKeys = node.children.map(child => child.key);
+    //   selectedKeysValue = selectedKeysValue.filter(key => !childKeys.includes(key));
+    // }
 
-    setSelectedKeys(selectedKeysValue);
+    // setSelectedKeys(selectedKeysValue);
     onDataChange(node.key);
     // Kiểm tra xem tiêu đề của nút được chọn thuộc vào giá hay kích thước
     // if (

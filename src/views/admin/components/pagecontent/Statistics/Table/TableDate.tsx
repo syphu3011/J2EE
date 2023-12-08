@@ -49,10 +49,9 @@ const columnsDay = [
   },
 ];
 
-const TableDate = () => {
+const TableDate = ({data}) => {
   // const [from, setFrom] = useState('2000-01-01')
   // const [to, setTo] = useState(dateToYYYY_MM_DD(Date.now))
-  const [data, setData] = useState(DaysData)
   // useEffect(() => {
     // async function load() {
     //   const rs = await statistics_revenue_days(from, to, 1)
@@ -78,7 +77,7 @@ const TableDate = () => {
   return (
     <Table
       bordered
-      dataSource={DaysData}
+      dataSource={data}
       columns={columnsDay}
       pagination={false}
       scroll={{ x: 800, y: 600 }}

@@ -55,7 +55,7 @@ const ProductItem: React.FC<ProductItemProps> = (props) => {
                 <h4>{product.ten}</h4>
                 <p>{product.gia.toLocaleString()} VND</p>
               </Link>
-              <AddToCartButton item={product} selectedColor={product.mathang[0].mau.ten} selectedSize={product.mathang[0].mau.kichco} amount={1} />
+              <AddToCartButton item={product} selectedColor={product.mathang[0].mau.ten} selectedSize={product.mathang[0].kichco.ten} amount={1} />
             </Card>
           ))}
         </div>
