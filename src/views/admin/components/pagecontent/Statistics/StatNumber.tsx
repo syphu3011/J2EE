@@ -64,7 +64,7 @@ options.push({
 });
 options.push({
   value: "TG",
-  label: "Thời gian",
+  label: "Doanh thu",
 });
 options.push({
   value: "LSP",

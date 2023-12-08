@@ -13,3 +13,4 @@ export declare function convertB64ToImage(b64: any): string;
 export declare const getBase64AndName: (img: RcFile, callback: (url: string, name: string) => void) => void;
 export declare const authenticationAdmin: (callback?: any) => void;
 export declare const authenticationCustomer: (callback?: any) => void;
+export declare const dateToYYYY_MM_DD: (date: any) => string;

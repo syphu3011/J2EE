@@ -71,7 +71,7 @@ module.exports = {
     }
   },
   Query: {
-    chucnang: async () => {
+    chucnang: async (root, args, context) => {
       async function callback(e) {
         try { 
           const rs = {

@@ -2,10 +2,10 @@ const {gql} = require('apollo-server-express')
 
 module.exports = gql`
 type TaiKhoan {
-  tentaikhoan: String!
-  matkhau: String!
-  maquyen: Int!
-  quyen: Quyen!
+  tentaikhoan: String
+  matkhau: String
+  maquyen: Int
+  quyen: Quyen
 }
 input TaiKhoanKhachHangInput {
   ten: String!
@@ -35,6 +35,7 @@ input OTPInput {
 }
 type ChucNangAdminResponse {
   chucnang: String
+  tentaikhoan: String
 }
 type TaiKhoanQueryResponse {
   status: Int!
@@ -48,6 +49,7 @@ type TaiKhoanResponse {
 type DangNhapResponse {
   status: Int!
   message: String!
+  data: ChucNangAdminResponse
 }
 type DangNhapAdminResponse {
   status: Int!

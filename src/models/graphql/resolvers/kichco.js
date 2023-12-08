@@ -26,7 +26,7 @@ module.exports = {
                             message: "Bị lỗi! Thêm kích cỡ không thành công!"
                         }
                     }
-                }, "đã thêm kích cỡ có mã là " + args.input.ma + "!", CHUCNANG.THEMLOAI)
+                }, "đã thêm kích cỡ có mã là " + args.input.ma + "!", CHUCNANG.SUASANPHAM)
             }
             catch (e) {
                 return {
@@ -58,7 +58,7 @@ module.exports = {
                             message: "Bị lỗi! Sửa kích cỡ không thành công!"
                         }
                     }
-                }, "đã sửa kích cỡ có mã là " + args.input.ma + "!", CHUCNANG.SUALOAI)
+                }, "đã sửa kích cỡ có mã là " + args.input.ma + "!", CHUCNANG.SUASANPHAM)
             }
             catch (e) {
                 return {
@@ -88,7 +88,7 @@ module.exports = {
                             message: "Bị lỗi! Xóa kích cỡ không thành công!"
                         }
                     }
-                }, "đã xóa kích cỡ có mã là " + args.ma + "!", CHUCNANG.XOASANPHAM)
+                }, "đã xóa kích cỡ có mã là " + args.ma + "!", CHUCNANG.SUASANPHAM)
             }
             catch (e) {
                 return {

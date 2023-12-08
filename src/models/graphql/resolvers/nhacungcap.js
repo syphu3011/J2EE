@@ -110,7 +110,7 @@ module.exports = {
           }
         }
       }
-      return await checkAndResolveAdmin(context.taikhoan, callback,  CHUCNANG.THEMNHACUNGCAP)
+      return await checkAndResolveAdmin(context.taikhoan, callback)
     },
     // async nhacungcapvoithuoctinh(root, args, context) {
     //   try {

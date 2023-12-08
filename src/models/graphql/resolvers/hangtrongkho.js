@@ -85,8 +85,8 @@ module.exports = {
           }
         }
       }
-      return await callback(null)
-      // return await checkAndResolveAdmin(context.taikhoan, callback, "", CHUCNANG.XEMKHO)
+      // return await callback(null)
+      return await checkAndResolveAdmin(context.taikhoan, callback, "", CHUCNANG.XEMKHO)
     }
   },
   HangTrongKho: {
