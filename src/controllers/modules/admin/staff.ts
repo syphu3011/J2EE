@@ -14,6 +14,15 @@ export function getStaff() {
                     ma
                     ten
                 }
+                tentaikhoan
+                trangthai {
+                    ma
+                    ten
+                }
+                quyen {
+                    ma
+                    ten
+                }
             }
         }
     }

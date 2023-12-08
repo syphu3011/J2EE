@@ -21,9 +21,15 @@ import TableDate from "./Table/TableDate";
 import TableMonth from "./Table/TableMonth";
 import { useNavigate } from "react-router-dom";
 import { Item } from "react-use-cart";
-import { authenticationAdmin } from "../../../../../../utils/util";
+import {
+  authenticationAdmin,
+  dateToYYYY_MM_DD,
+} from "../../../../../../utils/util";
 import { getOrders } from "../../../../../controllers/modules/admin/order";
-import { statistics_revenue_month } from "../../../../../controllers/modules/admin/statistic";
+import {
+  statistics_revenue_days,
+  statistics_revenue_month,
+} from "../../../../../controllers/modules/admin/statistic";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 60,
@@ -88,14 +94,40 @@ const StatNumber = () => {
   const [form] = Form.useForm();
   const [table, setTable] = useState(TableProduct);
   const [display, setDisplay] = useState("none");
-  const ChangeStatDate = (value: string) => {
+  const [from, setFrom] = useState("2000-01-01");
+  const [to, setTo] = useState(dateToYYYY_MM_DD(Date.now()));
+  const [dataRevenue, setDataRevenue] = useState(null);
+  const SetDataRevenue = async (type, monthOrDay) => {
+    const rsRevenue = monthOrDay ? await statistics_revenue_month(from, to, type) : await statistics_revenue_days(from, to, type);
+      const dataRs =
+        monthOrDay ? 
+        (rsRevenue.data && rsRevenue.data.thongkedoanhthutheothang && rsRevenue.data.thongkedoanhthutheothang.data)
+        :
+        (rsRevenue.data && rsRevenue.data.thongkedoanhthutheongay && rsRevenue.data.thongkedoanhthutheongay.data)
+      const tempData = [];
+      for (const data of dataRs) {
+        const row = {
+          key: data.thoigian,
+          id_date: data.thoigian,
+          amount_order_date: 0,
+          income_date: data.thu,
+          expenses_date: data.chi,
+          profits_date: data.loinhuan,
+        };
+        tempData.push(row);
+      }
+      setDataRevenue(tempData);
+  }
+  const ChangeStatDate = async (value: string) => {
     if (value == "Days") {
-      setTable(TableDate);
+      await SetDataRevenue(1,2)
+      setTable(TableDate({ data: dataRevenue }));
     } else {
+      await SetDataRevenue(1,1)
       setTable(TableMonth);
     }
   };
-  const ChangeStat = (value: string) => {
+  const ChangeStat = async (value: string) => {
     console.log(`selected ${value}`);
     if (value == "SP") {
       setTable(TableProduct);
@@ -107,7 +139,8 @@ const StatNumber = () => {
       setTable(TableStaff);
       setDisplay("none");
     } else if (value == "TG") {
-      setTable(TableDate);
+      await SetDataRevenue(1,2)
+      setTable(TableDate({ data: dataRevenue }));
       setDisplay("inline-block");
     } else {
       setTable(TableType);
@@ -158,7 +191,7 @@ const StatNumber = () => {
         // console.log(element.tongtien);
         originData.push({
           id: "",
-          price: 0
+          price: 0,
         });
       });
       console.log("originData " + originData.length);
