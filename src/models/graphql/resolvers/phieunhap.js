@@ -39,7 +39,7 @@ module.exports = {
                 checknew = true
               }
               await ChiTietPhieuNhap.create({maphieunhap: phieunhap.ma, masanpham, makichco, mamau, soluong, gianhap})
-              await HangTrongKho.create({maphieunhap: phieunhap.ma,masanpham, makichco, mamau, soluong, giaban, gianhap})
+              await HangTrongKho.create({maphieunhap: phieunhap.ma,masanpham, makichco, mamau, soluong, giaban, gianhap, matrangthai: 1})
               try {
                 const sanpham = await SanPham.findByPk(masanpham)
                 await ncc.addSanPham(sanpham)
