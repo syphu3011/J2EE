@@ -200,9 +200,14 @@ const Import = () => {
   // };
   const handleDelete = (key: React.Key) => {
     const newData = data.filter((item) => item.key !== key);
-    let tmp = totalBorrow - data.find((item) => item.key !== key).total_imp;
+    // let tmp = totalBorrow - data.find((item) => item.key !== key).total_imp;
     setData(newData);
-    setTotalBorrow(tmp);
+    // setTotalBorrow(tmp);
+    let tmp = 0;
+    data.forEach((element) => {
+      tmp += element.total_imp;
+      setTotalBorrow(tmp);
+    });
   };
   const columns = [
     {
@@ -415,65 +420,132 @@ const Import = () => {
       " ",
       amountProduct
     );
-    if (
-      productItem.label == "" ||
-      providerItem.label == "" ||
-      sizeItem.label == "" ||
-      colorItem.label == "" ||
-      priceProduct == "" ||
-      amountProduct == ""
-    ) {
-      alert("Hãy chọn các giá trị hợp lệ!");
-    } else {
-      const newData = [...data];
-      let itemT = newData.findIndex(
-        (item) =>
-          parseInt(item.id_pro_imp) === parseInt(productItem.value) &&
-          parseInt(item.color_imp_id) === parseInt(colorItem.value) &&
-          parseInt(item.size_imp_id) === parseInt(sizeItem.value)
-      );
-      console.log("Kho qua ma");
-      // console.log(newData);
-      // console.log(productItem.value, " ", colorItem.value, " ", sizeItem.value);
-      // console.log(itemT);
-      if (itemT != -1) {
-        newData[itemT].amount_imp += parseInt(amountProduct);
-        newData[itemT].price_imp = parseInt(priceProduct);
-        newData[itemT].total_imp =
-          newData[itemT].amount_imp * newData[itemT].price_imp;
+    if (data.length > 0) {
+      if (data[0].provider_id != providerItem.value) {
+        alert("Hãy chọn cùng nhà cung cấp");
       } else {
-        let key = (newData.length + 1).toString();
-        newData.push({
-          dateinit: dayjs(),
-          key: key,
-          id_pro_imp: productItem.value,
-          name_imp: productItem.label,
-          color_imp: colorItem.label,
-          size_imp: sizeItem.label,
-          provider: providerItem.label,
-          amount_imp: parseInt(amountProduct),
-          price_imp: parseInt(priceProduct),
-          total_imp: parseInt(amountProduct) * parseInt(priceProduct),
-          provider_id: providerItem.value,
-          color_imp_id: colorItem.value,
-          size_imp_id: sizeItem.value,
-        });
+        if (
+          productItem.label == "" ||
+          providerItem.label == "" ||
+          sizeItem.label == "" ||
+          colorItem.label == "" ||
+          priceProduct == "" ||
+          amountProduct == ""
+        ) {
+          alert("Hãy chọn các giá trị hợp lệ!");
+        } else {
+          const newData = [...data];
+          let itemT = newData.findIndex(
+            (item) =>
+              parseInt(item.id_pro_imp) === parseInt(productItem.value) &&
+              parseInt(item.color_imp_id) === parseInt(colorItem.value) &&
+              parseInt(item.size_imp_id) === parseInt(sizeItem.value)
+          );
+          console.log("Kho qua ma");
+          // console.log(newData);
+          // console.log(productItem.value, " ", colorItem.value, " ", sizeItem.value);
+          // console.log(itemT);
+          if (itemT != -1) {
+            newData[itemT].amount_imp += parseInt(amountProduct);
+            newData[itemT].price_imp = parseInt(priceProduct);
+            newData[itemT].total_imp =
+              newData[itemT].amount_imp * newData[itemT].price_imp;
+          } else {
+            let key = (newData.length + 1).toString();
+            newData.push({
+              dateinit: dayjs(),
+              key: key,
+              id_pro_imp: productItem.value,
+              name_imp: productItem.label,
+              color_imp: colorItem.label,
+              size_imp: sizeItem.label,
+              provider: providerItem.label,
+              amount_imp: parseInt(amountProduct),
+              price_imp: parseInt(priceProduct),
+              total_imp: parseInt(amountProduct) * parseInt(priceProduct),
+              provider_id: providerItem.value,
+              color_imp_id: colorItem.value,
+              size_imp_id: sizeItem.value,
+            });
+          }
+
+          // setData(newData);
+          // setReload(true);
+          // Reset values after importing
+          // setSelectedProvider(null);
+          // setSelectedProduct(null);
+          // setSelectedColor(null);
+          // setSelectedSize(null);
+          // setPrice("");
+          // setCount("");
+
+          setData(newData);
+        }
       }
+    } else {
+      if (
+        productItem.label == "" ||
+        providerItem.label == "" ||
+        sizeItem.label == "" ||
+        colorItem.label == "" ||
+        priceProduct == "" ||
+        amountProduct == ""
+      ) {
+        alert("Hãy chọn các giá trị hợp lệ!");
+      } else {
+        const newData = [...data];
+        let itemT = newData.findIndex(
+          (item) =>
+            parseInt(item.id_pro_imp) === parseInt(productItem.value) &&
+            parseInt(item.color_imp_id) === parseInt(colorItem.value) &&
+            parseInt(item.size_imp_id) === parseInt(sizeItem.value)
+        );
+        console.log("Kho qua ma");
+        // console.log(newData);
+        // console.log(productItem.value, " ", colorItem.value, " ", sizeItem.value);
+        // console.log(itemT);
+        if (itemT != -1) {
+          newData[itemT].amount_imp += parseInt(amountProduct);
+          newData[itemT].price_imp = parseInt(priceProduct);
+          newData[itemT].total_imp =
+            newData[itemT].amount_imp * newData[itemT].price_imp;
+        } else {
+          let key = (newData.length + 1).toString();
+          newData.push({
+            dateinit: dayjs(),
+            key: key,
+            id_pro_imp: productItem.value,
+            name_imp: productItem.label,
+            color_imp: colorItem.label,
+            size_imp: sizeItem.label,
+            provider: providerItem.label,
+            amount_imp: parseInt(amountProduct),
+            price_imp: parseInt(priceProduct),
+            total_imp: parseInt(amountProduct) * parseInt(priceProduct),
+            provider_id: providerItem.value,
+            color_imp_id: colorItem.value,
+            size_imp_id: sizeItem.value,
+          });
+        }
 
-      let tmp = totalBorrow + parseInt(amountProduct) * parseInt(priceProduct);
-      setTotalBorrow(tmp);
-      // setData(newData);
-      // setReload(true);
-      // Reset values after importing
-      // setSelectedProvider(null);
-      // setSelectedProduct(null);
-      // setSelectedColor(null);
-      // setSelectedSize(null);
-      // setPrice("");
-      // setCount("");
+        // setData(newData);
+        // setReload(true);
+        // Reset values after importing
+        // setSelectedProvider(null);
+        // setSelectedProduct(null);
+        // setSelectedColor(null);
+        // setSelectedSize(null);
+        // setPrice("");
+        // setCount("");
 
-      setData(newData);
+        setData(newData);
+      }
     }
+    let tmp = 0;
+    data.forEach((element) => {
+      tmp += element.total_imp;
+      setTotalBorrow(tmp);
+    });
     // form.setFieldsValue({
     //   provider: undefined,
     //   product: undefined,
@@ -524,22 +596,23 @@ const Import = () => {
       "Phieu nhap tao boi admin"
     ).then((rs) => {
       //TODO: Thêm thông báo ở đây
-      console.log(
-        parseInt(providerID),
-        1,
-        listProducts[0],
-        "Phieu nhap tao boi admin"
-      );
+      // console.log(
+      //   parseInt(providerID),
+      //   1,
+      //   listProducts[0],
+      //   "Phieu nhap tao boi admin"
+      // );
       console.log(rs);
       alert(rs.data.taoPhieuNhap.message);
       if (rs.data.taoPhieuNhap.status === 201) {
         // clearField();
         //setIsEdit(false);
+        setData(null);
         setReload(true);
       }
     });
   };
-  return isReady ? (  
+  return isReady ? (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
         <Header style={headerStyle}>

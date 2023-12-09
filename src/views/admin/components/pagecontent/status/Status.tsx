@@ -1,10 +1,23 @@
-import { Button, Checkbox, Col, Divider, Layout, Row, Space, Tag } from "antd";
+import {
+  Button,
+  Checkbox,
+  Col,
+  Divider,
+  Layout,
+  Row,
+  Skeleton,
+  Space,
+  Tag,
+} from "antd";
 import "../../../style/product.css";
 import React, { useEffect, useState } from "react";
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { CheckboxValueType } from "antd/es/checkbox/Group";
-import { getPrivileges } from "../../../../../controllers/modules/admin/privileges";
+import {
+  getFeatures,
+  getPrivileges,
+} from "../../../../../controllers/modules/admin/privileges";
 import { authenticationAdmin } from "../../../../../../utils/util";
 import { useNavigate } from "react-router-dom";
 const { Header, Content } = Layout;
@@ -28,8 +41,8 @@ interface detail {
   ma: string;
   ten: string;
 }
-const plainOptions = ["Xem", "Thêm", "Xóa", "Sửa", "Tìm kiếm"];
-const defaultCheckedList = ["Xem"];
+const plainOptions = [];
+const defaultCheckedList = [];
 interface Item {
   key: string;
   id_permission: string;
@@ -157,13 +170,17 @@ const Status = () => {
       }
 
       const rsquyenData = await getPrivileges();
-      for (const element of rsquyenData.data.quyen.data) {
-        originData.push({
-          key: element.ma,
-          id_permission: element.ma,
-          name_permission: element.ten,
-          detail_permission: element.chucnang,
-        });
+      const rschucnangData = await getFeatures();
+      // for (const element of rsquyenData.data.quyen.data) {
+      //   originData.push({
+      //     key: element.ma,
+      //     id_permission: element.ma,
+      //     name_permission: element.ten,
+      //     detail_permission: element.chucnang,
+      //   });
+      // }
+      for (const e of rschucnangData.data.chucnang.data) {
+        plainOptions.push(e.ten);
       }
 
       setIsReady(true);
@@ -175,7 +192,7 @@ const Status = () => {
       setReload(false);
     }
   }, [reload]);
-  return (
+  return isReady ? (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
         <Header style={headerStyle}>
@@ -251,6 +268,44 @@ const Status = () => {
         </Content>
       </Layout>
     </Space>
+  ) : (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        height: "100%",
+        paddingTop: "20px",
+        paddingBottom: "20px",
+      }}
+    >
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+    </div>
   );
 };
 export default Status;
