@@ -50,6 +50,8 @@ interface Item {
   name_imp: string;
   color_imp: string;
   size_imp: string;
+  color_imp_id: string;
+  size_imp_id: string;
   provider: string;
   provider_id: string;
   amount_imp: number;
@@ -169,33 +171,33 @@ const Import = () => {
     setEditingKey(record.key);
   };
 
-  const cancel = () => {
-    setEditingKey("");
-  };
+  // const cancel = () => {
+  //   setEditingKey("");
+  // };
 
-  const save = async (key: React.Key) => {
-    try {
-      const row = (await form.validateFields()) as Item;
+  // const save = async (key: React.Key) => {
+  //   try {
+  //     const row = (await form.validateFields()) as Item;
 
-      const newData = [...data];
-      const index = newData.findIndex((item) => key === item.key);
-      if (index > -1) {
-        const item = newData[index];
-        newData.splice(index, 1, {
-          ...item,
-          ...row,
-        });
-        setData(newData);
-        setEditingKey("");
-      } else {
-        newData.push(row);
-        setData(newData);
-        setEditingKey("");
-      }
-    } catch (errInfo) {
-      console.log("Validate Failed:", errInfo);
-    }
-  };
+  //     const newData = [...data];
+  //     const index = newData.findIndex((item) => key === item.key);
+  //     if (index > -1) {
+  //       const item = newData[index];
+  //       newData.splice(index, 1, {
+  //         ...item,
+  //         ...row,
+  //       });
+  //       setData(newData);
+  //       setEditingKey("");
+  //     } else {
+  //       newData.push(row);
+  //       setData(newData);
+  //       setEditingKey("");
+  //     }
+  //   } catch (errInfo) {
+  //     console.log("Validate Failed:", errInfo);
+  //   }
+  // };
   const handleDelete = (key: React.Key) => {
     const newData = data.filter((item) => item.key !== key);
     let tmp = totalBorrow - data.find((item) => item.key !== key).total_imp;
@@ -364,6 +366,7 @@ const Import = () => {
   const [count, setCount] = useState("");
   const handleChangeProvider = (value: string, label: { label: string }) => {
     console.log(value, label);
+    setSelectedProvider(value);
     providerItem.label = label.label;
     providerItem.value = value;
     console.log(providerItem);
@@ -423,20 +426,39 @@ const Import = () => {
       alert("Hãy chọn các giá trị hợp lệ!");
     } else {
       const newData = [...data];
-      let key = (newData.length + 1).toString();
-      newData.push({
-        dateinit: dayjs(),
-        key: key,
-        id_pro_imp: productItem.value,
-        name_imp: productItem.label,
-        color_imp: colorItem.label,
-        size_imp: sizeItem.label,
-        provider: providerItem.label,
-        amount_imp: parseInt(amountProduct),
-        price_imp: parseInt(priceProduct),
-        total_imp: parseInt(amountProduct) * parseInt(priceProduct),
-        provider_id: providerItem.value,
-      });
+      let itemT = newData.findIndex(
+        (item) =>
+          parseInt(item.id_pro_imp) === parseInt(productItem.value) &&
+          parseInt(item.color_imp_id) === parseInt(colorItem.value) &&
+          parseInt(item.size_imp_id) === parseInt(sizeItem.value)
+      );
+      console.log("Kho qua ma");
+      // console.log(newData);
+      // console.log(productItem.value, " ", colorItem.value, " ", sizeItem.value);
+      // console.log(itemT);
+      if (itemT != -1) {
+        newData[itemT].amount_imp += parseInt(amountProduct);
+        newData[itemT].price_imp = parseInt(priceProduct);
+        newData[itemT].total_imp =
+          newData[itemT].amount_imp * newData[itemT].price_imp;
+      } else {
+        let key = (newData.length + 1).toString();
+        newData.push({
+          dateinit: dayjs(),
+          key: key,
+          id_pro_imp: productItem.value,
+          name_imp: productItem.label,
+          color_imp: colorItem.label,
+          size_imp: sizeItem.label,
+          provider: providerItem.label,
+          amount_imp: parseInt(amountProduct),
+          price_imp: parseInt(priceProduct),
+          total_imp: parseInt(amountProduct) * parseInt(priceProduct),
+          provider_id: providerItem.value,
+          color_imp_id: colorItem.value,
+          size_imp_id: sizeItem.value,
+        });
+      }
 
       let tmp = totalBorrow + parseInt(amountProduct) * parseInt(priceProduct);
       setTotalBorrow(tmp);
@@ -451,26 +473,74 @@ const Import = () => {
       // setCount("");
 
       setData(newData);
-      // setReload(true);
     }
+    // form.setFieldsValue({
+    //   provider: undefined,
+    //   product: undefined,
+    //   color: undefined,
+    //   size: undefined,
+    //   price: undefined,
+    //   count: undefined,
+    // });
     // setEditingKey("");
     // console.log(editingKey);
   };
+  interface productItem {
+    masanpham: number;
+    mamau: number;
+    makichco: number;
+    soluong: number;
+    gianhap: number;
+    giaban: number;
+  }
   const handleClickImportProduct = () => {
+    const providerID = data[0].provider_id;
+    let listProducts: productItem[] = [];
     data.forEach((element) => {
-      // importProduct(element.provider_id,).then((rs) => {
-      //   alert(rs.data.xacnhanhoachuyhoadon.message);
-      //   if (rs.data.xacnhanhoachuyhoadon.status === 200) {
-      //     console.log("Dung vay ma huhu");
-      //     const newData = data.filter((item) => item.key !== key);
-      //     console.log(newData);
-      //     setData(newData);
-      //     // setReload(true);
-      //   }
-      // });
+      listProducts.push({
+        masanpham: parseInt(element.id_pro_imp),
+        mamau: parseInt(element.color_imp_id),
+        makichco: parseInt(element.size_imp_id),
+        soluong: element.amount_imp,
+        gianhap: element.price_imp,
+        giaban: 0,
+      });
+    });
+    // data.forEach((element) => {
+    //   // importProduct(element.provider_id,).then((rs) => {
+    //   //   alert(rs.data.xacnhanhoachuyhoadon.message);
+    //   //   if (rs.data.xacnhanhoachuyhoadon.status === 200) {
+    //   //     console.log("Dung vay ma huhu");
+    //   //     const newData = data.filter((item) => item.key !== key);
+    //   //     console.log(newData);
+    //   //     setData(newData);
+    //   //     // setReload(true);
+    //   //   }
+    //   // });
+    // });
+    importProduct(
+      parseInt(providerID),
+      2,
+      listProducts,
+      "Phieu nhap tao boi admin"
+    ).then((rs) => {
+      //TODO: Thêm thông báo ở đây
+      console.log(
+        parseInt(providerID),
+        1,
+        listProducts[0],
+        "Phieu nhap tao boi admin"
+      );
+      console.log(rs);
+      alert(rs.data.taoPhieuNhap.message);
+      if (rs.data.taoPhieuNhap.status === 201) {
+        // clearField();
+        //setIsEdit(false);
+        setReload(true);
+      }
     });
   };
-  return isReady ? (
+  return isReady ? (  
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
         <Header style={headerStyle}>
@@ -626,7 +696,11 @@ const Import = () => {
           </Form>
         </Content>
         <Footer style={footerStyle}>
-          <Button type="primary" style={{ width: "40%" }}>
+          <Button
+            type="primary"
+            style={{ width: "40%" }}
+            onClick={handleClickImportProduct}
+          >
             Xác nhận nhập hàng
           </Button>
         </Footer>
