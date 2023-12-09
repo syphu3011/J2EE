@@ -5,16 +5,22 @@ import {
   Divider,
   Layout,
   Row,
-  Select,
-  SelectProps,
+  Skeleton,
   Space,
   Tag,
 } from "antd";
 import "../../../style/product.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { CheckboxValueType } from "antd/es/checkbox/Group";
+import {
+  addPrivileges,
+  getFeatures,
+  getPrivileges,
+} from "../../../../../controllers/modules/admin/privileges";
+import { authenticationAdmin } from "../../../../../../utils/util";
+import { useNavigate } from "react-router-dom";
 const { Header, Content } = Layout;
 const headerStyle: React.CSSProperties = {
   color: "#000000",
@@ -32,116 +38,87 @@ const contentStyle: React.CSSProperties = {
   color: "#fff",
   backgroundColor: "#ffffff",
 };
-const plainOptions = ["Xem", "Thêm", "Xóa", "Sửa", "Tìm kiếm"];
-const defaultCheckedList = ["Xem"];
+
 interface Item {
   key: string;
   id_permission: string;
   name_permission: string;
-  detail_permission: string[];
+  detail_permission: detail[];
 }
-
-const originData: Item[] = [];
-const optionsst: SelectProps["options"] = [];
-const handleChange = (value: string[]) => {
-  console.log(`selected ${value}`);
+interface detail {
+  ma: string;
+  ten: string;
+}
+interface AddItem {
+  name: string;
+  id_permission: { ma: number }[];
+}
+const AddPermission: AddItem = {
+  name: "",
+  id_permission: [],
 };
-for (let i = 0; i < 20; i++) {
-  originData.push({
-    key: i.toString(),
-    id_permission: `${i}`,
-    name_permission: `trạng thái ${i}`,
-    detail_permission: ["Thêm", "Xóa"],
-  });
-}
-interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
-  editing: boolean;
-  dataIndex: string;
-  title: any;
-  inputType: "number" | "text";
-  record: Item;
-  index: number;
-  children: React.ReactNode;
-}
+const plainOptions = [];
+const defaultCheckedList = [];
+
+// const optionsst: SelectProps["options"] = [];
+// const handleChange = (value: string[]) => {
+//   console.log(`selected ${value}`);
+// };
+// interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
+//   editing: boolean;
+//   dataIndex: string;
+//   title: any;
+//   inputType: "number" | "text";
+//   record: Item;
+//   index: number;
+//   children: React.ReactNode;
+// }
 const CheckboxGroup = Checkbox.Group;
-const EditableCell: React.FC<EditableCellProps> = ({
-  editing,
-  dataIndex,
-  title,
-  inputType,
-  record,
-  index,
-  children,
-  ...restProps
-}) => {
-  const inputNode = inputType === "number" ? <InputNumber /> : <Input />;
+// const EditableCell: React.FC<EditableCellProps> = ({
+//   editing,
+//   dataIndex,
+//   title,
+//   inputType,
+//   record,
+//   index,
+//   children,
+//   ...restProps
+// }) => {
+//   const inputNode = inputType === "number" ? <InputNumber /> : <Input />;
 
-  return (
-    <td {...restProps}>
-      {editing ? (
-        <Form.Item
-          name={dataIndex}
-          style={{ margin: 0 }}
-          rules={[
-            {
-              required: true,
-              message: `Hãy nhập ${title}!`,
-            },
-          ]}
-        >
-          {inputNode}
-        </Form.Item>
-      ) : (
-        children
-      )}
-    </td>
-  );
-};
+//   return (
+//     <td {...restProps}>
+//       {editing ? (
+//         <Form.Item
+//           name={dataIndex}
+//           style={{ margin: 0 }}
+//           rules={[
+//             {
+//               required: true,
+//               message: `Hãy nhập ${title}!`,
+//             },
+//           ]}
+//         >
+//           {inputNode}
+//         </Form.Item>
+//       ) : (
+//         children
+//       )}
+//     </td>
+//   );
+// };
 const Status = () => {
+  const feature: detail[] = [];
+  const originData: Item[] = [];
   const [form] = Form.useForm();
   const [data, setData] = useState(originData);
-  const [editingKey, setEditingKey] = useState("");
-
-  const isEditing = (record: Item) => record.key === editingKey;
-
-  const edit = (record: Partial<Item> & { key: React.Key }) => {
-    form.setFieldsValue({
-      name_permission: "",
-      detail_permission: "",
-      ...record,
-    });
-    setEditingKey(record.key);
-  };
-
-  const cancel = () => {
-    setEditingKey("");
-  };
+  const [reload, setReload] = useState(true);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const [isReady, setIsReady] = useState(false);
+  const navigate = useNavigate();
   const handleDelete = (key: React.Key) => {
     const newData = data.filter((item) => item.key !== key);
     setData(newData);
-  };
-
-  const save = async (key: React.Key) => {
-    try {
-      const row = (await form.validateFields()) as Item;
-      const newData = [...data];
-      const index = newData.findIndex((item) => key === item.key);
-      if (index > -1) {
-        const item = newData[index];
-        newData.splice(index, 1, {
-          ...item,
-          ...row,
-        });
-        setData(newData);
-        setEditingKey("");
-      } else {
-        newData.push(row);
-        setData(newData);
-        setEditingKey("");
-      }
-    } catch (errInfo) {
-      console.log("Validate Failed:", errInfo);
-    }
   };
 
   const columns = [
@@ -154,47 +131,18 @@ const Status = () => {
       title: "Tên quyền",
       dataIndex: "name_permission",
       width: "auto",
-      editable: true,
     },
     {
       title: "Chi tiết quyền",
       dataIndex: "detail_permission",
       width: "auto",
-      editable: true,
-      render: (detail_permission: String[]) => (
+      render: (detail_permission: detail[]) => (
         <>
           {detail_permission.map((tag) => (
-            <Tag>{tag.toUpperCase()}</Tag>
+            <Tag key={tag.ma}>{tag.ten.toUpperCase()}</Tag>
           ))}
         </>
       ),
-    },
-    {
-      dataIndex: "editcus",
-      width: "8%",
-      render: (_: any, record: Item) => {
-        const editable = isEditing(record);
-        return editable ? (
-          <span>
-            <Typography.Link
-              onClick={() => save(record.key)}
-              style={{ marginRight: 8 }}
-            >
-              Lưu
-            </Typography.Link>
-            <Popconfirm title="Bạn muốn hủy??" onConfirm={cancel}>
-              <a>Hủy</a>
-            </Popconfirm>
-          </span>
-        ) : (
-          <Typography.Link
-            disabled={editingKey !== ""}
-            onClick={() => edit(record)}
-          >
-            Sửa
-          </Typography.Link>
-        );
-      },
     },
     {
       dataIndex: "delete_permiss",
@@ -217,28 +165,73 @@ const Status = () => {
   const indeterminate =
     checkedList.length > 0 && checkedList.length < plainOptions.length;
   const onChange = (list: CheckboxValueType[]) => {
+    console.log(list);
     setCheckedList(list);
   };
 
   const onCheckAllChange = (e: CheckboxChangeEvent) => {
     setCheckedList(e.target.checked ? plainOptions : []);
+    console.log(e.target.checked ? plainOptions : []);
   };
-  const mergedColumns = columns.map((col) => {
-    if (!col.editable) {
-      return col;
+
+  useEffect(() => {
+    async function fetchMetaData(rs?) {
+      plainOptions.splice(0, plainOptions.length);
+      if (rs && rs.data.dangNhapAdminVoiToken.status != 200) {
+        navigate("/LoginAdmin");
+        return;
+      }
+
+      const rsquyenData = await getPrivileges();
+      const rschucnangData = await getFeatures();
+      for (const element of rsquyenData.data.quyen.data) {
+        originData.push({
+          key: element.ma,
+          id_permission: element.ma,
+          name_permission: element.ten,
+          detail_permission: element.chucnang,
+        });
+      }
+      for (const e of rschucnangData.data.chucnang.data) {
+        plainOptions.push(e.ten);
+        feature.push({
+          ma: e.ma,
+          ten: e.ten,
+        });
+      }
+      setIsReady(true);
     }
-    return {
-      ...col,
-      onCell: (record: Item) => ({
-        record,
-        inputType: col.dataIndex === "numberphone" ? "number" : "text",
-        dataIndex: col.dataIndex,
-        title: col.title,
-        editing: isEditing(record),
-      }),
-    };
-  });
-  return (
+
+    if (reload) {
+      isFirstLoad ? authenticationAdmin(fetchMetaData) : fetchMetaData();
+      setIsFirstLoad(false);
+      setReload(false);
+    }
+  }, [reload]);
+  const layMaTuTen = (ten) => {
+    const getid = feature.find((item) => item.ten == ten);
+    return getid ? Number(getid.ma) : null;
+  };
+  const onclick = () => {
+    console.log(checkedList);
+    for (const e of checkedList) {
+      let ma = layMaTuTen(e);
+      if (ma !== null) {
+        AddPermission.id_permission.push({ ma });
+      }
+    }
+    console.log(" truoc khi them" + AddPermission);
+    addPrivileges(AddPermission.name, AddPermission.id_permission).then(
+      (rs) => {
+        console.log(rs);
+        alert(rs.data.taoQuyen.message);
+        if (rs.data.taoQuyen.status === 201) {
+          setReload(true);
+        }
+      }
+    );
+  };
+  return isReady ? (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
         <Header style={headerStyle}>
@@ -253,7 +246,10 @@ const Status = () => {
                   minHeight: "100%",
                 }}
               >
-                <Input style={{ width: "80%" }} />
+                <Input
+                  style={{ width: "80%" }}
+                  onChange={(e) => (AddPermission.name = e.target.value)}
+                />
               </Form.Item>
             </Col>
             <Col className="gutter-row" span={10}>
@@ -292,6 +288,7 @@ const Status = () => {
                 <Button
                   type="primary"
                   style={{ width: "60%", marginBottom: 10 }}
+                  onClick={onclick}
                 >
                   Thêm
                 </Button>
@@ -305,23 +302,53 @@ const Status = () => {
         <Content style={contentStyle}>
           <Form form={form} component={false}>
             <Table
-              components={{
-                body: {
-                  cell: EditableCell,
-                },
-              }}
               bordered
               dataSource={data}
-              columns={mergedColumns}
+              columns={columns}
               rowClassName="editable-permission"
-              pagination={{
-                onChange: cancel,
-              }}
             />
           </Form>
         </Content>
       </Layout>
     </Space>
+  ) : (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        height: "100%",
+        paddingTop: "20px",
+        paddingBottom: "20px",
+      }}
+    >
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+    </div>
   );
 };
 export default Status;

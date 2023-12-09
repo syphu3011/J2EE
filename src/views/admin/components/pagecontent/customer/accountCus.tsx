@@ -7,6 +7,7 @@ import {
   Skeleton,
   Table,
   Typography,
+  notification,
 } from "antd";
 import { useNavigate } from "react-router-dom";
 import {
@@ -15,6 +16,7 @@ import {
   openCustomer,
 } from "../../../../../controllers/modules/admin/customer";
 import { authenticationAdmin } from "../../../../../../utils/util";
+import type { NotificationPlacement } from "antd/es/notification/interface";
 
 interface Item {
   key: string;
@@ -84,6 +86,14 @@ const EditableCell: React.FC<EditableCellProps> = ({
 };
 
 const AccountCus = () => {
+  const [api2, NotiTKKH] = notification.useNotification();
+  const NotiAccCus = (placement: NotificationPlacement, s: String) => {
+    api2.info({
+      message: `THÔNG BÁO`,
+      description: s,
+      placement,
+    });
+  };
   const [editingKey, setEditingKey] = useState("");
   const cancel = () => {
     setEditingKey("");
@@ -146,7 +156,7 @@ const AccountCus = () => {
     blockCustomer(parseInt(key.toString())).then((rs) => {
       //TODO: Thêm thông báo ở đây
       // console.log(rs);
-      alert(rs.data.chuyenTrangThaiKhachHang.message);
+      NotiAccCus("top", rs.data.chuyenTrangThaiKhachHang.message);
       if (rs.data.chuyenTrangThaiKhachHang.status === 201) {
         // clearField();
         //setIsEdit(false);
@@ -159,7 +169,7 @@ const AccountCus = () => {
     openCustomer(parseInt(key.toString())).then((rs) => {
       //TODO: Thêm thông báo ở đây
       console.log(rs);
-      alert(rs.data.chuyenTrangThaiKhachHang.message);
+      NotiAccCus("top", rs.data.chuyenTrangThaiKhachHang.message);
       if (rs.data.chuyenTrangThaiKhachHang.status === 201) {
         // clearField();
         //setIsEdit(false);
@@ -246,24 +256,27 @@ const AccountCus = () => {
   //##################################################
 
   return isReady ? (
-    <Form form={form} component={false}>
-      <Table
-        components={{
-          body: {
-            cell: EditableCell,
-          },
-        }}
-        bordered
-        dataSource={data}
-        columns={mergedColumns}
-        pagination={{
-          onChange: cancel,
-          pageSize: 10, // Số hàng hiển thị trên mỗi trang
-          showTotal: (total, range) =>
-            `${range[0]}-${range[1]} of ${total} items`,
-        }}
-      />
-    </Form>
+    <>
+      {NotiTKKH}
+      <Form form={form} component={false}>
+        <Table
+          components={{
+            body: {
+              cell: EditableCell,
+            },
+          }}
+          bordered
+          dataSource={data}
+          columns={mergedColumns}
+          pagination={{
+            onChange: cancel,
+            pageSize: 10, // Số hàng hiển thị trên mỗi trang
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} of ${total} items`,
+          }}
+        />
+      </Form>
+    </>
   ) : (
     <div
       style={{

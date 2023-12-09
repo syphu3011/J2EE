@@ -79,7 +79,7 @@ const columnsPro = [
   },
 ];
 
-const TableProduct = ({data}) => {
+const TableProduct = ({ data }) => {
   return (
     <Table
       bordered
@@ -94,11 +94,13 @@ const TableProduct = ({data}) => {
         let total_expenses_pro = 0;
         pageData.forEach(
           ({ profits_pro, amount_sell_pro, income_pro, expenses_pro }) => {
-            total_profits += parseInt(profits_pro.replace(/[^\d]/g, ''));;
-            total_amount_sell_pro += parseInt(amount_sell_pro.replace(/[^\d]/g, ''));;
-            total_income_pro += parseInt(income_pro.replace(/[^\d]/g, ''));
+            total_profits += parseInt(profits_pro.replace(/[^\d]/g, ""));
+            total_amount_sell_pro += parseInt(
+              amount_sell_pro.replace(/[^\d]/g, "")
+            );
+            total_income_pro += parseInt(income_pro.replace(/[^\d]/g, ""));
 
-            total_expenses_pro += parseInt(expenses_pro.replace(/[^\d]/g, ''));
+            total_expenses_pro += parseInt(expenses_pro.replace(/[^\d]/g, ""));
           }
         );
         return (
@@ -107,17 +109,19 @@ const TableProduct = ({data}) => {
               <Table.Summary.Cell index={0}></Table.Summary.Cell>
               <Table.Summary.Cell index={1}>Tổng</Table.Summary.Cell>
               <Table.Summary.Cell index={2}></Table.Summary.Cell>
-              <Table.Summary.Cell index={3}></Table.Summary.Cell>
+              <Table.Summary.Cell index={3}>
+                {" "}
+                {total_amount_sell_pro.toLocaleString("vi-VN")}
+              </Table.Summary.Cell>
               <Table.Summary.Cell index={4}>
-                {total_amount_sell_pro.toLocaleString('vi-VN')}
+                {formatCurrency(total_income_pro + "")}
               </Table.Summary.Cell>
               <Table.Summary.Cell index={5}>
-                {formatCurrency(total_income_pro+"")}
+                {formatCurrency(total_expenses_pro + "")}
               </Table.Summary.Cell>
               <Table.Summary.Cell index={6}>
-                {formatCurrency(total_expenses_pro+"")}
+                {formatCurrency(total_profits)}
               </Table.Summary.Cell>
-              <Table.Summary.Cell index={7}>{formatCurrency(total_profits)}</Table.Summary.Cell>
             </Table.Summary.Row>
           </Table.Summary>
         );

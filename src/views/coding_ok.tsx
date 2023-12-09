@@ -8,7 +8,7 @@ import { postKeyToServer } from "../controllers/modules/key";
 import {
   addCate,
   getAllCate,
-  removeCate,https://github.com/syphu3011/J2EE/pull/111/conflict?name=src%252Fviews%252Fcoding_ok.tsx&ancestor_oid=f271b13535696ac633985e406aa8023ccfddadea&base_oid=a6f35187c37b5cdcaef1af17a685a44c2529c64f&head_oid=b6d28c0574b8c9178b18aca301f79cb144b93953
+  removeCate,
 } from "../controllers/modules/admin/cate";
 import {
   blockCustomer,
@@ -314,24 +314,6 @@ export default class Coding_ok extends React.Component<any, any> {
       // getPrivileges().then((rs) => {
       //   self.setState({
       //     test: JSON.stringify(rs),
-      //     // JSON.stringify(rs.data.sanpham.data)
-      //     // + '\n' +
-      //     // JSON.stringify(rs.data.nhacungcap.data)
-      //     // + '\n' +
-      //     // JSON.stringify(rs.data.mau.data)
-      //     // + '\n' +
-      //     // JSON.stringify(rs.data.kichco.data)
-      //   });
-      // });
-      // getHistoryOrders().then(rs => {
-      //      self.setState({
-      //         test: JSON.stringify(rs),
-      //     });
-      // })
-      getProviderProductColorSize().then((rs) => {
-      getOrders().then((rs) => {
-        self.setState({
-          test: JSON.stringify(rs),
           // JSON.stringify(rs.data.sanpham.data)
           // + '\n' +
           // JSON.stringify(rs.data.nhacungcap.data)
@@ -339,8 +321,11 @@ export default class Coding_ok extends React.Component<any, any> {
           // JSON.stringify(rs.data.mau.data)
           // + '\n' +
           // JSON.stringify(rs.data.kichco.data)
-        });
-      });
+      //   });
+      // });
+          // editStaff(1, ).then(rs => {
+
+          // })
     });
   }
 

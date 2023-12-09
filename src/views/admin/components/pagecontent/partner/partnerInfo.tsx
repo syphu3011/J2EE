@@ -5,7 +5,12 @@ import React, { useEffect, useState } from "react";
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
 import { authenticationAdmin } from "../../../../../../utils/util";
 import { useNavigate } from "react-router-dom";
-import { getProvider } from "../../../../../controllers/modules/admin/provider";
+import {
+  addProvider,
+  editProvider,
+  getProvider,
+  removeProvider,
+} from "../../../../../controllers/modules/admin/provider";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 120,
@@ -29,16 +34,11 @@ interface Item {
   address_partner: string;
   status_partner: string;
 }
-
-for (let i = 0; i < 20; i++) {
-  // originData.push({
-  //   key: i.toString(),
-  //   id_partner: `${i}`,
-  //   name_partner: `Nguyễn Văn ${i}`,
-  //   number_partner: 233321312321,
-  //   address_partner: "18/02/2002",
-  //   status_partner: "Còn làm",
-  // });
+interface AddItem {
+  name: String;
+  addres: String;
+  phonenumber: String;
+  id_provider_status: number;
 }
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
@@ -82,6 +82,12 @@ const EditableCell: React.FC<EditableCellProps> = ({
     </td>
   );
 };
+const Addpartner: AddItem = {
+  name: "",
+  addres: "",
+  phonenumber: "",
+  id_provider_status: 1,
+};
 const partner = () => {
   const originData: Item[] = [];
   const [reload, setReload] = useState(true);
@@ -118,6 +124,27 @@ const partner = () => {
         });
         setData(newData);
         setEditingKey("");
+        console.log(
+          parseInt(newData[index].id_partner),
+          newData[index].name_partner.toString(),
+          newData[index].address_partner.toString(),
+          newData[index].number_partner.toString(),
+          1
+        );
+        editProvider(
+          parseInt(newData[index].id_partner),
+          newData[index].name_partner.toString(),
+          newData[index].address_partner.toString(),
+          newData[index].number_partner.toString(),
+          1
+        ).then((rs) => {
+          //TODO: Thêm thông báo ở đây
+          console.log(rs);
+          alert(rs.data.suaNhaCungCap.message);
+          if (rs.data.suaNhaCungCap.status === 201) {
+            setReload(true);
+          }
+        });
       } else {
         newData.push(row);
         setData(newData);
@@ -128,8 +155,17 @@ const partner = () => {
     }
   };
   const handleDelete = (key: React.Key) => {
+    removeProvider(parseInt(key.toString())).then((rs) => {
+      console.log(rs);
+      alert(rs.data.xoaNhaCungCap.message);
+      if (rs.data.xoaNhaCungCap.status === 200) {
+        setReload(true);
+      }
+    });
     const newData = data.filter((item) => item.key !== key);
     setData(newData);
+    // const newData = data.filter((item) => item.key !== key);
+    // setData(newData);
   };
   const columns = [
     {
@@ -244,6 +280,21 @@ const partner = () => {
       setReload(false);
     }
   }, [reload]);
+  const onclick = () => {
+    console.log(Addpartner);
+    addProvider(
+      Addpartner.name,
+      Addpartner.addres,
+      Addpartner.phonenumber,
+      Addpartner.id_provider_status
+    ).then((rs) => {
+      console.log(rs);
+      alert(rs.data.taoNhaCungCap.message);
+      if (rs.data.taoNhaCungCap.status === 201) {
+        setReload(true);
+      }
+    });
+  };
   return isReady ? (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
@@ -251,18 +302,14 @@ const partner = () => {
           <Row gutter={16}>
             <Col className="gutter-row" span={10}>
               <Form.Item
-                label="Họ tên:"
+                label="Tên nhà cung cấp:"
                 labelAlign="left"
                 labelCol={{ span: 5 }}
               >
-                <Input style={{ width: "60%" }} />
-              </Form.Item>
-              <Form.Item
-                label="Ngày sinh"
-                labelAlign="left"
-                labelCol={{ span: 5 }}
-              >
-                <DatePicker format={dateFormat} style={{ width: "60%" }} />
+                <Input
+                  style={{ width: "60%" }}
+                  onChange={(e) => (Addpartner.name = e.target.value)}
+                />
               </Form.Item>
             </Col>
             <Col className="gutter-row" span={10}>
@@ -272,14 +319,20 @@ const partner = () => {
                   labelAlign="left"
                   labelCol={{ span: 6 }}
                 >
-                  <Input style={{ width: "60%" }} />
+                  <Input
+                    style={{ width: "60%" }}
+                    onChange={(e) => (Addpartner.phonenumber = e.target.value)}
+                  />
                 </Form.Item>
                 <Form.Item
                   label="Địa chỉ:"
                   labelAlign="left"
                   labelCol={{ span: 6 }}
                 >
-                  <Input style={{ width: "60%" }} />
+                  <Input
+                    style={{ width: "60%" }}
+                    onChange={(e) => (Addpartner.addres = e.target.value)}
+                  />
                 </Form.Item>
               </div>
             </Col>
@@ -294,6 +347,7 @@ const partner = () => {
                 <Button
                   type="primary"
                   style={{ width: "70%", marginBottom: 30 }}
+                  onClick={onclick}
                 >
                   Thêm
                 </Button>

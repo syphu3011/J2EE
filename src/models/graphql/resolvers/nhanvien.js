@@ -74,7 +74,6 @@ module.exports = {
                         ngaysinh,
                         sodienthoai,
                         socccd,
-                        maquyen,
                         matrangthai,
                     });
 

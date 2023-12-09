@@ -1,4 +1,4 @@
-export declare function importProduct(id_provider: number, id_staff: number, arr_prod: {
+export declare function importProduct(id_provider: number, arr_prod: {
     masanpham: number;
     mamau: number;
     makichco: number;

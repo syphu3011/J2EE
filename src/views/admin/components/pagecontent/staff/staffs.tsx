@@ -7,6 +7,7 @@ import {
   Row,
   Skeleton,
   Space,
+  notification,
 } from "antd";
 import "../../../style/product.css";
 const { Header, Content } = Layout;
@@ -21,6 +22,7 @@ import {
 } from "../../../../../controllers/modules/admin/staff";
 import dayjs from "dayjs";
 import { authenticationAdmin } from "../../../../../../utils/util";
+import type { NotificationPlacement } from "antd/es/notification/interface";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 120,
@@ -57,7 +59,6 @@ const addData: AddItem = {
   socccd: "string",
   sodienthoai: "string",
 };
-
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
@@ -79,7 +80,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
   ...restProps
 }) => {
   const inputNode = inputType === "number" ? <InputNumber /> : <Input />;
-
   return (
     <td {...restProps}>
       {editing ? (
@@ -103,6 +103,14 @@ const EditableCell: React.FC<EditableCellProps> = ({
 };
 
 const Staff = () => {
+  const [api2, NotiNV] = notification.useNotification();
+  const NotiStaff = (placement: NotificationPlacement, s: String) => {
+    api2.info({
+      message: `THÔNG BÁO`,
+      description: s,
+      placement,
+    });
+  };
   const StaffData: Item[] = [];
   const [reload, setReload] = useState(true);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
@@ -111,6 +119,40 @@ const Staff = () => {
   const [form] = Form.useForm();
   const [data, setData] = useState(StaffData);
   const [editingKey, setEditingKey] = useState("");
+
+  useEffect(() => {
+    async function fetchMetaData(rs?) {
+      if (rs && rs.data.dangNhapAdminVoiToken.status != 200) {
+        navigate("/LoginAdmin");
+        return;
+      }
+      const rsFetchData = await getStaff();
+
+      var fetchData = rsFetchData.data.nhanvien.data;
+      fetchData.forEach((element, index) => {
+        StaffData.push({
+          key: element.ma,
+          id_staff: element.ma,
+          name_staff: element.ten,
+          CCCD: element.socccd,
+          numberphone_staff: element.sodienthoai,
+          birthday_staff: dayjs(new Date(parseInt(element.ngaysinh)))
+            .format("YYYY-MM-DD")
+            .toString(),
+          status: element.trangthai.ten,
+        });
+      });
+
+      setIsReady(true);
+    }
+    // console.log(data)
+
+    if (reload) {
+      isFirstLoad ? authenticationAdmin(fetchMetaData) : fetchMetaData();
+      setIsFirstLoad(false);
+      setReload(false);
+    }
+  }, [reload]);
 
   const isEditing = (record: Item) => record.key === editingKey;
 
@@ -161,7 +203,7 @@ const Staff = () => {
         ).then((rs) => {
           //TODO: Thêm thông báo ở đây
           console.log(rs);
-          alert(rs.data.suaNhanVien.message);
+          NotiStaff("top", rs.data.suaNhanVien.message);
           if (rs.data.suaNhanVien.status === 201) {
             setReload(true);
           }
@@ -178,14 +220,13 @@ const Staff = () => {
   const handleDelete = (key: React.Key) => {
     removeStaff(parseInt(key.toString())).then((rs) => {
       console.log(rs);
-      alert(rs.data.xoaNhanVien.message);
-      if (rs.data.xoaNhanVien.status === 201) {
+      NotiStaff("top", rs.data.xoaNhanVien.message);
+      if (rs.data.xoaNhanVien.status === 200) {
         setReload(true);
+        const newData = data.filter((item) => item.key !== key);
+        setData(newData);
       }
     });
-    const newData = data.filter((item) => item.key !== key);
-
-    setData(newData);
   };
   const columns = [
     {
@@ -276,39 +317,6 @@ const Staff = () => {
       }),
     };
   });
-  useEffect(() => {
-    async function fetchMetaData(rs?) {
-      if (rs && rs.data.dangNhapAdminVoiToken.status != 200) {
-        navigate("/LoginAdmin");
-        return;
-      }
-      const rsFetchData = await getStaff();
-
-      var fetchData = rsFetchData.data.nhanvien.data;
-      fetchData.forEach((element, index) => {
-        StaffData.push({
-          key: element.ma,
-          id_staff: element.ma,
-          name_staff: element.ten,
-          CCCD: element.socccd,
-          numberphone_staff: element.sodienthoai,
-          birthday_staff: dayjs(new Date(parseInt(element.ngaysinh)))
-            .format("YYYY-MM-DD")
-            .toString(),
-          status: element.trangthai.ten,
-        });
-      });
-
-      setIsReady(true);
-    }
-    // console.log(data)
-
-    if (reload) {
-      isFirstLoad ? authenticationAdmin(fetchMetaData) : fetchMetaData();
-      setIsFirstLoad(false);
-      setReload(false);
-    }
-  }, [reload]);
   const onclick = () => {
     console.log(addData);
     addStaff(
@@ -318,8 +326,8 @@ const Staff = () => {
       addData.socccd
     ).then((rs) => {
       console.log(rs);
-      alert(rs.data.themNhanVien.message);
-      if (rs.data.themNhanVien.status === 200) {
+      NotiStaff("top", rs.data.themNhanVien.message);
+      if (rs.data.themNhanVien.status === 201) {
         setReload(true);
       }
     });
@@ -330,6 +338,7 @@ const Staff = () => {
   };
   return isReady ? (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
+      {NotiNV}
       <Layout>
         <Header style={headerStyle}>
           <Row gutter={16}>

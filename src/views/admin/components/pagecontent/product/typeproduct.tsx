@@ -8,6 +8,8 @@ import {
   Skeleton,
   Space,
   Upload,
+  UploadFile,
+  UploadProps,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import "../../../style/product.css";
@@ -27,13 +29,16 @@ import TextArea from "antd/es/input/TextArea";
 import { useNavigate } from "react-router-dom";
 import { getProductInStock } from "../../../../../controllers/modules/admin/productInStock";
 import {
+  addCate,
   editCate,
   getAllCate,
 } from "../../../../../controllers/modules/admin/cate";
 import {
   authenticationAdmin,
   convertB64ToImage,
+  getBase64AndName,
 } from "../../../../../../utils/util";
+import { UploadChangeParam, RcFile } from "antd/es/upload";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 120,
@@ -59,7 +64,6 @@ interface Item {
 }
 
 // const originData: Item[] = [];
-const options: SelectProps["options"] = [];
 const handleChange = (value: string[]) => {
   console.log(`selected ${value}`);
 };
@@ -122,6 +126,8 @@ const EditableCell: React.FC<EditableCellProps> = ({
 const Typeproduct = () => {
   // Define
   const originData: Item[] = [];
+  const options: SelectProps["options"] = [];
+  const [optionsData, setOptionsData] = useState(options);
   const [isReady, setIsReady] = useState(false);
   const navigate = useNavigate();
   const [reload, setReload] = useState(true);
@@ -271,12 +277,12 @@ const Typeproduct = () => {
         ) : null,
     },
   ];
-  for (let i = 10; i < 36; i++) {
-    options.push({
-      value: `ao` + i,
-      label: `ao` + i,
-    });
-  }
+  // for (let i = 10; i < 36; i++) {
+  //   options.push({
+  //     value: `ao` + i,
+  //     label: `ao` + i,
+  //   });
+  // }
   const mergedColumns = columns.map((col) => {
     if (!col.editable) {
       return col;
@@ -305,14 +311,21 @@ const Typeproduct = () => {
         navigate("/LoginAdmin");
         return;
       }
+      // const rsFectchCate = await getca
       const rsFetchData = await getAllCate();
 
       var fetchData = rsFetchData.data.loai.data;
       //
       //
+      const newOptions: SelectProps["options"] = [];
 
       fetchData.forEach((element, index) => {
+        newOptions.push({
+          label: element.ten,
+          value: element.ma,
+        });
         console.log("chiu luon a");
+        console.log(newOptions[index].label, newOptions[index].value);
         // console.log(convertB64ToImage(element.anhminhhoa));
         // if (element.loaicha) console.log(element.loaicha.ten);
         originData.push({
@@ -327,7 +340,8 @@ const Typeproduct = () => {
       });
       // console.log("originData " + originData.length);
       setData(originData);
-      // console.log("Data " + data.length);
+      setOptionsData(newOptions);
+      console.log("Data " + options);
       setIsReady(true);
     }
     // console.log(data)
@@ -339,7 +353,79 @@ const Typeproduct = () => {
     }
   }, [reload]);
   // ##################################################
+  const value = "";
+  const [valueType, setValueType] = useState(value);
+  const handleChangeNameType = (value) => {
+    setValueType(value);
+  };
+  const [valueNote, setValueNote] = useState(value);
+  const handleChangeNote = (value) => {
+    setValueNote(value);
+  };
+  const valueSelect = { label: "", value: "" };
+  const [rsVlueSelect, setValueSelect] = useState(valueSelect);
+  const handleChangeSelect = (value) => {
+    setValueSelect(value);
+  };
+  const handleAddCate = (value) => {
+    // setValueType(value);
+    console.log(valueType, valueNote, rsVlueSelect.value, b64Add, nameImageAdd);
+    addCate(
+      valueType,
+      valueNote,
+      rsVlueSelect.value,
+      b64Add,
+      nameImageAdd
+    ).then((rs) => {
+      console.log(rs);
+      alert(rs.data.taoLoai.message);
+      if (rs.data.taoLoai.status === 201) {
+        // clearField();
+        // setIsEdit(false);
+        setReload(true);
+      }
+    });
+  };
+  // upload image
+  const handleChangeImage: UploadProps["onChange"] = (
+    info: UploadChangeParam<UploadFile>
+  ) => {
+    console.log("ok");
+    console.log(info.file);
+    if (info.file.percent === 100) {
+      console.log(info.file);
+      // Get this url from response in real world.
+      getBase64AndName(info.file.originFileObj as RcFile, (url, name) => {
+        isEdit ? setB64Edit(url) : setB64Add(url);
+        isEdit ? setNameImageEdit(name) : setNameImageAdd(name);
+        console.log(url);
+        console.log(name);
+        isEdit
+          ? setFileListEdit([{ url: url, name: name }])
+          : setFileListAdd([{ url: url, name: name }]);
+      });
+    }
+  };
+  // edit
+  const [isEdit, setIsEdit] = useState(false);
+  const [idEdit, setIdEdit] = useState(0);
+  const [nameEdit, setNameEdit] = useState("");
+  const [unitEdit, setUnitEdit] = useState("");
+  const [cateEdit, setCateEdit] = useState([]);
+  const [descriptEdit, setDescriptEdit] = useState("");
+  const [b64Edit, setB64Edit] = useState("");
+  const [nameImageEdit, setNameImageEdit] = useState("");
+  // add
+  const [nameAdd, setNameAdd] = useState("");
+  const [unitAdd, setUnitAdd] = useState("");
+  const [cateAdd, setCateAdd] = useState([]);
+  const [descriptAdd, setDescriptAdd] = useState("");
+  const [b64Add, setB64Add] = useState("");
+  const [nameImageAdd, setNameImageAdd] = useState("");
 
+  //file list image
+  const [fileListAdd, setFileListAdd] = useState([]);
+  const [fileListEdit, setFileListEdit] = useState([]);
   return isReady ? (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
@@ -351,7 +437,7 @@ const Typeproduct = () => {
                 labelAlign="left"
                 labelCol={{ span: 6 }}
               >
-                <Input />
+                <Input onChange={handleChangeNameType} />
               </Form.Item>
               <Form.Item
                 label="Thuộc loại"
@@ -360,18 +446,18 @@ const Typeproduct = () => {
                 style={{ width: "100%", height: 30, minWidth: "100%" }}
               >
                 <Select
-                  mode="multiple"
+                  // mode="multiple"
                   allowClear
                   placeholder="Please select"
-                  onChange={handleChange}
-                  options={options}
+                  onChange={handleChangeSelect}
+                  options={optionsData}
                 />
               </Form.Item>
             </Col>
             <Col className="gutter-row" span={6}>
               <div>
                 <Form.Item label="Mô tả">
-                  <TextArea rows={4} />
+                  <TextArea rows={4} onChange={handleChangeNote} />
                 </Form.Item>
               </div>
             </Col>
@@ -386,6 +472,7 @@ const Typeproduct = () => {
                     action="/upload.do"
                     listType="picture-card"
                     maxCount={1}
+                    onChange={handleChangeImage}
                   >
                     <div>
                       <PlusOutlined />
@@ -405,7 +492,8 @@ const Typeproduct = () => {
               >
                 <Button
                   type="primary"
-                  style={{ width: "50%", marginBottom: 30 }}
+                  style={{ width: "70%", marginBottom: "5%" }}
+                  onClick={handleAddCate}
                 >
                   Thêm
                 </Button>

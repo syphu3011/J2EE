@@ -8,6 +8,7 @@ import {
   Space,
   Upload,
   message,
+  notification,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import "../../../style/product.css";
@@ -42,9 +43,11 @@ import {
   getAllUnit,
   addProduct,
   editProduct,
+  removeProduct,
 } from "../../../../../controllers/modules/admin/product";
 import CONFIG_CALL from "../../../../../controllers/const";
 import { useNavigate } from "react-router-dom";
+import type { NotificationPlacement } from "antd/es/notification/interface";
 // define style and interface
 const headerStyle: React.CSSProperties = {
   color: "#000000",
@@ -162,6 +165,14 @@ const Product = () => {
     );
   };
   const isEditing = (record: Item) => record.key === editingKey;
+  const [api2, NotiSP] = notification.useNotification();
+  const NotiProduct = (placement: NotificationPlacement, s: String) => {
+    api2.info({
+      message: `THÔNG BÁO`,
+      description: s,
+      placement,
+    });
+  };
 
   // const edit = (record: Partial<Item> & { key: React.Key }) => {
   //   form.setFieldsValue({ name: "", numberphone: "", birthday: "", ...record });
@@ -245,7 +256,7 @@ const Product = () => {
           b64Edit,
           nameImageEdit
         ).then((rs) => {
-          alert(rs.data.suaSanPham.message);
+          NotiProduct("top", rs.data.suaSanPham.message);
           if (rs.data.suaSanPham.status === 201) {
             clearField();
             setIsEdit(false);
@@ -260,7 +271,7 @@ const Product = () => {
           b64Add,
           nameImageAdd
         ).then((rs) => {
-          alert(rs.data.taoSanPham.message);
+          NotiProduct("top", rs.data.taoSanPham.message);
           if (rs.data.taoSanPham.status === 201) {
             clearField();
             setReload(true);
@@ -320,7 +331,7 @@ const Product = () => {
       editable: true,
       render: (unit: DonVi) => (
         <>
-            <Tag key={unit.ma}>{unit.ten.toUpperCase()}</Tag>
+          <Tag key={unit.ma}>{unit.ten.toUpperCase()}</Tag>
         </>
       ),
     },
@@ -373,6 +384,30 @@ const Product = () => {
             }}
           >
             Sửa
+          </Typography.Link>
+        );
+      },
+    },
+    {
+      title: "Xóa",
+      dataIndex: "editcus",
+      width: "8%",
+      render: (_: any, record: Item) => {
+        // const editable = isEditing(record);
+        return (
+          <Typography.Link
+            // disabled={editingKey !== ""}
+            onClick={() => {
+              removeProduct(record.ma).then((rs) => {
+                NotiProduct("top", rs.data.xoaSanPham.message);
+                if (rs.data.xoaSanPham.status === 201) {
+                  clearField();
+                  setReload(true);
+                }
+              });
+            }}
+          >
+            Xóa
           </Typography.Link>
         );
       },
@@ -454,6 +489,7 @@ const Product = () => {
   }, [reload]);
   return isReady ? (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
+      {NotiSP}
       <Layout>
         <Header style={headerStyle}>
           <Row gutter={16} style={{ marginBottom: "20px" }}>
