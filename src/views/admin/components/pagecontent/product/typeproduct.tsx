@@ -10,6 +10,8 @@ import {
   Upload,
   UploadFile,
   UploadProps,
+  message,
+  notification,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import "../../../style/product.css";
@@ -30,15 +32,19 @@ import { useNavigate } from "react-router-dom";
 import { getProductInStock } from "../../../../../controllers/modules/admin/productInStock";
 import {
   addCate,
+  addCate,
   editCate,
   getAllCate,
+  removeCate,
 } from "../../../../../controllers/modules/admin/cate";
 import {
   authenticationAdmin,
   convertB64ToImage,
   getBase64AndName,
+  getBase64AndName,
 } from "../../../../../../utils/util";
-import { UploadChangeParam, RcFile } from "antd/es/upload";
+import { RcFile, UploadChangeParam } from "antd/es/upload";
+import { NotificationPlacement } from "antd/es/notification/interface";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 120,
@@ -56,11 +62,12 @@ const contentStyle: React.CSSProperties = {
 
 interface Item {
   key: string;
-  id_type: string;
+  id_type: number;
   name_type: string;
-  oftype: string[];
+  oftype: string;
   describe: string;
-  image: string[];
+  image: string;
+  name_image: string
 }
 
 // const originData: Item[] = [];
@@ -124,6 +131,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
   );
 };
 const Typeproduct = () => {
+  const [api2, NotiSP] = notification.useNotification();
   // Define
   const originData: Item[] = [];
   const options: SelectProps["options"] = [];
@@ -131,11 +139,33 @@ const Typeproduct = () => {
   const [isReady, setIsReady] = useState(false);
   const navigate = useNavigate();
   const [reload, setReload] = useState(true);
+  //add
+  const [nameAdd, setNameAdd] = useState(null);
+  const [parentAdd, setParent] = useState(null);
+  const [describe, setDescribe] = useState(null);
+  const [b64Add, setB64Add] = useState(null);
+  const [nameImageAdd, setNameImageAdd] = useState(null);
+  //edit
+  const [nameEdit, setNameEdit] = useState(null);
+  const [idEdit, setIdEdit] = useState(0);
+  const [parentEdit, setParentEdit] = useState(null);
+  const [describeEdit, setDescribeEdit] = useState(null);
+  const [b64Edit, setB64Edit] = useState("");
+  const [nameImageEdit, setNameImageEdit] = useState("");
+  const [isEdit, setIsEdit] = useState(null)
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [base64String, setBase64String] = useState("");
-
+  //file list image
+  const [fileListAdd, setFileListAdd] = useState([]);
+  const [fileListEdit, setFileListEdit] = useState([]);
   // ##################################################
-
+  const NotiProduct = (placement: NotificationPlacement, s: String) => {
+    api2.info({
+      message: `THÔNG BÁO`,
+      description: s,
+      placement,
+    });
+  };
   const [form] = Form.useForm();
   const [data, setData] = useState(originData);
   const [editingKey, setEditingKey] = useState("");
@@ -191,9 +221,54 @@ const Typeproduct = () => {
       console.log("Validate Failed:", errInfo);
     }
   };
-  const handleDelete = (key: React.Key) => {
-    const newData = data.filter((item) => item.key !== key);
-    setData(newData);
+  // add or edit cate
+  const cateAction = () => {
+    isEdit
+      ? editCate(
+          parseInt(idEdit+""),
+          nameEdit,
+          describeEdit,
+          parentEdit.value,
+          b64Edit,
+          nameImageEdit
+        ).then((rs) => {
+          NotiProduct("top", rs.data.suaLoai.message);
+          if (rs.data.suaLoai.status === 201) {
+            clearField();
+            setIsEdit(false);
+            setReload(true);
+          }
+        })
+      : addCate(
+          nameAdd,
+          describe,
+          parentAdd.value,
+          b64Add,
+          nameImageAdd
+        ).then((rs) => {
+          NotiProduct("top", rs.data.taoLoai.message);
+          if (rs.data.taoLoai.status === 201) {
+            clearField();
+            setReload(true);
+          }
+        });
+  };
+  const clearField = () => {
+    handleChangeDescribe("");
+    isEdit ? setNameImageEdit("") : setNameImageAdd("");
+    isEdit ? setB64Edit("") : setB64Add("");
+    isEdit ? setFileListEdit([]) : setFileListAdd([]);
+    handleChangeName("");
+    handleChangeParent("");
+  }
+  const handleDelete = (key) => {
+    removeCate(parseInt(key.id_type)).then((rs) => {
+      NotiProduct("top", rs.data.xoaLoai.message);
+      if (rs.data.xoaLoai.status === 201) {
+        clearField();
+        setReload(true);
+      }
+    });
   };
   const columns = [
     {
@@ -211,11 +286,9 @@ const Typeproduct = () => {
       title: "Thuộc loại",
       dataIndex: "oftype",
       width: "10%",
-      render: (type_pro: string[]) => (
+      render: (type_pro: string) => (
         <>
-          {type_pro.map((tag) => (
-            <Tag key={tag}>{tag.toUpperCase()}</Tag>
-          ))}
+            <Tag key={type_pro}>{type_pro.toUpperCase()}</Tag>
         </>
       ),
     },
@@ -228,11 +301,11 @@ const Typeproduct = () => {
       title: "Hình ảnh",
       dataIndex: "image",
       width: "15%",
-      render: (image: string[]) => (
+      render: (image: string) => (
         <>
-          {image.map((pic) => (
-            <Image width={50} height={50} src={pic} />
-          ))}
+          {
+            <Image width={50} height={50} src={image} />
+          }
         </>
       ),
     },
@@ -256,7 +329,18 @@ const Typeproduct = () => {
         ) : (
           <Typography.Link
             disabled={editingKey !== ""}
-            onClick={() => edit(record)}
+            onClick={() => {
+              setIdEdit(record.id_type)
+              setNameEdit(record.name_type)
+              setNameImageEdit(record.name_image)
+              setDescribeEdit(record.describe)
+              setParentEdit(record.oftype)
+              setFileListEdit([
+                { url: record.image, name: record.name_image },
+              ])
+              setB64Edit(record.image)
+              setIsEdit(true)
+            }}
           >
             Sửa
           </Typography.Link>
@@ -270,7 +354,7 @@ const Typeproduct = () => {
         data.length >= 1 ? (
           <Popconfirm
             title="Bạn thật sự muốn xóa?"
-            onConfirm={() => handleDelete(record.key)}
+            onConfirm={() => handleDelete(record)}
           >
             <a>Xóa</a>
           </Popconfirm>
@@ -304,7 +388,63 @@ const Typeproduct = () => {
     }
     return e?.fileList;
   };
-
+// upload image
+const handleChangeImage: UploadProps["onChange"] = (
+  info: UploadChangeParam<UploadFile>
+) => {
+  console.log("ok");
+  console.log(info.file);
+  if (info.file.percent === 100) {
+    console.log(info.file);
+    // Get this url from response in real world.
+    getBase64AndName(info.file.originFileObj as RcFile, (url, name) => {
+      isEdit ? setB64Edit(url) : setB64Add(url);
+      isEdit ? setNameImageEdit(name) : setNameImageAdd(name);
+      console.log(url);
+      console.log(name);
+      isEdit
+        ? setFileListEdit([{ url: url, name: name }])
+        : setFileListAdd([{ url: url, name: name }]);
+    });
+  }
+};
+const beforeUpload = (file: UploadFile) => {
+  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+  if (!isJpgOrPng) {
+    message.error("Bạn chỉ có thể up file ảnh JPG/PNG!");
+  }
+  const isLt2M = file.size / 10240 / 10240 < 20;
+  if (!isLt2M) {
+    message.error("Dung lượng ảnh lớn hơn 10MB!");
+  }
+  if (isJpgOrPng) {
+    isEdit ? setFileListEdit([file]) : setFileListAdd([file]);
+  }
+  return isJpgOrPng && isLt2M;
+};
+const onRemoveUpload = () => {
+  if (isEdit) {
+    setB64Edit("");
+    setFileListEdit([]);
+    setNameImageEdit("");
+  } else {
+    setB64Add("");
+    setFileListAdd([]);
+    setNameImageAdd("");
+  }
+};
+const handleChangeDescribe = (value) => {
+  const valueChange = typeof value == "string" ? value : value.target.value;
+  isEdit ? setDescribeEdit(valueChange) : setDescribe(valueChange);
+};
+const handleChangeName = (value) => {
+  const valueChange = typeof value == "string" ? value : value.target.value;
+  isEdit ? setNameEdit(valueChange) : setNameAdd(valueChange);
+};
+const handleChangeParent = (value) => {
+  // const valueChange = typeof value == "string" ? value : value.target.value;
+  isEdit ? setParentEdit(value) : setParent(value);
+};
   useEffect(() => {
     async function fetchMetaData(rs?) {
       if (rs && rs.data.dangNhapAdminVoiToken.status != 200) {
@@ -332,10 +472,11 @@ const Typeproduct = () => {
           key: index,
           id_type: element.ma,
           name_type: element.ten,
-          oftype: [element.loaicha ? element.loaicha.ten : "Không"],
+          oftype: element.loaicha ? element.loaicha.ten : "Không",
 
           describe: element.mota,
-          image: [convertB64ToImage(element.anhminhhoa)],
+          image: convertB64ToImage(element.anhminhhoa),
+          name_image: element.tenanhminhhoa
         });
       });
       // console.log("originData " + originData.length);
@@ -437,7 +578,7 @@ const Typeproduct = () => {
                 labelAlign="left"
                 labelCol={{ span: 6 }}
               >
-                <Input onChange={handleChangeNameType} />
+                <Input value={isEdit ? nameEdit : nameAdd} onChange={handleChangeName}/>
               </Form.Item>
               <Form.Item
                 label="Thuộc loại"
@@ -446,10 +587,11 @@ const Typeproduct = () => {
                 style={{ width: "100%", height: 30, minWidth: "100%" }}
               >
                 <Select
-                  // mode="multiple"
                   allowClear
                   placeholder="Please select"
-                  onChange={handleChangeSelect}
+                  onChange={handleChangeParent}
+                  labelInValue={true}
+                  value={isEdit ? parentEdit : parentAdd}
                   options={optionsData}
                 />
               </Form.Item>
@@ -457,7 +599,7 @@ const Typeproduct = () => {
             <Col className="gutter-row" span={6}>
               <div>
                 <Form.Item label="Mô tả">
-                  <TextArea rows={4} onChange={handleChangeNote} />
+                  <TextArea rows={4} value={isEdit ? describeEdit : describe} onChange={handleChangeDescribe} />
                 </Form.Item>
               </div>
             </Col>
@@ -471,6 +613,10 @@ const Typeproduct = () => {
                   <Upload
                     action="/upload.do"
                     listType="picture-card"
+                    beforeUpload={beforeUpload}
+                    onChange={handleChangeImage}
+                    onRemove={onRemoveUpload}
+                    fileList={isEdit ? fileListEdit : fileListAdd}
                     maxCount={1}
                     onChange={handleChangeImage}
                   >
@@ -492,11 +638,28 @@ const Typeproduct = () => {
               >
                 <Button
                   type="primary"
-                  style={{ width: "70%", marginBottom: "5%" }}
-                  onClick={handleAddCate}
+                  style={{ width: "50%", marginBottom: 30 }}
+                  onClick={cateAction}
                 >
-                  Thêm
+                  {isEdit ? "Sửa" : "Thêm"}
                 </Button>
+                {isEdit ? (
+                  <Button
+                    type="primary"
+                    style={{
+                      width: "70%",
+                      marginBottom: "5%",
+                      marginTop: "5%",
+                    }}
+                    onClick={() => {
+                      setIsEdit(false);
+                    }}
+                  >
+                    Hủy
+                  </Button>
+                ) : (
+                  <></>
+                )}
                 <Button type="primary" style={{ width: "50%" }}>
                   Làm mới
                 </Button>
