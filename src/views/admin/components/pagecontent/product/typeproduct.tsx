@@ -121,8 +121,8 @@ const EditableCell: React.FC<EditableCellProps> = ({
 const Typeproduct = () => {
   // Define
   const originData: Item[] = [];
-const options: SelectProps["options"] = [];
-
+  const options: SelectProps["options"] = [];
+  const [optionsData, setOptionsData] = useState(options);
   const [isReady, setIsReady] = useState(false);
   const navigate = useNavigate();
   const [reload, setReload] = useState(true);
@@ -312,9 +312,15 @@ const options: SelectProps["options"] = [];
       var fetchData = rsFetchData.data.loai.data;
       //
       //
+      const newOptions: SelectProps["options"] = [];
 
       fetchData.forEach((element, index) => {
+        newOptions.push({
+          label: element.ten,
+          value: element.ma,
+        });
         console.log("chiu luon a");
+        console.log(newOptions[index].label, newOptions[index].value);
         // console.log(convertB64ToImage(element.anhminhhoa));
         // if (element.loaicha) console.log(element.loaicha.ten);
         originData.push({
@@ -329,7 +335,8 @@ const options: SelectProps["options"] = [];
       });
       // console.log("originData " + originData.length);
       setData(originData);
-      // console.log("Data " + data.length);
+      setOptionsData(newOptions);
+      console.log("Data " + options);
       setIsReady(true);
     }
     // console.log(data)
@@ -351,7 +358,7 @@ const options: SelectProps["options"] = [];
               <Form.Item
                 label="Tên loại:"
                 labelAlign="left"
-                labelCol={{ span: 6 }} 
+                labelCol={{ span: 6 }}
               >
                 <Input />
               </Form.Item>
@@ -366,7 +373,7 @@ const options: SelectProps["options"] = [];
                   allowClear
                   placeholder="Please select"
                   onChange={handleChange}
-                  options={options}
+                  options={optionsData}
                 />
               </Form.Item>
             </Col>
