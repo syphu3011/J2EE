@@ -151,7 +151,7 @@ const AccStaff = () => {
           label: e.ten,
         });
       }
-
+      setData(AccStaffData);
       setIsReady(true);
     }
 

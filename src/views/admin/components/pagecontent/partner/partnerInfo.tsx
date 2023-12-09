@@ -1,16 +1,11 @@
-import { Button, Col, DatePicker, Layout, Row, Skeleton, Space } from "antd";
+import { Button, Col, Layout, Row, Select, SelectProps, Space } from "antd";
 import "../../../style/product.css";
 const { Header, Content } = Layout;
 import React, { useEffect, useState } from "react";
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
-import { authenticationAdmin } from "../../../../../../utils/util";
-import { useNavigate } from "react-router-dom";
-import {
-  addProvider,
-  editProvider,
-  getProvider,
-  removeProvider,
-} from "../../../../../controllers/modules/admin/provider";
+import TextArea from "antd/es/input/TextArea";
+import { getAllColor } from "../../../../../controllers/modules/admin/color";
+import { getAllSize } from "../../../../../controllers/modules/admin/size";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 120,
@@ -28,23 +23,31 @@ const contentStyle: React.CSSProperties = {
 
 interface Item {
   key: string;
-  id_partner: string;
-  name_partner: string;
-  number_partner: number;
-  address_partner: string;
-  status_partner: string;
+  id_att: string;
+  name_att: string;
+  type_att: string;
+  describe: string;
 }
-interface AddItem {
-  name: String;
-  addres: String;
-  phonenumber: String;
-  id_provider_status: number;
+
+const originData: Item[] = [];
+const options: SelectProps["options"] = [];
+const handleChange = (value: string[]) => {
+  console.log(`selected ${value}`);
+};
+for (let i = 0; i < 20; i++) {
+  originData.push({
+    key: i.toString(),
+    id_att: `${i}`,
+    name_att: `Đỏ ${i}`,
+    type_att: "Màu",
+    describe: `Đây là quần áo`,
+  });
 }
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
   title: any;
-  inputType: "number" | "text" | "Date";
+  inputType: "number" | "text";
   record: Item;
   index: number;
   children: React.ReactNode;
@@ -61,6 +64,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
   ...restProps
 }) => {
   const inputNode = inputType === "number" ? <InputNumber /> : <Input />;
+
   return (
     <td {...restProps}>
       {editing ? (
@@ -82,18 +86,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
     </td>
   );
 };
-const Addpartner: AddItem = {
-  name: "",
-  addres: "",
-  phonenumber: "",
-  id_provider_status: 1,
-};
-const partner = () => {
-  const originData: Item[] = [];
-  const [reload, setReload] = useState(true);
-  const [isFirstLoad, setIsFirstLoad] = useState(true);
-  const [isReady, setIsReady] = useState(false);
-  const navigate = useNavigate();
+const Attribute = () => {
   const [form] = Form.useForm();
   const [data, setData] = useState(originData);
   const [editingKey, setEditingKey] = useState("");
@@ -108,7 +101,6 @@ const partner = () => {
   const cancel = () => {
     setEditingKey("");
   };
-  const dateFormat = "DD/MM/YYYY";
 
   const save = async (key: React.Key) => {
     try {
@@ -124,27 +116,6 @@ const partner = () => {
         });
         setData(newData);
         setEditingKey("");
-        console.log(
-          parseInt(newData[index].id_partner),
-          newData[index].name_partner.toString(),
-          newData[index].address_partner.toString(),
-          newData[index].number_partner.toString(),
-          1
-        );
-        editProvider(
-          parseInt(newData[index].id_partner),
-          newData[index].name_partner.toString(),
-          newData[index].address_partner.toString(),
-          newData[index].number_partner.toString(),
-          1
-        ).then((rs) => {
-          //TODO: Thêm thông báo ở đây
-          console.log(rs);
-          alert(rs.data.suaNhaCungCap.message);
-          if (rs.data.suaNhaCungCap.status === 201) {
-            setReload(true);
-          }
-        });
       } else {
         newData.push(row);
         setData(newData);
@@ -155,46 +126,29 @@ const partner = () => {
     }
   };
   const handleDelete = (key: React.Key) => {
-    removeProvider(parseInt(key.toString())).then((rs) => {
-      console.log(rs);
-      alert(rs.data.xoaNhaCungCap.message);
-      if (rs.data.xoaNhaCungCap.status === 200) {
-        setReload(true);
-      }
-    });
     const newData = data.filter((item) => item.key !== key);
     setData(newData);
-    // const newData = data.filter((item) => item.key !== key);
-    // setData(newData);
   };
+
   const columns = [
     {
       title: "Mã",
-      dataIndex: "id_partner",
-      width: "10%",
+      dataIndex: "id_att",
+      width: "auto",
     },
     {
-      title: "Tên đối tác",
-      dataIndex: "name_partner",
-      width: "15%",
+      title: "Tên thuộc tính",
+      dataIndex: "name_att",
+      width: "auto",
       editable: true,
     },
     {
-      title: "Số điện thoại",
-      dataIndex: "number_partner",
-      editable: true,
+      title: "Loại thuộc tính",
+      dataIndex: "type_att",
+      width: "auto",
     },
     {
-      title: "Địa chỉ",
-      dataIndex: "address_partner",
-      editable: true,
-    },
-    {
-      title: "Trạng thái",
-      dataIndex: "status_partner",
-    },
-    {
-      dataIndex: "edit_partner",
+      dataIndex: "editcus",
       width: "8%",
       render: (_: any, record: Item) => {
         const editable = isEditing(record);
@@ -221,8 +175,7 @@ const partner = () => {
       },
     },
     {
-      key: "operation",
-      dataIndex: "dlt_part_infor",
+      dataIndex: "delete_att",
       width: "8%",
       render: (_, record: { key: React.Key }) =>
         data.length >= 1 ? (
@@ -235,6 +188,14 @@ const partner = () => {
         ) : null,
     },
   ];
+  options.push({
+    value: `color`,
+    label: `Màu`,
+  });
+  options.push({
+    value: `size`,
+    label: `Kích thước`,
+  });
   const mergedColumns = columns.map((col) => {
     if (!col.editable) {
       return col;
@@ -251,107 +212,72 @@ const partner = () => {
     };
   });
   useEffect(() => {
-    async function fetchPartnerData(rs?) {
-      if (rs && rs.data.dangNhapAdminVoiToken.status != 200) {
-        navigate("/LoginAdmin");
-        return;
-      }
-      const rsFetchData = await getProvider();
-
-      var fetchData = rsFetchData.data.nhacungcap.data;
-      fetchData.forEach((element, index) => {
-        originData.push({
-          key: element.ma,
-          id_partner: element.ma,
-          name_partner: element.ten,
-          number_partner: element.dienthoai,
-          address_partner: element.diachi,
-          status_partner: element.trangthai.ten,
-        });
+    async function fetchData() {
+      const [dataColor, dataSize] = await Promise.all([
+        getAllColor(),
+        getAllSize(),
+      ]);
+      const tempDataColor = dataColor.data.mau.data.map((mau) => {
+        return {
+          key: mau.ma,
+          id_att: mau.ma,
+          name_att: mau.ten,
+          type_att: "Màu",
+          describe: "",
+        };
       });
-
-      setIsReady(true);
+      const tempDataSize = dataSize.data.kichco.data.map((kichco) => {
+        return {
+          key: kichco.ma,
+          id_att: kichco.ma,
+          name_att: kichco.ten,
+          type_att: "Kích cỡ",
+          describe: "",
+        };
+      });
+      const tempAllData = [...tempDataSize, ...tempDataColor];
+      setData(tempAllData);
     }
-    // console.log(data)
-
-    if (reload) {
-      isFirstLoad ? authenticationAdmin(fetchPartnerData) : fetchPartnerData();
-      setIsFirstLoad(false);
-      setReload(false);
-    }
-  }, [reload]);
-  const onclick = () => {
-    console.log(Addpartner);
-    addProvider(
-      Addpartner.name,
-      Addpartner.addres,
-      Addpartner.phonenumber,
-      Addpartner.id_provider_status
-    ).then((rs) => {
-      console.log(rs);
-      alert(rs.data.taoNhaCungCap.message);
-      if (rs.data.taoNhaCungCap.status === 201) {
-        setReload(true);
-      }
-    });
-  };
-  return isReady ? (
+    fetchData();
+  }, []);
+  return (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
         <Header style={headerStyle}>
           <Row gutter={16}>
-            <Col className="gutter-row" span={10}>
+            <Col className="gutter-row" span={8}>
+              <Form.Item label="Tên:" labelAlign="left" labelCol={{ span: 5 }}>
+                <Input />
+              </Form.Item>
               <Form.Item
-                label="Tên nhà cung cấp:"
+                label="Loại"
                 labelAlign="left"
                 labelCol={{ span: 5 }}
+                style={{ width: "100%", height: 30, minWidth: "100%" }}
               >
-                <Input
-                  style={{ width: "60%" }}
-                  onChange={(e) => (Addpartner.name = e.target.value)}
+                <Select
+                  placeholder="Hãy chọn"
+                  onChange={handleChange}
+                  options={options}
                 />
               </Form.Item>
             </Col>
-            <Col className="gutter-row" span={10}>
-              <div>
-                <Form.Item
-                  label="Số điện thoại:"
-                  labelAlign="left"
-                  labelCol={{ span: 6 }}
-                >
-                  <Input
-                    style={{ width: "60%" }}
-                    onChange={(e) => (Addpartner.phonenumber = e.target.value)}
-                  />
-                </Form.Item>
-                <Form.Item
-                  label="Địa chỉ:"
-                  labelAlign="left"
-                  labelCol={{ span: 6 }}
-                >
-                  <Input
-                    style={{ width: "60%" }}
-                    onChange={(e) => (Addpartner.addres = e.target.value)}
-                  />
-                </Form.Item>
-              </div>
-            </Col>
-            <Col className="gutter-row" span={4}>
+            <Col className="gutter-row" span={8}>
               <div
                 style={{
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
                 <Button
                   type="primary"
-                  style={{ width: "70%", marginBottom: 30 }}
-                  onClick={onclick}
+                  style={{ width: "30%", marginBottom: 30 }}
                 >
                   Thêm
                 </Button>
-                <Button type="primary" style={{ width: "70%" }}>
+                <Button type="primary" style={{ width: "30%" }}>
                   Làm mới
                 </Button>
               </div>
@@ -378,44 +304,6 @@ const partner = () => {
         </Content>
       </Layout>
     </Space>
-  ) : (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        width: "100%",
-        height: "100%",
-        paddingTop: "20px",
-        paddingBottom: "20px",
-      }}
-    >
-      <Skeleton.Input active={true} size={"large"} block={true} />
-      <br />
-      <Skeleton.Input active={true} size={"large"} block={true} />
-      <br />
-      <Skeleton.Input active={true} size={"large"} block={true} />
-      <br />
-      <Skeleton.Input active={true} size={"large"} block={true} />
-      <br />
-      <Skeleton.Input active={true} size={"large"} block={true} />
-      <br />
-      <Skeleton.Input active={true} size={"large"} block={true} />
-      <br />
-      <Skeleton.Input active={true} size={"large"} block={true} />
-      <br />
-      <Skeleton.Input active={true} size={"large"} block={true} />
-      <br />
-      <Skeleton.Input active={true} size={"large"} block={true} />
-      <br />
-      <Skeleton.Input active={true} size={"large"} block={true} />
-      <br />
-      <Skeleton.Input active={true} size={"large"} block={true} />
-      <br />
-      <Skeleton.Input active={true} size={"large"} block={true} />
-      <br />
-    </div>
   );
 };
-export default partner;
+export default Attribute;

@@ -18,6 +18,7 @@ import {
   addPrivileges,
   getFeatures,
   getPrivileges,
+  removePrivileges,
 } from "../../../../../controllers/modules/admin/privileges";
 import { authenticationAdmin } from "../../../../../../utils/util";
 import { useNavigate } from "react-router-dom";
@@ -117,6 +118,13 @@ const Status = () => {
   const [isReady, setIsReady] = useState(false);
   const navigate = useNavigate();
   const handleDelete = (key: React.Key) => {
+    removePrivileges(parseInt(key.toString())).then((rs) => {
+      console.log(rs);
+      alert(rs.data.xoaQuyen.message);
+      if (rs.data.xoaQuyen.status === 200) {
+        setReload(true);
+      }
+    });
     const newData = data.filter((item) => item.key !== key);
     setData(newData);
   };
@@ -199,6 +207,7 @@ const Status = () => {
           ten: e.ten,
         });
       }
+      setData(originData);
       setIsReady(true);
     }
 

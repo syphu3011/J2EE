@@ -142,7 +142,7 @@ const Staff = () => {
           status: element.trangthai.ten,
         });
       });
-
+      setData(StaffData);
       setIsReady(true);
     }
     // console.log(data)
