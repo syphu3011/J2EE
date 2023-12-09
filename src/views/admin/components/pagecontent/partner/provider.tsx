@@ -100,7 +100,9 @@ const Provider = () => {
             name_partner: element.ten,
             id_product_partner: prod.ma,
             name_product_partner: prod.ten,
-            type_partner: prod.loai.ten,
+            type_partner: prod.loai.reduce((pre, current) => {
+              return pre +", "+current.ten;
+            }, ""),
             donvi_partner: prod.donvi.ten,
             // price_partner: 4000000,
           });

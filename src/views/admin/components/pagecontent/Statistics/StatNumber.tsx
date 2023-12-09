@@ -76,10 +76,6 @@ options.push({
   value: "TG",
   label: "Doanh thu",
 });
-options.push({
-  value: "LSP",
-  label: "Loại sản phẩm",
-});
 
 const StatNumber = () => {
   // define
@@ -170,7 +166,7 @@ const StatNumber = () => {
           rank_staff: data.hang,
           id_staff_stat: data.ma,
           name_staff_stat: data.ten,
-          amount_order_staff: data.soluonghoadon.toLocaleString('vi-VN'),
+          amount_order_staff: data.soluongxacnhan.toLocaleString('vi-VN'),
           profits_staff: formatCurrency(data.tongtien)
         };
         tempData.push(row);
