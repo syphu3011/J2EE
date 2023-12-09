@@ -20,7 +20,7 @@ const contentStyle: React.CSSProperties = {
   color: "#fff",
   backgroundColor: "#ffffff",
 };
-
+let id_partner = "";
 interface Item {
   key: string;
   id_partner: string;
@@ -31,20 +31,20 @@ interface Item {
   donvi_partner: string;
   // price_partner: number;
 }
+const optionspartner: SelectProps["options"] = [];
 
-const handleChange = (value: string[]) => {
-  console.log(`selected ${value}`);
-};
 const Provider = () => {
-  const optionspartner: SelectProps["options"] = [];
   const ProviderData: Item[] = [];
   const [form] = Form.useForm();
+  const [metaData, setMetaData] = useState(ProviderData);
   const [data, setData] = useState(ProviderData);
   const [reload, setReload] = useState(true);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [isReady, setIsReady] = useState(false);
   const navigate = useNavigate();
-
+  function compare(str, str0) {
+    return str.trim().toLowerCase() == str0.trim().toLowerCase();
+  }
   const columns = [
     {
       title: "Mã",
@@ -78,6 +78,7 @@ const Provider = () => {
     //   dataIndex: "price_partner",
     // },
   ];
+
   useEffect(() => {
     async function fetchMetaData(rs?) {
       optionspartner.splice(0, optionspartner.length);
@@ -101,14 +102,14 @@ const Provider = () => {
             id_product_partner: prod.ma,
             name_product_partner: prod.ten,
             type_partner: prod.loai.reduce((pre, current) => {
-              return pre +", "+current.ten;
+              return pre + current.ten;
             }, ""),
             donvi_partner: prod.donvi.ten,
             // price_partner: 4000000,
           });
         }
       }
-
+      setMetaData(ProviderData);
       setIsReady(true);
     }
     if (reload) {
@@ -117,6 +118,12 @@ const Provider = () => {
       setReload(false);
     }
   }, [reload]);
+  const handleChange = (value: string) => {
+    // console.log(value);
+    // id_partner = value;
+    // const newData = metaData.filter((item) => item.id_partner === id_partner);
+    // setData(newData);
+  };
   return isReady ? (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>

@@ -15,6 +15,7 @@ import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { CheckboxValueType } from "antd/es/checkbox/Group";
 import {
+  addPrivileges,
   getFeatures,
   getPrivileges,
 } from "../../../../../controllers/modules/admin/privileges";
@@ -37,20 +38,28 @@ const contentStyle: React.CSSProperties = {
   color: "#fff",
   backgroundColor: "#ffffff",
 };
-interface detail {
-  ma: string;
-  ten: string;
-}
-const plainOptions = [];
-const defaultCheckedList = [];
+
 interface Item {
   key: string;
   id_permission: string;
   name_permission: string;
   detail_permission: detail[];
 }
+interface detail {
+  ma: string;
+  ten: string;
+}
+interface AddItem {
+  name: string;
+  id_permission: { ma: number }[];
+}
+const AddPermission: AddItem = {
+  name: "",
+  id_permission: [],
+};
+const plainOptions = [];
+const defaultCheckedList = [];
 
-const originData: Item[] = [];
 // const optionsst: SelectProps["options"] = [];
 // const handleChange = (value: string[]) => {
 //   console.log(`selected ${value}`);
@@ -99,9 +108,10 @@ const CheckboxGroup = Checkbox.Group;
 //   );
 // };
 const Status = () => {
+  const feature: detail[] = [];
+  const originData: Item[] = [];
   const [form] = Form.useForm();
   const [data, setData] = useState(originData);
-  // const [editingKey, setEditingKey] = useState("");
   const [reload, setReload] = useState(true);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [isReady, setIsReady] = useState(false);
@@ -155,15 +165,18 @@ const Status = () => {
   const indeterminate =
     checkedList.length > 0 && checkedList.length < plainOptions.length;
   const onChange = (list: CheckboxValueType[]) => {
+    console.log(list);
     setCheckedList(list);
   };
 
   const onCheckAllChange = (e: CheckboxChangeEvent) => {
     setCheckedList(e.target.checked ? plainOptions : []);
+    console.log(e.target.checked ? plainOptions : []);
   };
 
   useEffect(() => {
     async function fetchMetaData(rs?) {
+      plainOptions.splice(0, plainOptions.length);
       if (rs && rs.data.dangNhapAdminVoiToken.status != 200) {
         navigate("/LoginAdmin");
         return;
@@ -171,18 +184,21 @@ const Status = () => {
 
       const rsquyenData = await getPrivileges();
       const rschucnangData = await getFeatures();
-      // for (const element of rsquyenData.data.quyen.data) {
-      //   originData.push({
-      //     key: element.ma,
-      //     id_permission: element.ma,
-      //     name_permission: element.ten,
-      //     detail_permission: element.chucnang,
-      //   });
-      // }
+      for (const element of rsquyenData.data.quyen.data) {
+        originData.push({
+          key: element.ma,
+          id_permission: element.ma,
+          name_permission: element.ten,
+          detail_permission: element.chucnang,
+        });
+      }
       for (const e of rschucnangData.data.chucnang.data) {
         plainOptions.push(e.ten);
+        feature.push({
+          ma: e.ma,
+          ten: e.ten,
+        });
       }
-
       setIsReady(true);
     }
 
@@ -192,6 +208,29 @@ const Status = () => {
       setReload(false);
     }
   }, [reload]);
+  const layMaTuTen = (ten) => {
+    const getid = feature.find((item) => item.ten == ten);
+    return getid ? Number(getid.ma) : null;
+  };
+  const onclick = () => {
+    console.log(checkedList);
+    for (const e of checkedList) {
+      let ma = layMaTuTen(e);
+      if (ma !== null) {
+        AddPermission.id_permission.push({ ma });
+      }
+    }
+    console.log(" truoc khi them" + AddPermission);
+    addPrivileges(AddPermission.name, AddPermission.id_permission).then(
+      (rs) => {
+        console.log(rs);
+        alert(rs.data.taoQuyen.message);
+        if (rs.data.taoQuyen.status === 201) {
+          setReload(true);
+        }
+      }
+    );
+  };
   return isReady ? (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
@@ -207,7 +246,10 @@ const Status = () => {
                   minHeight: "100%",
                 }}
               >
-                <Input style={{ width: "80%" }} />
+                <Input
+                  style={{ width: "80%" }}
+                  onChange={(e) => (AddPermission.name = e.target.value)}
+                />
               </Form.Item>
             </Col>
             <Col className="gutter-row" span={10}>
@@ -246,6 +288,7 @@ const Status = () => {
                 <Button
                   type="primary"
                   style={{ width: "60%", marginBottom: 10 }}
+                  onClick={onclick}
                 >
                   Thêm
                 </Button>

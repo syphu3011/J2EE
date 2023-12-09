@@ -112,13 +112,13 @@ const AccStaff = () => {
   useEffect(() => {
     async function fetchMetaData(rs?) {
       options1.splice(0, options1.length);
-      // options2.splice(0, options2.length);
+      options2.splice(0, options2.length);
       if (rs && rs.data.dangNhapAdminVoiToken.status != 200) {
         navigate("/LoginAdmin");
         return;
       }
       const rsFetchData = await getStaff();
-      // const rsquyenData = await getPrivileges();
+      const rsquyenData = await getPrivileges();
       for (const element of rsFetchData.data.nhanvien.data) {
         if (element.quyen == null) {
           AccStaffData.push({
@@ -145,12 +145,12 @@ const AccStaff = () => {
           label: element.ten,
         });
       }
-      // for (const e of rsquyenData.data.quyen.data) {
-      //   options2.push({
-      //     value: e.ma,
-      //     label: e.ten,
-      //   });
-      // }
+      for (const e of rsquyenData.data.quyen.data) {
+        options2.push({
+          value: e.ma,
+          label: e.ten,
+        });
+      }
 
       setIsReady(true);
     }
@@ -221,7 +221,7 @@ const AccStaff = () => {
 
   const onclick = () => {
     console.log(addAcc);
-    addAcc.id_privileges = 2;
+    // addAcc.id_privileges = 2;
     grantAccount(
       addAcc.id_staff,
       addAcc.username,
