@@ -59,7 +59,6 @@ interface Item {
 }
 
 // const originData: Item[] = [];
-const options: SelectProps["options"] = [];
 const handleChange = (value: string[]) => {
   console.log(`selected ${value}`);
 };
@@ -122,6 +121,8 @@ const EditableCell: React.FC<EditableCellProps> = ({
 const Typeproduct = () => {
   // Define
   const originData: Item[] = [];
+const options: SelectProps["options"] = [];
+
   const [isReady, setIsReady] = useState(false);
   const navigate = useNavigate();
   const [reload, setReload] = useState(true);
@@ -271,12 +272,12 @@ const Typeproduct = () => {
         ) : null,
     },
   ];
-  for (let i = 10; i < 36; i++) {
-    options.push({
-      value: `ao` + i,
-      label: `ao` + i,
-    });
-  }
+  // for (let i = 10; i < 36; i++) {
+  //   options.push({
+  //     value: `ao` + i,
+  //     label: `ao` + i,
+  //   });
+  // }
   const mergedColumns = columns.map((col) => {
     if (!col.editable) {
       return col;
@@ -305,6 +306,7 @@ const Typeproduct = () => {
         navigate("/LoginAdmin");
         return;
       }
+      // const rsFectchCate = await getca
       const rsFetchData = await getAllCate();
 
       var fetchData = rsFetchData.data.loai.data;
@@ -349,7 +351,7 @@ const Typeproduct = () => {
               <Form.Item
                 label="Tên loại:"
                 labelAlign="left"
-                labelCol={{ span: 6 }}
+                labelCol={{ span: 6 }} 
               >
                 <Input />
               </Form.Item>
