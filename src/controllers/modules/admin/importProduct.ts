@@ -16,7 +16,6 @@ export function importProduct(
         $note: String) {
         taoPhieuNhap (
             input: {
-                manhanvien: $id_staff,
                 manhacungcap: $id_provider,
                 ghichu: $note,
                 mathang: $arr_prod

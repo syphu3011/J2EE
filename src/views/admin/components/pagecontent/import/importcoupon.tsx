@@ -520,7 +520,6 @@ const Import = () => {
     // });
     importProduct(
       parseInt(providerID),
-      2,
       listProducts,
       "Phieu nhap tao boi admin"
     ).then((rs) => {
