@@ -1,7 +1,6 @@
 import { request } from '../request';
 export function importProduct(
     id_provider: number, 
-    id_staff: number, 
     arr_prod: {
         masanpham: number,
         mamau: number,
@@ -13,7 +12,6 @@ export function importProduct(
     const query = `
     mutation importProduct(
         $id_provider: Int!,
-        $id_staff: Int!,
         $arr_prod: [NhapMatHangInput]!,
         $note: String) {
         taoPhieuNhap (
@@ -30,7 +28,7 @@ export function importProduct(
     }
     `
     const variables = {
-        id_provider, id_staff, arr_prod, note
+        id_provider, arr_prod, note
     }
     return request(query, variables)
 }
