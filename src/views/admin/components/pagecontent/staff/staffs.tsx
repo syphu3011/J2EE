@@ -7,6 +7,7 @@ import {
   Row,
   Skeleton,
   Space,
+  notification,
 } from "antd";
 import "../../../style/product.css";
 const { Header, Content } = Layout;
@@ -15,10 +16,13 @@ import React, { useEffect, useState } from "react";
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
 import {
   addStaff,
+  editStaff,
   getStaff,
+  removeStaff,
 } from "../../../../../controllers/modules/admin/staff";
 import dayjs from "dayjs";
 import { authenticationAdmin } from "../../../../../../utils/util";
+import type { NotificationPlacement } from "antd/es/notification/interface";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 120,
@@ -55,75 +59,68 @@ const addData: AddItem = {
   socccd: "string",
   sodienthoai: "string",
 };
-const originData: Item[] = [];
-// for (let i = 0; i < 20; i++) {
-//   originData.push({
-//     key: i.toString(),
-//     id_staff: `${i}`,
-//     name_staff: `Nguyễn Văn ${i}`,
-//     CCCD: 233321312321,
-//     num
-//     birthday_staff: "18/02/2002",
-//     status: "Còn làm",
-//   });
-// }
-interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
-  editing: boolean;
-  dataIndex: string;
-  title: any;
-  inputType: "number" | "text" | "Date";
-  record: Item;
-  index: number;
-  children: React.ReactNode;
-}
-
-const EditableCell: React.FC<EditableCellProps> = ({
-  editing,
-  dataIndex,
-  title,
-  inputType,
-  record,
-  index,
-  children,
-  ...restProps
-}) => {
-  const inputNode = inputType === "number" ? <InputNumber /> : <Input />;
-
-  return (
-    <td {...restProps}>
-      {editing ? (
-        <Form.Item
-          name={dataIndex}
-          style={{ margin: 0 }}
-          rules={[
-            {
-              required: true,
-              message: `Hãy nhập ${title}!`,
-            },
-          ]}
-        >
-          {inputNode}
-        </Form.Item>
-      ) : (
-        children
-      )}
-    </td>
-  );
-};
 
 const Staff = () => {
+  const [api2, NotiNV] = notification.useNotification();
+  const NotiStaff = (placement: NotificationPlacement, s: String) => {
+    api2.info({
+      message: `THÔNG BÁO`,
+      description: s,
+      placement,
+    });
+  };
+  const StaffData: Item[] = [];
   const [reload, setReload] = useState(true);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [isReady, setIsReady] = useState(false);
   const navigate = useNavigate();
   const [form] = Form.useForm();
-  const [data, setData] = useState(originData);
+  const [data, setData] = useState(StaffData);
   const [editingKey, setEditingKey] = useState("");
+
+  useEffect(() => {
+    async function fetchMetaData(rs?) {
+      if (rs && rs.data.dangNhapAdminVoiToken.status != 200) {
+        navigate("/LoginAdmin");
+        return;
+      }
+      const rsFetchData = await getStaff();
+
+      var fetchData = rsFetchData.data.nhanvien.data;
+      fetchData.forEach((element, index) => {
+        StaffData.push({
+          key: element.ma,
+          id_staff: element.ma,
+          name_staff: element.ten,
+          CCCD: element.socccd,
+          numberphone_staff: element.sodienthoai,
+          birthday_staff: dayjs(new Date(parseInt(element.ngaysinh)))
+            .format("YYYY-MM-DD")
+            .toString(),
+          status: element.trangthai.ten,
+        });
+      });
+
+      setIsReady(true);
+    }
+    // console.log(data)
+
+    if (reload) {
+      isFirstLoad ? authenticationAdmin(fetchMetaData) : fetchMetaData();
+      setIsFirstLoad(false);
+      setReload(false);
+    }
+  }, [reload]);
 
   const isEditing = (record: Item) => record.key === editingKey;
 
   const edit = (record: Partial<Item> & { key: React.Key }) => {
-    form.setFieldsValue({ name: "", numberphone: "", birthday: "", ...record });
+    form.setFieldsValue({
+      name_staff: "",
+      numberphone_staff: "",
+      birthday_staff: "",
+      ...record,
+    });
     setEditingKey(record.key);
   };
 
@@ -146,6 +143,29 @@ const Staff = () => {
         });
         setData(newData);
         setEditingKey("");
+        console.log(
+          parseInt(newData[index].id_staff),
+          newData[index].name_staff.toString(),
+          newData[index].birthday_staff.split(" ")[0].toString(),
+          newData[index].numberphone_staff.toString(),
+          newData[index].CCCD.toString(),
+          1
+        );
+        editStaff(
+          parseInt(newData[index].id_staff),
+          newData[index].name_staff.toString(),
+          newData[index].birthday_staff.split(" ")[0].toString(),
+          newData[index].numberphone_staff.toString(),
+          newData[index].CCCD.toString(),
+          1
+        ).then((rs) => {
+          //TODO: Thêm thông báo ở đây
+          console.log(rs);
+          alert(rs.data.suaNhanVien.message);
+          if (rs.data.suaNhanVien.status === 201) {
+            setReload(true);
+          }
+        });
       } else {
         newData.push(row);
         setData(newData);
@@ -156,8 +176,15 @@ const Staff = () => {
     }
   };
   const handleDelete = (key: React.Key) => {
-    const newData = data.filter((item) => item.key !== key);
-    setData(newData);
+    removeStaff(parseInt(key.toString())).then((rs) => {
+      console.log(rs);
+      NotiStaff("top", rs.data.xoaNhanVien.message);
+      if (rs.data.xoaNhanVien.status === 200) {
+        setReload(true);
+        const newData = data.filter((item) => item.key !== key);
+        setData(newData);
+      }
+    });
   };
   const columns = [
     {
@@ -233,56 +260,7 @@ const Staff = () => {
         ) : null,
     },
   ];
-  const mergedColumns = columns.map((col) => {
-    if (!col.editable) {
-      return col;
-    }
-    return {
-      ...col,
-      onCell: (record: Item) => ({
-        record,
-        inputType: col.dataIndex === "numberphone" ? "number" : "text",
-        dataIndex: col.dataIndex,
-        title: col.title,
-        editing: isEditing(record),
-      }),
-    };
-  });
-  useEffect(() => {
-    async function fetchMetaData(rs?) {
-      if (rs && rs.data.dangNhapAdminVoiToken.status != 200) {
-        navigate("/LoginAdmin");
-        return;
-      }
-      const rsFetchData = await getStaff();
 
-      var fetchData = rsFetchData.data.nhanvien.data;
-      //
-      //
-      fetchData.forEach((element, index) => {
-        originData.push({
-          key: element.ma,
-          id_staff: element.ma,
-          name_staff: element.ten,
-          CCCD: element.socccd,
-          numberphone_staff: element.sodienthoai,
-          birthday_staff: dayjs(new Date(parseInt(element.ngaysinh)))
-            .format("YYYY-MM-DD")
-            .toString(),
-          status: element.trangthai.ten,
-        });
-      });
-
-      setIsReady(true);
-    }
-    // console.log(data)
-
-    if (reload) {
-      isFirstLoad ? authenticationAdmin(fetchMetaData) : fetchMetaData();
-      setIsFirstLoad(false);
-      setReload(false);
-    }
-  }, [reload]);
   const onclick = () => {
     console.log(addData);
     addStaff(
@@ -292,8 +270,8 @@ const Staff = () => {
       addData.socccd
     ).then((rs) => {
       console.log(rs);
-      alert(rs.data.themNhanVien.message);
-      if (rs.data.themNhanVien.status === 200) {
+      NotiStaff("top", rs.data.themNhanVien.message);
+      if (rs.data.themNhanVien.status === 201) {
         setReload(true);
       }
     });
@@ -304,6 +282,7 @@ const Staff = () => {
   };
   return isReady ? (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
+      {NotiNV}
       <Layout>
         <Header style={headerStyle}>
           <Row gutter={16}>
@@ -379,18 +358,10 @@ const Staff = () => {
         <Content style={contentStyle}>
           <Form form={form} component={false}>
             <Table
-              components={{
-                body: {
-                  cell: EditableCell,
-                },
-              }}
               bordered
               dataSource={data}
-              columns={mergedColumns}
+              columns={columns}
               rowClassName="table-staff"
-              pagination={{
-                onChange: cancel,
-              }}
             />
           </Form>
         </Content>

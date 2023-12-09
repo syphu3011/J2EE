@@ -113,8 +113,8 @@ export default class Product extends React.PureComponent<
                       </Link>
                       <AddToCartButton
                         item={product}
-                        selectedColor={product.mau}
-                        selectedSize={product.kichco}
+                        selectedColor={product.mathang[0].mau.ten}
+                        selectedSize={product.mathang[0].kichco.ten}
                         amount={1}
                       />
                     </Card>

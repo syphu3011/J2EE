@@ -1,8 +1,14 @@
-import { Button, Col, DatePicker, Layout, Row, Space } from "antd";
+import { Button, Col, DatePicker, Layout, Row, Skeleton, Space } from "antd";
 import "../../../style/product.css";
 const { Header, Content } = Layout;
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
+import { authenticationAdmin } from "../../../../../../utils/util";
+import { useNavigate } from "react-router-dom";
+import {
+  addProvider,
+  getProvider,
+} from "../../../../../controllers/modules/admin/provider";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 120,
@@ -26,17 +32,11 @@ interface Item {
   address_partner: string;
   status_partner: string;
 }
-
-const originData: Item[] = [];
-for (let i = 0; i < 20; i++) {
-  originData.push({
-    key: i.toString(),
-    id_partner: `${i}`,
-    name_partner: `Nguyễn Văn ${i}`,
-    number_partner: 233321312321,
-    address_partner: "18/02/2002",
-    status_partner: "Còn làm",
-  });
+interface AddItem {
+  name: String;
+  addres: String;
+  phonenumber: String;
+  id_provider_status: number;
 }
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
@@ -59,7 +59,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
   ...restProps
 }) => {
   const inputNode = inputType === "number" ? <InputNumber /> : <Input />;
-
   return (
     <td {...restProps}>
       {editing ? (
@@ -81,7 +80,18 @@ const EditableCell: React.FC<EditableCellProps> = ({
     </td>
   );
 };
+const Addpartner: AddItem = {
+  name: "",
+  addres: "",
+  phonenumber: "",
+  id_provider_status: 1,
+};
 const partner = () => {
+  const originData: Item[] = [];
+  const [reload, setReload] = useState(true);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const [isReady, setIsReady] = useState(false);
+  const navigate = useNavigate();
   const [form] = Form.useForm();
   const [data, setData] = useState(originData);
   const [editingKey, setEditingKey] = useState("");
@@ -208,26 +218,66 @@ const partner = () => {
       }),
     };
   });
+  useEffect(() => {
+    async function fetchPartnerData(rs?) {
+      if (rs && rs.data.dangNhapAdminVoiToken.status != 200) {
+        navigate("/LoginAdmin");
+        return;
+      }
+      const rsFetchData = await getProvider();
 
-  return (
+      var fetchData = rsFetchData.data.nhacungcap.data;
+      fetchData.forEach((element, index) => {
+        originData.push({
+          key: element.ma,
+          id_partner: element.ma,
+          name_partner: element.ten,
+          number_partner: element.dienthoai,
+          address_partner: element.diachi,
+          status_partner: element.trangthai.ten,
+        });
+      });
+
+      setIsReady(true);
+    }
+    // console.log(data)
+
+    if (reload) {
+      isFirstLoad ? authenticationAdmin(fetchPartnerData) : fetchPartnerData();
+      setIsFirstLoad(false);
+      setReload(false);
+    }
+  }, [reload]);
+  const onclick = () => {
+    console.log(Addpartner);
+    addProvider(
+      Addpartner.name,
+      Addpartner.addres,
+      Addpartner.phonenumber,
+      Addpartner.id_provider_status
+    ).then((rs) => {
+      console.log(rs);
+      alert(rs.data.taoNhaCungCap.message);
+      if (rs.data.taoNhaCungCap.status === 201) {
+        setReload(true);
+      }
+    });
+  };
+  return isReady ? (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
         <Header style={headerStyle}>
           <Row gutter={16}>
             <Col className="gutter-row" span={10}>
               <Form.Item
-                label="Họ tên:"
+                label="Tên nhà cung cấp:"
                 labelAlign="left"
                 labelCol={{ span: 5 }}
               >
-                <Input style={{ width: "60%" }} />
-              </Form.Item>
-              <Form.Item
-                label="Ngày sinh"
-                labelAlign="left"
-                labelCol={{ span: 5 }}
-              >
-                <DatePicker format={dateFormat} style={{ width: "60%" }} />
+                <Input
+                  style={{ width: "60%" }}
+                  onChange={(e) => (Addpartner.name = e.target.value)}
+                />
               </Form.Item>
             </Col>
             <Col className="gutter-row" span={10}>
@@ -237,14 +287,20 @@ const partner = () => {
                   labelAlign="left"
                   labelCol={{ span: 6 }}
                 >
-                  <Input style={{ width: "60%" }} />
+                  <Input
+                    style={{ width: "60%" }}
+                    onChange={(e) => (Addpartner.phonenumber = e.target.value)}
+                  />
                 </Form.Item>
                 <Form.Item
                   label="Địa chỉ:"
                   labelAlign="left"
                   labelCol={{ span: 6 }}
                 >
-                  <Input style={{ width: "60%" }} />
+                  <Input
+                    style={{ width: "60%" }}
+                    onChange={(e) => (Addpartner.addres = e.target.value)}
+                  />
                 </Form.Item>
               </div>
             </Col>
@@ -259,6 +315,7 @@ const partner = () => {
                 <Button
                   type="primary"
                   style={{ width: "70%", marginBottom: 30 }}
+                  onClick={onclick}
                 >
                   Thêm
                 </Button>
@@ -289,6 +346,44 @@ const partner = () => {
         </Content>
       </Layout>
     </Space>
+  ) : (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        height: "100%",
+        paddingTop: "20px",
+        paddingBottom: "20px",
+      }}
+    >
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+    </div>
   );
 };
 export default partner;
