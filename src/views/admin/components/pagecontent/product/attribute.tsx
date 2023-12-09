@@ -1,11 +1,28 @@
-import { Button, Col, Layout, Row, Select, SelectProps, Space } from "antd";
+import {
+  Button,
+  Col,
+  Layout,
+  Row,
+  Select,
+  SelectProps,
+  Skeleton,
+  Space,
+} from "antd";
 import "../../../style/product.css";
 const { Header, Content } = Layout;
 import React, { useEffect, useState } from "react";
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import { getAllColor } from "../../../../../controllers/modules/admin/color";
-import { getAllSize } from "../../../../../controllers/modules/admin/size";
+import {
+  editColor,
+  getAllColor,
+  removeColor,
+} from "../../../../../controllers/modules/admin/color";
+import {
+  editSize,
+  getAllSize,
+  removeSize,
+} from "../../../../../controllers/modules/admin/size";
 import { getAllCate } from "../../../../../controllers/modules/admin/cate";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
@@ -105,6 +122,7 @@ const Attribute = () => {
   const cancel = () => {
     setEditingKey("");
   };
+  const [reload, setReload] = useState(true);
 
   const save = async (key: React.Key) => {
     try {
@@ -112,6 +130,27 @@ const Attribute = () => {
 
       const newData = [...data];
       const index = newData.findIndex((item) => key === item.key);
+      if (newData[index].name_att.trim() == "Màu") {
+        editColor(
+          parseInt(newData[index].id_att),
+          newData[index].name_att
+        ).then((rs) => {
+          console.log(rs);
+          alert(rs.data.suaMau.message);
+          if (rs.data.suaMau.status === 201) {
+            setReload(true);
+          }
+        });
+      } else {
+        editSize(parseInt(newData[index].id_att), newData[index].name_att).then(
+          (rs) => {
+            alert(rs.data.suaKichCo.message);
+            if (rs.data.suaKichCo.status === 201) {
+              setReload(true);
+            }
+          }
+        );
+      }
       if (index > -1) {
         const item = newData[index];
         newData.splice(index, 1, {
@@ -131,6 +170,24 @@ const Attribute = () => {
   };
   const handleDelete = (key: React.Key) => {
     const newData = data.filter((item) => item.key !== key);
+    const index = data.findIndex((item) => key === item.key);
+    if (data[index].name_att == "Màu") {
+      removeColor(parseInt(newData[index].id_att)).then((rs) => {
+        console.log(rs);
+        alert(rs.data.suaMau.message);
+        if (rs.data.suaMau.status === 201) {
+          setReload(true);
+        }
+      });
+    } else {
+      removeSize(parseInt(newData[index].id_att)).then((rs) => {
+        console.log(rs);
+        alert(rs.data.xoakichco.message);
+        if (rs.data.xoakichco.status === 201) {
+          setReload(true);
+        }
+      });
+    }
     setData(newData);
   };
 
@@ -192,14 +249,14 @@ const Attribute = () => {
         ) : null,
     },
   ];
-  // options.push({
-  //   value: `color`,
-  //   label: `Màu`,
-  // });
-  // options.push({
-  //   value: `size`,
-  //   label: `Kích thước`,
-  // });
+  options.push({
+    value: `color`,
+    label: `Màu`,
+  });
+  options.push({
+    value: `size`,
+    label: `Kích thước`,
+  });
   const mergedColumns = columns.map((col) => {
     if (!col.editable) {
       return col;
@@ -217,17 +274,17 @@ const Attribute = () => {
   });
   useEffect(() => {
     async function fetchData() {
-      const [dataColor, dataSize, datacate] = await Promise.all([
+      const [dataColor, dataSize] = await Promise.all([
         getAllColor(),
         getAllSize(),
-        getAllCate(),
+        // getAllCate(),
       ]);
-      datacate.data.loai.data.forEach((element, index) => {
-        options.push({
-          label: element.ten,
-          value: element.ma,
-        });
-      });
+      // datacate.data.loai.data.forEach((element, index) => {
+      //   options.push({
+      //     label: element.ten,
+      //     value: element.ma,
+      //   });
+      // });
       setOptionsData(options);
       console.log(optionsData);
       const tempDataColor = dataColor.data.mau.data.map((mau, index) => {
@@ -250,11 +307,14 @@ const Attribute = () => {
       });
       const tempAllData = [...tempDataSize, ...tempDataColor];
       setData(tempAllData);
+      setIsReady(true);
     }
     fetchData();
   }, [true]);
+  const [isReady, setIsReady] = useState(false);
+
   const [nameAtt, setNameAtt] = useState("");
-  return (
+  return isReady ? (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
         <Header style={headerStyle}>
@@ -323,6 +383,44 @@ const Attribute = () => {
         </Content>
       </Layout>
     </Space>
+  ) : (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        height: "100%",
+        paddingTop: "20px",
+        paddingBottom: "20px",
+      }}
+    >
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+    </div>
   );
 };
 export default Attribute;
