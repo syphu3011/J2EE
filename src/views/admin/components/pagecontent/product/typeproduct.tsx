@@ -32,7 +32,6 @@ import { useNavigate } from "react-router-dom";
 import { getProductInStock } from "../../../../../controllers/modules/admin/productInStock";
 import {
   addCate,
-  addCate,
   editCate,
   getAllCate,
   removeCate,
@@ -40,8 +39,7 @@ import {
 import {
   authenticationAdmin,
   convertB64ToImage,
-  getBase64AndName,
-  getBase64AndName,
+  getBase64AndName
 } from "../../../../../../utils/util";
 import { RcFile, UploadChangeParam } from "antd/es/upload";
 import { NotificationPlacement } from "antd/es/notification/interface";
@@ -527,46 +525,6 @@ const handleChangeParent = (value) => {
       }
     });
   };
-  // upload image
-  const handleChangeImage: UploadProps["onChange"] = (
-    info: UploadChangeParam<UploadFile>
-  ) => {
-    console.log("ok");
-    console.log(info.file);
-    if (info.file.percent === 100) {
-      console.log(info.file);
-      // Get this url from response in real world.
-      getBase64AndName(info.file.originFileObj as RcFile, (url, name) => {
-        isEdit ? setB64Edit(url) : setB64Add(url);
-        isEdit ? setNameImageEdit(name) : setNameImageAdd(name);
-        console.log(url);
-        console.log(name);
-        isEdit
-          ? setFileListEdit([{ url: url, name: name }])
-          : setFileListAdd([{ url: url, name: name }]);
-      });
-    }
-  };
-  // edit
-  const [isEdit, setIsEdit] = useState(false);
-  const [idEdit, setIdEdit] = useState(0);
-  const [nameEdit, setNameEdit] = useState("");
-  const [unitEdit, setUnitEdit] = useState("");
-  const [cateEdit, setCateEdit] = useState([]);
-  const [descriptEdit, setDescriptEdit] = useState("");
-  const [b64Edit, setB64Edit] = useState("");
-  const [nameImageEdit, setNameImageEdit] = useState("");
-  // add
-  const [nameAdd, setNameAdd] = useState("");
-  const [unitAdd, setUnitAdd] = useState("");
-  const [cateAdd, setCateAdd] = useState([]);
-  const [descriptAdd, setDescriptAdd] = useState("");
-  const [b64Add, setB64Add] = useState("");
-  const [nameImageAdd, setNameImageAdd] = useState("");
-
-  //file list image
-  const [fileListAdd, setFileListAdd] = useState([]);
-  const [fileListEdit, setFileListEdit] = useState([]);
   return isReady ? (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
@@ -578,7 +536,7 @@ const handleChangeParent = (value) => {
                 labelAlign="left"
                 labelCol={{ span: 6 }}
               >
-                <Input value={isEdit ? nameEdit : nameAdd} onChange={handleChangeName}/>
+                <Input />
               </Form.Item>
               <Form.Item
                 label="Thuộc loại"
@@ -587,11 +545,10 @@ const handleChangeParent = (value) => {
                 style={{ width: "100%", height: 30, minWidth: "100%" }}
               >
                 <Select
+                  mode="multiple"
                   allowClear
                   placeholder="Please select"
-                  onChange={handleChangeParent}
-                  labelInValue={true}
-                  value={isEdit ? parentEdit : parentAdd}
+                  onChange={handleChange}
                   options={optionsData}
                 />
               </Form.Item>
@@ -599,7 +556,7 @@ const handleChangeParent = (value) => {
             <Col className="gutter-row" span={6}>
               <div>
                 <Form.Item label="Mô tả">
-                  <TextArea rows={4} value={isEdit ? describeEdit : describe} onChange={handleChangeDescribe} />
+                  <TextArea rows={4} />
                 </Form.Item>
               </div>
             </Col>
@@ -618,7 +575,6 @@ const handleChangeParent = (value) => {
                     onRemove={onRemoveUpload}
                     fileList={isEdit ? fileListEdit : fileListAdd}
                     maxCount={1}
-                    onChange={handleChangeImage}
                   >
                     <div>
                       <PlusOutlined />
@@ -639,7 +595,6 @@ const handleChangeParent = (value) => {
                 <Button
                   type="primary"
                   style={{ width: "50%", marginBottom: 30 }}
-                  onClick={cateAction}
                 >
                   {isEdit ? "Sửa" : "Thêm"}
                 </Button>
