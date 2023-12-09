@@ -5,7 +5,6 @@ import {
   Divider,
   Layout,
   Row,
-  Select,
   SelectProps,
   Space,
   Tag,
@@ -102,17 +101,6 @@ const Status = () => {
   const [data, setData] = useState(originData);
   const [editingKey, setEditingKey] = useState("");
 
-  const isEditing = (record: Item) => record.key === editingKey;
-
-  const edit = (record: Partial<Item> & { key: React.Key }) => {
-    form.setFieldsValue({
-      name_permission: "",
-      detail_permission: "",
-      ...record,
-    });
-    setEditingKey(record.key);
-  };
-
   const cancel = () => {
     setEditingKey("");
   };
@@ -154,13 +142,11 @@ const Status = () => {
       title: "Tên quyền",
       dataIndex: "name_permission",
       width: "auto",
-      editable: true,
     },
     {
       title: "Chi tiết quyền",
       dataIndex: "detail_permission",
       width: "auto",
-      editable: true,
       render: (detail_permission: String[]) => (
         <>
           {detail_permission.map((tag) => (
@@ -168,33 +154,6 @@ const Status = () => {
           ))}
         </>
       ),
-    },
-    {
-      dataIndex: "editcus",
-      width: "8%",
-      render: (_: any, record: Item) => {
-        const editable = isEditing(record);
-        return editable ? (
-          <span>
-            <Typography.Link
-              onClick={() => save(record.key)}
-              style={{ marginRight: 8 }}
-            >
-              Lưu
-            </Typography.Link>
-            <Popconfirm title="Bạn muốn hủy??" onConfirm={cancel}>
-              <a>Hủy</a>
-            </Popconfirm>
-          </span>
-        ) : (
-          <Typography.Link
-            disabled={editingKey !== ""}
-            onClick={() => edit(record)}
-          >
-            Sửa
-          </Typography.Link>
-        );
-      },
     },
     {
       dataIndex: "delete_permiss",
@@ -223,21 +182,6 @@ const Status = () => {
   const onCheckAllChange = (e: CheckboxChangeEvent) => {
     setCheckedList(e.target.checked ? plainOptions : []);
   };
-  const mergedColumns = columns.map((col) => {
-    if (!col.editable) {
-      return col;
-    }
-    return {
-      ...col,
-      onCell: (record: Item) => ({
-        record,
-        inputType: col.dataIndex === "numberphone" ? "number" : "text",
-        dataIndex: col.dataIndex,
-        title: col.title,
-        editing: isEditing(record),
-      }),
-    };
-  });
   return (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
@@ -312,7 +256,7 @@ const Status = () => {
               }}
               bordered
               dataSource={data}
-              columns={mergedColumns}
+              columns={columns}
               rowClassName="editable-permission"
               pagination={{
                 onChange: cancel,

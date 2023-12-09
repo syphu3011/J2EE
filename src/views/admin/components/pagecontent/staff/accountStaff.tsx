@@ -1,19 +1,25 @@
 import {
   Button,
   Col,
-  DatePicker,
   Layout,
   Row,
   Select,
   SelectProps,
+  Skeleton,
   Space,
-  Upload,
 } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
 import "../../../style/product.css";
+import {
+  getStaff,
+  grantAccount,
+  removeAccount,
+} from "../../../../../controllers/modules/admin/staff";
 const { Header, Content } = Layout;
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
+import { useNavigate } from "react-router-dom";
+import { authenticationAdmin } from "../../../../../../utils/util";
+import { getPrivileges } from "../../../../../controllers/modules/admin/privileges";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 120,
@@ -34,24 +40,21 @@ interface Item {
   id_staff: string;
   name_staff: string;
   UserStaff: string;
-  PasswordStaff: string;
   permission: string;
   status: string;
 }
-
-const originData: Item[] = [];
-const options: SelectProps["options"] = [];
-for (let i = 0; i < 20; i++) {
-  originData.push({
-    key: i.toString(),
-    id_staff: `${i}`,
-    name_staff: `Nguyễn Văn ${i}`,
-    UserStaff: `admin$${i}`,
-    PasswordStaff: "123123",
-    permission: " quyền?",
-    status: "Còn làm",
-  });
+interface AddItemAcc {
+  id_staff: number;
+  username: string;
+  password: string;
+  id_privileges: number;
 }
+const addAcc: AddItemAcc = {
+  id_staff: 0,
+  username: "",
+  password: "",
+  id_privileges: 0,
+};
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
@@ -95,48 +98,72 @@ const EditableCell: React.FC<EditableCellProps> = ({
     </td>
   );
 };
+const options1: SelectProps["options"] = [];
+const options2: SelectProps["options"] = [];
 const AccStaff = () => {
+  const AccStaffData: Item[] = [];
+  const [reload, setReload] = useState(true);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const [isReady, setIsReady] = useState(false);
+  const navigate = useNavigate();
   const [form] = Form.useForm();
-  const [data, setData] = useState(originData);
-  const [editingKey, setEditingKey] = useState("");
+  const [data, setData] = useState(AccStaffData);
 
-  const isEditing = (record: Item) => record.key === editingKey;
-
-  const edit = (record: Partial<Item> & { key: React.Key }) => {
-    form.setFieldsValue({ name: "", numberphone: "", birthday: "", ...record });
-    setEditingKey(record.key);
-  };
-
-  const cancel = () => {
-    setEditingKey("");
-  };
-
-  const save = async (key: React.Key) => {
-    try {
-      const row = (await form.validateFields()) as Item;
-
-      const newData = [...data];
-      const index = newData.findIndex((item) => key === item.key);
-      if (index > -1) {
-        const item = newData[index];
-        newData.splice(index, 1, {
-          ...item,
-          ...row,
-        });
-        setData(newData);
-        setEditingKey("");
-      } else {
-        newData.push(row);
-        setData(newData);
-        setEditingKey("");
+  useEffect(() => {
+    async function fetchMetaData(rs?) {
+      options1.splice(0, options1.length);
+      // options2.splice(0, options2.length);
+      if (rs && rs.data.dangNhapAdminVoiToken.status != 200) {
+        navigate("/LoginAdmin");
+        return;
       }
-    } catch (errInfo) {
-      console.log("Validate Failed:", errInfo);
+      const rsFetchData = await getStaff();
+      // const rsquyenData = await getPrivileges();
+      // var fetchData = rsFetchData.data.nhanvien.data;
+      // var fetchquyenData = rsquyenData.data.quyen.data;
+      for (const element of rsFetchData.data.nhanvien.data) {
+        AccStaffData.push({
+          key: element.ma,
+          id_staff: element.ma,
+          name_staff: element.ten,
+          UserStaff: element.tentaikhoan,
+          permission: element.quyen,
+          status: element.trangthai.ten,
+        });
+        options1.push({
+          value: element.ma,
+          label: element.ten,
+        });
+      }
+      // for (const e of rsquyenData.data.quyen.data) {
+      //   options2.push({
+      //     value: e.ma,
+      //     label: e.ten,
+      //   });
+      // }
+
+      setIsReady(true);
     }
-  };
-  const handleDelete = (key: React.Key) => {
-    const newData = data.filter((item) => item.key !== key);
-    setData(newData);
+
+    if (reload) {
+      isFirstLoad ? authenticationAdmin(fetchMetaData) : fetchMetaData();
+      setIsFirstLoad(false);
+      setReload(false);
+    }
+  }, [reload]);
+
+  const handleDelete = (UserStaff: string, key: React.Key) => {
+    console.log(UserStaff);
+    if (UserStaff == null) {
+      alert("Nhân viên này chưa có tài khoản");
+    } else {
+      removeAccount(UserStaff.toString()).then((rs) => {
+        alert(rs.data.xoataikhoan.message);
+        if (rs.data.xoataikhoan.status === 201) {
+          setReload(true);
+        }
+      });
+    }
   };
   const columns = [
     {
@@ -148,17 +175,10 @@ const AccStaff = () => {
       title: "Tên nhân viên",
       dataIndex: "name_staff",
       width: "15%",
-      editable: true,
     },
     {
       title: "Tài khoản",
       dataIndex: "UserStaff",
-      editable: true,
-    },
-    {
-      title: "Mật khẩu",
-      dataIndex: "PasswordStaff",
-      editable: true,
     },
     {
       title: "Quyền",
@@ -169,71 +189,43 @@ const AccStaff = () => {
       dataIndex: "status",
     },
     {
-      dataIndex: "editcus",
-      width: "8%",
-      render: (_: any, record: Item) => {
-        const editable = isEditing(record);
-        return editable ? (
-          <span>
-            <Typography.Link
-              onClick={() => save(record.key)}
-              style={{ marginRight: 8 }}
-            >
-              Lưu
-            </Typography.Link>
-            <Popconfirm title="Bạn muốn hủy??" onConfirm={cancel}>
-              <a>Hủy</a>
-            </Popconfirm>
-          </span>
-        ) : (
-          <Typography.Link
-            disabled={editingKey !== ""}
-            onClick={() => edit(record)}
-          >
-            Sửa
-          </Typography.Link>
-        );
-      },
-    },
-    {
       dataIndex: "dlt_staff_acc",
       width: "8%",
-      render: (_, record: { key: React.Key }) =>
+      render: (_, record: { UserStaff: string; key: React.Key }) =>
         data.length >= 1 ? (
           <Popconfirm
             title="Bạn thật sự muốn xóa?"
-            onConfirm={() => handleDelete(record.key)}
+            onConfirm={() => handleDelete(record.UserStaff, record.key)}
           >
             <a>Xóa</a>
           </Popconfirm>
         ) : null,
     },
   ];
-  // for (let i = 10; i < 36; i++) {
-  //   options.push({
-  //     value: `ao` + i,
-  //     label: `ao` + i,
-  //   });
-  // }
-  const handleChange = (value: string[]) => {
-    console.log(`selected ${value}`);
+  const handleChange1 = (value: string) => {
+    addAcc.id_staff = parseInt(value);
   };
-  const mergedColumns = columns.map((col) => {
-    if (!col.editable) {
-      return col;
-    }
-    return {
-      ...col,
-      onCell: (record: Item) => ({
-        record,
-        inputType: col.dataIndex === "numberphone" ? "number" : "text",
-        dataIndex: col.dataIndex,
-        title: col.title,
-        editing: isEditing(record),
-      }),
-    };
-  });
-  return (
+  const handleChange2 = (value: string) => {
+    addAcc.id_privileges = parseInt(value);
+  };
+
+  const onclick = () => {
+    console.log(addAcc);
+    addAcc.id_privileges = 1;
+    grantAccount(
+      addAcc.id_staff,
+      addAcc.username,
+      addAcc.password,
+      addAcc.id_privileges
+    ).then((rs) => {
+      console.log(rs);
+      alert(rs.data.captaikhoan.message);
+      if (rs.data.captaikhoan.status === 200) {
+        setReload(true);
+      }
+    });
+  };
+  return isReady ? (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
         <Header style={headerStyle}>
@@ -245,12 +237,11 @@ const AccStaff = () => {
                 labelCol={{ span: 5 }}
               >
                 <Select
-                  mode="multiple"
                   style={{ width: "60%" }}
                   allowClear
                   placeholder="Please select"
-                  onChange={handleChange}
-                  options={options}
+                  onChange={handleChange1}
+                  options={options1}
                 />
               </Form.Item>
               <Form.Item
@@ -259,12 +250,11 @@ const AccStaff = () => {
                 labelCol={{ span: 5 }}
               >
                 <Select
-                  mode="multiple"
                   style={{ width: "60%" }}
                   allowClear
                   placeholder="Please select"
-                  onChange={handleChange}
-                  options={options}
+                  onChange={handleChange2}
+                  options={options2}
                 />
               </Form.Item>
             </Col>
@@ -275,14 +265,20 @@ const AccStaff = () => {
                   labelAlign="left"
                   labelCol={{ span: 6 }}
                 >
-                  <Input style={{ width: "60%" }} />
+                  <Input
+                    style={{ width: "60%" }}
+                    onChange={(e) => (addAcc.username = e.target.value)}
+                  />
                 </Form.Item>
                 <Form.Item
                   label="Mật Khẩu:"
                   labelAlign="left"
                   labelCol={{ span: 6 }}
                 >
-                  <Input style={{ width: "60%" }} />
+                  <Input
+                    style={{ width: "60%" }}
+                    onChange={(e) => (addAcc.password = e.target.value)}
+                  />
                 </Form.Item>
               </div>
             </Col>
@@ -297,6 +293,7 @@ const AccStaff = () => {
                 <Button
                   type="primary"
                   style={{ width: "70%", marginBottom: 30 }}
+                  onClick={onclick}
                 >
                   Cấp tài khoản
                 </Button>
@@ -310,23 +307,53 @@ const AccStaff = () => {
         <Content style={contentStyle}>
           <Form form={form} component={false}>
             <Table
-              components={{
-                body: {
-                  cell: EditableCell,
-                },
-              }}
               bordered
               dataSource={data}
-              columns={mergedColumns}
+              columns={columns}
               rowClassName="table_acc_staff"
-              pagination={{
-                onChange: cancel,
-              }}
             />
           </Form>
         </Content>
       </Layout>
     </Space>
+  ) : (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        height: "100%",
+        paddingTop: "20px",
+        paddingBottom: "20px",
+      }}
+    >
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+    </div>
   );
 };
 export default AccStaff;
