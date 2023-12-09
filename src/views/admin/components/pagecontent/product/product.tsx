@@ -42,6 +42,7 @@ import {
   getAllUnit,
   addProduct,
   editProduct,
+  removeProduct,
 } from "../../../../../controllers/modules/admin/product";
 import CONFIG_CALL from "../../../../../controllers/const";
 import { useNavigate } from "react-router-dom";
@@ -373,6 +374,30 @@ const Product = () => {
             }}
           >
             Sửa
+          </Typography.Link>
+        );
+      },
+    },
+    {
+      title: "Xóa",
+      dataIndex: "editcus",
+      width: "8%",
+      render: (_: any, record: Item) => {
+        // const editable = isEditing(record);
+        return (
+          <Typography.Link
+            // disabled={editingKey !== ""}
+            onClick={() => {
+              removeProduct(record.ma).then(rs => {
+                alert(rs.data.xoaSanPham.message);
+                if (rs.data.xoaSanPham.status === 201) {
+                  clearField();
+                  setReload(true);
+                }
+              })
+            }}
+          >
+            Xóa
           </Typography.Link>
         );
       },

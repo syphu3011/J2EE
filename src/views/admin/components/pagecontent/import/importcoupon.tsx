@@ -520,7 +520,6 @@ const Import = () => {
     // });
     importProduct(
       parseInt(providerID),
-      2,
       listProducts,
       "Phieu nhap tao boi admin"
     ).then((rs) => {
@@ -540,7 +539,7 @@ const Import = () => {
       }
     });
   };
-  return isReady ? (
+  return isReady ? (  
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
         <Header style={headerStyle}>
