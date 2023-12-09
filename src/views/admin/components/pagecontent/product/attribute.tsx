@@ -6,6 +6,7 @@ import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { getAllColor } from "../../../../../controllers/modules/admin/color";
 import { getAllSize } from "../../../../../controllers/modules/admin/size";
+import { getAllCate } from "../../../../../controllers/modules/admin/cate";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 120,
@@ -29,20 +30,18 @@ interface Item {
   describe: string;
 }
 
-const originData: Item[] = [];
-const options: SelectProps["options"] = [];
-const handleChange = (value: string[]) => {
+const handleChange = (value: string) => {
   console.log(`selected ${value}`);
 };
-for (let i = 0; i < 20; i++) {
-  originData.push({
-    key: i.toString(),
-    id_att: `${i}`,
-    name_att: `Đỏ ${i}`,
-    type_att: "Màu",
-    describe: `Đây là quần áo`,
-  });
-}
+// for (let i = 0; i < 20; i++) {
+//   originData.push({
+//     key: i.toString(),
+//     id_att: `${i}`,
+//     name_att: `Đỏ ${i}`,
+//     type_att: "Màu",
+//     describe: `Đây là quần áo`,
+//   });
+// }
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
@@ -87,9 +86,14 @@ const EditableCell: React.FC<EditableCellProps> = ({
   );
 };
 const Attribute = () => {
+  const options: SelectProps["options"] = [];
+
+  const originData: Item[] = [];
+
   const [form] = Form.useForm();
   const [data, setData] = useState(originData);
   const [editingKey, setEditingKey] = useState("");
+  const [optionsData, setOptionsData] = useState(options);
 
   const isEditing = (record: Item) => record.key === editingKey;
 
@@ -188,14 +192,14 @@ const Attribute = () => {
         ) : null,
     },
   ];
-  options.push({
-    value: `color`,
-    label: `Màu`,
-  });
-  options.push({
-    value: `size`,
-    label: `Kích thước`,
-  });
+  // options.push({
+  //   value: `color`,
+  //   label: `Màu`,
+  // });
+  // options.push({
+  //   value: `size`,
+  //   label: `Kích thước`,
+  // });
   const mergedColumns = columns.map((col) => {
     if (!col.editable) {
       return col;
@@ -213,30 +217,43 @@ const Attribute = () => {
   });
   useEffect(() => {
     async function fetchData() {
-      const [dataColor, dataSize] = await Promise.all([getAllColor(), getAllSize()])
-      const tempDataColor = dataColor.data.mau.data.map((mau) => {
+      const [dataColor, dataSize, datacate] = await Promise.all([
+        getAllColor(),
+        getAllSize(),
+        getAllCate(),
+      ]);
+      datacate.data.loai.data.forEach((element, index) => {
+        options.push({
+          label: element.ten,
+          value: element.ma,
+        });
+      });
+      setOptionsData(options);
+      console.log(optionsData);
+      const tempDataColor = dataColor.data.mau.data.map((mau, index) => {
         return {
-          key: mau.ma,
+          key: index,
           id_att: mau.ma,
           name_att: mau.ten,
           type_att: "Màu",
-          describe: ""
-        }
-      })
-      const tempDataSize = dataSize.data.kichco.data.map((kichco) => {
+          describe: "",
+        };
+      });
+      const tempDataSize = dataSize.data.kichco.data.map((kichco, index) => {
         return {
-          key: kichco.ma,
+          key: index + dataColor.data.mau.data.length,
           id_att: kichco.ma,
           name_att: kichco.ten,
           type_att: "Kích cỡ",
-          describe: ""
-        }
-      })
-      const tempAllData = [...tempDataSize, ...tempDataColor]
-      setData(tempAllData)
+          describe: "",
+        };
+      });
+      const tempAllData = [...tempDataSize, ...tempDataColor];
+      setData(tempAllData);
     }
-    fetchData()
-  },[])
+    fetchData();
+  }, [true]);
+  const [nameAtt, setNameAtt] = useState("");
   return (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
@@ -244,7 +261,12 @@ const Attribute = () => {
           <Row gutter={16}>
             <Col className="gutter-row" span={8}>
               <Form.Item label="Tên:" labelAlign="left" labelCol={{ span: 5 }}>
-                <Input />
+                <Input
+                  onChange={(value) => {
+                    setNameAtt(value.target.value);
+                    console.log(value.target.value);
+                  }}
+                />
               </Form.Item>
               <Form.Item
                 label="Loại"
@@ -255,7 +277,7 @@ const Attribute = () => {
                 <Select
                   placeholder="Hãy chọn"
                   onChange={handleChange}
-                  options={options}
+                  options={optionsData}
                 />
               </Form.Item>
             </Col>
