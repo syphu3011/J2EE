@@ -1,18 +1,8 @@
-import {
-  Button,
-  Col,
-  DatePicker,
-  Layout,
-  Row,
-  Select,
-  SelectProps,
-  Skeleton,
-  Space,
-} from "antd";
+import { Layout, Select, SelectProps, Skeleton, Space } from "antd";
 import "../../../style/product.css";
 const { Header, Content } = Layout;
 import React, { useEffect, useState } from "react";
-import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
+import { Form, Table } from "antd";
 import { useNavigate } from "react-router-dom";
 import { authenticationAdmin } from "../../../../../../utils/util";
 import { getProvider } from "../../../../../controllers/modules/admin/provider";
@@ -42,49 +32,6 @@ interface Item {
   // price_partner: number;
 }
 
-interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
-  editing: boolean;
-  dataIndex: string;
-  title: any;
-  inputType: "number" | "text" | "Date";
-  record: Item;
-  index: number;
-  children: React.ReactNode;
-}
-
-const EditableCell: React.FC<EditableCellProps> = ({
-  editing,
-  dataIndex,
-  title,
-  inputType,
-  record,
-  index,
-  children,
-  ...restProps
-}) => {
-  const inputNode = inputType === "number" ? <InputNumber /> : <Input />;
-
-  return (
-    <td {...restProps}>
-      {editing ? (
-        <Form.Item
-          name={dataIndex}
-          style={{ margin: 0 }}
-          rules={[
-            {
-              required: true,
-              message: `Hãy nhập ${title}!`,
-            },
-          ]}
-        >
-          {inputNode}
-        </Form.Item>
-      ) : (
-        children
-      )}
-    </td>
-  );
-};
 const handleChange = (value: string[]) => {
   console.log(`selected ${value}`);
 };
@@ -131,17 +78,6 @@ const Provider = () => {
     //   dataIndex: "price_partner",
     // },
   ];
-  const mergedColumns = columns.map((col) => {
-    return {
-      ...col,
-      onCell: (record: Item) => ({
-        record,
-        inputType: col.dataIndex === "numberphone" ? "number" : "text",
-        dataIndex: col.dataIndex,
-        title: col.title,
-      }),
-    };
-  });
   useEffect(() => {
     async function fetchMetaData(rs?) {
       optionspartner.splice(0, optionspartner.length);
@@ -153,20 +89,22 @@ const Provider = () => {
 
       // var fetchData = rsFetchData.data.nhacungcap.data;
       for (const element of rsFetchData.data.nhacungcap.data) {
-        ProviderData.push({
-          key: element.ma,
-          id_partner: element.ma,
-          name_partner: element.ten,
-          id_product_partner: element.sanpham.ma,
-          name_product_partner: element.sanpham.ten,
-          type_partner: element.sanpham.loai,
-          donvi_partner: element.sanpham.donvi,
-          // price_partner: 4000000,
-        });
         optionspartner.push({
-          value: element.ma,
-          label: element.ten,
+          value: element.ma.toString(),
+          label: element.ten.toString(),
         });
+        for (const prod of element.sanpham) {
+          ProviderData.push({
+            key: element.ma,
+            id_partner: element.ma,
+            name_partner: element.ten,
+            id_product_partner: prod.ma,
+            name_product_partner: prod.ten,
+            type_partner: prod.loai.ten,
+            donvi_partner: prod.donvi.ten,
+            // price_partner: 4000000,
+          });
+        }
       }
 
       setIsReady(true);
@@ -196,7 +134,7 @@ const Provider = () => {
             <Table
               bordered
               dataSource={data}
-              columns={mergedColumns}
+              columns={columns}
               rowClassName="table-row-provider"
             />
           </Form>

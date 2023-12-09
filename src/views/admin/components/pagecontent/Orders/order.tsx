@@ -6,6 +6,7 @@ import {
   Skeleton,
   Space,
   TableColumnsType,
+  notification,
 } from "antd";
 import "../../../style/product.css";
 const { Header, Content } = Layout;
@@ -20,6 +21,7 @@ import {
   getHistoryOrders,
   getOrders,
 } from "../../../../../controllers/modules/admin/order";
+import type { NotificationPlacement } from "antd/es/notification/interface";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 60,
@@ -74,6 +76,14 @@ let fromDate = dayjs();
 let toDate = dayjs();
 let status = "";
 const Order = () => {
+  const [api2, NotiDH] = notification.useNotification();
+  const NotiOrder = (placement: NotificationPlacement, s: String) => {
+    api2.info({
+      message: `THÔNG BÁO`,
+      description: s,
+      placement,
+    });
+  };
   // define
   const originData: Item[] = [];
   const exData = [];
@@ -92,7 +102,7 @@ const Order = () => {
   // Confirm
   const handleConfirm = (key: React.Key) => {
     confirmOrder(parseInt(key.toString())).then((rs) => {
-      alert(rs.data.xacnhanhoachuyhoadon.message);
+      NotiOrder("top", rs.data.xacnhanhoachuyhoadon.message);
       if (rs.data.xacnhanhoachuyhoadon.status === 200) {
         console.log("Dung vay ma huhu");
         const newData = data.filter((item) => item.key !== key);
@@ -105,7 +115,7 @@ const Order = () => {
   // Cancel
   const handleCancel = (key: React.Key) => {
     cancelOrder(parseInt(key.toString())).then((rs) => {
-      alert(rs.data.xacnhanhoachuyhoadon.message);
+      NotiOrder("top", rs.data.xacnhanhoachuyhoadon.message);
       if (rs.data.xacnhanhoachuyhoadon.status === 200) {
         setReload(true);
       }
@@ -362,6 +372,7 @@ const Order = () => {
   };
   return isReady ? (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
+      {NotiDH}
       <Layout>
         <Header style={headerStyle}>
           <div

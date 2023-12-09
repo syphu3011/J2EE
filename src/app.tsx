@@ -35,6 +35,7 @@ import UpdateInformation from "./views/pages/editInformation/updateInformation";
 import Home from "./views/pages/home/home";
 import UpdateInformationMedia from "./views/pages/editInformation/updateInformationMedia";
 import HistoryOrder from "./views/components/cart/historyOrder";
+import Coding_ok from "./views/coding_ok";
 const param = window.location.search;
 let component_render;
 switch (param) {
@@ -64,10 +65,7 @@ switch (param) {
               path="/gio-hang/xac-nhan-thong-tin-giao-hang"
               element={<DeliveryInform />}
             ></Route>
-             <Route
-              path="/lich-su-don-hang"
-              element={<HistoryOrder />}
-            ></Route>
+            <Route path="/lich-su-don-hang" element={<HistoryOrder />}></Route>
           </Route>
           <Route path="/LoginAdmin" element={<Login />}></Route>
           <Route path="/AccessOTP" element={<LoginOTP />}></Route>

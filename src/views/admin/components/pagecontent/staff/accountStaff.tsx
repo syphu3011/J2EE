@@ -119,17 +119,27 @@ const AccStaff = () => {
       }
       const rsFetchData = await getStaff();
       // const rsquyenData = await getPrivileges();
-      // var fetchData = rsFetchData.data.nhanvien.data;
-      // var fetchquyenData = rsquyenData.data.quyen.data;
       for (const element of rsFetchData.data.nhanvien.data) {
-        AccStaffData.push({
-          key: element.ma,
-          id_staff: element.ma,
-          name_staff: element.ten,
-          UserStaff: element.tentaikhoan,
-          permission: element.quyen,
-          status: element.trangthai.ten,
-        });
+        if (element.quyen == null) {
+          AccStaffData.push({
+            key: element.ma,
+            id_staff: element.ma,
+            name_staff: element.ten,
+            UserStaff: element.tentaikhoan,
+            permission: element.quyen,
+            status: element.trangthai.ten,
+          });
+        } else {
+          AccStaffData.push({
+            key: element.ma,
+            id_staff: element.ma,
+            name_staff: element.ten,
+            UserStaff: element.tentaikhoan,
+            permission: element.quyen.ten,
+            status: element.trangthai.ten,
+          });
+        }
+
         options1.push({
           value: element.ma,
           label: element.ten,
@@ -159,7 +169,7 @@ const AccStaff = () => {
     } else {
       removeAccount(UserStaff.toString()).then((rs) => {
         alert(rs.data.xoataikhoan.message);
-        if (rs.data.xoataikhoan.status === 201) {
+        if (rs.data.xoataikhoan.status === 200) {
           setReload(true);
         }
       });
@@ -211,7 +221,7 @@ const AccStaff = () => {
 
   const onclick = () => {
     console.log(addAcc);
-    addAcc.id_privileges = 1;
+    addAcc.id_privileges = 2;
     grantAccount(
       addAcc.id_staff,
       addAcc.username,
@@ -220,7 +230,7 @@ const AccStaff = () => {
     ).then((rs) => {
       console.log(rs);
       alert(rs.data.captaikhoan.message);
-      if (rs.data.captaikhoan.status === 200) {
+      if (rs.data.captaikhoan.status === 201) {
         setReload(true);
       }
     });

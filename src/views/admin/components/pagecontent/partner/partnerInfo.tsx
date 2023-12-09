@@ -7,7 +7,9 @@ import { authenticationAdmin } from "../../../../../../utils/util";
 import { useNavigate } from "react-router-dom";
 import {
   addProvider,
+  editProvider,
   getProvider,
+  removeProvider,
 } from "../../../../../controllers/modules/admin/provider";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
@@ -122,6 +124,27 @@ const partner = () => {
         });
         setData(newData);
         setEditingKey("");
+        console.log(
+          parseInt(newData[index].id_partner),
+          newData[index].name_partner.toString(),
+          newData[index].address_partner.toString(),
+          newData[index].number_partner.toString(),
+          1
+        );
+        editProvider(
+          parseInt(newData[index].id_partner),
+          newData[index].name_partner.toString(),
+          newData[index].address_partner.toString(),
+          newData[index].number_partner.toString(),
+          1
+        ).then((rs) => {
+          //TODO: Thêm thông báo ở đây
+          console.log(rs);
+          alert(rs.data.suaNhaCungCap.message);
+          if (rs.data.suaNhaCungCap.status === 201) {
+            setReload(true);
+          }
+        });
       } else {
         newData.push(row);
         setData(newData);
@@ -132,8 +155,17 @@ const partner = () => {
     }
   };
   const handleDelete = (key: React.Key) => {
+    removeProvider(parseInt(key.toString())).then((rs) => {
+      console.log(rs);
+      alert(rs.data.xoaNhaCungCap.message);
+      if (rs.data.xoaNhaCungCap.status === 200) {
+        setReload(true);
+      }
+    });
     const newData = data.filter((item) => item.key !== key);
     setData(newData);
+    // const newData = data.filter((item) => item.key !== key);
+    // setData(newData);
   };
   const columns = [
     {
