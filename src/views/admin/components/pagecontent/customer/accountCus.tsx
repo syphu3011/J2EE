@@ -7,6 +7,7 @@ import {
   Skeleton,
   Table,
   Typography,
+  notification,
 } from "antd";
 import { useNavigate } from "react-router-dom";
 import {
@@ -84,6 +85,14 @@ const EditableCell: React.FC<EditableCellProps> = ({
 };
 
 const AccountCus = () => {
+  const [api2, NotiTKKH] = notification.useNotification();
+  const NotiAccCus = (placement: NotificationPlacement, s: String) => {
+    api2.info({
+      message: `THÔNG BÁO`,
+      description: s,
+      placement,
+    });
+  };
   const [editingKey, setEditingKey] = useState("");
   const cancel = () => {
     setEditingKey("");
@@ -246,24 +255,27 @@ const AccountCus = () => {
   //##################################################
 
   return isReady ? (
-    <Form form={form} component={false}>
-      <Table
-        components={{
-          body: {
-            cell: EditableCell,
-          },
-        }}
-        bordered
-        dataSource={data}
-        columns={mergedColumns}
-        pagination={{
-          onChange: cancel,
-          pageSize: 10, // Số hàng hiển thị trên mỗi trang
-          showTotal: (total, range) =>
-            `${range[0]}-${range[1]} of ${total} items`,
-        }}
-      />
-    </Form>
+    <>
+      {NotiTKKH}
+      <Form form={form} component={false}>
+        <Table
+          components={{
+            body: {
+              cell: EditableCell,
+            },
+          }}
+          bordered
+          dataSource={data}
+          columns={mergedColumns}
+          pagination={{
+            onChange: cancel,
+            pageSize: 10, // Số hàng hiển thị trên mỗi trang
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} of ${total} items`,
+          }}
+        />
+      </Form>
+    </>
   ) : (
     <div
       style={{

@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
+import {
+  Form,
+  Input,
+  InputNumber,
+  Popconfirm,
+  Table,
+  Typography,
+  notification,
+} from "antd";
 import {
   editCustomer,
   getCustomer,
@@ -12,8 +20,8 @@ import {
   convertB64ToImage,
   getBase64AndName,
 } from "../../../../../../utils/util";
-import { Image, Skeleton } from "antd";
-
+import { Skeleton } from "antd";
+import type { NotificationPlacement } from "antd/es/notification/interface";
 interface Item {
   key: string;
   id: string;
@@ -23,19 +31,6 @@ interface Item {
   dateinit: string;
   status: string;
 }
-
-// for (let i = 0; i < 20; i++) {
-//   originData.push({
-// key: i.toString(),
-// id: `${i}`,
-// name: `Khách hàng ${i}`,
-// numberphone: 394142181,
-// birthday: `18/02/2002`,
-// dateinit: `18/10/2023`,
-// status: `Hoạt động`,
-//   });
-// }
-// const customers =  getCustomer()
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
@@ -82,6 +77,14 @@ const EditableCell: React.FC<EditableCellProps> = ({
 };
 
 const Customer = () => {
+  const [api2, NotiKH] = notification.useNotification();
+  const NotiCustomer = (placement: NotificationPlacement, s: String) => {
+    api2.info({
+      message: `THÔNG BÁO`,
+      description: s,
+      placement,
+    });
+  };
   const originData: Item[] = [];
   //Chuyển hướng
   const navigate = useNavigate();
@@ -152,7 +155,7 @@ const Customer = () => {
         ).then((rs) => {
           //TODO: Thêm thông báo ở đây
           console.log(rs);
-          alert(rs.data.suaKhachHang.message);
+          NotiCustomer("top", rs.data.suaKhachHang.message);
           if (rs.data.suaKhachHang.status === 201) {
             // clearField();
             //setIsEdit(false);
@@ -180,7 +183,7 @@ const Customer = () => {
     removeCustomer(parseInt(key.toString())).then((rs) => {
       //TODO: Thêm thông báo ở đây
       console.log(rs);
-      alert(rs.data.xoaKhachHang.message);
+      NotiCustomer("top", rs.data.xoaKhachHang.message);
       if (rs.data.xoaKhachHang.status === 201) {
         // clearField();
         //setIsEdit(false);
@@ -406,25 +409,28 @@ const Customer = () => {
   }, [reload]);
 
   return isReady ? (
-    <Form form={form} component={false}>
-      <Table
-        components={{
-          body: {
-            cell: EditableCell,
-          },
-        }}
-        bordered
-        dataSource={data}
-        columns={mergedColumns}
-        rowClassName="editable-row"
-        pagination={{
-          onChange: cancel,
-          pageSize: 10, // Số hàng hiển thị trên mỗi trang
-          showTotal: (total, range) =>
-            `${range[0]}-${range[1]} of ${total} items`,
-        }}
-      />
-    </Form>
+    <>
+      {NotiKH}
+      <Form form={form} component={false}>
+        <Table
+          components={{
+            body: {
+              cell: EditableCell,
+            },
+          }}
+          bordered
+          dataSource={data}
+          columns={mergedColumns}
+          rowClassName="editable-row"
+          pagination={{
+            onChange: cancel,
+            pageSize: 10, // Số hàng hiển thị trên mỗi trang
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} of ${total} items`,
+          }}
+        />
+      </Form>
+    </>
   ) : (
     <div
       style={{

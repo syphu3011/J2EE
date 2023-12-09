@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import {
   addProvider,
   getProvider,
+  removeProvider,
 } from "../../../../../controllers/modules/admin/provider";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
@@ -132,8 +133,17 @@ const partner = () => {
     }
   };
   const handleDelete = (key: React.Key) => {
+    removeProvider(parseInt(key.toString())).then((rs) => {
+      console.log(rs);
+      alert(rs.data.xoaNhaCungCap.message);
+      if (rs.data.xoaNhaCungCap.status === 200) {
+        setReload(true);
+      }
+    });
     const newData = data.filter((item) => item.key !== key);
     setData(newData);
+    // const newData = data.filter((item) => item.key !== key);
+    // setData(newData);
   };
   const columns = [
     {
