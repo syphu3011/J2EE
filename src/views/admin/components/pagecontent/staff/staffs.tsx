@@ -59,6 +59,48 @@ const addData: AddItem = {
   socccd: "string",
   sodienthoai: "string",
 };
+interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
+  editing: boolean;
+  dataIndex: string;
+  title: any;
+  inputType: "number" | "text" | "Date";
+  record: Item;
+  index: number;
+  children: React.ReactNode;
+}
+
+const EditableCell: React.FC<EditableCellProps> = ({
+  editing,
+  dataIndex,
+  title,
+  inputType,
+  record,
+  index,
+  children,
+  ...restProps
+}) => {
+  const inputNode = inputType === "number" ? <InputNumber /> : <Input />;
+  return (
+    <td {...restProps}>
+      {editing ? (
+        <Form.Item
+          name={dataIndex}
+          style={{ margin: 0 }}
+          rules={[
+            {
+              required: true,
+              message: `Hãy nhập ${title}!`,
+            },
+          ]}
+        >
+          {inputNode}
+        </Form.Item>
+      ) : (
+        children
+      )}
+    </td>
+  );
+};
 
 const Staff = () => {
   const [api2, NotiNV] = notification.useNotification();
@@ -161,7 +203,7 @@ const Staff = () => {
         ).then((rs) => {
           //TODO: Thêm thông báo ở đây
           console.log(rs);
-          alert(rs.data.suaNhanVien.message);
+          NotiStaff("top", rs.data.suaNhanVien.message);
           if (rs.data.suaNhanVien.status === 201) {
             setReload(true);
           }
@@ -260,7 +302,21 @@ const Staff = () => {
         ) : null,
     },
   ];
-
+  const mergedColumns = columns.map((col) => {
+    if (!col.editable) {
+      return col;
+    }
+    return {
+      ...col,
+      onCell: (record: Item) => ({
+        record,
+        inputType: col.dataIndex === "numberphone" ? "number" : "text",
+        dataIndex: col.dataIndex,
+        title: col.title,
+        editing: isEditing(record),
+      }),
+    };
+  });
   const onclick = () => {
     console.log(addData);
     addStaff(
@@ -358,10 +414,18 @@ const Staff = () => {
         <Content style={contentStyle}>
           <Form form={form} component={false}>
             <Table
+              components={{
+                body: {
+                  cell: EditableCell,
+                },
+              }}
               bordered
               dataSource={data}
-              columns={columns}
+              columns={mergedColumns}
               rowClassName="table-staff"
+              pagination={{
+                onChange: cancel,
+              }}
             />
           </Form>
         </Content>
