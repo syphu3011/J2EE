@@ -311,7 +311,7 @@ export default class Coding_ok extends React.Component<any, any> {
       //         test: JSON.stringify(rs),
       //     });
       // })
-      getStaff().then((rs) => {
+      getPrivileges().then((rs) => {
         self.setState({
           test: JSON.stringify(rs),
           // JSON.stringify(rs.data.sanpham.data)
