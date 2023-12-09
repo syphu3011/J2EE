@@ -43,7 +43,7 @@ export function addCate(name: string, description: string, cate: string, base64I
 export function editCate(id: number, name: string, description: string, cate: string, base64Image: string, nameImage: string) {
     const cateInt = parseInt(cate)
     const query = 
-    `mutation editCate($id: Int!, $name: String!, $description: String!, $cateInt: Int!, $base64Image: String!, $nameImage: String!) {
+    `mutation editCate($id: Int!, $name: String!, $description: String!, $cateInt: Int, $base64Image: String!, $nameImage: String!) {
         suaLoai(input: {
             ma: $id
             ten: $name,
