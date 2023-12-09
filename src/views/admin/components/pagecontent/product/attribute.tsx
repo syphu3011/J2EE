@@ -1,9 +1,11 @@
 import { Button, Col, Layout, Row, Select, SelectProps, Space } from "antd";
 import "../../../style/product.css";
 const { Header, Content } = Layout;
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
 import TextArea from "antd/es/input/TextArea";
+import { getAllColor } from "../../../../../controllers/modules/admin/color";
+import { getAllSize } from "../../../../../controllers/modules/admin/size";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 120,
@@ -146,11 +148,6 @@ const Attribute = () => {
       width: "auto",
     },
     {
-      title: "Mô tả",
-      dataIndex: "describe",
-      editable: true,
-    },
-    {
       dataIndex: "editcus",
       width: "8%",
       render: (_: any, record: Item) => {
@@ -214,6 +211,32 @@ const Attribute = () => {
       }),
     };
   });
+  useEffect(() => {
+    async function fetchData() {
+      const [dataColor, dataSize] = await Promise.all([getAllColor(), getAllSize()])
+      const tempDataColor = dataColor.data.mau.data.map((mau) => {
+        return {
+          key: mau.ma,
+          id_att: mau.ma,
+          name_att: mau.ten,
+          type_att: "Màu",
+          describe: ""
+        }
+      })
+      const tempDataSize = dataSize.data.kichco.data.map((kichco) => {
+        return {
+          key: kichco.ma,
+          id_att: kichco.ma,
+          name_att: kichco.ten,
+          type_att: "Kích cỡ",
+          describe: ""
+        }
+      })
+      const tempAllData = [...tempDataSize, ...tempDataColor]
+      setData(tempAllData)
+    }
+    fetchData()
+  },[])
   return (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
@@ -235,13 +258,6 @@ const Attribute = () => {
                   options={options}
                 />
               </Form.Item>
-            </Col>
-            <Col className="gutter-row" span={8}>
-              <div>
-                <Form.Item label="Mô tả">
-                  <TextArea rows={4} />
-                </Form.Item>
-              </div>
             </Col>
             <Col className="gutter-row" span={8}>
               <div
