@@ -32,21 +32,13 @@ module.exports = {
             subject: 'CẤP LẠI MẬT KHẨU',
             text: 'Đây là mật khẩu mới của bạn. Đừng cung cấp cho bất kỳ ai. Mật khẩu: ' + new_password
           }
-          transporter.sendMail(mainOptions, async function (err, info) {
-            if (err) {
-              await transaction.rollback()
-              return {
-                status: 400,
-                message: "Cấp lại mật khẩu không thành công!"
-              }
-            } else {
-              await transaction.commit()
-              return {
-                status: 200,
-                message: "Cấp lại mật khẩu thành công!"
-              }
-            }
+          transporter.sendMail(mainOptions, function(err) {
+            console.log(err)
           });
+          return {
+            status: 200,
+            message: "Cấp lại mật khẩu thành công!"
+          }
         }
         else {
           await transaction.rollback()

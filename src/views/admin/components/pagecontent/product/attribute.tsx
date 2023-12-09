@@ -1,11 +1,29 @@
-import { Button, Col, Layout, Row, Select, SelectProps, Space } from "antd";
+import {
+  Button,
+  Col,
+  Layout,
+  Row,
+  Select,
+  SelectProps,
+  Skeleton,
+  Space,
+} from "antd";
 import "../../../style/product.css";
 const { Header, Content } = Layout;
 import React, { useEffect, useState } from "react";
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import { getAllColor } from "../../../../../controllers/modules/admin/color";
-import { getAllSize } from "../../../../../controllers/modules/admin/size";
+import {
+  editColor,
+  getAllColor,
+  removeColor,
+} from "../../../../../controllers/modules/admin/color";
+import {
+  editSize,
+  getAllSize,
+  removeSize,
+} from "../../../../../controllers/modules/admin/size";
+import { getAllCate } from "../../../../../controllers/modules/admin/cate";
 const headerStyle: React.CSSProperties = {
   color: "#000000",
   minHeight: 120,
@@ -29,20 +47,18 @@ interface Item {
   describe: string;
 }
 
-const originData: Item[] = [];
-const options: SelectProps["options"] = [];
-const handleChange = (value: string[]) => {
+const handleChange = (value: string) => {
   console.log(`selected ${value}`);
 };
-for (let i = 0; i < 20; i++) {
-  originData.push({
-    key: i.toString(),
-    id_att: `${i}`,
-    name_att: `Đỏ ${i}`,
-    type_att: "Màu",
-    describe: `Đây là quần áo`,
-  });
-}
+// for (let i = 0; i < 20; i++) {
+//   originData.push({
+//     key: i.toString(),
+//     id_att: `${i}`,
+//     name_att: `Đỏ ${i}`,
+//     type_att: "Màu",
+//     describe: `Đây là quần áo`,
+//   });
+// }
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
@@ -87,9 +103,14 @@ const EditableCell: React.FC<EditableCellProps> = ({
   );
 };
 const Attribute = () => {
+  const options: SelectProps["options"] = [];
+
+  const originData: Item[] = [];
+
   const [form] = Form.useForm();
   const [data, setData] = useState(originData);
   const [editingKey, setEditingKey] = useState("");
+  const [optionsData, setOptionsData] = useState(options);
 
   const isEditing = (record: Item) => record.key === editingKey;
 
@@ -101,6 +122,7 @@ const Attribute = () => {
   const cancel = () => {
     setEditingKey("");
   };
+  const [reload, setReload] = useState(true);
 
   const save = async (key: React.Key) => {
     try {
@@ -108,6 +130,27 @@ const Attribute = () => {
 
       const newData = [...data];
       const index = newData.findIndex((item) => key === item.key);
+      if (newData[index].name_att.trim() == "Màu") {
+        editColor(
+          parseInt(newData[index].id_att),
+          newData[index].name_att
+        ).then((rs) => {
+          console.log(rs);
+          alert(rs.data.suaMau.message);
+          if (rs.data.suaMau.status === 201) {
+            setReload(true);
+          }
+        });
+      } else {
+        editSize(parseInt(newData[index].id_att), newData[index].name_att).then(
+          (rs) => {
+            alert(rs.data.suaKichCo.message);
+            if (rs.data.suaKichCo.status === 201) {
+              setReload(true);
+            }
+          }
+        );
+      }
       if (index > -1) {
         const item = newData[index];
         newData.splice(index, 1, {
@@ -127,6 +170,24 @@ const Attribute = () => {
   };
   const handleDelete = (key: React.Key) => {
     const newData = data.filter((item) => item.key !== key);
+    const index = data.findIndex((item) => key === item.key);
+    if (data[index].name_att == "Màu") {
+      removeColor(parseInt(newData[index].id_att)).then((rs) => {
+        console.log(rs);
+        alert(rs.data.suaMau.message);
+        if (rs.data.suaMau.status === 201) {
+          setReload(true);
+        }
+      });
+    } else {
+      removeSize(parseInt(newData[index].id_att)).then((rs) => {
+        console.log(rs);
+        alert(rs.data.xoakichco.message);
+        if (rs.data.xoakichco.status === 201) {
+          setReload(true);
+        }
+      });
+    }
     setData(newData);
   };
 
@@ -213,38 +274,59 @@ const Attribute = () => {
   });
   useEffect(() => {
     async function fetchData() {
-      const [dataColor, dataSize] = await Promise.all([getAllColor(), getAllSize()])
-      const tempDataColor = dataColor.data.mau.data.map((mau) => {
+      const [dataColor, dataSize] = await Promise.all([
+        getAllColor(),
+        getAllSize(),
+        // getAllCate(),
+      ]);
+      // datacate.data.loai.data.forEach((element, index) => {
+      //   options.push({
+      //     label: element.ten,
+      //     value: element.ma,
+      //   });
+      // });
+      setOptionsData(options);
+      console.log(optionsData);
+      const tempDataColor = dataColor.data.mau.data.map((mau, index) => {
         return {
-          key: mau.ma,
+          key: index,
           id_att: mau.ma,
           name_att: mau.ten,
           type_att: "Màu",
-          describe: ""
-        }
-      })
-      const tempDataSize = dataSize.data.kichco.data.map((kichco) => {
+          describe: "",
+        };
+      });
+      const tempDataSize = dataSize.data.kichco.data.map((kichco, index) => {
         return {
-          key: kichco.ma,
+          key: index + dataColor.data.mau.data.length,
           id_att: kichco.ma,
           name_att: kichco.ten,
           type_att: "Kích cỡ",
-          describe: ""
-        }
-      })
-      const tempAllData = [...tempDataSize, ...tempDataColor]
-      setData(tempAllData)
+          describe: "",
+        };
+      });
+      const tempAllData = [...tempDataSize, ...tempDataColor];
+      setData(tempAllData);
+      setIsReady(true);
     }
-    fetchData()
-  },[])
-  return (
+    fetchData();
+  }, [true]);
+  const [isReady, setIsReady] = useState(false);
+
+  const [nameAtt, setNameAtt] = useState("");
+  return isReady ? (
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout>
         <Header style={headerStyle}>
           <Row gutter={16}>
             <Col className="gutter-row" span={8}>
               <Form.Item label="Tên:" labelAlign="left" labelCol={{ span: 5 }}>
-                <Input />
+                <Input
+                  onChange={(value) => {
+                    setNameAtt(value.target.value);
+                    console.log(value.target.value);
+                  }}
+                />
               </Form.Item>
               <Form.Item
                 label="Loại"
@@ -255,7 +337,7 @@ const Attribute = () => {
                 <Select
                   placeholder="Hãy chọn"
                   onChange={handleChange}
-                  options={options}
+                  options={optionsData}
                 />
               </Form.Item>
             </Col>
@@ -301,6 +383,44 @@ const Attribute = () => {
         </Content>
       </Layout>
     </Space>
+  ) : (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        height: "100%",
+        paddingTop: "20px",
+        paddingBottom: "20px",
+      }}
+    >
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+      <Skeleton.Input active={true} size={"large"} block={true} />
+      <br />
+    </div>
   );
 };
 export default Attribute;
