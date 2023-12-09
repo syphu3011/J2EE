@@ -311,9 +311,9 @@ export default class Coding_ok extends React.Component<any, any> {
       //         test: JSON.stringify(rs),
       //     });
       // })
-      getStaff().then((rs) => {
-        self.setState({
-          test: JSON.stringify(rs),
+      // getPrivileges().then((rs) => {
+      //   self.setState({
+      //     test: JSON.stringify(rs),
           // JSON.stringify(rs.data.sanpham.data)
           // + '\n' +
           // JSON.stringify(rs.data.nhacungcap.data)
@@ -321,8 +321,11 @@ export default class Coding_ok extends React.Component<any, any> {
           // JSON.stringify(rs.data.mau.data)
           // + '\n' +
           // JSON.stringify(rs.data.kichco.data)
-        });
-      });
+      //   });
+      // });
+          // editStaff(1, ).then(rs => {
+
+          // })
     });
   }
 

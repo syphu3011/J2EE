@@ -16,6 +16,7 @@ import {
   openCustomer,
 } from "../../../../../controllers/modules/admin/customer";
 import { authenticationAdmin } from "../../../../../../utils/util";
+import type { NotificationPlacement } from "antd/es/notification/interface";
 
 interface Item {
   key: string;
@@ -155,7 +156,7 @@ const AccountCus = () => {
     blockCustomer(parseInt(key.toString())).then((rs) => {
       //TODO: Thêm thông báo ở đây
       // console.log(rs);
-      alert(rs.data.chuyenTrangThaiKhachHang.message);
+      NotiAccCus("top", rs.data.chuyenTrangThaiKhachHang.message);
       if (rs.data.chuyenTrangThaiKhachHang.status === 201) {
         // clearField();
         //setIsEdit(false);
@@ -168,7 +169,7 @@ const AccountCus = () => {
     openCustomer(parseInt(key.toString())).then((rs) => {
       //TODO: Thêm thông báo ở đây
       console.log(rs);
-      alert(rs.data.chuyenTrangThaiKhachHang.message);
+      NotiAccCus("top", rs.data.chuyenTrangThaiKhachHang.message);
       if (rs.data.chuyenTrangThaiKhachHang.status === 201) {
         // clearField();
         //setIsEdit(false);
