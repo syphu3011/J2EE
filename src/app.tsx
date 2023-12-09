@@ -3,7 +3,7 @@ import Main from "./views/pages/main";
 import Admin from "./views/admin/pages/admin";
 import { CartProvider } from "react-use-cart";
 import Test from "./views/components/test";
-// import Coding_ok from "./views/coding_ok";
+import Coding_ok from "./views/coding_ok";
 import { BrowserRouter, HashRouter, Route, Routes } from "react-router-dom";
 import Login from "./views/admin/components/loginpage/loginpage";
 import HomeAdmin from "./views/admin/components/pagecontent/home";

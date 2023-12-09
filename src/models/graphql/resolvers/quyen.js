@@ -134,7 +134,7 @@ module.exports = {
     async quyen(root, args, context) {
       async function callback(e) {
         try {
-          const sanpham = await Quyen.findAll({
+          const quyen = await Quyen.findAll({
             where: {
               ma: {
                 [Op.not]: 1
@@ -144,7 +144,7 @@ module.exports = {
           return {
             status: STATUS_CODE.query_success,
             message: "Lấy danh sách quyền thành công!",
-            data: sanpham
+            data: quyen
           }
         }
         catch (e) {
@@ -155,7 +155,7 @@ module.exports = {
           }
         }
       }
-      return await checkAndResolveAdmin(context.taikhoan, callback, "đã xóa quyền có id là " + ma, CHUCNANG.SUANHANVIEN)
+      return await checkAndResolveAdmin(context.taikhoan, callback, "", CHUCNANG.SUANHANVIEN)
     }
   },
   Quyen: {
